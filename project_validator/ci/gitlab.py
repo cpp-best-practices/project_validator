@@ -18,6 +18,7 @@ from project_validator.facts import CiJob, Command, Fact, Origin, Unknown
 from project_validator.facts.exit_status import STRICT, after
 from project_validator.facts.expansion import advised, script_facts
 from project_validator.facts.shell import ShellCommand, split_script
+from project_validator.limits import GITLAB_EXTENDS, GITLAB_INCLUDES, GITLAB_REFERENCES
 from project_validator.platforms import detect_operating_systems
 from project_validator.text import pattern
 from project_validator.yaml_support import Tagged
@@ -150,10 +151,6 @@ def _lines_facts(
             yield from advised(facts, _AFTER_SCRIPT)
 
 
-# GitLab reads at most this many levels of nested includes, and of extends.
-_DEPTH = 10
-
-
 def _merged(base: Mapping[str, object], over: Mapping[str, object]) -> dict[str, object]:
     """`over` merged into `base` as GitLab merges configuration: mappings deep, every other value replaced."""
     merged = dict(base)
@@ -211,7 +208,7 @@ def _included(path: str, document: Mapping[str, object], load: Load | None, dept
             unread.extend(_template_facts(path, index, template))
             continue
         local = _local_include(entry)
-        found = load(local) if local is not None and load is not None and depth < _DEPTH else None
+        found = load(local) if local is not None and load is not None and GITLAB_INCLUDES.allows(depth + 1) else None
         if local is None or not isinstance(found, Mapping):
             subject = f"the include {json.dumps(entry, default=str)}"
             origin = Origin(path=path, at=("include", index))
@@ -226,8 +223,6 @@ def _included(path: str, document: Mapping[str, object], load: Load | None, dept
 
 
 _UNDEFINED = "a template it extends is not defined"
-_TOO_DEEP = f"the templates it extends nest more than {_DEPTH} levels deep"
-_REFERENCES_TOO_DEEP = f"its !reference tags nest more than {_DEPTH} levels deep"
 
 
 def _extended(name: str, pipeline: Mapping[str, object], depth: int = 0) -> Mapping[str, object] | str:
@@ -240,7 +235,7 @@ def _extended(name: str, pipeline: Mapping[str, object], depth: int = 0) -> Mapp
     names = parents if isinstance(parents, list) else [] if parents is None else [parents]
     merged: dict[str, object] = {}
     for parent in map(str, names):
-        base = _extended(parent, pipeline, depth + 1) if depth < _DEPTH else _TOO_DEEP
+        base = _extended(parent, pipeline, depth + 1) if GITLAB_EXTENDS.allows(depth + 1) else GITLAB_EXTENDS.reason
         if isinstance(base, str):
             return base
         merged = _merged(merged, base)
@@ -259,7 +254,12 @@ def _unresolved(value: object) -> bool:
 def _referenced(value: object, pipeline: Mapping[str, object], depth: int = 0) -> object:
     """`value` with each `!reference [.job, key, ...]` replaced by what it names; in a list, a referenced list's
     items take its place."""
-    if isinstance(value, Tagged) and value.tag == "!reference" and isinstance(value.value, list) and depth < _DEPTH:
+    if (
+        isinstance(value, Tagged)
+        and value.tag == "!reference"
+        and isinstance(value.value, list)
+        and GITLAB_REFERENCES.allows(depth + 1)
+    ):
         found: object = pipeline
         for key in map(str, value.value):
             found = found.get(key) if isinstance(found, Mapping) else None
@@ -302,7 +302,7 @@ def pipeline_facts(path: str, document: object, load: Load | None = None) -> Ite
             continue
         referenced = _referenced_mapping(resolved, pipeline)
         if _unresolved(referenced):
-            yield Unknown(origin=origin, subject=f"job {name}", reason=_REFERENCES_TOO_DEEP)
+            yield Unknown(origin=origin, subject=f"job {name}", reason=GITLAB_REFERENCES.reason)
         yield from _job_facts(sources.get(name, path), name, referenced, defaults)
 
 

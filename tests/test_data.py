@@ -10,6 +10,7 @@ from project_validator.ecosystems import data
 from project_validator.ecosystems.data import DATA
 from project_validator.facts.structure import NOT_SOURCE_SUFFIXES
 from project_validator.facts.wellformed import ParseError, known_parsers
+from project_validator.limits import JSON_NESTING
 from project_validator.text import check_json
 from tests.support import make_context, temp_project
 
@@ -66,7 +67,7 @@ class ParserTests(unittest.TestCase):
                 check_json(text)
 
     def test_json_counts_as_deep_only_past_the_limit(self) -> None:
-        limit = data._DEEP
+        limit = JSON_NESTING.most
         cases = {
             "[" * limit + "]" * limit: False,
             "[" * (limit + 1) + "]" * (limit + 1): True,

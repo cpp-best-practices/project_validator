@@ -16,6 +16,7 @@ from xml.parsers import expat
 from project_validator import yaml_support
 from project_validator.ecosystems.model import Ecosystem
 from project_validator.facts.wellformed import ParseError, Parser, decoded
+from project_validator.limits import JSON_NESTING
 from project_validator.text import check_json, strip_json_comments
 
 JSON, TOML, XML, YAML = "JSON", "TOML", "XML", "YAML"
@@ -36,20 +37,17 @@ def _allows_comments(path: str) -> bool:
     return any(fnmatchcase(path, glob) or fnmatchcase(name, glob) for glob in JSON_WITH_COMMENTS)
 
 
-# Deeper than this, JSON is read without recursion: how deep Python's own decoder goes depends on the interpreter, and
-# a report must not (JSONTestSuite's 100000-deep arrays).
-_DEEP = 500
 _NESTING = re.compile(r'"(?:[^"\\]|\\.)*"|[\[{]|[\]}]')
 
 
 def _deep(text: str) -> bool:
-    """Whether `text` nests containers deeper than `_DEEP` (strings skipped)."""
-    if text.count("[") + text.count("{") <= _DEEP:
+    """Whether `text` nests containers deeper than `JSON_NESTING` allows (strings skipped)."""
+    if text.count("[") + text.count("{") <= JSON_NESTING.most:
         return False
     depth = 0
     for token in _NESTING.finditer(text):
         depth += {"[": 1, "{": 1, "]": -1, "}": -1}.get(token[0], 0)
-        if depth > _DEEP:
+        if not JSON_NESTING.allows(depth):
             return True
     return False
 
