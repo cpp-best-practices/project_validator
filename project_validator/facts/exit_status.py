@@ -61,16 +61,25 @@ def set_options(shell: Shell, words: Sequence[str]) -> Shell:
     return shell
 
 
-def masked(commands: Sequence[ShellCommand], shell: Shell) -> list[str]:
+def masked(commands: Sequence[ShellCommand], shell: Shell, *, followed: bool = False) -> list[str]:
     """For each of a script's `commands`, in order, why its failure cannot fail the script, or "" when it can; the
-    script runs in `shell`, whose options its `set` commands change as it goes."""
-    last = max((index for index, command in enumerate(commands) if not command.nested), default=-1)
+    script runs in `shell`, whose options its `set` commands change as it goes (a `set` itself is never reported:
+    it is no step whose failure matters). `followed`: more of the script comes after these commands (a GitLab job's
+    next script line), so none of them ends it."""
+    last = -1 if followed else max((index for index, command in enumerate(commands) if not command.nested), default=-1)
     reasons = []
     for index, command in enumerate(commands):
-        reasons.append("" if command.nested else _reason(commands, index, shell, last))
+        reasons.append("" if command.nested or command.argv[0] == "set" else _reason(commands, index, shell, last))
+        shell = after((command,), shell)
+    return reasons
+
+
+def after(commands: Sequence[ShellCommand], shell: Shell) -> Shell:
+    """`shell` once `commands` have run: as their `set` commands leave its options."""
+    for command in commands:
         if command.argv[0] == "set" and not command.nested:
             shell = set_options(shell, command.argv[1:])
-    return reasons
+    return shell
 
 
 _CONDITIONS = {
@@ -109,4 +118,4 @@ def _reason(commands: Sequence[ShellCommand], index: int, shell: Shell, last: in
     return "before && in the middle of the script" if commands[pipeline].operator == "&&" else ""
 
 
-__all__ = ["ERREXIT", "POSIX", "STRICT", "Shell", "masked", "set_options", "shell_of"]
+__all__ = ["ERREXIT", "POSIX", "STRICT", "Shell", "after", "masked", "set_options", "shell_of"]

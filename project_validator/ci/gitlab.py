@@ -15,8 +15,9 @@ from collections.abc import Iterator, Mapping
 
 from project_validator.ci import CiProvider, Load, strings
 from project_validator.facts import CiJob, Command, Fact, Origin, Unknown
-from project_validator.facts.exit_status import STRICT
+from project_validator.facts.exit_status import STRICT, after
 from project_validator.facts.expansion import advised, script_facts
+from project_validator.facts.shell import ShellCommand, split_script
 from project_validator.platforms import detect_operating_systems
 from project_validator.text import pattern
 from project_validator.yaml_support import Tagged
@@ -87,11 +88,11 @@ def _services(job: Mapping[str, object], defaults: Mapping[str, object]) -> list
 
 def _scripts(
     path: str, name: str, job: Mapping[str, object], defaults: Mapping[str, object]
-) -> Iterator[tuple[str, Origin]]:
-    """Each script line the job runs (its own, else the default's), where it is written."""
+) -> Iterator[tuple[str, str, Origin]]:
+    """Each script line the job runs (its own, else the default's), with its key, where it is written."""
     for key in _SCRIPTS:
         for number, line in enumerate(_script_lines(job.get(key, defaults.get(key)))):
-            yield line, Origin(path=path, at=(name, key, number) if key in job else ("default", key, number))
+            yield key, line, Origin(path=path, at=(name, key, number) if key in job else ("default", key, number))
 
 
 def _job_facts(path: str, name: str, job: Mapping[str, object], defaults: Mapping[str, object]) -> Iterator[Fact]:
@@ -118,15 +119,35 @@ def _job_facts(path: str, name: str, job: Mapping[str, object], defaults: Mappin
             services=tuple(substitute_variables(name, variables) for name in _services(job, defaults)),
             env=env,
         )
-        for line, origin in _scripts(path, name, job, defaults):
-            found = _line_facts(substitute_variables(line, variables), identity, origin, env, windows=os == "windows")
-            yield from advised(found, advisory)
+        lines = [
+            (key, substitute_variables(line, variables), origin)
+            for key, line, origin in _scripts(path, name, job, defaults)
+        ]
+        yield from advised(_lines_facts(lines, identity, env, windows=os == "windows"), advisory)
 
 
-def _line_facts(text: str, job: str, origin: Origin, env: Mapping[str, str], *, windows: bool) -> Iterator[Fact]:
-    """The commands of a script line: a Windows runner's shell is PowerShell, and GitLab Runner's bash and sh scripts
-    start with `set -eo pipefail`."""
-    return script_facts(text, job=job, origin=origin, env=env, powershell=windows, shell=None if windows else STRICT)
+_AFTER_SCRIPT = "in after_script, whose failure GitLab ignores"
+
+
+def _lines_facts(
+    lines: list[tuple[str, str, Origin]], job: str, env: Mapping[str, str], *, windows: bool
+) -> Iterator[Fact]:
+    """The commands of a job's script lines. GitLab Runner runs the before_script and script lines as one script, in
+    PowerShell on a Windows runner, else in a shell that starts with `set -eo pipefail`, so a line's `set` holds for
+    the lines after it; after_script runs in a shell of its own, and its exit status is ignored."""
+    script = [(text, origin) for key, text, origin in lines if key != "after_script"]
+    shell = None if windows else STRICT
+    for number, (text, origin) in enumerate(script):
+        followed = number < len(script) - 1
+        yield from script_facts(
+            text, job=job, origin=origin, env=env, powershell=windows, shell=shell, followed=followed
+        )
+        if shell is not None:
+            shell = after([found for found in split_script(text) if isinstance(found, ShellCommand)], shell)
+    for key, text, origin in lines:
+        if key == "after_script":
+            facts = script_facts(text, job=job, origin=origin, env=env, powershell=windows)
+            yield from advised(facts, _AFTER_SCRIPT)
 
 
 # GitLab reads at most this many levels of nested includes, and of extends.

@@ -115,11 +115,12 @@ def script_facts(
     powershell: bool = False,
     whole: bool = False,
     shell: Shell | None = None,
+    followed: bool = False,
 ) -> Iterator[Fact]:
-    """The commands of a shell script a job runs (see `split_script`, `Script.whole`, and `_judged` for `shell`)."""
+    """The commands of a shell script a job runs (see `split_script`, `Script.whole`, `masked` for the rest)."""
     assigned, constants = _seen_assigned(script, whole or not via, powershell=powershell), _Constants(script)
     command = partial(Command, origin=origin, job=job, condition=condition, via=via)
-    for found, advisory in _judged(list(split_script(script, opaque, powershell=powershell)), shell):
+    for found, advisory in _judged(list(split_script(script, opaque, powershell=powershell)), shell, followed):
         if isinstance(found, ShellCommand):
             made = command(
                 argv=found.argv,
@@ -134,12 +135,12 @@ def script_facts(
 
 
 def _judged(
-    split: list[ShellCommand | Unsplittable], shell: Shell | None
+    split: list[ShellCommand | Unsplittable], shell: Shell | None, followed: bool
 ) -> Iterator[tuple[ShellCommand | Unsplittable, str]]:
     """Each of a script's commands with why its failure cannot fail the script in `shell` (see `masked`): "" when it
     can, or when the shell is not known."""
     commands = [found for found in split if isinstance(found, ShellCommand)]
-    reasons = iter(masked(commands, shell) if shell is not None else [""] * len(commands))
+    reasons = iter(masked(commands, shell, followed=followed) if shell is not None else [""] * len(commands))
     return ((found, next(reasons) if isinstance(found, ShellCommand) else "") for found in split)
 
 
