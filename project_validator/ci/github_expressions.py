@@ -10,11 +10,23 @@ GitHub's do. A step's status functions are judged for a run in which every step 
 from __future__ import annotations
 
 import json
-import re
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
+from functools import reduce
 
-type Value = str | float | bool | None
+from project_validator.ci.github_expression_syntax import (
+    Call,
+    Comparison,
+    ExpressionSyntaxError,
+    Literal,
+    Logical,
+    Node,
+    Not,
+    Reference,
+    Value,
+    parse,
+)
+
 _UNKNOWN = object()
 # A value that is not known whose truth is: `x || 'a'` with `x` unknown is `x` or 'a', truthy either way. It decides
 # a condition, but renders, compares and is passed to a function as unknown.
@@ -22,10 +34,6 @@ _SOME_TRUTHY, _SOME_FALSY = object(), object()
 _UNSEEN = (_UNKNOWN, _SOME_TRUTHY, _SOME_FALSY)
 type Maybe = Value | object  # a Value, _UNKNOWN, _SOME_TRUTHY or _SOME_FALSY
 
-_TOKEN = re.compile(
-    r"\s*(?:(?P<string>'(?:[^']|'')*')|(?P<number>-?\d+(?:\.\d+)?)|(?P<operator>==|!=|<=|>=|&&|\|\||[!()<>,])"
-    r"|(?P<name>[A-Za-z_][\w.*-]*))"
-)
 _RUNNER_OS = {"linux": "Linux", "windows": "Windows", "macos": "macOS"}
 _STATUS = {"success": True, "always": True, "failure": False, "cancelled": False}
 
@@ -41,18 +49,6 @@ class Known:
     matrix_known: bool = True
     # A called workflow's inputs: what its caller passes in `with:`, or the declared defaults.
     inputs: Mapping[str, str] = field(default_factory=dict)
-
-
-def _tokens(text: str) -> list[str] | None:
-    tokens, position = [], 0
-    text = text.strip()
-    while position < len(text):
-        match = _TOKEN.match(text, position)
-        if match is None or match.end() == position:
-            return None
-        tokens.append(match[0].strip())
-        position = match.end()
-    return tokens
 
 
 def _text(value: Maybe) -> str:
@@ -72,69 +68,36 @@ def _truthy(value: Maybe) -> Maybe:
     return value not in (None, False, 0.0, "")
 
 
-class _Parser:
-    def __init__(self, tokens: list[str], known: Known) -> None:
-        self.tokens, self.position, self.known = tokens, 0, known
+class _Evaluator:
+    """Walks an expression's tree (`github_expression_syntax`) with what the checkout shows about one job."""
 
-    def peek(self) -> str | None:
-        return self.tokens[self.position] if self.position < len(self.tokens) else None
+    def __init__(self, known: Known) -> None:
+        self.known = known
 
-    def take(self) -> str:
-        token = self.tokens[self.position]
-        self.position += 1
-        return token
-
-    def expression(self) -> Maybe:
-        return self.binary(("||",), self.conjunction, _either)
-
-    def conjunction(self) -> Maybe:
-        return self.binary(("&&",), self.comparison, _both)
-
-    def comparison(self) -> Maybe:
-        return self.binary(("==", "!="), self.unary, _compare)
-
-    def binary(self, operators: tuple[str, ...], operand: Callable[[], Maybe], combine: _Combine) -> Maybe:
-        left = operand()
-        while self.peek() in operators:
-            operator = self.take()
-            left = combine(operator, left, operand())
-        return left
-
-    def unary(self) -> Maybe:
-        if self.peek() == "!":
-            self.take()
-            value = _truthy(self.unary())
-            return _UNKNOWN if value is _UNKNOWN else not value
-        return self.primary()
-
-    def primary(self) -> Maybe:
-        word = self.take()
-        if word == "(":
-            value = self.expression()
-            self.take()
-            return value
-        if word.startswith("'"):
-            return word[1:-1].replace("''", "'")
-        if re.fullmatch(r"-?\d+(?:\.\d+)?", word):
-            return float(word)
-        if self.peek() == "(":
-            return self.call(word)
-        return self.reference(word)
-
-    def call(self, name: str) -> Maybe:
-        self.take()
-        arguments: list[Maybe] = []
-        while self.peek() != ")":
-            arguments.append(self.expression())
-            if self.peek() == ",":
-                self.take()
-        self.take()
-        return _function(name.lower(), arguments)
+    def value(self, node: Node) -> Maybe:
+        if isinstance(node, Literal):
+            return node.value
+        if isinstance(node, Reference):
+            return self.reference(node.name)
+        if isinstance(node, Not):
+            truth = _truthy(self.value(node.operand))
+            return _UNKNOWN if truth is _UNKNOWN else not truth
+        if isinstance(node, Comparison):
+            if node.operator not in ("==", "!="):
+                return _UNKNOWN  # ordering is not evaluated
+            return _compare(node.operator, self.value(node.left), self.value(node.right))
+        if isinstance(node, Logical):
+            combine = _either if node.operator == "||" else _both
+            return reduce(
+                lambda left, right: combine(node.operator, left, self.value(right)),
+                node.operands[1:],
+                self.value(node.operands[0]),
+            )
+        if isinstance(node, Call):
+            return _function(node.name.lower(), [self.value(argument) for argument in node.arguments])
+        return _UNKNOWN  # an index is not evaluated
 
     def reference(self, name: str) -> Maybe:
-        literals: dict[str, Value] = {"true": True, "false": False, "null": None}
-        if name in literals:
-            return literals[name]
         head, _, rest = name.partition(".")
         if name == "runner.os":
             return _RUNNER_OS.get(self.known.os, _UNKNOWN)
@@ -223,18 +186,11 @@ def _function(name: str, arguments: list[Maybe]) -> Maybe:
 
 
 def _parsed(expression: str, known: Known) -> Maybe:
-    text = expression.strip()
-    if text.startswith("${{") and text.endswith("}}"):
-        text = text[3:-2]
-    tokens = _tokens(text)
-    if not tokens:
-        return _UNKNOWN
-    parser = _Parser(tokens, known)
     try:
-        value = parser.expression()
-    except (IndexError, RecursionError):
+        tree = parse(expression)
+    except ExpressionSyntaxError:
         return _UNKNOWN
-    return _UNKNOWN if parser.peek() is not None else value
+    return _Evaluator(known).value(tree)
 
 
 def evaluate(condition: str, known: Known) -> bool | None:

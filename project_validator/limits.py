@@ -36,6 +36,8 @@ REUSABLE_WORKFLOWS = Limit("the reusable workflows it calls", 4)
 COMPOSITE_ACTIONS = Limit("the composite actions it uses", 4)
 # The local tsconfig files a configuration extends, followed for its strictness.
 TSCONFIG_EXTENDS = Limit("the configurations it extends", 4)
+# GitHub's runner rejects an expression whose tree is deeper (its MaxDepth); parentheses are held to it too.
+GITHUB_EXPRESSION_NESTING = Limit("its operators, calls and parentheses", 50)
 # Deeper than this, JSON is read without recursion: how deep Python's own decoder goes depends on the interpreter, and
 # a report must not (JSONTestSuite's 100000-deep arrays).
 JSON_NESTING = Limit("its arrays and objects", 500)

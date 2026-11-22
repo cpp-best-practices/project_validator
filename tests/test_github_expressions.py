@@ -67,6 +67,20 @@ class EvaluateTests(unittest.TestCase):
         self.assertTrue(evaluate("runner.os == 'Linux'", known))
 
 
+class UnreadOperatorTests(unittest.TestCase):
+    """Ordering comparisons and indexes parse, but are not evaluated: unknown, unless the rest decides."""
+
+    def test_unread_operators_are_unknown_unless_the_rest_decides(self) -> None:
+        for condition, expected in (
+            ("matrix.version < 3", None),
+            ("github.event['pull_request']", None),
+            ("runner.os == 'Windows' && matrix.version >= 3", False),
+            ("github.event['inputs'].flag || runner.os == 'Linux'", True),
+        ):
+            with self.subTest(condition=condition):
+                self.assertEqual(evaluate(condition, KNOWN), expected)
+
+
 class DepthTests(unittest.TestCase):
     def test_deep_nesting_is_unknown(self) -> None:
         self.assertIsNone(evaluate("(" * 5000 + "true" + ")" * 5000, KNOWN))
