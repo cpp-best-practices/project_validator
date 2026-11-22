@@ -4,13 +4,13 @@ the languages whose lockfiles it reads (`OSV_SCANNER_LANGUAGES`, ...); a profile
 
 from __future__ import annotations
 
-import shlex
 from collections.abc import Callable, Mapping
 
 from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.arguments import starts_with
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.expansion import Action
+from project_validator.facts.shell import split_words
 from project_validator.facts.tools import Run, Tool, starts, when
 
 _TRIVY_FILESYSTEM = frozenset({"fs", "filesystem", "repo", "repository"})
@@ -79,7 +79,7 @@ def multi_ecosystem_audits(languages: frozenset[str]) -> tuple[Tool, ...]:
 
 OSV_SCANNER_ACTION = Action(
     name="google/osv-scanner-action/osv-scanner-action",
-    runs=lambda inputs: (("osv-scanner", *shlex.split(inputs.get("scan-args", "-r ./"))),),
+    runs=lambda inputs: (("osv-scanner", *split_words(inputs.get("scan-args", "-r ./"))),),
 )
 _TRIVY_SCAN_TYPES = {
     "image": ("image",),
@@ -106,6 +106,6 @@ def _trivy_action(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:
 
 TRIVY_ACTION = Action(name="aquasecurity/trivy-action", runs=_trivy_action)
 SNYK_ACTIONS = tuple(
-    Action(name=f"snyk/actions/{flavour}", runs=lambda inputs: (("snyk", *shlex.split(inputs.get("command", "test"))),))
+    Action(name=f"snyk/actions/{flavour}", runs=lambda inputs: (("snyk", *split_words(inputs.get("command", "test"))),))
     for flavour in ("node", "python", "golang", "gradle", "maven", "php", "ruby", "dotnet", "swift", "cocoapods")
 )

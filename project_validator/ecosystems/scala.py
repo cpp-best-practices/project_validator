@@ -9,7 +9,6 @@ that version on each JDK it names."""
 from __future__ import annotations
 
 import re
-import shlex
 from collections.abc import Callable, Iterator
 from pathlib import Path, PurePosixPath
 
@@ -36,6 +35,7 @@ from project_validator.facts.practices import (
     requirement_reader,
 )
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings
+from project_validator.facts.shell import command_line
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Condition, Run, any_of, defined_by, either, when
 from project_validator.text import Pattern
@@ -130,7 +130,7 @@ def _sbt_aliases(command: Command, context: Context) -> list[Expansion] | None:
         return None
     aliases = dict(_ALIAS.findall(context.project.read_text(path)))
     found: list[Expansion] = [
-        Script(text=shlex.join((argv[0], aliases[piece])), origin=Origin(path=path))
+        Script(text=command_line((argv[0], aliases[piece])), origin=Origin(path=path))
         for word in argv[1:]
         for piece in re.split(r"\s*;\s*", word.strip())
         if piece in aliases

@@ -8,7 +8,6 @@ alias when it is the alias's name (`:test`, `:kaocha`, `:cloverage`), and by its
 from __future__ import annotations
 
 import re
-import shlex
 from pathlib import Path
 
 from project_validator.core import Context
@@ -25,6 +24,7 @@ from project_validator.facts.jobs import Job
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.facts.settings import file_reader
+from project_validator.facts.shell import command_line
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by, either, starts, when
 from project_validator.text import pattern
@@ -156,7 +156,9 @@ def _lein_tasks(command: Command, context: Context) -> list[Expansion] | None:
     }
     if argv[1] not in aliases:
         return None
-    return [Script(text=shlex.join(("lein", *aliases[argv[1]], *argv[2:])), origin=Origin(path=path, at=(":aliases",)))]
+    return [
+        Script(text=command_line(("lein", *aliases[argv[1]], *argv[2:])), origin=Origin(path=path, at=(":aliases",)))
+    ]
 
 
 LEIN_TASKS = CommandExpander(name="Leiningen profiles and aliases", expand=_lein_tasks)

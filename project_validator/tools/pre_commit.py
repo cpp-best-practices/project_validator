@@ -12,7 +12,6 @@ committed, those hooks are what `pre-commit run` runs, each by its id.
 from __future__ import annotations
 
 import re
-import shlex
 from collections.abc import Iterator, Mapping
 
 from project_validator import yaml_support
@@ -23,6 +22,7 @@ from project_validator.facts.arguments import positional
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Invocation, Script, found_at
 from project_validator.facts.nix_syntax import attributes
 from project_validator.facts.settings import SettingsReader
+from project_validator.facts.shell import split_words
 
 _PROGRAMS = frozenset({"pre-commit", "prek"})
 # The stages `pre-commit run` runs when no --hook-stage is given; hooks without `stages` run in every stage.
@@ -130,7 +130,7 @@ _EXPRESSION = re.compile(r"\$\{\{.*?\}\}", re.DOTALL)
 def _action_arguments(value: str) -> list[str]:
     """The words of an action's extra arguments, without the expressions in them: Bash-it's chooses the refs to check
     (`--from-ref …` or `--last-commit`), which select no hook."""
-    return shlex.split(_EXPRESSION.sub(" ", value))
+    return list(split_words(_EXPRESSION.sub(" ", value)))
 
 
 # The pre-commit action runs every hook, or what its `extra_args` say.

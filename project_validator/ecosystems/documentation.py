@@ -13,7 +13,6 @@ plugin, linkinator, muffet, htmltest, HTMLProofer, LinkChecker; a scheduled run 
 from __future__ import annotations
 
 import re
-import shlex
 from collections.abc import Callable, Iterator, Mapping
 from dataclasses import replace
 from pathlib import PurePosixPath
@@ -28,6 +27,7 @@ from project_validator.facts.links import link_checker, links_checked
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Requirement, Wording, always, requirement_reader
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings
+from project_validator.facts.shell import split_words
 from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, Tool, defined_by, starts, when
 
@@ -190,7 +190,7 @@ JEKYLL_PAGES_ACTION = Action(name="actions/jekyll-build-pages", runs=lambda _inp
 
 def _sphinx_pages(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:
     """`sphinx-notes/pages` runs sphinx-build with its `sphinx_build_options`."""
-    return (("sphinx-build", *shlex.split(inputs.get("sphinx_build_options", ""))),)
+    return (("sphinx-build", *split_words(inputs.get("sphinx_build_options", ""))),)
 
 
 SPHINX_PAGES_ACTION = Action(name="sphinx-notes/pages", runs=_sphinx_pages)
@@ -302,7 +302,7 @@ CODESPELL = analyzer(
 )
 MARKDOWNLINT_ACTION = Action(
     name="DavidAnson/markdownlint-cli2-action",
-    runs=lambda inputs: (("markdownlint-cli2", *shlex.split(inputs.get("globs", "**/*.md"))),),
+    runs=lambda inputs: (("markdownlint-cli2", *split_words(inputs.get("globs", "**/*.md"))),),
 )
 VALE_ACTION = Action(name="errata-ai/vale-action", runs=lambda inputs: (("vale", inputs.get("files", ".")),))
 
@@ -419,7 +419,7 @@ def _lychee_action(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:
     if inputs.get("fail", "true").strip().lower() == "false":
         return ()
     args = inputs.get("args", "--verbose --no-progress './**/*.md' './**/*.html' './**/*.rst'")
-    return (("lychee", *shlex.split(args)),)
+    return (("lychee", *split_words(args)),)
 
 
 def _markdown_link_check_action(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:

@@ -4,7 +4,6 @@ busted, luacov, StyLua, luacheck, selene and the Lua language server."""
 from __future__ import annotations
 
 import re
-import shlex
 from collections.abc import Iterator, Mapping
 
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
@@ -18,6 +17,7 @@ from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings
+from project_validator.facts.shell import split_words
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by, either, starts, when
 from project_validator.text import pattern
@@ -108,7 +108,7 @@ STYLUA = format_tool(
     style=defined_by(files=(STYLUA_SETTINGS.name,)),
 )
 STYLUA_ACTION = Action(
-    name="JohnnyMorganz/stylua-action", runs=lambda inputs: (("stylua", *shlex.split(inputs.get("args", ""))),)
+    name="JohnnyMorganz/stylua-action", runs=lambda inputs: (("stylua", *split_words(inputs.get("args", ""))),)
 )
 
 
@@ -146,7 +146,7 @@ SELENE_ANALYZER = analyzer(
     rules=defined_by(files=(SELENE_SETTINGS.name,), default=False),
 )
 LUACHECK_ACTION = Action(
-    name="lunarmodules/luacheck", runs=lambda inputs: (("luacheck", *shlex.split(inputs.get("args", "."))),)
+    name="lunarmodules/luacheck", runs=lambda inputs: (("luacheck", *split_words(inputs.get("args", "."))),)
 )
 
 LUALS_SETTINGS = file_reader("lua-language-server", (".luarc.json", ".luarc.jsonc"))

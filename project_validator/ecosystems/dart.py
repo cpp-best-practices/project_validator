@@ -5,7 +5,6 @@ Flutter SDK count wherever their Dart counterparts do."""
 from __future__ import annotations
 
 import re
-import shlex
 from collections.abc import Mapping
 from pathlib import Path, PurePosixPath
 
@@ -22,6 +21,7 @@ from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, format_tool, formatted
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
+from project_validator.facts.shell import split_words
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Condition, Run, defined_by, starts, when
 from project_validator.text import Pattern
@@ -317,7 +317,7 @@ DART_VERSIONS = versions_axis("Dart or Flutter SDK version", "Dart", DART)
 def _emulator_script(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:
     """reactivecircus/android-emulator-runner runs its `script` input, line by line, in the emulator."""
     commands = (part for line in inputs.get("script", "").splitlines() for part in line.split("&&"))
-    return tuple(argv for part in commands if (argv := tuple(shlex.split(part, comments=True))))
+    return tuple(argv for part in commands if (argv := split_words(part, comments=True)))
 
 
 ANDROID_EMULATOR = Action(name="reactivecircus/android-emulator-runner", runs=_emulator_script)

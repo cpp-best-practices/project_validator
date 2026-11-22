@@ -5,7 +5,6 @@ hpack's `package.yaml`), a project file's `package` and `program-options` stanza
 
 from __future__ import annotations
 
-import shlex
 from collections.abc import Iterator, Mapping
 from pathlib import PurePosixPath
 
@@ -15,6 +14,7 @@ from project_validator.facts import Fact, Origin
 from project_validator.facts.build import CompilerOption, disjuncts
 from project_validator.facts.conditions import both, extend, negated, only, requiring
 from project_validator.facts.settings import SettingsReader, unreadable
+from project_validator.facts.shell import ShellSyntaxError, split_words
 
 HASKELL_LANGUAGE = frozenset({"Haskell"})
 READER = "GHC options"
@@ -44,8 +44,8 @@ def ghc_options(
 
 def _split(value: str) -> tuple[str, ...]:
     try:
-        return tuple(shlex.split(value))
-    except ValueError:
+        return split_words(value)
+    except ShellSyntaxError:
         return tuple(value.split())
 
 

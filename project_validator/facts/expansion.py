@@ -21,7 +21,7 @@ from project_validator.evidence import DEVENV, DEVENV_HOOKS, PRE_COMMIT_CONFIGUR
 from project_validator.facts import NOTHING, ActionStep, Command, Fact, Origin, Unknown, resolved
 from project_validator.facts.arguments import starts_with
 from project_validator.facts.exit_status import Shell, masked
-from project_validator.facts.shell import ShellCommand, Unsplittable, split_script
+from project_validator.facts.shell import ShellCommand, ShellSyntaxError, Unsplittable, split_script
 
 if TYPE_CHECKING:
     from project_validator.core import Context
@@ -84,13 +84,19 @@ class Action:
     runs: Callable[[Mapping[str, str]], Iterable[tuple[str, ...]]]
 
 
-def action_commands(step: ActionStep, actions: Iterable[Action]) -> Iterator[Command]:
+def action_commands(step: ActionStep, actions: Iterable[Action]) -> Iterator[Command | Unknown]:
     """The commands the `step` runs, as the actions that know it say, where the step is (in its `working-directory`
     input, for actions that have one)."""
     repository = step.uses.partition("@")[0].lower()
     for action in actions:
         if action.name.lower() == repository:
-            for argv in action.runs(step.inputs):
+            try:
+                runs = tuple(action.runs(step.inputs))
+            except ShellSyntaxError as error:
+                reason = f"its inputs do not split into words: {error}"
+                yield Unknown(origin=step.origin, subject=f"the action {step.uses}", reason=reason, hides="commands")
+                continue
+            for argv in runs:
                 yield Command(
                     origin=step.origin,
                     job=step.job,
@@ -318,7 +324,12 @@ def expand_command(command: Command, context: Context, expanders: Iterable[Comma
     expanders = tuple(expanders)
     chain = (*command.via, command.origin)
     for expander in expanders:
-        expansions = list(expander.expand(command, context) or ())
+        try:
+            expansions = list(expander.expand(command, context) or ())
+        except ShellSyntaxError as error:
+            reason = f"what it runs does not split into words: {error}"
+            yield Unknown(origin=command.origin, subject=f"the command {command.line!r}", reason=reason)
+            continue
         if any(isinstance(found, (Script, Invocation)) and found.origin in chain for found in expansions):
             continue  # a definition that runs itself, which is followed once
         # A launcher runs a shorter command than its own, so launching ends.
@@ -343,9 +354,10 @@ def expanded(
         if isinstance(fact, Command):
             yield from expand_command(fact, context, expanders)
         elif isinstance(fact, ActionStep):
-            for command in action_commands(fact, actions):
-                yield command
-                yield from expand_command(command, context, expanders)
+            for found in action_commands(fact, actions):
+                yield found
+                if isinstance(found, Command):
+                    yield from expand_command(found, context, expanders)
 
 
 def from_hook(command: Command) -> bool:

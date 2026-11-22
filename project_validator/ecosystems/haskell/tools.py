@@ -5,7 +5,6 @@ dependency managers (Cabal and Stack) and their lockfiles, the declared license,
 from __future__ import annotations
 
 import re
-import shlex
 from collections.abc import Callable, Iterator, Mapping
 
 from project_validator import yaml_support
@@ -22,6 +21,7 @@ from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.settings import SettingsReader, file_reader, unreadable
+from project_validator.facts.shell import split_words
 from project_validator.facts.testing import test_runner, tested
 from project_validator.facts.tools import Definition, Run, defined_by, starts, when
 
@@ -151,7 +151,7 @@ HLINT = analyzer(
 )
 HLINT_ACTION = Action(
     name="haskell-actions/hlint-run",
-    runs=lambda inputs: (("hlint", *shlex.split(inputs.get("path", ".").strip("[]").replace(",", " "))),),
+    runs=lambda inputs: (("hlint", *split_words(inputs.get("path", ".").strip("[]").replace(",", " "))),),
 )
 WEEDER = analyzer(name="weeder", languages=HASKELL_LANGUAGE, how="weeder", analyses=when(starts(("weeder",)), analysed))
 STAN = analyzer(name="stan", languages=HASKELL_LANGUAGE, how="stan", analyses=when(starts(("stan",)), analysed))

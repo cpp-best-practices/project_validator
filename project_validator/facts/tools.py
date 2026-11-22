@@ -16,8 +16,9 @@ from dataclasses import dataclass
 from pathlib import PurePosixPath
 
 from project_validator.components import component_cache, known
-from project_validator.facts import NOTHING, Command, ConfigurationFile, Fact, Facts, Origin, Setting, resolved
+from project_validator.facts import NOTHING, Command, ConfigurationFile, Fact, Facts, Origin, Setting, Unknown, resolved
 from project_validator.facts.arguments import has_option, starts_with
+from project_validator.facts.shell import ShellSyntaxError
 
 type Levels = frozenset[str]
 
@@ -266,14 +267,28 @@ def _joined(directory: str, path: str) -> str:
     return str(PurePosixPath(directory) / path.removeprefix("./")).removeprefix("./")
 
 
-def tool_runs(facts: Facts, tools: Iterable[Tool]) -> Iterator[ToolRun]:
-    """The run of each tool among `tools` that each command of `facts` is."""
+def _claimed(tool: Tool, command: Command, facts: Facts) -> Run | Unknown | None:
+    """The run of `tool` that `command` is, if any; unknown when a command line it reads does not split into words."""
+    try:
+        return tool.claims(command, facts)
+    except ShellSyntaxError as error:
+        reason = f"a command line it reads does not split into words: {error}"
+        return Unknown(
+            origin=command.origin, subject=f"the {tool.name} run", reason=reason, hides="settings", tools=(tool.name,)
+        )
+
+
+def tool_runs(facts: Facts, tools: Iterable[Tool]) -> Iterator[ToolRun | Unknown]:
+    """The run of each tool among `tools` that each command of `facts` is; unknown when a command line the tool reads
+    (in its settings) does not split into words."""
     tools = tuple(tools)
     sources = _Sources(facts)
     for command in facts.of(Command):
         for tool in tools:
-            run = tool.claims(command, facts)
-            if run is not None and any(run.provides.values()):
+            run = _claimed(tool, command, facts)
+            if isinstance(run, Unknown):
+                yield run
+            elif run is not None and any(run.provides.values()):
                 yield ToolRun(
                     origin=command.origin,
                     job=command.job,

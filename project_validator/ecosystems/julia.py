@@ -9,7 +9,6 @@ CI runs Julia code in three ways, which `julia_code` reads alike: `julia -e 'usi
 from __future__ import annotations
 
 import re
-import shlex
 import tomllib
 from collections.abc import Iterator, Mapping
 
@@ -26,6 +25,7 @@ from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.outputs import BuildOutput, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings
+from project_validator.facts.shell import command_line, split_words
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by, either
 from project_validator.text import pattern
@@ -68,9 +68,9 @@ def _julia_commands(command: Command, _context: Context) -> list[Expansion] | No
     uses that its backtick commands run."""
     code = julia_code(command)
     wrapped = set(_USING_JLL.findall(code))
-    runs = [tuple(shlex.split(text)) for text in _RUN.findall(code)]
+    runs = [split_words(text) for text in _RUN.findall(code)]
     runs += [
-        (name, *shlex.split(rest))
+        (name, *split_words(rest))
         for package, name, rest in _JLL_COMMAND.findall(code)
         if (package or name) in wrapped and (not package or package == name)
     ]
@@ -79,7 +79,7 @@ def _julia_commands(command: Command, _context: Context) -> list[Expansion] | No
     found: list[Expansion] = [
         Invocation(
             argv=argv,
-            line=f"`{shlex.join(argv)}` in the Julia code",
+            line=f"`{command_line(argv)}` in the Julia code",
             origin=Origin(path=place.path, at=(*place.at, "julia", index)),
         )
         for index, argv in enumerate(runs)
