@@ -12,6 +12,16 @@ from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from itertools import product
 
+from project_validator.build_systems.cmake.condition_syntax import (
+    All,
+    Comparison,
+    Node,
+    Not,
+    Operand,
+    Test,
+    Truth,
+    parse,
+)
 from project_validator.build_systems.cmake.values import Item, Lookup, referenced
 from project_validator.facts.conditions import (
     ALWAYS,
@@ -82,12 +92,6 @@ def constant(text: str) -> bool | None:
 
 
 @dataclass(frozen=True, slots=True)
-class Operand:
-    text: str
-    quoted: bool = False
-
-
-@dataclass(frozen=True, slots=True)
 class Variables:
     """What conditions read: variable values, and how to describe a variable the project does not set (a compiler
     check's result is described by the check)."""
@@ -131,16 +135,6 @@ def truth(operand: Operand, variables: Variables) -> Condition:
     if items is None:
         return _named(operand.text, variables)
     return either(*(_value_truth(item, variables) for item in items))
-
-
-_UNARY = frozenset(
-    {"EXISTS", "COMMAND", "DEFINED", "TARGET", "TEST", "POLICY", "IS_DIRECTORY", "IS_SYMLINK", "IS_ABSOLUTE"}
-)
-_BINARY = frozenset(
-    {"EQUAL", "LESS", "LESS_EQUAL", "GREATER", "GREATER_EQUAL", "STREQUAL", "STRLESS", "STRLESS_EQUAL", "STRGREATER"}
-    | {"STRGREATER_EQUAL", "VERSION_EQUAL", "VERSION_LESS", "VERSION_LESS_EQUAL", "VERSION_GREATER"}
-    | {"VERSION_GREATER_EQUAL", "PATH_EQUAL", "MATCHES", "IN_LIST", "IS_NEWER_THAN"}
-)
 
 
 def _symbol(operand: Operand, variables: Variables) -> Dimension | None:
@@ -201,91 +195,47 @@ def _symbolic(dimension: Dimension, operator: str, other: str) -> Condition | No
     return None
 
 
-@dataclass(slots=True)
-class _Parser:
-    """`if()` arguments, by CMake's precedence: parentheses, unary tests, binary tests, NOT, AND, then OR."""
+def _comparison(node: Comparison, variables: Variables) -> Condition:
+    left, operator, right = node.left, node.operator, node.right
+    written = f"{left.text} {operator} {right.text}"
+    for symbol, other in ((left, right), (right, left)):
+        if (dimension := _symbol(symbol, variables)) is not None:
+            found = _symbolic(dimension, operator, other.text) if referenced(other.text) is None else None
+            return requiring(written) if found is None else found
+    pairs = product(_values(left, variables), _values(right, variables))
+    return either(*(_known(first, operator, second, written) for first, second in pairs))
 
-    operands: list[Operand]
-    variables: Variables
-    position: int = 0
 
-    def _peek(self, offset: int = 0) -> Operand | None:
-        index = self.position + offset
-        return self.operands[index] if index < len(self.operands) else None
+def _known(left: Item, operator: str, right: Item, written: str) -> Condition:
+    when = both(left.when, right.when)
+    if "${" in left.text or "${" in right.text:
+        return both(when, requiring(written))
+    result = _compared(left.text, operator, right.text)
+    if result is None:
+        return both(when, requiring(written))
+    return when if result else NEVER
 
-    def _keyword(self, *keywords: str) -> bool:
-        operand = self._peek()
-        if operand is not None and not operand.quoted and operand.text in keywords:
-            self.position += 1
-            return True
-        return False
 
-    def disjunction(self) -> Condition:
-        found = self.conjunction()
-        while self._keyword("OR"):
-            found = either(found, self.conjunction())
-        return found
-
-    def conjunction(self) -> Condition:
-        found = self.negation()
-        while self._keyword("AND"):
-            found = both(found, self.negation())
-        return found
-
-    def negation(self) -> Condition:
-        return negated(self.negation()) if self._keyword("NOT") else self.test()
-
-    def test(self) -> Condition:
-        if self._keyword("("):
-            found = self.disjunction()
-            self._keyword(")")
-            return found
-        if (operand := self._peek()) is not None and not operand.quoted and operand.text in _UNARY:
-            return self._unary(operand.text)
-        return self._binary_or_truth()
-
-    def _next(self) -> Operand:
-        operand = self._peek() or Operand("")
-        self.position += 1
-        return operand
-
-    def _unary(self, operator: str) -> Condition:
-        self.position += 1
-        operand = self._next()
-        if operator == "DEFINED":
-            return self.variables.defined(operand.text)
-        return requiring(f"{operator} {operand.text}")
-
-    def _binary_or_truth(self) -> Condition:
-        left = self._next()
-        following = self._peek()
-        if following is None or following.quoted or following.text not in _BINARY:
-            return truth(left, self.variables)
-        self.position += 1
-        return self._comparison(left, following.text, self._next())
-
-    def _comparison(self, left: Operand, operator: str, right: Operand) -> Condition:
-        written = f"{left.text} {operator} {right.text}"
-        for symbol, other in ((left, right), (right, left)):
-            if (dimension := _symbol(symbol, self.variables)) is not None:
-                found = _symbolic(dimension, operator, other.text) if referenced(other.text) is None else None
-                return requiring(written) if found is None else found
-        pairs = product(_values(left, self.variables), _values(right, self.variables))
-        return either(*(self._known(first, operator, second, written) for first, second in pairs))
-
-    def _known(self, left: Item, operator: str, right: Item, written: str) -> Condition:
-        when = both(left.when, right.when)
-        if "${" in left.text or "${" in right.text:
-            return both(when, requiring(written))
-        result = _compared(left.text, operator, right.text)
-        if result is None:
-            return both(when, requiring(written))
-        return when if result else NEVER
+def holds(node: Node, variables: Variables) -> Condition:
+    """The builds in which a parsed condition holds."""
+    if isinstance(node, Truth):
+        return truth(node.operand, variables)
+    if isinstance(node, Test):
+        if node.operator == "DEFINED":
+            return variables.defined(node.operand.text)
+        return requiring(f"{node.operator} {node.operand.text}")
+    if isinstance(node, Comparison):
+        return _comparison(node, variables)
+    if isinstance(node, Not):
+        return negated(holds(node.operand, variables))
+    combine = both if isinstance(node, All) else either
+    return combine(*(holds(operand, variables) for operand in node.operands))
 
 
 def condition(operands: list[Operand], variables: Variables) -> Condition:
     """The builds in which the `if()` (or `elseif()`, `while()`) with these arguments holds."""
-    return _Parser(operands, variables).disjunction() if operands else NEVER
+    tree = parse(operands)
+    return NEVER if tree is None else holds(tree, variables)
 
 
 __all__ = [
@@ -300,5 +250,6 @@ __all__ = [
     "Variables",
     "condition",
     "constant",
+    "holds",
     "truth",
 ]
