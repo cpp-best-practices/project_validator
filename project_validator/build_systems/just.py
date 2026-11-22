@@ -124,7 +124,9 @@ def _body(recipe: Recipe, name: str, path: str, values: dict[str, str | None]) -
             reason = f"{line!r} interpolates a value computed when just runs"
             yield Unknown(origin=Origin(path=path, at=(name, number)), subject=f"the just recipe {name}", reason=reason)
             return
-        yield Script(text=text.lstrip("@-"), origin=Origin(path=path, at=(name, number)))
+        # `-` before a recipe line: just ignores its failure.
+        ignored = "just ignores its failure (-)" if "-" in text[: len(text) - len(text.lstrip("@-"))] else ""
+        yield Script(text=text.lstrip("@-"), origin=Origin(path=path, at=(name, number)), advisory=ignored)
 
 
 def _bound(recipe: Recipe, arguments: list[str]) -> dict[str, str | None]:

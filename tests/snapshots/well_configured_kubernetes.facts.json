@@ -382,7 +382,7 @@
       "via": []
     },
     {
-      "advisory": "",
+      "advisory": "piped into kubeconform without pipefail",
       "argv": [
         "helm",
         "template",

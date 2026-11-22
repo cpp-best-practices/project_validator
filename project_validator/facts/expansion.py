@@ -12,6 +12,7 @@ import posixpath
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass, replace
+from functools import partial
 from pathlib import PurePosixPath
 from typing import TYPE_CHECKING
 
@@ -19,7 +20,8 @@ from project_validator.components import known
 from project_validator.evidence import PRE_COMMIT_CONFIGURATION
 from project_validator.facts import NOTHING, ActionStep, Command, Fact, Origin, Unknown, resolved
 from project_validator.facts.arguments import starts_with
-from project_validator.facts.shell import ShellCommand, split_script
+from project_validator.facts.exit_status import Shell, masked
+from project_validator.facts.shell import ShellCommand, Unsplittable, split_script
 
 if TYPE_CHECKING:
     from project_validator.core import Context
@@ -37,6 +39,10 @@ class Script:
     # Whether the text is the whole of a shell script, so that what it sets is seen (a repository's script file,
     # unless it sources another), as a CI step's own script is.
     whole: bool = False
+    # The shell that runs the text, when known, which decides whether a command's failure fails it (see `masked`).
+    shell: Shell | None = None
+    # Why none of the text's commands can fail what runs it (make's `-` before a recipe line), when none can.
+    advisory: str = ""
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -108,24 +114,33 @@ def script_facts(
     via: tuple[Origin, ...] = (),
     powershell: bool = False,
     whole: bool = False,
+    shell: Shell | None = None,
 ) -> Iterator[Fact]:
-    """The commands of a shell script a job runs (`opaque`: see `split_script`; `whole`: see `Script.whole`)."""
+    """The commands of a shell script a job runs (see `split_script`, `Script.whole`, and `_judged` for `shell`)."""
     assigned, constants = _seen_assigned(script, whole or not via, powershell=powershell), _Constants(script)
-    for found in split_script(script, opaque, powershell=powershell):
+    command = partial(Command, origin=origin, job=job, condition=condition, via=via)
+    for found, advisory in _judged(list(split_script(script, opaque, powershell=powershell)), shell):
         if isinstance(found, ShellCommand):
-            command = Command(
-                origin=origin,
-                job=job,
+            made = command(
                 argv=found.argv,
                 line=found.line,
                 env={**env, **constants.before(found.line), **dict(found.env)},
                 directory=(directory := _changed(directory, found.argv)),
-                condition=condition,
-                via=via,
+                advisory=advisory,
             )
-            yield from _with_program(command, assigned)
+            yield from _with_program(made, assigned)
         else:
             yield Unknown(origin=origin, subject=f"the command {found.line!r}", reason=found.reason)
+
+
+def _judged(
+    split: list[ShellCommand | Unsplittable], shell: Shell | None
+) -> Iterator[tuple[ShellCommand | Unsplittable, str]]:
+    """Each of a script's commands with why its failure cannot fail the script in `shell` (see `masked`): "" when it
+    can, or when the shell is not known."""
+    commands = [found for found in split if isinstance(found, ShellCommand)]
+    reasons = iter(masked(commands, shell) if shell is not None else [""] * len(commands))
+    return ((found, next(reasons) if isinstance(found, ShellCommand) else "") for found in split)
 
 
 def advised(facts: Iterable[Fact], advisory: str) -> Iterator[Fact]:
@@ -265,18 +280,23 @@ def _children(command: Command, expansion: Expansion) -> Iterator[Fact]:
             via=via,
         )
     else:
-        commands = script_facts(
-            expansion.text,
-            job=command.job,
-            origin=expansion.origin,
-            env=command.env,
-            directory=expansion.directory or command.directory,
-            condition=command.condition,
-            opaque=expansion.opaque,
-            via=via,
-            whole=expansion.whole,
-        )
-        yield from advised(commands, command.advisory)
+        yield from _script_children(command, expansion, via)
+
+
+def _script_children(command: Command, script: Script, via: tuple[Origin, ...]) -> Iterator[Fact]:
+    commands = script_facts(
+        script.text,
+        job=command.job,
+        origin=script.origin,
+        env=command.env,
+        directory=script.directory or command.directory,
+        condition=command.condition,
+        opaque=script.opaque,
+        via=via,
+        whole=script.whole,
+        shell=script.shell,
+    )
+    yield from advised(commands, command.advisory or script.advisory)
 
 
 def inside(context: Context, directory: str | None) -> bool:

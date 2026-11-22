@@ -140,7 +140,7 @@ lint:
         makefile = parse_makefile(self.MAKEFILE)
         self.assertEqual(makefile.default, "all")
         self.assertEqual(list(makefile.rules), [".PHONY", "all", "build", "check", "lint"])
-        self.assertEqual(makefile.rules["check"].recipe, [(7, "./app --selftest"), (8, "make -C docs lint")])
+        self.assertEqual(makefile.rules["check"].recipe, [(7, "./app --selftest"), (8, "-make -C docs lint")])
         self.assertEqual(makefile.rules["lint"].recipe[0][0], 10)
 
     def test_make_runs_the_named_targets_after_their_prerequisites(self) -> None:

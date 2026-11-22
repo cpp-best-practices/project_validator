@@ -1504,7 +1504,7 @@
       ]
     },
     {
-      "advisory": "",
+      "advisory": "piped into tar without pipefail",
       "argv": [
         "curl",
         "-sSL",

@@ -35,6 +35,7 @@ from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured, reported
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
+from project_validator.facts.exit_status import POSIX
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader
@@ -185,7 +186,8 @@ def _in_workspaces(command: Command, context: Context, name: str) -> list[Expans
     for member in workspace_members(context, command.directory):
         path = joined(member, PACKAGE_JSON)
         if (script := _json_strings(json_value(context, path, "scripts")).get(name)) is not None:
-            found.append(Script(text=script, origin=Origin(path=path, at=("scripts", name)), directory=member))
+            origin = Origin(path=path, at=("scripts", name))
+            found.append(Script(text=script, origin=origin, directory=member, shell=POSIX))
     return found
 
 
@@ -205,7 +207,8 @@ def _package_scripts(command: Command, context: Context) -> Iterator[Expansion] 
         return iter((Unknown(origin=command.origin, subject=f"the script {run.name}", reason=f"{path} has none"),))
     names = [f"{prefix}{run.name}" for prefix in (("pre", "", "post") if command.argv[0] in ("npm", "yarn") else ("",))]
     return (
-        Script(text=scripts[name], origin=Origin(path=path, at=("scripts", name)), directory=run.directory)
+        # A package manager runs a script with `sh -c`.
+        Script(text=scripts[name], origin=Origin(path=path, at=("scripts", name)), directory=run.directory, shell=POSIX)
         for name in names
         if name in scripts
     )

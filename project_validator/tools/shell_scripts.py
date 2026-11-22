@@ -12,6 +12,7 @@ from pathlib import PurePosixPath
 from project_validator.core import Context
 from project_validator.facts import Command, Origin, Unknown, resolved
 from project_validator.facts.arguments import positional, program
+from project_validator.facts.exit_status import Shell, shell_of
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, joined
 
 SHELLS = frozenset({"sh", "bash", "zsh", "dash", "ksh"})
@@ -59,7 +60,21 @@ def _shell_script(command: Command, context: Context) -> list[Expansion] | None:
         return [_missing(command, found)] if found.endswith((".sh", ".bash")) else None
     if not _is_shell_script(text := context.project.read_text(found), found):
         return None
-    return [Script(text=text, origin=Origin(path=str(PurePosixPath(found))), whole=True)]
+    origin = Origin(path=str(PurePosixPath(found)))
+    return [Script(text=text, origin=origin, whole=True, shell=_shell(resolved(command), text))]
+
+
+def _shell(argv: tuple[str, ...], text: str) -> Shell | None:
+    """The options the shell that runs a script starts with: those of the shell command that runs it (`bash -e
+    ci/lint.sh`), or of its shebang when it runs itself; None for a script sourced into a shell not seen."""
+    if argv[:1] in ((".",), ("source",)):
+        return None
+    if program(argv) in SHELLS:
+        return shell_of(" ".join(argv))
+    shebang = text.partition("\n")[0].removeprefix("#!").split() if text.startswith("#!") else ["sh"]
+    if shebang and PurePosixPath(shebang[0]).name == "env":
+        shebang = [word for word in shebang[1:] if word != "-S"]
+    return shell_of(" ".join(shebang))
 
 
 def _missing(command: Command, path: str) -> Unknown:

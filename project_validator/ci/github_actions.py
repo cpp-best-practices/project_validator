@@ -13,6 +13,7 @@ from functools import partial
 from project_validator.ci import REPOSITORY, CiProvider, Load, strings
 from project_validator.ci.github_expressions import Known, evaluate, rendered
 from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, Origin, Unknown
+from project_validator.facts.exit_status import ERREXIT, STRICT, Shell, shell_of
 from project_validator.facts.expansion import advised, script_facts
 from project_validator.platforms import detect_operating_systems
 from project_validator.text import pattern
@@ -51,6 +52,10 @@ EXPRESSION = re.compile(r"\$\{\{.*?\}\}")
 # The shells whose scripts are split into commands; another `shell:` names a program that runs the step's script as a
 # whole (`python {0}`, `Rscript {0}`).
 _SHELLS = frozenset({"bash", "sh", "pwsh", "powershell", "cmd"})
+
+
+# The shells GitHub runs by name, as it runs them.
+_NAMED_SHELLS = {"bash": STRICT, "sh": ERREXIT}
 
 
 def custom_shell(shell: str | None) -> tuple[str, ...] | None:
@@ -416,6 +421,7 @@ class _Combination:
             opaque=EXPRESSION,
             via=via,
             powershell=self.powershell(step, known),
+            shell=self.exit_shell(step, known),
         )
         yield from advised(commands, self.advisory)
 
@@ -435,6 +441,18 @@ class _Combination:
         if shell is None:
             return known.os == "windows"
         return str(shell).split()[0] in ("pwsh", "powershell")
+
+    def exit_shell(self, step: Mapping[str, object], known: Known) -> Shell | None:
+        """How a step's shell treats a failing command (see `Shell`): GitHub's default, `bash -e {0}`, has no pipefail,
+        unlike `shell: bash`; None for PowerShell and cmd, and a shell an expression names."""
+        if self.powershell(step, known):
+            return None
+        shell = self.optional(step.get("shell")) or self.shell
+        if shell is None:
+            return ERREXIT
+        if EXPRESSION.search(shell):
+            return None
+        return _NAMED_SHELLS.get(shell.strip()) or (shell_of(shell) if "{0}" in shell else None)
 
     def composite_facts(
         self, origin: Origin, directory: str, inputs: Mapping[str, str], known: Known, via: tuple[Origin, ...]

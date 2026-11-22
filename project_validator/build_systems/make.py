@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from project_validator.core import Context
 from project_validator.facts import Command, Origin, Unknown
 from project_validator.facts.arguments import positional
+from project_validator.facts.exit_status import POSIX
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, inside, joined
 
 MAKEFILES = ("GNUmakefile", "makefile", "Makefile")
@@ -91,8 +92,13 @@ def expand_variables(line: str, variables: dict[str, str]) -> str:
     return line
 
 
+# Why a recipe line written after `-` cannot fail make.
+_IGNORED = "make ignores its failure (-)"
+
+
 def _recipe_line(line: str) -> str:
-    return _RECURSIVE_MAKE.sub("make", line.lstrip("\t").lstrip("@-+ "))
+    """A recipe line as written, with its prefixes (`@`, `-`, `+`): whether make ignores its failure is read later."""
+    return _RECURSIVE_MAKE.sub("make", line.lstrip("\t "))
 
 
 def _logical_lines(text: str) -> Iterator[tuple[int, str]]:
@@ -165,7 +171,10 @@ def _recipes(makefile: Makefile, path: str, target: str, visited: set[str]) -> I
         # A variable may hold the recipe's prefixes (`Q = @`, then `$(Q)$(CC) …`).
         # `$$` is a `$` the shell sees, never a reference (Documenter's `$$(biome_jll.biome())`).
         line = line.replace("$$", _ESCAPED_DOLLAR).replace("$@", target).replace("$*", stem)
-        text = expand_variables(line, automatic).lstrip("@-+ ").replace(_ESCAPED_DOLLAR, "$")
+        expanded = expand_variables(line, automatic)
+        unprefixed = expanded.lstrip("@-+ ")
+        text = unprefixed.replace(_ESCAPED_DOLLAR, "$")
+        ignored = _IGNORED if "-" in expanded[: len(expanded) - len(unprefixed)] else ""
         if (program := _REFERENCE.match(text)) is not None:
             name = program["paren"] or program["brace"]
             yield Unknown(
@@ -174,7 +183,8 @@ def _recipes(makefile: Makefile, path: str, target: str, visited: set[str]) -> I
                 reason=f"its program is the variable {name}, which neither the makefile nor the command line sets",
             )
             continue
-        yield Script(text=text, origin=origin, opaque=VARIABLE)
+        # Each recipe line is a shell script of its own, run by `sh -c`.
+        yield Script(text=text, origin=origin, opaque=VARIABLE, shell=POSIX, advisory=ignored)
 
 
 _OPTIONS = frozenset({"-C", "--directory", "-f", "--file", "-j", "--jobs"})
