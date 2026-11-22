@@ -46,10 +46,10 @@ from project_validator.build_systems.cmake.values import (
 )
 from project_validator.facts import Origin
 from project_validator.facts.conditions import ALWAYS, Condition, both, either, negated, requiring
+from project_validator.limits import CMAKE_NESTING
 
-# How deep calls and includes nest, how many items a loop runs for, and how many commands are evaluated in all.
-MOST_NESTED = 24
-_TOO_NESTED = f"calls, includes or subdirectories nest more than {MOST_NESTED} deep"
+# How many items a loop runs for, and how many commands are evaluated in all (how deep calls and includes nest is
+# `CMAKE_NESTING`).
 MOST_ITERATIONS = 64
 MOST_COMMANDS = 250_000
 # A function or macro called again with the same arguments sets the same things again: it is not followed again. Nor is
@@ -345,9 +345,9 @@ class Evaluation:
 
     def _call(self, definition: Definition, words: list[Value], frame: Frame) -> None:
         arguments = tuple(word.text for word in words)
-        if len(frame.stack) > MOST_NESTED:
-            self.problems.setdefault(frame.path, _TOO_NESTED)
-        if arguments in definition.seen or definition.name in frame.stack or len(frame.stack) > MOST_NESTED:
+        if not CMAKE_NESTING.allows(len(frame.stack)):
+            self.problems.setdefault(frame.path, CMAKE_NESTING.reason)
+        if arguments in definition.seen or definition.name in frame.stack or not CMAKE_NESTING.allows(len(frame.stack)):
             definition.calls = max(definition.calls, 1)
             return
         definition.seen.add(arguments)
@@ -461,8 +461,8 @@ class Evaluation:
     def include(self, frame: Frame, words: list[Value], _: Invocation) -> None:
         if not words or (path := self._module(frame, words[0].text)) is None or path in frame.stack:
             return
-        if len(frame.stack) > MOST_NESTED:
-            self.problems.setdefault(frame.path, _TOO_NESTED)
+        if not CMAKE_NESTING.allows(len(frame.stack)):
+            self.problems.setdefault(frame.path, CMAKE_NESTING.reason)
             return
         if path in self.reached and self._guarded(path):
             return
@@ -489,8 +489,8 @@ class Evaluation:
     def add_subdirectory(self, frame: Frame, words: list[Value], _: Invocation) -> None:
         if not words:
             return
-        if len(frame.stack) > MOST_NESTED:
-            self.problems.setdefault(frame.path, _TOO_NESTED)
+        if not CMAKE_NESTING.allows(len(frame.stack)):
+            self.problems.setdefault(frame.path, CMAKE_NESTING.reason)
             return
         path = _within(self.files, frame.directory, f"{words[0].text}/{LISTS_FILE}")
         if path is not None and path not in frame.stack:
