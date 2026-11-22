@@ -6,6 +6,7 @@ from __future__ import annotations
 import re
 import unittest
 from collections.abc import Mapping
+from dataclasses import replace
 from pathlib import Path
 from unittest import mock
 
@@ -23,14 +24,16 @@ from project_validator.ecosystems.jvm import Wiring, _wired
 from project_validator.ecosystems.python.hatch import _environments, _script
 from project_validator.ecosystems.python.tox import _toml_tables
 from project_validator.ecosystems.ruby.tools import _read_simplecov_settings
+from project_validator.ecosystems.rust import cargo_argv
 from project_validator.facts import Command, ConfigurationFile, Facts, Origin, Setting
 from project_validator.facts.dependencies import Locked
 from project_validator.facts.exit_status import ERREXIT
 from project_validator.facts.expansion import script_facts
-from project_validator.facts.formatting import FORMAT, Enforcement, _keeps
+from project_validator.facts.formatting import FORMAT, Enforcement, _keeps, flagged
 from project_validator.facts.structure import SourceFile
 from project_validator.facts.tools import Run, defined_by
 from project_validator.tools.audits import _gitlab_dependency_scanning
+from project_validator.tools.coverage import _GCOVR, _named
 from project_validator.tools.scanners import multi_language_scanners
 from tests.support import command, temp_project
 
@@ -95,6 +98,60 @@ class GitDiffEnforcementTests(unittest.TestCase):
                     if isinstance(fact, Command) and fact.argv[:2] == ("git", "diff")
                 )
                 self.assertIs(_keeps(diff), False)
+
+
+class NamedConfigurationTests(unittest.TestCase):
+    def test_only_the_tools_own_option_names_its_configuration_relative_to_the_job(self) -> None:
+        named = _named(_GCOVR, "--config")
+        self.assertEqual(named(command("gcovr --config ci/gcovr.cfg -r .")), ["ci/gcovr.cfg"])
+        self.assertEqual(named(replace(command("gcovr --config=gcovr.cfg"), directory="build")), ["build/gcovr.cfg"])
+        self.assertEqual(named(command("gcovr -r .")), [])
+        self.assertEqual(named(command("other --config ci/gcovr.cfg")), [])
+
+
+class CargoArgvTests(unittest.TestCase):
+    def test_the_toolchain_and_global_options_before_the_subcommand_are_dropped(self) -> None:
+        cases = {
+            "cargo +nightly clippy -D warnings": ("cargo", "clippy", "-D", "warnings"),
+            "cargo --config ci.toml --locked clippy -q": ("cargo", "clippy", "-q"),
+            "cargo -C sub -Z unstable-options --frozen -Z x test": ("cargo", "test"),
+            "cargo --config ci.toml": ("cargo",),
+            # An option that needs a value, at the end without one, is kept.
+            "cargo --locked --color": ("cargo", "--color"),
+            "rustc --config x": ("rustc", "--config", "x"),
+        }
+        for line, expected in cases.items():
+            with self.subTest(line=line):
+                self.assertEqual(cargo_argv(tuple(line.split())), expected)
+
+
+class FlaggedTests(unittest.TestCase):
+    def test_the_flags_given_say_whether_a_run_checks_or_applies(self) -> None:
+        claims = {
+            "both": flagged(("fmt",), checks=("--check", "verify"), applies=("--write",)),
+            "checks": flagged(("fmt",), checks=("--check",)),
+            "applies": flagged(("fmt",), applies=("--fix",)),
+            "never checks": flagged(("fmt",), ("tool", "fmt"), checks=()),
+            "never applies": flagged(("fmt",), applies=()),
+        }
+        cases = {
+            ("both", "fmt --check ."): CHECKS,
+            ("both", "fmt verify ."): CHECKS,
+            ("both", "fmt --write ."): APPLIES,
+            # Neither flag: it prints the formatted code, which enforces nothing.
+            ("both", "fmt ."): None,
+            ("checks", "fmt --check ."): CHECKS,
+            ("checks", "fmt ."): APPLIES,
+            ("applies", "fmt --fix ."): APPLIES,
+            ("applies", "fmt ."): CHECKS,
+            ("never checks", "fmt --check ."): APPLIES,
+            ("never checks", "tool fmt"): APPLIES,
+            ("never applies", "fmt --fix ."): CHECKS,
+            ("checks", "other --check"): None,
+        }
+        for (name, line), provides in cases.items():
+            with self.subTest(claim=name, line=line):
+                self.assertEqual(_provided(claims[name](command(line), Facts())), provides)
 
 
 class GitlabDependencyScanningTests(unittest.TestCase):
@@ -178,10 +235,12 @@ class GithubStatusFunctionTests(unittest.TestCase):
 
 class JuliaCompatTests(unittest.TestCase):
     def test_a_package_bounding_every_dependency_is_locked(self) -> None:
+        locked = [Locked(origin=Origin(path="Project.toml"), manager="Pkg")]
         text = 'name = "Pkg1"\n[deps]\nJSON = "uuid"\n[compat]\nJSON = "0.21"\njulia = "1.10"\n'
-        self.assertEqual(
-            list(_bounded("Project.toml", text)), [Locked(origin=Origin(path="Project.toml"), manager="Pkg")]
-        )
+        self.assertEqual(list(_bounded("Project.toml", text)), locked)
+        # Bounds for exactly the dependencies, without one for julia itself, are enough.
+        exact = 'name = "Pkg1"\n[deps]\nJSON = "uuid"\n[compat]\nJSON = "0.21"\n'
+        self.assertEqual(list(_bounded("Project.toml", exact)), locked)
 
     def test_an_unbounded_dependency_a_missing_name_or_no_dependencies_is_not(self) -> None:
         for text in (

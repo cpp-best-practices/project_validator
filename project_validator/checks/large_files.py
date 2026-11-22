@@ -46,7 +46,8 @@ def _lfs_patterns(context: Context, files: tuple[str, ...]) -> list[_LfsPattern]
 def _size(size: int) -> str:
     if size < 1024 * 1024:
         return f"{size / 1024:.0f} KiB"
-    return f"{size / (1024 * 1024):.3g} MiB"
+    mib = size / (1024 * 1024)
+    return f"{mib:.3g} MiB" if mib < 100 else f"{mib:.0f} MiB"
 
 
 @check(name="large-files", description="Large files are stored with Git LFS or DVC rather than committed directly")

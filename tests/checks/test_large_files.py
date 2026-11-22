@@ -5,7 +5,7 @@ import unittest
 from collections.abc import Mapping
 from pathlib import PurePosixPath
 
-from project_validator.checks.large_files import HINT, large_files
+from project_validator.checks.large_files import HINT, _size, large_files
 from project_validator.core import DEFAULT_MAX_FILE_SIZE, Context, Options, Project, Result, Status
 from tests.support import FIXTURES, make_context, temp_project
 from tests.test_project import git
@@ -54,6 +54,18 @@ class LargeFilesTests(unittest.TestCase):
         with temp_project({"model.onnx": "x" * (3 * 1024 * 1024 // 2)}) as root:
             context = Context(Project(root), (), Options(max_file_size=1024 * 1024))
             self.assertEqual(large_files.run(context).details[0], "model.onnx (1.5 MiB)")
+
+    def test_sizes_change_unit_exactly_at_one_mib(self) -> None:
+        cases = {
+            1024 * 1024 - 1: "1024 KiB",
+            1024 * 1024: "1 MiB",
+            1536: "2 KiB",
+            1024 * 1024 * 1000: "1000 MiB",
+            1024 * 1024 * 12345: "12345 MiB",
+        }
+        for size, shown in cases.items():
+            with self.subTest(size=size):
+                self.assertEqual(_size(size), shown)
 
     def test_files_stored_in_git_lfs_pass(self) -> None:
         attributes = "# assets\n*.psd filter=lfs diff=lfs merge=lfs -text\n/video/*.mp4 filter=lfs\n*.txt diff\n"

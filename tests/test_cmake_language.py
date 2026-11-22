@@ -192,6 +192,14 @@ class ConditionTests(unittest.TestCase):
             ("b STRGREATER a", ALWAYS),
             ("abc MATCHES ^a", ALWAYS),
             ("1.0 VERSION_EQUAL 1.0", ALWAYS),
+            # At equality and one apart, where each numeric comparison changes its answer.
+            ("2 LESS 2", NEVER),
+            ("1 LESS 2", ALWAYS),
+            ("2 GREATER 2", NEVER),
+            ("2 LESS_EQUAL 2", ALWAYS),
+            ("3 LESS_EQUAL 2", NEVER),
+            ("1 GREATER_EQUAL 2", NEVER),
+            ("2 EQUAL 3", NEVER),
         ):
             with self.subTest(text=text):
                 self.assertEqual(_holds(text), expected)

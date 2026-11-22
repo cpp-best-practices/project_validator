@@ -7,10 +7,11 @@ import json
 import unittest
 
 from project_validator.build_systems.make import VARIABLE, _make_targets
-from project_validator.ci import gitlab, pre_commit_ci
+from project_validator.ci import CiFile, _heuristic_facts, gitlab, pre_commit_ci
+from project_validator.ci.heuristic_providers import TRAVIS_CI
 from project_validator.ecosystems import emacs_lisp, ocaml, zig
 from project_validator.ecosystems.beam import _bracketed
-from project_validator.ecosystems.dotnet.tools import _read_run_settings
+from project_validator.ecosystems.dotnet.tools import _coverlet, _read_run_settings
 from project_validator.ecosystems.haskell.options import ghc_options
 from project_validator.ecosystems.javascript import _in_workspaces, _named_config
 from project_validator.ecosystems.jvm.analysis import _read_checkstyle
@@ -20,7 +21,7 @@ from project_validator.ecosystems.python.tox import _env_scripts
 from project_validator.ecosystems.r import _renv_project
 from project_validator.ecosystems.ruby.tools import _read_rake_tasks, _read_simplecov_settings
 from project_validator.ecosystems.shell.tools import _read_pester
-from project_validator.facts import CiJob, Command, Origin, Setting, Unknown
+from project_validator.facts import CiJob, Command, Facts, Origin, Setting, Unknown
 from project_validator.facts.analysis import analysed, type_checked
 from project_validator.facts.audit import audited
 from project_validator.facts.build import Applies, CompilerOption
@@ -38,6 +39,28 @@ from project_validator.facts.security import scanned
 from project_validator.facts.testing import tested
 from project_validator.tools.pre_commit import _read_hooks
 from tests.support import command, make_context, temp_project
+
+
+class HeuristicCiFactTests(unittest.TestCase):
+    def test_configuration_that_is_not_parsed_is_a_job_per_os_running_each_line(self) -> None:
+        origin = Origin(path=".travis.yml")
+        ci_file = CiFile(provider=TRAVIS_CI, path=".travis.yml")
+
+        def job(identity: str, os: str) -> CiJob:
+            return CiJob(origin=origin, id=identity, provider="Travis CI", name=".travis.yml", os=os, heuristic=True)
+
+        unknown = Unknown(origin=origin, subject="the jobs and commands", reason="scanned", hides="jobs")
+        # One OS: the job is the file. A block scalar's marker (`- |`) runs nothing.
+        one = list(_heuristic_facts(ci_file, "script:\n  - |\n  - make test\n", "scanned"))
+        make = Command(origin=origin, job=".travis.yml", argv=("make", "test"), line="make test")
+        self.assertEqual(one, [job(".travis.yml", "unknown"), make, unknown])
+        # Each OS named is a job of its own.
+        two = [
+            fact
+            for fact in _heuristic_facts(ci_file, "os:\n  - linux\n  - osx\n", "scanned")
+            if not isinstance(fact, Command)
+        ]
+        self.assertEqual(two, [job(".travis.yml[linux]", "linux"), job(".travis.yml[macos]", "macos"), unknown])
 
 
 class GitlabTemplateFactTests(unittest.TestCase):
@@ -321,6 +344,30 @@ class SmallExtractorTests(unittest.TestCase):
                 )
             ],
         )
+
+
+class CoverletRunTests(unittest.TestCase):
+    def test_each_way_coverlet_runs_says_what_it_measures_and_reads(self) -> None:
+        both = (Granularity.LINE, Granularity.BRANCH)
+        self.assertEqual(_coverlet(command("coverlet bin/x.dll"), Facts()), reported(*both))
+        collect = command('dotnet test --collect:"XPlat Code Coverage"')
+        self.assertEqual(_coverlet(collect, Facts()), measured(*both))
+        self.assertEqual(_coverlet(command("dotnet test /p:CollectCoverage=true"), Facts()), reported(*both))
+        # Settings: MSBuild's CollectCoverage, and a .runsettings that MSBuild names, which adds the collector.
+        project = Origin(path="tests/Directory.Build.props")
+        collects = Setting(origin=project, tool="MSBuild", key="CollectCoverage", value="True")
+        names = Setting(origin=project, tool="MSBuild", key="RunSettingsFilePath", value=".\\ci\\a.runsettings")
+        collector = Setting(
+            origin=Origin(path="tests/ci/a.runsettings"),
+            tool="VSTest",
+            key="DataCollector",
+            value="XPlat Code Coverage",
+        )
+        unrelated = Setting(origin=project, tool="Other", key="CollectCoverage", value="true")
+        facts = Facts([collects, names, collector, unrelated])
+        self.assertEqual(_coverlet(command("dotnet test"), facts), measured(*both, read=[collects, collector]))
+        self.assertIsNone(_coverlet(command("dotnet test"), Facts([unrelated])))
+        self.assertIsNone(_coverlet(command("dotnet build"), facts))
 
 
 class XmlAndProfileReaderTests(unittest.TestCase):

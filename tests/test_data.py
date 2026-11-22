@@ -64,6 +64,22 @@ class ParserTests(unittest.TestCase):
             with self.subTest(text=text), self.assertRaises(ParseError):
                 data._check_deep_json(text)
 
+    def test_json_counts_as_deep_only_past_the_limit(self) -> None:
+        limit = data._DEEP
+        cases = {
+            "[" * limit + "]" * limit: False,
+            "[" * (limit + 1) + "]" * (limit + 1): True,
+            "{" * (limit + 1): True,
+            # Closed containers do not add up, and brackets inside strings are not containers.
+            "[[]]" * (limit + 1): False,
+            "{}" * (limit + 1): False,
+            '"' + "[" * (limit + 1) + '"': False,
+            "[" * limit + '"]"' + "[": True,
+        }
+        for text, deep in cases.items():
+            with self.subTest(text=text[:20], length=len(text)):
+                self.assertIs(data._deep(text), deep)
+
     def test_deeply_nested_json_is_reported_the_same_whatever_python_recurses(self) -> None:
         """JSONTestSuite's `n_structure_100000_opening_arrays.json` (denoland/std, yojson) is reported the same on a
         Python whose decoder raises RecursionError and on one that reads that deep and fails on the end."""

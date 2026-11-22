@@ -244,6 +244,17 @@ class PythonCoverageTests(unittest.TestCase):
         rc = {**setting, ".coveragerc": "[run]\nsource = app\n", **github_job("ubuntu-latest", "coverage run -m x")}
         self.assertEqual(self._run(rc).status, Status.FAIL)
 
+    def test_pytest_cov_reads_the_coverage_settings_it_is_given(self) -> None:
+        gated = Result.passed("branch coverage is gated with pytest-cov")
+        named = {"ci/cov.ini": "[run]\nbranch = on\n[report]\nfail_under = 90\n", ".coveragerc": "[run]\nbranch = no\n"}
+        for line in ("pytest --cov --cov-config=ci/cov.ini", "py.test --cov --cov-config ci/cov.ini"):
+            with self.subTest(line=line):
+                self.assertEqual(self._run({**named, **github_job("ubuntu-latest", line)}), gated)
+        # Without --cov-config it reads .coveragerc, whose fail_under gates.
+        self.assertEqual(self._run({**named, **github_job("ubuntu-latest", "pytest --cov")}).status, Status.FAIL)
+        rc = {".coveragerc": "[run]\nbranch = true\n[report]\nfail_under = 80\n"}
+        self.assertEqual(self._run({**rc, **github_job("ubuntu-latest", "pytest --cov")}), gated)
+
     def test_pytest_options_from_its_configuration(self) -> None:
         for files in (
             {"pyproject.toml": '[tool.pytest.ini_options]\naddopts = ["--cov=app", "--cov-branch"]\n'},
