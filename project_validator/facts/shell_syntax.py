@@ -22,7 +22,7 @@ from bisect import bisect_right
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 
-from project_validator.limits import SHELL_NESTING
+from project_validator.limits import SHELL_COMPOUNDS, SHELL_NESTING
 from project_validator.parsing import ParseError, Span
 
 
@@ -646,10 +646,15 @@ class _Parser:
         self.errors: list[ShellSyntaxError] = []
         # Where a condition was read to the end without finding its body: (token index, stop words, open subshells).
         self.unfinished: set[tuple[int, frozenset[str], int]] = set()
+        # The compound commands being read, one inside the other; once that passes `SHELL_COMPOUNDS`, the rest of the
+        # script is read `flat`: its commands without their structure.
+        self.compounds = 0
+        self.flat = False
 
     def problem(self, message: str, offset: int) -> None:
-        """Report what is wrong at `offset`; PowerShell, read without compound commands, is not judged by them."""
-        if not self.powershell:
+        """Report what is wrong at `offset`; PowerShell, read without compound commands, is not judged by them, nor a
+        script read flat past `SHELL_COMPOUNDS`, whose structure is no longer followed (its limit says so once)."""
+        if not self.powershell and not self.flat:
             self.errors.append(self.source.error(message, offset))
 
     # tokens
@@ -755,17 +760,43 @@ class _Parser:
         return Compounded(compound, self.redirections())
 
     def compound(self, start: int) -> Compound | None:
-        if self.powershell:
+        if self.powershell or self.peek() is None:
             return None
+        if self.nests() and not self.flat and not SHELL_COMPOUNDS.allows(self.compounds + 1):
+            self.errors.append(self.source.error(SHELL_COMPOUNDS.reason, start))
+            self.flat = True
+        if self.flat:
+            self.flatten()
+            return None
+        self.compounds += 1
+        try:
+            return self.nested(start)
+        finally:
+            self.compounds -= 1
+
+    def nests(self) -> bool:
+        """Whether a compound command that holds commands starts here (a `[[ ]]` test holds none)."""
+        return self.operator("(") or self.reserved(*(_COMPOUNDS.keys() - {"[["})) or self.function_name()
+
+    def flatten(self) -> None:
+        """Past `SHELL_COMPOUNDS`, skip the words and parentheses that open compound commands, so that what follows is
+        read as the commands it holds, without nesting further (the closing words close nothing, unreported)."""
+        while self.peek() is not None:
+            if self.function_name():
+                self.index += 3
+            elif self.operator("(") or self.reserved(*_COMPOUNDS, *_CLOSERS):
+                self.index += 1
+            else:
+                return
+
+    def nested(self, start: int) -> Compound | None:
         token = self.peek()
-        if token is None:
-            return None
         if _is(token, "("):
             return self.arithmetic(start) if self.adjacent("(") else self.subshell(start)
-        keyword = token.text if self.reserved(*_COMPOUNDS) else None
+        keyword = token.text if token is not None and self.reserved(*_COMPOUNDS) else None
         if keyword is not None:
             return _COMPOUNDS[keyword](self, start)
-        if self.function_name():
+        if token is not None and self.function_name():
             return self.function(start, token.text)
         return None
 
@@ -804,8 +835,9 @@ class _Parser:
         return Simple(tuple(assignments), tuple(words), tuple(redirections), start, end, self.span(start, end))
 
     def stray_parenthesis(self) -> bool:
-        """Whether a `)` closes nothing: no subshell is open (see `subshell`)."""
-        return self.open_subshells == 0
+        """Whether a `)` closes nothing: no subshell is open (see `subshell`). Read flat, a `)` (a `case` pattern's)
+        ends the command instead, its structure no longer followed."""
+        return self.open_subshells == 0 and not self.flat
 
     def assignment(self) -> Assignment:
         token = self.take()
@@ -896,14 +928,14 @@ class _Parser:
         Where a search ran out is remembered, so a condition nested in one that is read again (`if|if|…`) never
         searches twice, and what the abandoned search reported is dropped, to be reported once by the reading that
         stands."""
-        mark, reported = self.index, len(self.errors)
+        mark, reported, flat = self.index, len(self.errors), self.flat
         search = (mark, self.stopping() | frozenset(stop), self.open_subshells)
         if search in self.unfinished:
             return None
         condition = self.body(start, *stop)
         if self.peek() is None:
             self.unfinished.add(search)
-            self.index = mark
+            self.index, self.flat = mark, flat
             del self.errors[reported:]
             return None
         return condition
@@ -1029,7 +1061,11 @@ class _Parser:
             self.newlines()
             if self.peek() is None or self.reserved("esac"):
                 break
+            before = self.index
             item = self.item()
+            if self.index == before:  # nothing read (a `)` read flat ends the command): pass it, so the item moves on
+                self.index += 1
+                continue
             items.append(item)
             if item.terminator in (";;", ";&", ";;&"):
                 break

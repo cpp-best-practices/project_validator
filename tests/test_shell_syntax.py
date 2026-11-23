@@ -6,6 +6,7 @@ import re
 import time
 import unittest
 
+from project_validator.facts.shell import ShellCommand, split_script
 from project_validator.facts.shell_syntax import (
     Arithmetic,
     Case,
@@ -24,7 +25,7 @@ from project_validator.facts.shell_syntax import (
     Verbatim,
     parse,
 )
-from project_validator.limits import SHELL_NESTING
+from project_validator.limits import SHELL_COMPOUNDS, SHELL_NESTING
 from project_validator.parsing import Span
 
 
@@ -204,6 +205,11 @@ def _argvs(text: str) -> list[tuple[str, ...]]:
     ]
 
 
+def _all_argvs(text: str) -> list[tuple[str, ...]]:
+    """The argv of every command `split_script` derives from `text`, nested ones too, in its order."""
+    return [tuple(found.argv) for found in split_script(text) if isinstance(found, ShellCommand)]
+
+
 class RecoveryTests(unittest.TestCase):
     """A script with an error reports it, with where it is, and keeps everything that can still be read."""
 
@@ -247,6 +253,39 @@ class RecoveryTests(unittest.TestCase):
             innermost = substitution.script
         self.assertEqual([error.message for error in innermost.errors], [SHELL_NESTING.reason])
 
+    def test_compound_commands_nest_at_most_the_limit_deep(self) -> None:
+        most = SHELL_COMPOUNDS.most
+        self.assertEqual(_errors("{ " * most + "make" + "; }" * most), [])
+        self.assertEqual(_all_argvs("{ " * most + "make" + "; }" * most), [("make",)])
+        deeper = "{ " * (most + 1) + "make" + "; }" * (most + 1)
+        # Past the limit the commands are still read, flat, and the limit is reported once, where it was reached.
+        self.assertEqual(_errors(deeper), [(SHELL_COMPOUNDS.reason, 1, 2 * most + 1)])
+        self.assertEqual(_all_argvs(f"{deeper}\nls"), [("make",), ("ls",)])
+
+    def test_case_items_read_flat_past_the_limit_end(self) -> None:
+        """Past the limit, a pattern's `)` ends the command it follows; the case item holding it still moves on."""
+        most = SHELL_COMPOUNDS.most
+        text = "case a in a) " * (most + 1) + "make" + ";; esac" * (most + 1)
+        self.assertIn(("make",), _all_argvs(text))
+
+    def test_no_nesting_exhausts_the_stack(self) -> None:
+        """Every opener nested far past the limit, and the deepest substitutions each holding as many compound commands
+        as the limit allows: read, never a RecursionError."""
+        far = 2000
+        for opener, closer in (
+            ("{ ", "; }"),
+            ("( ", " )"),
+            ("if a; then ", "; fi"),
+            ("while a; do ", "; done"),
+            ("case a in a) ", ";; esac"),
+            ("f() { ", "; }"),
+            ("if|", ""),
+        ):
+            with self.subTest(opener=opener):
+                self.assertIn(("make",), _all_argvs(opener * far + "make" + closer * far))
+        compounds = "{ " * SHELL_COMPOUNDS.most + "make" + "; }" * SHELL_COMPOUNDS.most
+        self.assertIn(("make",), _all_argvs("echo " + "$(" * SHELL_NESTING.most + compounds + ")" * SHELL_NESTING.most))
+
     def test_unclosed_compound_commands_say_so(self) -> None:
         for text, error in (
             ("if a; then\n  b", ("the if is never closed with fi", 1, 1)),
@@ -271,9 +310,9 @@ class RecoveryTests(unittest.TestCase):
     def test_conditions_without_their_bodies_nest_without_rereading_the_script(self) -> None:
         # Each `if` looks for its `then` to the end of the script once; nesting them must not multiply that search.
         started = time.perf_counter()
-        script = parse("if|" * 40 + "x\n" + "while if|" * 20 + "x")
+        script = parse("if|" * 25 + "x\n" + "while if|" * 12 + "x")
         self.assertLess(time.perf_counter() - started, 1.0)
-        self.assertEqual(len(script.errors), 80)
+        self.assertEqual(len(script.errors), 49)
 
     def test_what_closes_nothing_says_so(self) -> None:
         self.assertEqual(_argvs("fi\nmake\ndone"), [("make",)])
