@@ -70,6 +70,12 @@ class CommittedArtifactsTests(unittest.TestCase):
             with self.subTest(fixture=fixture):
                 self.assertEqual(committed_artifacts.run(make_context(FIXTURES / fixture)).status, Status.FAIL)
 
+    def test_outside_a_checkout_every_file_counts_as_committed_build_trees_too(self) -> None:
+        """A project that is no git checkout (a tarball, or mutmut's copy inside a checkout that ignores it) has every
+        file counted as committed: a build tree, which the project's files leave out, is among them."""
+        with temp_project({"Cargo.toml": "", "src/main.rs": "", "target/debug/bare": ""}) as root:
+            self.assertEqual(committed_artifacts.run(make_context(root)).status, Status.FAIL)
+
     def test_fails_listing_each_output_once(self) -> None:
         files = {"CMakeLists.txt": "", "main.cpp": "", "build/a.o": "", "build/b.o": "", "src/x.obj": ""}
         expected = Result.failed("2 build outputs are committed", "build/", "src/x.obj", HINT)

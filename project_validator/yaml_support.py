@@ -43,14 +43,14 @@ class Tagged:
 @cache
 def _escape_safe() -> type:
     """The safe loader, where an escape past the last character (`"\\U99999999"`, which PyYAML hands to chr()) is a
-    scanner error at its scalar, not a ValueError."""
+    scanner error at its scalar, not the ValueError chr() raises (an OverflowError before Python 3.13)."""
     yaml: Any = _yaml
 
     class Loader(yaml.SafeLoader):  # type: ignore[misc]
         def scan_flow_scalar_non_spaces(self, double: bool, start_mark: Any) -> list[str]:
             try:
                 return list(super().scan_flow_scalar_non_spaces(double, start_mark))
-            except ValueError as error:
+            except (ValueError, OverflowError) as error:
                 problem = "found an escape that names no character"
                 raise yaml.scanner.ScannerError("while scanning a quoted scalar", start_mark, problem) from error
 
