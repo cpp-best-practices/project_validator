@@ -95,6 +95,31 @@ class TreeTests(unittest.TestCase):
             ],
         )
 
+    def test_lines_indented_with_spaces_are_read_as_written_unindented(self) -> None:
+        """Makefiles indent what a conditional holds (neovim's `  CMAKE := cmake`); only a tab starts a recipe line."""
+        text = "ifdef WIN\n  CC := cl\n  include win.mk\n  all: app\n\tlink app\nendif\n"
+        self.assertEqual(
+            _tree(text),
+            [
+                (
+                    "if",
+                    (
+                        (
+                            "ifdef",
+                            "WIN",
+                            (
+                                ("=", "CC", ":=", "cl"),
+                                ("include", "win.mk", False),
+                                ("rule", ("all",), ("app",), ""),
+                                ("recipe", "link app"),
+                            ),
+                        ),
+                    ),
+                    None,
+                )
+            ],
+        )
+
     def test_a_recipe_line_inside_a_conditional_is_a_node_of_its_own(self) -> None:
         """Which rule it belongs to is the evaluation's to say: the rule written before the conditional."""
         text = "all:\nifeq ($(V),1)\n\techo verbose\nelse\n\t@echo quiet\nendif\n"

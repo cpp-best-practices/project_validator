@@ -154,7 +154,9 @@ class _Parser:
         return Makefile(tuple(self.top), tuple(self.errors))
 
     def line(self, line: str, span: Span) -> None:
-        stripped = line.strip()
+        """A line that is not a recipe line; what a conditional holds is often indented, which make ignores."""
+        line = line.lstrip()
+        stripped = line.rstrip()
         if not stripped or stripped.startswith("#"):
             return
         if self.directive(stripped, span):
