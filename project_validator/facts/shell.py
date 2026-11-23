@@ -55,6 +55,8 @@ class ShellCommand:
     checked: bool = False
     # Whether it runs in a command substitution, whose status is the business of the command around it.
     nested: bool = False
+    # Where it is in the script; it does not change what the command is.
+    span: Span | None = field(default=None, compare=False)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -310,6 +312,7 @@ class _Level:
             condition=found.condition,
             fallback=self.fallback(found),
             checked=found.checked,
+            span=found.command.span,
         )
 
 

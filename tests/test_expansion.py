@@ -643,6 +643,15 @@ class ShellScriptTests(unittest.TestCase):
                 found = _tox(self.SCRIPT, line)
                 self.assertIn(("ruff", "check", "."), found)
 
+    def test_a_scripts_commands_are_placed_where_the_file_has_them_and_a_steps_are_not(self) -> None:
+        """A script file's text is the file, so where a command is in it is a place in the file; a `run:` step's is a
+        place in its block only, which the workflow's place already names."""
+        script = {"ci/build.sh": "#!/bin/sh\nset -e\nif true; then\n  make all\nfi\n"}
+        facts = _facts({**script, **github_job("ubuntu-latest", "./ci/build.sh\necho done")})
+        placed = {command.argv: str(command.origin) for command in facts.of(Command)}
+        self.assertEqual(placed[("make", "all")], "ci/build.sh:4:3")
+        self.assertEqual(placed[("echo", "done")], f"{GITHUB_WORKFLOW}:jobs.build.steps[0].run")
+
     def test_other_files_and_inline_scripts_are_not_followed(self) -> None:
         files = {**self.SCRIPT, "tools/run.py": "print('x')\n", "ci/notes": "ruff check .\n"}
         for line in (

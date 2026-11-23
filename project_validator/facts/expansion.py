@@ -41,7 +41,8 @@ class Script:
     # Text the shell does not split, because something else substitutes it first (a Make variable).
     opaque: re.Pattern[str] | None = None
     # Whether the text is the whole of a shell script, so that what it sets is seen (a repository's script file,
-    # unless it sources another), as a CI step's own script is.
+    # unless it sources another), as a CI step's own script is. Its text is the file's: its commands are placed where
+    # the file has them.
     whole: bool = False
     # The shell that runs the text, when known, which decides whether a command's failure fails it (see `masked`).
     shell: Shell | None = None
@@ -137,12 +138,12 @@ def script_facts(
 ) -> Iterator[Fact]:
     """The commands of a shell script a job runs (see `split_script`, `Script.whole`, `masked` for the rest)."""
     assigned, constants = _seen_assigned(script, whole or not via, powershell=powershell), _Constants(script)
-    command = partial(Command, origin=origin, job=job, condition=condition, via=via)
-    split = list(split_script(script, opaque, powershell=powershell))
-    yield from _unread(split, origin)
+    command = partial(Command, job=job, condition=condition, via=via)
+    yield from _unread(split := list(split_script(script, opaque, powershell=powershell)), origin)
     for found, advisory in _judged(split, shell, followed):
         if isinstance(found, ShellCommand):
             made = command(
+                origin=replace(origin, span=found.span) if whole else origin,
                 argv=found.argv,
                 line=found.line,
                 env={**env, **constants.before(found.line), **dict(found.env)},
