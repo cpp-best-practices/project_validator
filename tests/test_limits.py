@@ -18,11 +18,12 @@ from project_validator.limits import (
     GITLAB_EXTENDS,
     GITLAB_INCLUDES,
     GITLAB_REFERENCES,
+    MAKE_INCLUDES,
     REUSABLE_WORKFLOWS,
     TSCONFIG_EXTENDS,
     Limit,
 )
-from tests.support import make_context, temp_project
+from tests.support import github_job, make_context, temp_project
 
 type Files = dict[str, str]
 
@@ -140,6 +141,22 @@ class TsconfigLimitTests(LimitTestCase):
         self.assert_limit(
             TSCONFIG_EXTENDS, self._extends, lambda files: bool(_strict_settings("tsconfig.json", _facts(files)))
         )
+
+
+class MakeLimitTests(LimitTestCase):
+    @staticmethod
+    def _includes(levels: int) -> Files:
+        """A Makefile that includes 1.mk, which includes 2.mk, … `levels` deep; the deepest defines `lint`."""
+        files = {"Makefile": "include 1.mk\n"}
+        files |= {f"{level}.mk": f"include {level + 1}.mk\n" for level in range(1, levels)}
+        files[f"{levels}.mk"] = "lint:\n\tdeep-lint .\n"
+        return {**files, **github_job("ubuntu-latest", "make lint")}
+
+    def test_includes_nest_at_most_the_limit_deep(self) -> None:
+        self.assert_limit(MAKE_INCLUDES, self._includes, lambda files: ("deep-lint", ".") in _commands(_facts(files)))
+
+    def test_includes_past_the_limit_say_so(self) -> None:
+        self.assertIn(MAKE_INCLUDES.reason, _reasons(_facts(self._includes(MAKE_INCLUDES.most + 1))))
 
 
 class CmakeLimitTests(LimitTestCase):

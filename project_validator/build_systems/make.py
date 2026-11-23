@@ -24,6 +24,8 @@ from project_validator.facts import Command, Origin, Unknown
 from project_validator.facts.arguments import positional
 from project_validator.facts.exit_status import POSIX
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, inside, joined
+from project_validator.includes import Chain, Refused, follow
+from project_validator.limits import MAKE_INCLUDES
 
 MAKEFILES = ("GNUmakefile", "makefile", "Makefile")
 _PROGRAMS = frozenset({"make", "gmake", "mingw32-make"})
@@ -59,6 +61,8 @@ class Makefile:
     default: str | None = None
     variables: dict[str, str] = field(default_factory=lambda: dict(_BUILT_IN))
     includes: list[str] = field(default_factory=list)
+    # Why an include was not followed (a cycle, the chain too deep), each reported as unknown where make runs.
+    problems: list[str] = field(default_factory=list)
 
 
 _REFERENCE = re.compile(r"\$(?:\((?P<paren>[A-Za-z_][\w.-]*)\)|\{(?P<brace>[A-Za-z_][\w.-]*)\})")
@@ -278,18 +282,32 @@ def _make_targets(command: Command, context: Context) -> Iterator[Expansion] | N
 
 
 def _read(context: Context, path: str, overrides: Mapping[str, str]) -> Makefile:
-    """The makefile at `path`, with the rules and variables of the makefiles it includes that the project holds."""
+    """The makefile at `path`, with the rules and variables of the makefiles it includes that the project holds, and
+    of those they include in turn (see `project_validator.includes`); its own win over theirs."""
     makefile = parse_makefile(context.project.read_text(path), overrides)
-    for name in makefile.includes:
-        included = posixpath.normpath(posixpath.join(posixpath.dirname(path), name))
-        if context.project.exists(included):
-            other = parse_makefile(context.project.read_text(included), overrides)
-            makefile.rules = {**other.rules, **makefile.rules}
-            makefile.variables = {**other.variables, **makefile.variables}
+    _include(context, makefile, posixpath.dirname(path), Chain.start(path), overrides)
     return makefile
 
 
+def _include(context: Context, makefile: Makefile, directory: str, chain: Chain, overrides: Mapping[str, str]) -> None:
+    """Merge into `makefile` what its includes define; make finds an included file from where it runs (`directory`).
+    One the project does not hold is passed over silently: a generated `-include deps.d` is usual."""
+    for name in makefile.includes:
+        found = follow(chain, posixpath.normpath(joined(directory, name)), MAKE_INCLUDES, context.project.exists)
+        if isinstance(found, Refused):
+            if not found.missing:
+                makefile.problems.append(found.reason)
+            continue
+        other = parse_makefile(context.project.read_text(found.paths[-1]), overrides)
+        _include(context, other, directory, found, overrides)
+        makefile.rules = {**other.rules, **makefile.rules}
+        makefile.variables = {**other.variables, **makefile.variables}
+        makefile.problems += other.problems
+
+
 def _goals(makefile: Makefile, path: str, goals: list[str], command: Command) -> Iterator[Expansion]:
+    for problem in dict.fromkeys(makefile.problems):
+        yield Unknown(origin=command.origin, subject=f"the includes of {path}", reason=problem)
     visited: set[str] = set()
     for goal in goals:
         if _rule(makefile, goal) is None:
