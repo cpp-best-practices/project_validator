@@ -6,6 +6,11 @@ place so that each reader says the same thing for the same reason: has this file
 the file at all. The `Chain` that reached a file is its provenance: which file pulled in which, outermost first.
 
 A refusal says why (`Refused.reason`), for the reader to report as unknown rather than cut off silently.
+
+CMake keeps its own stack (`build_systems.cmake.evaluation`): its limit counts function calls with files, and a file
+that includes itself is passed over, not reported, since its guard (`include_guard()`, or `if(DEFINED …) return()`)
+may be one the evaluation cannot decide. Meson reads each `meson.build` once, from the directory tree, which cannot
+cycle.
 """
 
 from __future__ import annotations
@@ -44,11 +49,19 @@ class Refused:
     missing: bool = False
 
 
-def follow(chain: Chain, path: str, limit: Limit, exists: Callable[[str], bool]) -> Chain | Refused:
-    """The chain that reaches `path` from `chain`, or why it is not followed: `path` is already on the way (a cycle),
-    following it would pass `limit`, or the project does not hold it (`exists`)."""
+def _held(_path: str) -> bool:
+    return True
+
+
+def follow(
+    chain: Chain, path: str, limit: Limit, exists: Callable[[str], bool] = _held, *, verb: str = "includes"
+) -> Chain | Refused:
+    """The chain that reaches `path` from `chain`, or why it is not followed: `path` is already on the way (a cycle,
+    said with the reader's `verb`: a workflow `calls` itself, an action `uses` itself), following it would pass
+    `limit`, or the project does not hold it (`exists`; left out by a reader
+    whose loader says what it cannot read)."""
     if path in chain.paths:
-        return Refused(f"{path} includes itself, through {chain}")
+        return Refused(f"{path} {verb} itself, through {chain}")
     if not limit.allows(chain.depth + 1):
         return Refused(limit.reason)
     if not exists(path):

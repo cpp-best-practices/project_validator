@@ -15,6 +15,7 @@ from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, O
 from project_validator.facts.exit_status import ERREXIT, STRICT, Shell, shell_of
 from project_validator.facts.expansion import advised, script_facts
 from project_validator.facts.shell import ShellSyntaxError, split_words
+from project_validator.includes import Chain, Refused, follow
 from project_validator.limits import COMPOSITE_ACTIONS, REUSABLE_WORKFLOWS
 from project_validator.platforms import detect_operating_systems
 from project_validator.text import pattern
@@ -473,10 +474,10 @@ class _Combination:
         steps = runs.get("steps") if isinstance(runs, Mapping) and runs.get("using") == "composite" else None
         if not isinstance(steps, list):
             return  # a JavaScript or Docker action, whose commands are its own code
-        if not COMPOSITE_ACTIONS.allows(len(via)):
-            yield Unknown(
-                origin=origin, subject=f"the action ./{directory}", reason=COMPOSITE_ACTIONS.reason, hides="commands"
-            )
+        # `via` holds the steps that use each action on the way here, the workflow's first.
+        reached = follow(Chain(tuple(step.path for step in via)), path, COMPOSITE_ACTIONS, verb="uses")
+        if isinstance(reached, Refused):
+            yield Unknown(origin=origin, subject=f"the action ./{directory}", reason=reached.reason, hides="commands")
             return
         values = {**_input_defaults(action.get("inputs")), **inputs}
         for number, step in enumerate(steps):
@@ -575,11 +576,17 @@ def _local(uses: object) -> str | None:
 
 
 def workflow_facts(
-    path: str, document: object, load: Load | None = None, caller: str = "", inputs: Mapping[str, str] = NOTHING
+    path: str,
+    document: object,
+    load: Load | None = None,
+    caller: str = "",
+    inputs: Mapping[str, str] = NOTHING,
+    chain: Chain | None = None,
 ) -> Iterator[Fact]:
     """The jobs of a workflow, one per matrix combination, with the commands and actions each one runs. A job that
     calls a reusable workflow of the same repository runs that workflow's jobs (read with `load`), once per matrix
-    combination of the calling job, with the `inputs` it passes; one in another repository is unknown."""
+    combination of the calling job, with the `inputs` it passes; one in another repository is unknown. `caller` names
+    the calling jobs, for identities, and `chain` the workflows on the way here."""
     if not isinstance(document, Mapping) or not isinstance(jobs := document.get("jobs"), Mapping):
         return
     if not caller and _only_called(document):
@@ -590,20 +597,41 @@ def workflow_facts(
             continue
         if "uses" not in job:
             yield from _job_facts(path, str(job_id), job, document, caller, load, inputs, advisory)
-            continue
-        uses = str(job["uses"]).strip()
-        called = _local(uses) or _own(uses, load)
-        within_depth = REUSABLE_WORKFLOWS.allows(caller.count(" → ") + 1)
-        if called is not None and load is not None and within_depth and (target := load(called)) is not None:
-            for label, passed in _calls(job, target, inputs):
-                yield from workflow_facts(called, target, load, f"{caller}{path}:{job_id}{label} → ", passed)
-            continue
+        else:
+            yield from _reusable_facts(path, str(job_id), job, load, caller, inputs, chain or Chain.start(path))
+
+
+def _reusable_facts(
+    path: str,
+    job_id: str,
+    job: Mapping[str, object],
+    load: Load | None,
+    caller: str,
+    inputs: Mapping[str, str],
+    chain: Chain,
+) -> Iterator[Fact]:
+    """The jobs of the reusable workflow job `job_id` calls, once per call (see `_calls`); unknown when not read."""
+    found = _called(str(job["uses"]).strip(), load, chain)
+    if isinstance(found, str):
         yield Unknown(
-            origin=Origin(path=path, at=("jobs", str(job_id))),
-            subject=f"job {job_id}",
-            reason=f"it calls the reusable workflow {uses}, which is not read",
-            hides="jobs",
+            origin=Origin(path=path, at=("jobs", job_id)), subject=f"job {job_id}", reason=found, hides="jobs"
         )
+        return
+    reached, target = found
+    for label, passed in _calls(job, target, inputs):
+        identity = f"{caller}{path}:{job_id}{label} → "
+        yield from workflow_facts(reached.paths[-1], target, load, identity, passed, reached)
+
+
+def _called(uses: str, load: Load | None, chain: Chain) -> tuple[Chain, object] | str:
+    """The chain that reaches the reusable workflow `uses` names, and its document; why it is not read, when not."""
+    unread = f"it calls the reusable workflow {uses}, which is not read"
+    called = _local(uses) or _own(uses, load)
+    reached = follow(chain, called, REUSABLE_WORKFLOWS, verb="calls") if called is not None else Refused(unread)
+    if isinstance(reached, Refused):
+        return reached.reason
+    target = load(reached.paths[-1]) if load is not None else None
+    return unread if target is None else (reached, target)
 
 
 def _calls(

@@ -25,6 +25,7 @@ from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, json_settings, matched_settings
 from project_validator.facts.tools import Run, combined, defined_by, starts
+from project_validator.includes import Chain, follow
 from project_validator.limits import TSCONFIG_EXTENDS
 from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
@@ -126,18 +127,19 @@ def _tsconfig(command: Command) -> str:
     return path if path.endswith(".json") else joined(path, "tsconfig.json")
 
 
-def _strict_settings(path: str, facts: Facts, depth: int = 0) -> list[Setting]:
-    """The settings of the configuration `path`, and of the local ones it extends, that make tsc strict."""
+def _strict_settings(path: str, facts: Facts, chain: Chain | None = None) -> list[Setting]:
+    """The settings of the configuration `path`, and of the local ones it extends, that make tsc strict. A base past
+    the limit, or one extended again on the way, is not read; a run has no way yet to say so."""
+    chain = chain or Chain.start(path)
     own = facts.settings("TypeScript", paths=[path])
     found = [setting for setting in own if _strict(setting)]
     for setting in own:
         bases = _bases(setting.value) if setting.key == "extends" else ()
-        for base in map(str, bases):
-            if base.startswith(".") and TSCONFIG_EXTENDS.allows(depth + 1):
-                extended = posixpath.normpath(joined(str(PurePosixPath(path).parent), base))
-                found += _strict_settings(
-                    extended if extended.endswith(".json") else f"{extended}.json", facts, depth + 1
-                )
+        for base in (str(base) for base in bases if str(base).startswith(".")):
+            extended = posixpath.normpath(joined(str(PurePosixPath(path).parent), base))
+            reached = follow(chain, extended if extended.endswith(".json") else f"{extended}.json", TSCONFIG_EXTENDS)
+            if isinstance(reached, Chain):
+                found += _strict_settings(reached.paths[-1], facts, reached)
     return found
 
 

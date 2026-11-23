@@ -25,6 +25,14 @@ class FollowTests(unittest.TestCase):
         chain = Chain(("Makefile", "a.mk"))
         self.assertEqual(_follow(chain, "Makefile"), Refused("Makefile includes itself, through Makefile → a.mk"))
 
+    def test_a_cycle_says_how_the_file_is_followed(self) -> None:
+        """A reusable workflow calls, an action uses: the reader names the link, for the reason to read true."""
+        refused = follow(Chain(("ci.yml", "w.yml")), "w.yml", LIMIT, verb="calls")
+        self.assertEqual(refused, Refused("w.yml calls itself, through ci.yml → w.yml"))
+
+    def test_a_reader_whose_loader_says_what_is_missing_need_not_ask_whether_a_file_exists(self) -> None:
+        self.assertEqual(follow(Chain.start("ci.yml"), "w.yml", LIMIT), Chain(("ci.yml", "w.yml")))
+
     def test_the_chain_is_followed_at_most_the_limit_deep(self) -> None:
         at = _follow(Chain(("Makefile", "a.mk")), "b.mk")
         self.assertEqual(at, Chain(("Makefile", "a.mk", "b.mk")))
