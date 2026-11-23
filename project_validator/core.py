@@ -180,15 +180,15 @@ class Project:
     def _git_tracked_files(self) -> list[str]:
         git = shutil.which("git")
         if git is None:
-            return self.files()
+            return self._every_file()
         listed = subprocess.run(  # noqa: S603 - argv list, no shell
             [git, "-C", str(self.root), "ls-files", "-z"], capture_output=True, check=False
         )
         if listed.returncode != 0:
-            return self.files()
+            return self._every_file()
         paths = listed.stdout.decode("utf-8", errors="replace").split("\0")
         if not any(paths) and self._ignored(git):
-            return self.files()
+            return self._every_file()
         return sorted(path for path in paths if path and not self._excludes(path) and (self.root / path).is_file())
 
     def origin_url(self) -> str | None:
@@ -270,7 +270,12 @@ class Project:
     def cmake_files(self) -> list[str]:
         return [path for path in self.files() if _is_cmake_file(PurePosixPath(path).name)]
 
-    def _walk_files(self, hidden: frozenset[str]) -> Iterator[str]:
+    def _every_file(self) -> list[str]:
+        """What a project that is no git checkout holds, as `tracked_files` counts it: its files and its build trees,
+        which `files` leaves out (a committed `target/` is still committed)."""
+        return sorted(self._walk_files(frozenset(), build_trees=True))
+
+    def _walk_files(self, hidden: frozenset[str], *, build_trees: bool = False) -> Iterator[str]:
         from project_validator.ecosystems import is_build_tree
 
         for directory, subdirectories, files in os.walk(self.root):
@@ -279,15 +284,20 @@ class Project:
             subdirectories[:] = [
                 name
                 for name in subdirectories
-                if (not name.startswith(".") or (current == self.root and name in hidden) or f"**/{name}" in hidden)
+                if _shown(name, top=current == self.root, hidden=hidden)
                 and name not in _SKIPPED_DIRECTORIES
                 and relative / name not in self.excluded
-                and not is_build_tree(current / name)
+                and (build_trees or not is_build_tree(current / name))
                 and not self._git_ignores(f"{relative / name}/")
             ]
             # A symlink to nothing has no content to read: it is not a file of the project.
             found = (str(PurePosixPath(relative, name)) for name in files if _exists(current / name))
             yield from (path for path in found if not self._git_ignores(path))
+
+
+def _shown(name: str, *, top: bool, hidden: frozenset[str]) -> bool:
+    """Whether a directory is walked for its name: not hidden, or a hidden one `hidden` names (see `Project.files`)."""
+    return not name.startswith(".") or (top and name in hidden) or f"**/{name}" in hidden
 
 
 class ExtractionError(Exception):
