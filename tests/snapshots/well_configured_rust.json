@@ -1022,6 +1022,11 @@
       "message": "all 6 OS/Rust toolchain combination(s) build Debug and Release, each with and without sanitizers",
       "status": "PASS"
     },
+    "ci-current": {
+      "details": [],
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
     "ci-lint": {
       "details": [],
       "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",

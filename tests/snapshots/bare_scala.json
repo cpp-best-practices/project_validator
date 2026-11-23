@@ -662,6 +662,11 @@
       "message": "not applicable to Scala",
       "status": "SKIP"
     },
+    "ci-current": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
     "ci-lint": {
       "details": [],
       "message": "no CI configuration",

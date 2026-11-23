@@ -194,19 +194,35 @@ class Project:
         """The URL of the checkout's `origin` remote (where the project is published), or None; None too for a
         directory inside a checkout, which is not published where the checkout is."""
         if "origin" not in self._listed:
-            git = shutil.which("git")
-            found = (
-                subprocess.run(  # noqa: S603 - argv list, no shell
-                    [git, "-C", str(self.root), "config", "--get", "remote.origin.url"],
-                    capture_output=True,
-                    check=False,
-                )
-                if git is not None and (self.root / ".git").exists()
-                else None
-            )
-            url = found.stdout.decode("utf-8", errors="replace").strip() if found and found.returncode == 0 else ""
+            url = self._checkout_git("config", "--get", "remote.origin.url") or ""
             self._listed["origin"] = (url,) if url else ()
         return next(iter(self._listed["origin"]), None)
+
+    def last_changed(self, relative: str) -> int | None:
+        """When a commit last changed the file, in seconds since the epoch; None without its history: outside a
+        checkout whose root the project is, in a shallow clone (whose one commit changed every file), or for a file git
+        does not track."""
+        if "shallow" not in self._listed:
+            self._listed["shallow"] = (self._checkout_git("rev-parse", "--is-shallow-repository") or "true",)
+        if "false" not in self._listed["shallow"]:
+            return None
+        found = self._checkout_git("log", "-1", "--format=%ct", "--", relative)
+        return int(found) if found and found.isdigit() else None
+
+    def modified(self, relative: str) -> int:
+        """When the file was last written, in seconds since the epoch."""
+        return int((self.root / relative).stat().st_mtime)
+
+    def _checkout_git(self, *arguments: str) -> str | None:
+        """What git prints, stripped, for a checkout whose root the project is; None for any other project, or when git
+        is not installed or fails."""
+        git = shutil.which("git")
+        if git is None or not (self.root / ".git").exists():
+            return None
+        found = subprocess.run(  # noqa: S603 - argv list, no shell
+            [git, "-C", str(self.root), *arguments], capture_output=True, check=False
+        )
+        return found.stdout.decode("utf-8", errors="replace").strip() if found.returncode == 0 else None
 
     def ignored(self) -> tuple[str, ...]:
         """The paths git ignores and does not track, left out of the project (a directory ends in `/`), sorted."""

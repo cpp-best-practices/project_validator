@@ -58,6 +58,9 @@ class CiProvider:
     lint_hint: str = ""
     # The status badge images this provider serves for a README.
     badges: tuple[Pattern, ...] = ()
+    # Badges of a host of the provider that has shut down, each named for what became of it: a README that shows one
+    # and none of `badges` is of a configuration that has not run since (`project_validator.ci.defunct`).
+    retired_badges: tuple[Pattern, ...] = ()
     # The reusable steps (`owner/repo@ref`) a parsed configuration document uses, for providers that have them.
     step_references: Callable[[object], list[str]] | None = None
     facts: FactExtractor | None = None
