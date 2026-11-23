@@ -355,7 +355,8 @@ class Context:
         from project_validator.ci.defunct import ci_currency
         from project_validator.evidence import README, documents
 
-        return ci_currency(self.project, self.ci_files, documents(self, README))
+        # The README status-badges reads: the first found (at the root, then in .github/ and docs/).
+        return ci_currency(self.project, self.ci_files, documents(self, README)[:1])
 
     @cached_property
     def live_ci_files(self) -> tuple[CiFile, ...]:

@@ -121,6 +121,11 @@ class CiCurrentTests(unittest.TestCase):
             ),
         )
 
+    def test_the_readme_judged_is_the_one_status_badges_reads(self) -> None:
+        """The README at the root, not a docs page that keeps an old badge, and its reason once."""
+        files = {**WORKFLOW, **TRAVIS, "README.md": f"# app\n{COM_BADGE}", "docs/README.md": f"# docs\n{ORG_BADGE}"}
+        self.assertEqual(_run(files), Result.passed("no CI configuration is known to be defunct", HISTORY_NOTE))
+
     def test_a_travis_ci_com_badge_shows_the_project_moved(self) -> None:
         result = _run({**WORKFLOW, **TRAVIS, "README.md": f"# app\n{ORG_BADGE}{COM_BADGE}"})
         self.assertEqual(result, Result.passed("no CI configuration is known to be defunct", HISTORY_NOTE))
