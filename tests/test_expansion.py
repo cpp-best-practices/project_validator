@@ -26,7 +26,7 @@ def _expanded(facts: Facts) -> list[tuple[str, ...]]:
 
 
 def _recipe(makefile: Makefile, target: str) -> list[tuple[int, str]]:
-    return [(step.line, step.text) for step in makefile.rules[target].recipe]
+    return [(step.span.line, step.text) for step in makefile.rules[target].recipe]
 
 
 def _value(makefile: Makefile, name: str) -> str:
@@ -53,9 +53,9 @@ class EngineTests(unittest.TestCase):
         formatting = commands[("clang-format", "--dry-run", "-Werror", "a.cpp")]
         self.assertEqual(
             [str(origin) for origin in formatting.via],
-            [f"{GITHUB_WORKFLOW}:jobs.build.steps[0].run", "Makefile:lint[4]"],
+            [f"{GITHUB_WORKFLOW}:jobs.build.steps[0].run", "Makefile:4:1 (lint)"],
         )
-        self.assertEqual(str(formatting.origin), "Makefile:format[6]")
+        self.assertEqual(str(formatting.origin), "Makefile:6:1 (format)")
         self.assertEqual(formatting.job, f"{GITHUB_WORKFLOW}:build")
 
     def test_launchers_and_wrappers_run_the_command_that_follows(self) -> None:
