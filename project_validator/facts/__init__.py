@@ -166,6 +166,16 @@ class Unknown(Fact):
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
+class PartlyRead(Fact):
+    """Something a reader could follow only in part (a script with what its parser takes for a syntax error). What it
+    could read is used; the rest is noted, never unknown: the limit may be the reader's, not the project's, so it is
+    no reason to judge a question unknown (see `Unknown` for what is)."""
+
+    subject: str
+    reason: str
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
 class Setting(Fact):
     """A setting of a tool, as a configuration file writes it: `key` is dotted (`run.branch`) and `value` is a string,
     number, boolean, or tuple of those. `heuristic` settings are matched in text that is not parsed (code)."""
@@ -298,6 +308,7 @@ __all__ = [
     "Fact",
     "Facts",
     "Origin",
+    "PartlyRead",
     "Setting",
     "StepReference",
     "Unknown",

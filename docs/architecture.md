@@ -173,7 +173,8 @@ The policies know nothing of it. Vendored code is never judged, named or not.
 
 A CI provider (`CiProvider`, `project_validator/ci`) extracts its jobs (one per matrix combination, with a GitHub
 step or job whose condition is false for a combination yielding no facts and known expressions evaluated), the
-commands each one runs (split by `project_validator/facts/shell.py`, PowerShell's way on Windows steps) with the
+commands each one runs (parsed to a syntax tree with positions by `project_validator/facts/shell_syntax.py`, from
+which `project_validator/facts/shell.py` derives the simple commands; PowerShell's way on Windows steps) with the
 step's condition, the reusable steps it uses with their inputs, and what it could not read. A job that calls a
 reusable workflow of the same repository runs that workflow's jobs; a local composite action runs its steps in the
 calling job; a known action that runs a known command (`psf/black`) is expanded into that command (`Action`), so

@@ -111,6 +111,18 @@ class CommonTests(unittest.TestCase):
         left_out = dataclasses.replace(_analysis(), ignored=("generated/", "debug.log"))
         self.assertRegex(common.reading(left_out), r"facts in \d+\.\d\d s; 2 paths git ignores left out$")
 
+    def test_what_was_read_only_in_part_is_said_and_listed(self) -> None:
+        """A script the parser follows only in part is noted where the report says what was read, not judged."""
+        from project_validator.facts import Facts, Origin, PartlyRead
+
+        noted = PartlyRead(origin=Origin(path="ci.sh"), subject="the command 'echo \"x'", reason="No closing quotation")
+        analysis = _analysis()
+        analysis = dataclasses.replace(analysis, facts=Facts((*analysis.facts, noted)))
+        self.assertRegex(common.reading(analysis), r"facts in \d+\.\d\d s; 1 place read only in part$")
+        self.assertIn(
+            "  Read in part: the command 'echo \"x': No closing quotation (ci.sh)", text.detected_lines(analysis)
+        )
+
     def test_code_named_auxiliary_is_judged_so(self) -> None:
         from project_validator.analysis import RoleSummary
 

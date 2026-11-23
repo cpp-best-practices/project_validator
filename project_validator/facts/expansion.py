@@ -18,7 +18,7 @@ from typing import TYPE_CHECKING
 
 from project_validator.components import known
 from project_validator.evidence import DEVENV, DEVENV_HOOKS, PRE_COMMIT_CONFIGURATION
-from project_validator.facts import NOTHING, ActionStep, Command, Fact, Origin, Unknown, resolved
+from project_validator.facts import NOTHING, ActionStep, Command, Fact, Origin, PartlyRead, Unknown, resolved
 from project_validator.facts.arguments import starts_with
 from project_validator.facts.exit_status import Shell, masked
 from project_validator.facts.shell import ShellCommand, ShellSyntaxError, Unsplittable, split_script
@@ -126,7 +126,9 @@ def script_facts(
     """The commands of a shell script a job runs (see `split_script`, `Script.whole`, `masked` for the rest)."""
     assigned, constants = _seen_assigned(script, whole or not via, powershell=powershell), _Constants(script)
     command = partial(Command, origin=origin, job=job, condition=condition, via=via)
-    for found, advisory in _judged(list(split_script(script, opaque, powershell=powershell)), shell, followed):
+    split = list(split_script(script, opaque, powershell=powershell))
+    yield from _unread(split, origin)
+    for found, advisory in _judged(split, shell, followed):
         if isinstance(found, ShellCommand):
             made = command(
                 argv=found.argv,
@@ -136,8 +138,23 @@ def script_facts(
                 advisory=advisory,
             )
             yield from _with_program(made, assigned)
-        else:
-            yield Unknown(origin=origin, subject=f"the command {found.line!r}", reason=found.reason)
+
+
+def _unread(split: list[ShellCommand | Unsplittable], origin: Origin) -> Iterator[Fact]:
+    """What the parser could not follow in a script. Read in part, it is noted, not unknown: the limit may be the
+    parser's, and what it read is used. When nothing at all could be read, what the script runs is unknown."""
+    problems = [found for found in split if isinstance(found, Unsplittable)]
+    if problems and len(problems) == len(split):
+        reasons = "; ".join(map(_placed, problems))
+        yield Unknown(origin=origin, subject="the script", reason=f"nothing in it could be read: {reasons}")
+        return
+    for found in problems:
+        yield PartlyRead(origin=origin, subject=f"the command {found.line!r}", reason=_placed(found))
+
+
+def _placed(found: Unsplittable) -> str:
+    """Why a script could not be read there, and where: `No closing quotation at 2:6`."""
+    return f"{found.reason} at {found.span}" if found.span is not None else found.reason
 
 
 def _judged(
