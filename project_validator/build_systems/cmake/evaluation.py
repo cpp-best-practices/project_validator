@@ -47,7 +47,7 @@ from project_validator.build_systems.cmake.values import (
 from project_validator.facts import Origin
 from project_validator.facts.conditions import ALWAYS, Condition, both, either, negated, requiring
 from project_validator.limits import CMAKE_NESTING
-from project_validator.parsing import Span
+from project_validator.parsing import Problem
 
 # How many items a loop runs for, and how many commands are evaluated in all (how deep calls and includes nest is
 # `CMAKE_NESTING`).
@@ -109,14 +109,6 @@ class Frame:
 
     def origin(self, invocation: Invocation) -> Origin:
         return Origin(path=self.path, at=(invocation.name,), span=invocation.span)
-
-
-@dataclass(frozen=True, slots=True)
-class Problem:
-    """Why a file could not be evaluated (in full), and where in it, when that is known."""
-
-    reason: str
-    span: Span | None = None
 
 
 class Observer(Protocol):

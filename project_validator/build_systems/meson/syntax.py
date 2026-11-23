@@ -8,7 +8,7 @@ import re
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
 
-from project_validator.parsing import ParseError
+from project_validator.parsing import ParseError, Span
 
 
 class MesonSyntaxError(ParseError):
@@ -20,7 +20,11 @@ class MesonSyntaxError(ParseError):
 class Token:
     kind: str
     text: str
-    line: int
+    span: Span
+
+    @property
+    def line(self) -> int:
+        return self.span.line
 
 
 _TOKEN = re.compile(
@@ -46,7 +50,7 @@ _CONTINUING = frozenset({"and", "or"})
 
 def tokens(text: str) -> Iterator[Token]:
     """The tokens of `text`; a newline inside brackets, or after `and` or `or`, is blank, as Meson reads it."""
-    position, line, depth, previous = 0, 1, 0, ""
+    position, line, start, depth, previous = 0, 1, 0, 0, ""
     while position < len(text):
         match = _TOKEN.match(text, position)
         if match is None or match.lastgroup is None:
@@ -56,12 +60,21 @@ def tokens(text: str) -> Iterator[Token]:
         if kind == "name" and found in KEYWORDS:
             kind = "keyword"
         if kind not in ("space", "comment") and not (kind == "newline" and (depth > 0 or previous in _CONTINUING)):
-            yield Token(kind, found, line)
+            yield Token(kind, found, _span(text, line, start, position, match.end()))
             previous = found if kind == "keyword" else ""
-        line += found.count("\n")
+        if newlines := found.count("\n"):
+            line, start = line + newlines, position + found.rindex("\n") + 1
         position = match.end()
-    yield Token("newline", "\n", line)
-    yield Token("end", "", line)
+    end = Span(line, position - start + 1)
+    yield Token("newline", "\n", end)
+    yield Token("end", "", end)
+
+
+def _span(text: str, line: int, start: int, position: int, end: int) -> Span:
+    """Where the token from `position` to `end` is, on `line` (which starts at `start`) and the lines it crosses."""
+    newlines = text.count("\n", position, end)
+    last = text.rfind("\n", position, end) + 1 if newlines else start
+    return Span(line, position - start + 1, line + newlines, end - last + 1)
 
 
 # --- the tree
@@ -130,20 +143,22 @@ class Assignment:
     name: str
     operator: str  # "=" or "+="
     value: Expression
-    line: int
+    span: Span
 
 
 @dataclass(frozen=True, slots=True)
 class Statement:
     expression: Expression
-    line: int
+    span: Span
 
 
 @dataclass(slots=True)
 class If:
-    """`if` and each `elif` with its condition, then `else` (condition None), each with its statements."""
+    """`if` and each `elif` with its condition, then `else` (condition None), each with its statements; `heads` are
+    the keyword that opens each branch and where it is written, through its condition."""
 
     branches: list[tuple[Expression | None, list[Node]]] = field(default_factory=list)
+    heads: list[tuple[str, Span]] = field(default_factory=list)
 
 
 @dataclass(frozen=True, slots=True)
@@ -175,6 +190,11 @@ class _Parser:
     def _at(self, *texts: str) -> bool:
         return self.token.kind in ("operator", "keyword") and self.token.text in texts
 
+    def since(self, first: Token) -> Span:
+        """From the start of `first` to the end of the last token taken."""
+        last = self.tokens[self.position - 1].span
+        return Span(first.span.line, first.span.column, last.end_line, last.end_column)
+
     def _take(self, *texts: str) -> Token | None:
         if self._at(*texts):
             self.position += 1
@@ -203,31 +223,37 @@ class _Parser:
         return nodes
 
     def statement(self) -> Node:
-        line = self.token.line
+        first = self.token
+        line = first.line
         if self._take("if"):
-            return self._if()
+            return self._if(first)
         if self._take("foreach"):
             return self._foreach()
         if jump := self._take("break", "continue"):
             return Jump(jump.text)
         expression = self.expression()
         if isinstance(expression, Name) and (operator := self._take("=", "+=")):
-            return Assignment(expression.name, operator.text, self.expression(), line)
+            value = self.expression()
+            return Assignment(expression.name, operator.text, value, self.since(first))
         if self.token.kind not in ("newline", "end"):
             raise MesonSyntaxError(line, f"unexpected {self.token.text!r}")
-        return Statement(expression, line)
+        return Statement(expression, self.since(first))
 
-    def _if(self) -> If:
+    def _if(self, opening: Token) -> If:
         found = If()
         condition: Expression | None = self.expression()
+        head = (opening.text, self.since(opening))
         while True:
             body = self.block("elif", "else", "endif")
             found.branches.append((condition, body))
+            found.heads.append(head)
             if self._take("endif"):
                 return found
+            keyword = self.token
             condition = self.expression() if self._take("elif") else None
             if condition is None:
                 self._expect("else")
+            head = (keyword.text, self.since(keyword))
 
     def _foreach(self) -> Foreach:
         names = [self._name()]
