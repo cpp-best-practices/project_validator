@@ -21,6 +21,7 @@ from project_validator.facts.shell import ShellCommand, split_script
 from project_validator.includes import Chain, Refused, follow
 from project_validator.limits import GITLAB_EXTENDS, GITLAB_INCLUDES, GITLAB_REFERENCES
 from project_validator.platforms import detect_operating_systems
+from project_validator.templates import SHELL, known
 from project_validator.text import pattern
 from project_validator.yaml_support import Tagged
 
@@ -30,7 +31,6 @@ _RESERVED_KEYS = frozenset(
     {"stages", "variables", "default", "include", "workflow"}
     | {"image", "services", "before_script", "after_script", "cache"}
 )
-_VARIABLE = re.compile(r"\$\{?(\w+)\}?")
 
 
 def _entry_combinations(entry: Mapping[str, object]) -> list[Variables]:
@@ -47,7 +47,7 @@ def expand_parallel(parallel: object) -> list[Variables]:
 
 
 def substitute_variables(text: str, variables: Variables) -> str:
-    return _VARIABLE.sub(lambda match: variables.get(match[1], match[0]), text)
+    return SHELL.substituted(text, known(variables))
 
 
 def _runner_os(tags: str) -> str:

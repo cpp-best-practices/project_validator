@@ -26,6 +26,7 @@ from project_validator.facts.exit_status import POSIX
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, inside, joined
 from project_validator.includes import Chain, Refused, follow
 from project_validator.limits import MAKE_INCLUDES
+from project_validator.templates import Syntax, known
 
 MAKEFILES = ("GNUmakefile", "makefile", "Makefile")
 _PROGRAMS = frozenset({"make", "gmake", "mingw32-make"})
@@ -65,18 +66,14 @@ class Makefile:
     problems: list[str] = field(default_factory=list)
 
 
-_REFERENCE = re.compile(r"\$(?:\((?P<paren>[A-Za-z_][\w.-]*)\)|\{(?P<brace>[A-Za-z_][\w.-]*)\})")
+# A reference to a variable by name, `$(NAME)` or `${NAME}`; `VARIABLE` is anything make substitutes.
+_REFERENCE = Syntax(re.compile(r"\$(?:\((?P<name>[A-Za-z_][\w.-]*)\)|\{(?P<name_brace>[A-Za-z_][\w.-]*)\})"))
 
 
 def expand_variables(line: str, variables: dict[str, str]) -> str:
     """`line` with the references to `variables` replaced by their values, which may refer to others in turn; a
     reference to a variable without a value stays as written."""
-    for _ in range(10):
-        expanded = _REFERENCE.sub(lambda match: variables.get(match["paren"] or match["brace"], match[0]), line)
-        if expanded == line:
-            break
-        line = expanded
-    return line
+    return _REFERENCE.substituted(line, known(variables), rounds=10)
 
 
 # Why a recipe line written after `-` cannot fail make.
@@ -240,8 +237,8 @@ def _recipes(makefile: Makefile, path: str, target: str, visited: set[str]) -> I
         unprefixed = expanded.lstrip("@-+ ")
         text = unprefixed.replace(_ESCAPED_DOLLAR, "$")
         ignored = _IGNORED if "-" in expanded[: len(expanded) - len(unprefixed)] else ""
-        if (program := _REFERENCE.match(text)) is not None:
-            name = program["paren"] or program["brace"]
+        if (program := _REFERENCE.parse(text).leading) is not None:
+            name = program.name
             yield Unknown(
                 origin=origin,
                 subject=f"the recipe {text!r}",

@@ -18,11 +18,12 @@ from project_validator.facts.shell import ShellSyntaxError, split_words
 from project_validator.includes import Chain, Refused, follow
 from project_validator.limits import COMPOSITE_ACTIONS, REUSABLE_WORKFLOWS
 from project_validator.platforms import detect_operating_systems
+from project_validator.templates import SHELL, Reference, Syntax, known
 from project_validator.text import pattern
 
 type Combination = dict[str, object]
 
-_MATRIX_EXPRESSION = re.compile(r"\$\{\{\s*matrix\.([\w.-]+)\s*\}\}")
+_MATRIX = Syntax(re.compile(r"\$\{\{\s*matrix\.(?P<name>[\w.-]+)\s*\}\}"))
 _RESERVED_MATRIX_KEYS = frozenset({"include", "exclude"})
 
 
@@ -39,13 +40,13 @@ def substitute_matrix(text: str, combination: Combination, missing: str | None =
     """`text` with `${{ matrix.<key> }}` replaced by the combination's values; a key the combination lacks is left as
     written, or replaced by `missing` (GitHub itself substitutes an empty string)."""
 
-    def replacement(match: re.Match[str]) -> str:
-        value = _lookup(combination, match[1])
+    def replacement(reference: Reference) -> str | None:
+        value = _lookup(combination, reference.name)
         if value is None:
-            return match[0] if missing is None else missing
+            return missing
         return value if isinstance(value, str) else json.dumps(value)
 
-    return _MATRIX_EXPRESSION.sub(replacement, text)
+    return _MATRIX.substituted(text, replacement)
 
 
 # An expression GitHub evaluates before the shell runs the step.
@@ -167,7 +168,6 @@ _EXPORT = re.compile(
 
 
 _ASSIGNMENT = re.compile(r"(?:^|[;&]\s*)\s*(?:export\s+)?(?P<name>[A-Za-z_]\w*)=(?P<value>[^\s;&|]*)", re.MULTILINE)
-_REFERENCE = re.compile(r"\$(?:\{(\w+)\}|(\w+))")
 
 
 def _exported(script: str) -> dict[str, str]:
@@ -197,7 +197,7 @@ def _conditional(script: str, at: int) -> bool:
 
 
 def _substituted(value: str, assigned: Mapping[str, str]) -> str:
-    return _REFERENCE.sub(lambda reference: assigned.get(reference[1] or reference[2], reference[0]), value)
+    return SHELL.substituted(value, known(assigned))
 
 
 def _job_facts(
@@ -494,7 +494,7 @@ class _Combination:
         return None
 
 
-_INPUT = re.compile(r"\$\{\{\s*inputs\.([\w-]+)\s*\}\}")
+_INPUTS = Syntax(re.compile(r"\$\{\{\s*inputs\.(?P<name>[\w-]+)\s*\}\}"))
 
 
 def _local_action(uses: str) -> str | None:
@@ -518,7 +518,7 @@ def _with_inputs[T](value: T, inputs: Mapping[str, str]) -> T:
     """`value` (a step, or part of one) with each `${{ inputs.<name> }}` replaced by the input's value ("" when it has
     none)."""
     if isinstance(value, str):
-        return _INPUT.sub(lambda match: inputs.get(match[1], ""), value)  # type: ignore[return-value]
+        return _INPUTS.substituted(value, lambda reference: inputs.get(reference.name, ""))  # type: ignore[return-value]
     if isinstance(value, Mapping):
         return {key: _with_inputs(item, inputs) for key, item in value.items()}  # type: ignore[return-value]
     if isinstance(value, list):

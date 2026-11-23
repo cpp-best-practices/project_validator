@@ -7,13 +7,13 @@ questions query them (see docs/architecture.md). Nothing here judges a project.
 from __future__ import annotations
 
 import dataclasses
-import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass, field
 from types import MappingProxyType
 from typing import Any, Protocol, cast, runtime_checkable
 
 from project_validator.parsing import Span
+from project_validator.templates import SHELL, known
 
 type Location = tuple[str | int, ...]
 
@@ -100,9 +100,6 @@ class Command(Fact):
         object.__setattr__(self, "words", _resolve(self.argv, self.env))
 
 
-_VARIABLE = re.compile(r"\$(?:\{(\w+)\}|(\w+))")
-
-
 def resolved(command: Command) -> tuple[str, ...]:
     """The command's arguments with the shell variables its environment defines (`$BUILD_TYPE`) put in place; a
     word that is one variable becomes the words of its value.
@@ -116,14 +113,12 @@ def _resolve(argv: tuple[str, ...], env: Mapping[str, str]) -> tuple[str, ...]:
     if not any("$" in word for word in argv):
         return argv
 
-    def value(match: re.Match[str]) -> str:
-        return env.get(match[1] or match[2], match[0])
-
     def words(word: str) -> tuple[str, ...]:
         """A word that is one variable splits into the words of its value, as the shell splits an unquoted
         expansion (`$CABAL v2-test` with `CABAL="cabal -v"`)."""
-        expanded = _VARIABLE.sub(value, word)
-        whole = _VARIABLE.fullmatch(word) is not None and expanded != word
+        template = SHELL.parse(word)
+        expanded = template.substituted(known(env))
+        whole = template.whole is not None and expanded != word
         return tuple(expanded.split()) if whole and expanded.strip() else (expanded,)
 
     return tuple(found for word in argv for found in words(word))

@@ -18,6 +18,7 @@ from project_validator.core import Context
 from project_validator.facts import Command, Origin, Unknown, resolved
 from project_validator.facts.arguments import positional, program
 from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at
+from project_validator.templates import Syntax
 
 _FILES = ("tox.ini", "tox.toml", "pyproject.toml")
 _RUNS = frozenset({"run", "r", "run-parallel", "p", "exec", "e"})
@@ -48,7 +49,8 @@ _OPTIONS = frozenset(
 _RANGE = re.compile(r"^(\d+)-(\d+)$")
 _BRACES = re.compile(r"\{([^{}]*)\}")
 # A tox substitution with a default (`{posargs:-n auto}`) becomes its default; others (`{toxinidir}`) become ".".
-_SUBSTITUTION = re.compile(r"\{(\w+)(?::([^{}]*))?\}")
+# A substitution (`{posargs}`, `{env:NAME:default}`... `{name:default}`), replaced by its default, else `.`.
+_SUBSTITUTION = Syntax(re.compile(r"\{(?P<name>\w+)(?::(?P<default>[^{}]*))?\}"))
 
 
 def braces(text: str) -> list[str]:
@@ -164,7 +166,7 @@ def _toml_env(tables: Mapping[str, object], name: str) -> tuple[str, list[str]] 
 
 
 def _substituted(line: str) -> str:
-    return _SUBSTITUTION.sub(lambda match: match[2] if match[2] is not None else ".", line)
+    return _SUBSTITUTION.substituted(line, lambda reference: "." if reference.default is None else reference.default)
 
 
 def _env_commands(
