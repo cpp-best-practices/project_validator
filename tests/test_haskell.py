@@ -56,6 +56,24 @@ test-suite spec
   main-is: Spec.hs
 """
 
+BRACED = (
+    "name: base\n"
+    "Library {\n"
+    "    ghc-options: -fno-warn-deprecations\n"
+    "    if impl(ghc < 6.9) {\n"
+    "        ghc-options: -Werror\n"
+    "    } else {\n"
+    "        ghc-options:\n"
+    "            -O2\n"
+    "            -Wall\n"
+    "    }\n"
+    "}\n"
+    "executable app\n"
+    "  {\n"
+    "  ghc-options: -threaded\n"
+    "  }\n"
+)
+
 
 def _ci(*steps: str) -> dict[str, str]:
     return github_job("ubuntu-latest", *steps)
@@ -79,11 +97,28 @@ class CabalTests(unittest.TestCase):
             ],
         )
 
+    def test_sections_written_with_braces_read_as_indented_ones(self) -> None:
+        found = [
+            (str(component), value.value, sorted(value.requires))
+            for component, value in values(parse(BRACED), "ghc-options")
+        ]
+        self.assertEqual(
+            found,
+            [
+                ("library", "-fno-warn-deprecations", []),
+                ("library", "-Werror", ["impl(ghc < 6.9)"]),
+                ("library", "-O2\n-Wall", ["not impl(ghc < 6.9)"]),
+                ("executable app", "-threaded", []),
+            ],
+        )
+
+    def test_a_brace_ending_a_description_line_opens_nothing(self) -> None:
+        text = "description:\n  uses { and\n  more {\nlibrary\n  ghc-options: -Wall\n"
+        self.assertEqual([found.value for _, found in values(parse(text), "ghc-options")], ["-Wall"])
+
     def test_unreadable_files(self) -> None:
         with self.assertRaises(CabalSyntaxError):
             parse("library\n\tghc-options: -Wall\n")
-        with self.assertRaises(CabalSyntaxError):
-            parse("library {\n  ghc-options: -Wall\n}\n")
         [fact] = GHC_OPTIONS.read("app.cabal", "library\n\tghc-options: -Wall\n")
         self.assertEqual(fact.origin.path, "app.cabal")
         self.assertNotIsInstance(fact, CompilerOption)
