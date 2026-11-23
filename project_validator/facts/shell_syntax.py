@@ -644,6 +644,8 @@ class _Parser:
         self.stops: list[frozenset[str]] = []
         self.open_subshells = 0
         self.errors: list[ShellSyntaxError] = []
+        # Where a condition was read to the end without finding its body: (token index, stop words, open subshells).
+        self.unfinished: set[tuple[int, frozenset[str], int]] = set()
 
     def problem(self, message: str, offset: int) -> None:
         """Report what is wrong at `offset`; PowerShell, read without compound commands, is not judged by them."""
@@ -889,11 +891,20 @@ class _Parser:
 
     def condition(self, start: int, *stop: str) -> Script | None:
         """A condition up to the word that opens its body; None, with nothing read, when the script ends before that
-        word (a fragment, or another shell's `if`): the caller reads only the rest of the line as the condition."""
-        mark = self.index
+        word (a fragment, or another shell's `if`): the caller reads only the rest of the line as the condition.
+
+        Where a search ran out is remembered, so a condition nested in one that is read again (`if|if|…`) never
+        searches twice, and what the abandoned search reported is dropped, to be reported once by the reading that
+        stands."""
+        mark, reported = self.index, len(self.errors)
+        search = (mark, self.stopping() | frozenset(stop), self.open_subshells)
+        if search in self.unfinished:
+            return None
         condition = self.body(start, *stop)
         if self.peek() is None:
+            self.unfinished.add(search)
             self.index = mark
+            del self.errors[reported:]
             return None
         return condition
 

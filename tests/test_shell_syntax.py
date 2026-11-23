@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import time
 import unittest
 
 from project_validator.facts.shell_syntax import (
@@ -262,6 +263,17 @@ class RecoveryTests(unittest.TestCase):
     def test_a_condition_without_its_body_says_so(self) -> None:
         self.assertEqual(_errors('if "a" equ "b" call x.bat\nmake'), [("the if has no then", 1, 1)])
         self.assertEqual(_errors("while read x\nmake"), [("the while has no do", 1, 1)])
+
+    def test_each_condition_without_its_body_is_reported_once(self) -> None:
+        self.assertEqual(_errors("if|if|x"), [("the if has no then", 1, 1), ("the if has no then", 1, 4)])
+        self.assertEqual(_errors("while if x\nmake"), [("the while has no do", 1, 1), ("the if has no then", 1, 7)])
+
+    def test_conditions_without_their_bodies_nest_without_rereading_the_script(self) -> None:
+        # Each `if` looks for its `then` to the end of the script once; nesting them must not multiply that search.
+        started = time.perf_counter()
+        script = parse("if|" * 40 + "x\n" + "while if|" * 20 + "x")
+        self.assertLess(time.perf_counter() - started, 1.0)
+        self.assertEqual(len(script.errors), 80)
 
     def test_what_closes_nothing_says_so(self) -> None:
         self.assertEqual(_argvs("fi\nmake\ndone"), [("make",)])
