@@ -103,12 +103,13 @@ class Collector:
         if (handler := _COMMANDS.get(invocation.name)) is not None:
             handler(self, frame, invocation, words)
         elif invocation.name in _TEST_REGISTRATIONS:
-            self.ctest(frame, "registers", invocation.name)
+            self.ctest(frame, invocation, "registers", invocation.name)
             registered = _registered_test([word.text for word in words])
             if invocation.name == "add_test" and registered[:1] not in ((), ("",)):
-                self.ctest(frame, "test", registered)
+                self.ctest(frame, invocation, "test", registered)
         elif invocation.name in _DEPENDENCY_MANAGERS:
-            self.facts.append(Declared(origin=Origin(path=frame.path), manager=_DEPENDENCY_MANAGERS[invocation.name]))
+            manager = _DEPENDENCY_MANAGERS[invocation.name]
+            self.facts.append(Declared(origin=frame.origin(invocation), manager=manager))
 
     def finished(self, frame: Frame) -> None:
         """The CMake variables a directory set last, as settings; those that hold flags, as options too."""
@@ -147,11 +148,11 @@ class Collector:
                 builds = both(frame.condition, word.when, value.when)
                 self._add(word.origin or frame.origin(invocation), builds, options, kind, target)
 
-    def ctest(self, frame: Frame, key: str, value: object) -> None:
-        self.facts.append(Setting(origin=Origin(path=frame.path), tool="CTest", key=key, value=value))
+    def ctest(self, frame: Frame, invocation: Invocation, key: str, value: object) -> None:
+        self.facts.append(Setting(origin=frame.origin(invocation), tool="CTest", key=key, value=value))
 
-    def guard(self, frame: Frame, text: str) -> None:
-        self.facts.append(Setting(origin=Origin(path=frame.path), tool=BUILD_SYSTEM, key="guard", value=text))
+    def guard(self, frame: Frame, invocation: Invocation, text: str) -> None:
+        self.facts.append(Setting(origin=frame.origin(invocation), tool=BUILD_SYSTEM, key="guard", value=text))
 
     def setting(
         self,
@@ -302,15 +303,15 @@ def _option(collector: Collector, frame: Frame, invocation: Invocation, words: l
         for value in arguments[2] if len(arguments) > 2 else [Value("OFF")]:
             collector.setting(frame, invocation, words[0].text, value, None, default=True)
     if invocation.name == "cmake_dependent_option" and len(arguments) >= 4:
-        collector.guard(frame, arguments[3][0].text)
+        collector.guard(frame, invocation, arguments[3][0].text)
 
 
-def _guard(collector: Collector, frame: Frame, _invocation: Invocation, words: list[Value]) -> None:
+def _guard(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
     """What an `if()` (or `elseif()`) tests, as written: the evaluator decides where it holds; the text says what the
     project guards on (`PROJECT_IS_TOP_LEVEL`, a comparison of the source and binary directories). A variable a path
     was resolved into reads as the path."""
     texts = (collector.resolved.get(word.text.removeprefix("${").removesuffix("}"), word.text) for word in words)
-    collector.guard(frame, " ".join(texts))
+    collector.guard(frame, invocation, " ".join(texts))
 
 
 def _resolve(collector: Collector, _frame: Frame, invocation: Invocation, _words: list[Value]) -> None:
@@ -328,7 +329,7 @@ def _string(collector: Collector, frame: Frame, invocation: Invocation, _words: 
     `if(a STREQUAL b)` would, so the comparison, as written, is a guard."""
     raw = [argument.text for argument in invocation.arguments]
     if raw[:2] == ["COMPARE", "EQUAL"] and len(raw) >= 5:
-        collector.guard(frame, f"{raw[2]} STREQUAL {raw[3]}")
+        collector.guard(frame, invocation, f"{raw[2]} STREQUAL {raw[3]}")
 
 
 def _set(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
@@ -339,8 +340,8 @@ def _set(collector: Collector, frame: Frame, invocation: Invocation, words: list
         collector.setting(frame, invocation, texts[0], Value(value, words[0].when), None, default=True)
 
 
-def _enable_testing(collector: Collector, frame: Frame, _invocation: Invocation, _words: list[Value]) -> None:
-    collector.ctest(frame, "enables", True)
+def _enable_testing(collector: Collector, frame: Frame, invocation: Invocation, _words: list[Value]) -> None:
+    collector.ctest(frame, invocation, "enables", True)
 
 
 def _include(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
@@ -349,7 +350,7 @@ def _include(collector: Collector, frame: Frame, invocation: Invocation, words: 
     if words[0].text == "CTest":
         _enable_testing(collector, frame, invocation, words)
     elif words[0].text.endswith("CPM.cmake"):
-        collector.facts.append(Declared(origin=Origin(path=frame.path), manager="CPM"))
+        collector.facts.append(Declared(origin=frame.origin(invocation), manager="CPM"))
 
 
 def _commands(

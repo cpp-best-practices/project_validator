@@ -17,6 +17,7 @@ from project_validator.build_systems.cmake.syntax import (
 )
 from project_validator.build_systems.cmake.values import Item, Lookup, elements, expanded
 from project_validator.facts.conditions import ALWAYS, NEVER, Condition, both, either, negated, only, requiring
+from project_validator.parsing import Span
 
 MSVC = only("compilers", ["msvc"])
 GCC = only("compilers", ["gcc"])
@@ -64,10 +65,16 @@ class SyntaxTests(unittest.TestCase):
                         Argument("z", Kind.BRACKET),
                         Argument('-Da="b c"', Kind.UNQUOTED),
                     ),
-                    3,
+                    Span(3, 1, 5, 15),
                 )
             ],
         )
+
+    def test_an_invocation_spans_from_its_name_past_its_closing_parenthesis(self) -> None:
+        [block] = parse("if(A)\n  set(X 1)\nendif()\n")
+        block = _block(block)
+        [inner] = block.branches[0][1]
+        self.assertEqual((block.opening.span, _invocation(inner).span), (Span(1, 1, 1, 6), Span(2, 3, 2, 11)))
 
     def test_blocks_hold_what_they_enclose(self) -> None:
         [block] = parse("if(A)\n  set(X 1)\nelseif(B)\nelse()\n  foreach(I 1 2)\n  endforeach()\nendif()\n")

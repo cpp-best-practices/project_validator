@@ -46,13 +46,13 @@ def _evaluated(files: Mapping[str, str]) -> CMakeProject:
     evaluation.evaluate()
     problems = (
         Unknown(
-            origin=Origin(path=path),
+            origin=Origin(path=path, span=problem.span),
             subject=f"the CMake file {path}",
-            reason=reason,
+            reason=problem.reason,
             hides="settings",
             tools=("CMake",),
         )
-        for path, reason in evaluation.problems.items()
+        for path, problem in evaluation.problems.items()
     )
     targets = {
         name: tuple(
@@ -175,8 +175,8 @@ def _scripts_run(command: Command, context: Context) -> list[Expansion] | None:
     evaluation = Evaluation(files=frozenset(files), read=files.__getitem__, observer=collector)
     evaluation.script(path, defines)
     problems: list[Expansion] = [
-        Unknown(origin=Origin(path=at), subject=f"the CMake script {at}", reason=reason, hides="commands")
-        for at, reason in evaluation.problems.items()
+        Unknown(origin=Origin(path=at, span=problem.span), subject=f"the CMake script {at}", reason=problem.reason)
+        for at, problem in evaluation.problems.items()
     ]
     return [
         *problems,

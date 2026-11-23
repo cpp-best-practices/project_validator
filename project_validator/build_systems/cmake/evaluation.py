@@ -47,6 +47,7 @@ from project_validator.build_systems.cmake.values import (
 from project_validator.facts import Origin
 from project_validator.facts.conditions import ALWAYS, Condition, both, either, negated, requiring
 from project_validator.limits import CMAKE_NESTING
+from project_validator.parsing import Span
 
 # How many items a loop runs for, and how many commands are evaluated in all (how deep calls and includes nest is
 # `CMAKE_NESTING`).
@@ -107,7 +108,15 @@ class Frame:
     stack: tuple[str, ...] = ()
 
     def origin(self, invocation: Invocation) -> Origin:
-        return Origin(path=self.path, at=(invocation.name, invocation.line))
+        return Origin(path=self.path, at=(invocation.name,), span=invocation.span)
+
+
+@dataclass(frozen=True, slots=True)
+class Problem:
+    """Why a file could not be evaluated (in full), and where in it, when that is known."""
+
+    reason: str
+    span: Span | None = None
 
 
 class Observer(Protocol):
@@ -147,7 +156,7 @@ class Evaluation:
     configured: set[str] = field(default_factory=set)
     descriptions: dict[str, str] = field(default_factory=dict)
     reached: set[str] = field(default_factory=set)
-    problems: dict[str, str] = field(default_factory=dict)
+    problems: dict[str, Problem] = field(default_factory=dict)
     _parsed: dict[str, list[Node] | None] = field(default_factory=dict)
     _commands: int = 0
 
@@ -156,10 +165,10 @@ class Evaluation:
             try:
                 self._parsed[path] = parse(self.read(path))
             except CMakeSyntaxError as error:
-                self.problems[path] = str(error)
+                self.problems[path] = Problem(str(error), error.span)
                 self._parsed[path] = None
             except RecursionError:
-                self.problems[path] = "nested too deeply to read"
+                self.problems[path] = Problem("nested too deeply to read")
                 self._parsed[path] = None
         return self._parsed[path]
 
@@ -168,9 +177,9 @@ class Evaluation:
         try:
             self._evaluate_all()
         except _TooMuch:
-            self.problems["CMakeLists.txt"] = f"evaluation stopped after {MOST_COMMANDS} commands"
+            self.problems["CMakeLists.txt"] = Problem(f"evaluation stopped after {MOST_COMMANDS} commands")
         except RecursionError:
-            self.problems["CMakeLists.txt"] = "nested too deeply to read"
+            self.problems["CMakeLists.txt"] = Problem("nested too deeply to read")
 
     def script(self, path: str, defines: Mapping[str, str]) -> None:
         """Run `path` as `cmake -D name=value... -P path` does: on its own, with the variables the command defines."""
@@ -182,7 +191,7 @@ class Evaluation:
         try:
             self._file(path, frame)
         except _TooMuch:
-            self.problems[path] = f"evaluation stopped after {MOST_COMMANDS} commands"
+            self.problems[path] = Problem(f"evaluation stopped after {MOST_COMMANDS} commands")
 
     def _evaluate_all(self) -> None:
         lists = sorted((path for path in self.files if PurePosixPath(path).name == LISTS_FILE), key=_depth)
@@ -337,16 +346,16 @@ class Evaluation:
     def _invoke(self, invocation: Invocation, frame: Frame) -> None:
         words = self.words(invocation.arguments, frame)
         if (definition := self.functions.get(invocation.name)) is not None:
-            self._call(definition, words, frame)
+            self._call(definition, words, frame, invocation)
             return
         if (handler := _HANDLERS.get(invocation.name)) is not None:
             handler(self, frame, words, invocation)
         self.observer.invoked(frame, invocation, words)
 
-    def _call(self, definition: Definition, words: list[Value], frame: Frame) -> None:
+    def _call(self, definition: Definition, words: list[Value], frame: Frame, invocation: Invocation) -> None:
         arguments = tuple(word.text for word in words)
         if not CMAKE_NESTING.allows(len(frame.stack)):
-            self.problems.setdefault(frame.path, CMAKE_NESTING.reason)
+            self.problems.setdefault(frame.path, Problem(CMAKE_NESTING.reason, invocation.span))
         if arguments in definition.seen or definition.name in frame.stack or not CMAKE_NESTING.allows(len(frame.stack)):
             definition.calls = max(definition.calls, 1)
             return
@@ -458,11 +467,11 @@ class Evaluation:
         elif len(texts) >= 4:
             _parse_arguments(frame.scope, texts[:4], words[4:])
 
-    def include(self, frame: Frame, words: list[Value], _: Invocation) -> None:
+    def include(self, frame: Frame, words: list[Value], invocation: Invocation) -> None:
         if not words or (path := self._module(frame, words[0].text)) is None or path in frame.stack:
             return
         if not CMAKE_NESTING.allows(len(frame.stack)):
-            self.problems.setdefault(frame.path, CMAKE_NESTING.reason)
+            self.problems.setdefault(frame.path, Problem(CMAKE_NESTING.reason, invocation.span))
             return
         if path in self.reached and self._guarded(path):
             return
@@ -486,11 +495,11 @@ class Evaluation:
         found = (_within(self.files, directory, f"{name}.cmake") for directory in directories)
         return next((path for path in found if path is not None), None)
 
-    def add_subdirectory(self, frame: Frame, words: list[Value], _: Invocation) -> None:
+    def add_subdirectory(self, frame: Frame, words: list[Value], invocation: Invocation) -> None:
         if not words:
             return
         if not CMAKE_NESTING.allows(len(frame.stack)):
-            self.problems.setdefault(frame.path, CMAKE_NESTING.reason)
+            self.problems.setdefault(frame.path, Problem(CMAKE_NESTING.reason, invocation.span))
             return
         path = _within(self.files, frame.directory, f"{words[0].text}/{LISTS_FILE}")
         if path is not None and path not in frame.stack:

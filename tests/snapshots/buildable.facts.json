@@ -39,7 +39,7 @@
       "heuristic": false,
       "key": "enables",
       "kind": "Setting",
-      "origin": "CMakeLists.txt",
+      "origin": "CMakeLists.txt:3:1 (enable_testing)",
       "tool": "CTest",
       "value": true
     },
@@ -47,7 +47,7 @@
       "heuristic": false,
       "key": "registers",
       "kind": "Setting",
-      "origin": "CMakeLists.txt",
+      "origin": "CMakeLists.txt:4:1 (add_test)",
       "tool": "CTest",
       "value": "add_test"
     },
@@ -55,7 +55,7 @@
       "heuristic": false,
       "key": "test",
       "kind": "Setting",
-      "origin": "CMakeLists.txt",
+      "origin": "CMakeLists.txt:4:1 (add_test)",
       "tool": "CTest",
       "value": [
         "always_passes",

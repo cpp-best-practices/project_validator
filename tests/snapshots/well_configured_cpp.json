@@ -333,6 +333,10 @@
               {
                 "manager": "FetchContent",
                 "manifest": "cmake/Dependencies.cmake"
+              },
+              {
+                "manager": "FetchContent",
+                "manifest": "cmake/Dependencies.cmake"
               }
             ],
             "language": "C++",
