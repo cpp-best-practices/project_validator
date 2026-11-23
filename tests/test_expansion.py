@@ -13,6 +13,7 @@ from project_validator.facts.arguments import positional
 from project_validator.facts.conditions import ALWAYS
 from project_validator.facts.expansion import CommandExpander, known_expanders
 from project_validator.facts.tools import ToolRun
+from project_validator.parsing import Span
 from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, temp_project
 
 
@@ -26,7 +27,7 @@ def _expanded(facts: Facts) -> list[tuple[str, ...]]:
 
 
 def _recipe(makefile: Makefile, target: str) -> list[tuple[int, str]]:
-    return [(step.line, step.text) for step in makefile.rules[target].recipe]
+    return [(step.span.line, step.text) for step in makefile.rules[target].recipe]
 
 
 def _value(makefile: Makefile, name: str) -> str:
@@ -53,9 +54,9 @@ class EngineTests(unittest.TestCase):
         formatting = commands[("clang-format", "--dry-run", "-Werror", "a.cpp")]
         self.assertEqual(
             [str(origin) for origin in formatting.via],
-            [f"{GITHUB_WORKFLOW}:jobs.build.steps[0].run", "Makefile:lint[4]"],
+            [f"{GITHUB_WORKFLOW}:1:60 (jobs.build.steps[0].run)", "Makefile:4:1 (lint)"],
         )
-        self.assertEqual(str(formatting.origin), "Makefile:format[6]")
+        self.assertEqual(str(formatting.origin), "Makefile:6:1 (format)")
         self.assertEqual(formatting.job, f"{GITHUB_WORKFLOW}:build")
 
     def test_launchers_and_wrappers_run_the_command_that_follows(self) -> None:
@@ -443,7 +444,7 @@ class PreCommitTests(unittest.TestCase):
             (ruff.line, ruff.origin),
             (
                 "the ruff hook of https://github.com/astral-sh/ruff-pre-commit",
-                Origin(path=".pre-commit-config.yaml", at=("repos", 0, "hooks", 0)),
+                Origin(path=".pre-commit-config.yaml", at=("repos", 0, "hooks", 0), span=Span(5, 9, 7, 7)),
             ),
         )
 
@@ -642,6 +643,15 @@ class ShellScriptTests(unittest.TestCase):
             with self.subTest(line=line):
                 found = _tox(self.SCRIPT, line)
                 self.assertIn(("ruff", "check", "."), found)
+
+    def test_a_scripts_commands_are_placed_where_the_file_has_them_and_a_steps_are_not(self) -> None:
+        """A script file's text is the file, so where a command is in it is a place in the file; a `run:` step's is a
+        place in its block only, which the workflow's place already names."""
+        script = {"ci/build.sh": "#!/bin/sh\nset -e\nif true; then\n  make all\nfi\n"}
+        facts = _facts({**script, **github_job("ubuntu-latest", "./ci/build.sh\necho done")})
+        placed = {command.argv: str(command.origin) for command in facts.of(Command)}
+        self.assertEqual(placed[("make", "all")], "ci/build.sh:4:3")
+        self.assertEqual(placed[("echo", "done")], f"{GITHUB_WORKFLOW}:1:60 (jobs.build.steps[0].run)")
 
     def test_other_files_and_inline_scripts_are_not_followed(self) -> None:
         files = {**self.SCRIPT, "tools/run.py": "print('x')\n", "ci/notes": "ruff check .\n"}

@@ -43,6 +43,7 @@ from project_validator.facts.exit_status import POSIX
 from project_validator.facts.expansion import CommandExpander, Expansion, Only, Script, found_at, inside, joined
 from project_validator.includes import Chain, Refused, follow
 from project_validator.limits import MAKE_INCLUDES
+from project_validator.parsing import Span
 from project_validator.templates import Reference, Syntax
 
 MAKEFILES = ("GNUmakefile", "makefile", "Makefile")
@@ -58,7 +59,7 @@ VARIABLE = re.compile(r"\$(?:\([^()]*\)|\{[^{}]*\}|[^({$\s])")
 class Step:
     """A line of a recipe: where it is written, its text, and the builds it is read in."""
 
-    line: int
+    span: Span
     text: str
     when: Condition = ALWAYS
 
@@ -204,7 +205,7 @@ class _Evaluation:
     def node(self, node: make_syntax.Node) -> None:
         if isinstance(node, make_syntax.RecipeLine):
             for rule in self.current:
-                rule.recipe.append(Step(node.span.line, _recipe_line(node.text), self.when))
+                rule.recipe.append(Step(node.span, _recipe_line(node.text), self.when))
         elif isinstance(node, make_syntax.Assignment):
             self.assign(node)
         elif isinstance(node, make_syntax.Include):
@@ -241,7 +242,7 @@ class _Evaluation:
         for rule in self.current:
             rule.prerequisites += [(prerequisite, self.when) for prerequisite in node.prerequisites]
             if node.recipe:
-                rule.recipe.append(Step(node.span.line, _recipe_line(node.recipe), self.when))
+                rule.recipe.append(Step(node.span, _recipe_line(node.recipe), self.when))
         if makefile.default is None:
             makefile.default = next((target for target in node.targets if not target.startswith(".")), None)
 
@@ -382,7 +383,7 @@ def _recipes(
             yield from _recipes(makefile, path, prerequisite.replace("%", stem), visited, held)
     lookup = _lookup(makefile.variables)
     for step in rule.recipe:
-        origin = Origin(path=path, at=(target, step.line))
+        origin = Origin(path=path, at=(target,), span=step.span)
         # A variable may hold the recipe's prefixes (`Q = @`, then `$(Q)$(CC) …`).
         # `$$` is a `$` the shell sees, never a reference (Documenter's `$$(biome_jll.biome())`).
         line = step.text.replace("$$", _ESCAPED_DOLLAR).replace("$@", target).replace("$*", stem)

@@ -9,7 +9,7 @@ import re
 from collections.abc import Iterator
 from dataclasses import dataclass, field
 
-from project_validator.parsing import ParseError
+from project_validator.parsing import ParseError, Span
 
 
 class Kind(enum.Enum):
@@ -26,11 +26,16 @@ class Argument:
 
 @dataclass(frozen=True, slots=True)
 class Invocation:
-    """A command invocation: its name (in lower case, as CMake compares them), arguments and line."""
+    """A command invocation: its name (in lower case, as CMake compares them), arguments, and where it is written,
+    from its name to past its closing parenthesis."""
 
     name: str
     arguments: tuple[Argument, ...]
-    line: int
+    span: Span
+
+    @property
+    def line(self) -> int:
+        return self.span.line
 
 
 @dataclass(slots=True)
@@ -85,6 +90,11 @@ class _Lines:
     def of(self, offset: int) -> int:
         return bisect.bisect_right(self.starts, offset)
 
+    def position(self, offset: int) -> tuple[int, int]:
+        """The line and column of `offset`, both from 1."""
+        line = self.of(offset)
+        return line, offset - self.starts[line - 1] + 1
+
 
 def _tokens(text: str) -> Iterator[tuple[str, str, int]]:
     """(kind, text, offset) of each token that is not blank or a comment."""
@@ -108,13 +118,14 @@ def _argument(kind: str, text: str) -> Argument:
     return Argument(text, Kind.UNQUOTED)
 
 
-def _arguments(tokens: Iterator[tuple[str, str, int]], lines: _Lines, line: int) -> tuple[Argument, ...]:
-    """The arguments up to the closing parenthesis; nested parentheses are arguments of their own (`if((A))`)."""
+def _arguments(tokens: Iterator[tuple[str, str, int]], line: int) -> tuple[tuple[Argument, ...], int]:
+    """The arguments up to the closing parenthesis, and the offset after it; nested parentheses are arguments of their
+    own (`if((A))`)."""
     found: list[Argument] = []
     depth = 0
-    for kind, text, _ in tokens:
+    for kind, text, offset in tokens:
         if kind == "close" and depth == 0:
-            return tuple(found)
+            return tuple(found), offset + 1
         depth += {"open": 1, "close": -1}.get(kind, 0)
         found.append(Argument(text, Kind.UNQUOTED) if kind in ("open", "close") else _argument(kind, text))
     raise CMakeSyntaxError(line, "the command's arguments are never closed")
@@ -130,7 +141,8 @@ def invocations(text: str) -> Iterator[Invocation]:
             raise CMakeSyntaxError(line, f"expected a command, found {name!r}")
         if next(tokens, ("", "", 0))[0] != "open":
             raise CMakeSyntaxError(line, f"expected ( after {name}")
-        yield Invocation(name.lower(), _arguments(tokens, lines, line), line)
+        arguments, end = _arguments(tokens, line)
+        yield Invocation(name.lower(), arguments, Span(*lines.position(offset), *lines.position(end)))
 
 
 def _block(opening: Invocation, found: Iterator[Invocation]) -> Block:

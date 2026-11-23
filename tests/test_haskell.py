@@ -97,6 +97,22 @@ class CabalTests(unittest.TestCase):
             ],
         )
 
+    def test_options_and_test_suites_are_placed_where_they_are_written(self) -> None:
+        """A field spans its continuation lines (the library's `ghc-options:` runs from line 17 to 19)."""
+        options = {
+            str(fact.origin) for fact in GHC_OPTIONS.read("app.cabal", PACKAGE) if isinstance(fact, CompilerOption)
+        }
+        self.assertEqual(
+            sorted(options, key=lambda origin: int(origin.split(":")[1])),
+            [f"app.cabal:{place} (ghc-options)" for place in ("6:3", "8:5", "10:5", "12:5", "17:3", "24:3")],
+        )
+        [library] = (value for component, value in values(parse(PACKAGE), "ghc-options") if "Wcompat" in value.value)
+        if library.span is None:
+            self.fail("the field has no span")
+        self.assertEqual((library.span.line, library.span.end_line), (17, 19))
+        suites = [str(fact.origin) for fact in TEST_SUITES.read("app.cabal", PACKAGE)]
+        self.assertEqual(suites, ["app.cabal:27:1 (test-suite)"])
+
     def test_sections_written_with_braces_read_as_indented_ones(self) -> None:
         found = [
             (str(component), value.value, sorted(value.requires))

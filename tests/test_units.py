@@ -235,8 +235,8 @@ class LocalActionTests(unittest.TestCase):
         ) as root:
             [first, *_] = make_context(root).facts.of(Command)
         self.assertEqual(first.argv, ("./gradlew", "build", "--scan=false"))
-        self.assertEqual([str(origin) for origin in first.via], [f"{GITHUB_WORKFLOW}:jobs.ci.steps[0]"])
-        self.assertEqual(str(first.origin), ".github/actions/build/action.yml:runs.steps[0].run")
+        self.assertEqual([str(origin) for origin in first.via], [f"{GITHUB_WORKFLOW}:1:44 (jobs.ci.steps[0])"])
+        self.assertEqual(str(first.origin), ".github/actions/build/action.yml:10:7 (runs.steps[0].run)")
 
     def test_javascript_and_docker_actions_run_their_own_code(self) -> None:
         node = {".github/actions/js/action.yml": "runs:\n  using: node20\n  main: index.js\n"}

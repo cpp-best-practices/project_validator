@@ -242,7 +242,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "ci-lint",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:3:3 (jobs.ci-lint)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -253,7 +253,7 @@
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "origin": ".github/workflows/ci-lint.yml:6:9 (jobs.ci-lint.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -270,7 +270,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "pipx run zizmor .github",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
       "via": []
     },
     {
@@ -285,9 +285,9 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "pipx run zizmor .github",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
       "via": [
-        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+        ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)"
       ]
     },
     {
@@ -296,7 +296,7 @@
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
@@ -310,7 +310,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
       "via": []
     },
     {
@@ -327,7 +327,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "gitleaks git --redact .",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "origin": ".github/workflows/ci-lint.yml:9:9 (jobs.ci-lint.steps[3].run)",
       "via": []
     },
     {
@@ -353,7 +353,7 @@
         "swift": "6.0"
       },
       "name": "test (ubuntu-latest, 6.0, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -364,7 +364,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -375,7 +375,7 @@
       },
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
       "uses": "swift-actions/setup-swift@682457186b71c25a884c45c06f859febbe259240"
     },
     {
@@ -394,7 +394,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "swift format lint --strict --recursive .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -409,7 +409,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "swiftlint --strict",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -426,7 +426,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "swift build -Xswiftc -warnings-as-errors",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -442,7 +442,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "swift test --enable-code-coverage",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "via": []
     },
     {
@@ -459,7 +459,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "swift test -c release",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "via": []
     },
     {
@@ -476,7 +476,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "via": []
     },
     {
@@ -490,7 +490,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "via": []
     },
     {
@@ -506,7 +506,7 @@
         "swift": "6.0"
       },
       "name": "test (ubuntu-latest, 6.0, --sanitize=address)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -517,7 +517,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -528,7 +528,7 @@
       },
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
       "uses": "swift-actions/setup-swift@682457186b71c25a884c45c06f859febbe259240"
     },
     {
@@ -547,7 +547,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "swift format lint --strict --recursive .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -562,7 +562,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "swiftlint --strict",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -579,7 +579,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "swift build -Xswiftc -warnings-as-errors",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -596,7 +596,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "swift test --enable-code-coverage --sanitize=address",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "via": []
     },
     {
@@ -614,7 +614,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "swift test -c release --sanitize=address",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "via": []
     },
     {
@@ -631,7 +631,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "via": []
     },
     {
@@ -645,7 +645,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "via": []
     },
     {
@@ -661,7 +661,7 @@
         "swift": "6.1"
       },
       "name": "test (ubuntu-latest, 6.1, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -672,7 +672,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -683,7 +683,7 @@
       },
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
       "uses": "swift-actions/setup-swift@682457186b71c25a884c45c06f859febbe259240"
     },
     {
@@ -702,7 +702,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "swift format lint --strict --recursive .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -717,7 +717,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "swiftlint --strict",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -734,7 +734,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "swift build -Xswiftc -warnings-as-errors",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -750,7 +750,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "swift test --enable-code-coverage",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "via": []
     },
     {
@@ -767,7 +767,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "swift test -c release",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "via": []
     },
     {
@@ -784,7 +784,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "via": []
     },
     {
@@ -798,7 +798,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "via": []
     },
     {
@@ -814,7 +814,7 @@
         "swift": "6.1"
       },
       "name": "test (ubuntu-latest, 6.1, --sanitize=address)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -825,7 +825,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -836,7 +836,7 @@
       },
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
       "uses": "swift-actions/setup-swift@682457186b71c25a884c45c06f859febbe259240"
     },
     {
@@ -855,7 +855,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "swift format lint --strict --recursive .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -870,7 +870,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "swiftlint --strict",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -887,7 +887,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "swift build -Xswiftc -warnings-as-errors",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -904,7 +904,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "swift test --enable-code-coverage --sanitize=address",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "via": []
     },
     {
@@ -922,7 +922,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "swift test -c release --sanitize=address",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "via": []
     },
     {
@@ -939,7 +939,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "via": []
     },
     {
@@ -953,7 +953,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "via": []
     },
     {
@@ -969,7 +969,7 @@
         "swift": "6.0"
       },
       "name": "test (macos-latest, 6.0, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -980,7 +980,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -991,7 +991,7 @@
       },
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
       "uses": "swift-actions/setup-swift@682457186b71c25a884c45c06f859febbe259240"
     },
     {
@@ -1010,7 +1010,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "swift format lint --strict --recursive .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1025,7 +1025,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "swiftlint --strict",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1042,7 +1042,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "swift build -Xswiftc -warnings-as-errors",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1058,7 +1058,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "swift test --enable-code-coverage",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "via": []
     },
     {
@@ -1075,7 +1075,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "swift test -c release",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "via": []
     },
     {
@@ -1092,7 +1092,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "via": []
     },
     {
@@ -1106,7 +1106,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "via": []
     },
     {
@@ -1122,7 +1122,7 @@
         "swift": "6.0"
       },
       "name": "test (macos-latest, 6.0, --sanitize=address)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -1133,7 +1133,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1144,7 +1144,7 @@
       },
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
       "uses": "swift-actions/setup-swift@682457186b71c25a884c45c06f859febbe259240"
     },
     {
@@ -1163,7 +1163,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "swift format lint --strict --recursive .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1178,7 +1178,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "swiftlint --strict",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1195,7 +1195,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "swift build -Xswiftc -warnings-as-errors",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1212,7 +1212,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "swift test --enable-code-coverage --sanitize=address",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "via": []
     },
     {
@@ -1230,7 +1230,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "swift test -c release --sanitize=address",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "via": []
     },
     {
@@ -1247,7 +1247,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "via": []
     },
     {
@@ -1261,7 +1261,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "via": []
     },
     {
@@ -1277,7 +1277,7 @@
         "swift": "6.1"
       },
       "name": "test (macos-latest, 6.1, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -1288,7 +1288,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1299,7 +1299,7 @@
       },
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
       "uses": "swift-actions/setup-swift@682457186b71c25a884c45c06f859febbe259240"
     },
     {
@@ -1318,7 +1318,7 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "Command",
       "line": "swift format lint --strict --recursive .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1333,7 +1333,7 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "Command",
       "line": "swiftlint --strict",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1350,7 +1350,7 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "Command",
       "line": "swift build -Xswiftc -warnings-as-errors",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1366,7 +1366,7 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "Command",
       "line": "swift test --enable-code-coverage",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "via": []
     },
     {
@@ -1383,7 +1383,7 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "Command",
       "line": "swift test -c release",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "via": []
     },
     {
@@ -1400,7 +1400,7 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "via": []
     },
     {
@@ -1414,7 +1414,7 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "Command",
       "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "via": []
     },
     {
@@ -1430,7 +1430,7 @@
         "swift": "6.1"
       },
       "name": "test (macos-latest, 6.1, --sanitize=address)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -1441,7 +1441,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1452,7 +1452,7 @@
       },
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
       "uses": "swift-actions/setup-swift@682457186b71c25a884c45c06f859febbe259240"
     },
     {
@@ -1471,7 +1471,7 @@
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "Command",
       "line": "swift format lint --strict --recursive .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1486,7 +1486,7 @@
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "Command",
       "line": "swiftlint --strict",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1503,7 +1503,7 @@
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "Command",
       "line": "swift build -Xswiftc -warnings-as-errors",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1520,7 +1520,7 @@
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "Command",
       "line": "swift test --enable-code-coverage --sanitize=address",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "via": []
     },
     {
@@ -1538,7 +1538,7 @@
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "Command",
       "line": "swift test -c release --sanitize=address",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "via": []
     },
     {
@@ -1555,7 +1555,7 @@
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "via": []
     },
     {
@@ -1569,7 +1569,7 @@
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "Command",
       "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "via": []
     },
     {
@@ -1585,7 +1585,7 @@
         "swift": "6.0"
       },
       "name": "test (windows-latest, 6.0, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -1596,7 +1596,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1607,7 +1607,7 @@
       },
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
       "uses": "swift-actions/setup-swift@682457186b71c25a884c45c06f859febbe259240"
     },
     {
@@ -1626,7 +1626,7 @@
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "Command",
       "line": "swift format lint --strict --recursive .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1641,7 +1641,7 @@
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "Command",
       "line": "swiftlint --strict",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1658,7 +1658,7 @@
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "Command",
       "line": "swift build -Xswiftc -warnings-as-errors",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1674,7 +1674,7 @@
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "Command",
       "line": "swift test --enable-code-coverage",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "via": []
     },
     {
@@ -1691,7 +1691,7 @@
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "Command",
       "line": "swift test -c release",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "via": []
     },
     {
@@ -1708,7 +1708,7 @@
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "via": []
     },
     {
@@ -1722,7 +1722,7 @@
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "Command",
       "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "via": []
     },
     {
@@ -1738,7 +1738,7 @@
         "swift": "6.0"
       },
       "name": "test (windows-latest, 6.0, --sanitize=address)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -1749,7 +1749,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1760,7 +1760,7 @@
       },
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
       "uses": "swift-actions/setup-swift@682457186b71c25a884c45c06f859febbe259240"
     },
     {
@@ -1779,7 +1779,7 @@
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "Command",
       "line": "swift format lint --strict --recursive .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1794,7 +1794,7 @@
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "Command",
       "line": "swiftlint --strict",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1811,7 +1811,7 @@
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "Command",
       "line": "swift build -Xswiftc -warnings-as-errors",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1828,7 +1828,7 @@
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "Command",
       "line": "swift test --enable-code-coverage --sanitize=address",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "via": []
     },
     {
@@ -1846,7 +1846,7 @@
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "Command",
       "line": "swift test -c release --sanitize=address",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "via": []
     },
     {
@@ -1863,7 +1863,7 @@
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "via": []
     },
     {
@@ -1877,7 +1877,7 @@
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "Command",
       "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "via": []
     },
     {
@@ -1893,7 +1893,7 @@
         "swift": "6.1"
       },
       "name": "test (windows-latest, 6.1, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -1904,7 +1904,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1915,7 +1915,7 @@
       },
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
       "uses": "swift-actions/setup-swift@682457186b71c25a884c45c06f859febbe259240"
     },
     {
@@ -1934,7 +1934,7 @@
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "Command",
       "line": "swift format lint --strict --recursive .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1949,7 +1949,7 @@
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "Command",
       "line": "swiftlint --strict",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1966,7 +1966,7 @@
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "Command",
       "line": "swift build -Xswiftc -warnings-as-errors",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1982,7 +1982,7 @@
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "Command",
       "line": "swift test --enable-code-coverage",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "via": []
     },
     {
@@ -1999,7 +1999,7 @@
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "Command",
       "line": "swift test -c release",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "via": []
     },
     {
@@ -2016,7 +2016,7 @@
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "via": []
     },
     {
@@ -2030,7 +2030,7 @@
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "Command",
       "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "via": []
     },
     {
@@ -2046,7 +2046,7 @@
         "swift": "6.1"
       },
       "name": "test (windows-latest, 6.1, --sanitize=address)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -2057,7 +2057,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2068,7 +2068,7 @@
       },
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
       "uses": "swift-actions/setup-swift@682457186b71c25a884c45c06f859febbe259240"
     },
     {
@@ -2087,7 +2087,7 @@
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "Command",
       "line": "swift format lint --strict --recursive .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -2102,7 +2102,7 @@
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "Command",
       "line": "swiftlint --strict",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -2119,7 +2119,7 @@
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "Command",
       "line": "swift build -Xswiftc -warnings-as-errors",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -2136,7 +2136,7 @@
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "Command",
       "line": "swift test --enable-code-coverage --sanitize=address",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "via": []
     },
     {
@@ -2154,7 +2154,7 @@
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "Command",
       "line": "swift test -c release --sanitize=address",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "via": []
     },
     {
@@ -2171,7 +2171,7 @@
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "Command",
       "line": "osv-scanner scan --lockfile Package.resolved",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "via": []
     },
     {
@@ -2185,7 +2185,7 @@
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "Command",
       "line": "muter",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "via": []
     },
     {
@@ -2197,7 +2197,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "fuzz",
-      "origin": ".github/workflows/ci.yml:jobs.fuzz",
+      "origin": ".github/workflows/ci.yml:21:3 (jobs.fuzz)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -2208,7 +2208,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:fuzz",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[0]",
+      "origin": ".github/workflows/ci.yml:24:9 (jobs.fuzz.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2219,7 +2219,7 @@
       },
       "job": ".github/workflows/ci.yml:fuzz",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[1]",
+      "origin": ".github/workflows/ci.yml:25:9 (jobs.fuzz.steps[1])",
       "uses": "swift-actions/setup-swift@682457186b71c25a884c45c06f859febbe259240"
     },
     {
@@ -2240,7 +2240,7 @@
       "job": ".github/workflows/ci.yml:fuzz",
       "kind": "Command",
       "line": "swift build -Xswiftc -sanitize=fuzzer -Xswiftc -parse-as-library --product AppFuzz",
-      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[2].run",
+      "origin": ".github/workflows/ci.yml:28:9 (jobs.fuzz.steps[2].run)",
       "via": []
     },
     {
@@ -2255,7 +2255,7 @@
       "job": ".github/workflows/ci.yml:fuzz",
       "kind": "Command",
       "line": ".build/debug/AppFuzz -max_total_time=30",
-      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[3].run",
+      "origin": ".github/workflows/ci.yml:29:9 (jobs.fuzz.steps[3].run)",
       "via": []
     },
     {
@@ -2277,7 +2277,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "analyze",
-      "origin": ".github/workflows/codeql.yml:jobs.analyze",
+      "origin": ".github/workflows/codeql.yml:2:3 (jobs.analyze)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -2288,7 +2288,7 @@
       "inputs": {},
       "job": ".github/workflows/codeql.yml:analyze",
       "kind": "ActionStep",
-      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[0]",
+      "origin": ".github/workflows/codeql.yml:5:9 (jobs.analyze.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2299,7 +2299,7 @@
       },
       "job": ".github/workflows/codeql.yml:analyze",
       "kind": "ActionStep",
-      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[1]",
+      "origin": ".github/workflows/codeql.yml:6:9 (jobs.analyze.steps[1])",
       "uses": "github/codeql-action/init@9418214df1f2c4b8128c770156c409013b07d6b9"
     },
     {
@@ -2308,7 +2308,7 @@
       "inputs": {},
       "job": ".github/workflows/codeql.yml:analyze",
       "kind": "ActionStep",
-      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[2]",
+      "origin": ".github/workflows/codeql.yml:9:9 (jobs.analyze.steps[2])",
       "uses": "github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9"
     },
     {
@@ -2324,7 +2324,7 @@
       "job": ".github/workflows/codeql.yml:analyze",
       "kind": "Command",
       "line": "uses: github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9",
-      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[2]",
+      "origin": ".github/workflows/codeql.yml:9:9 (jobs.analyze.steps[2])",
       "via": []
     },
     {
@@ -2351,7 +2351,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "copy-paste-detection",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:2:3 (jobs.copy-paste-detection)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -2362,7 +2362,7 @@
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "origin": ".github/workflows/copy-paste-detection.yml:5:9 (jobs.copy-paste-detection.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2381,7 +2381,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
       "via": []
     },
     {
@@ -2398,9 +2398,9 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
       "via": [
-        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+        ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)"
       ]
     },
     {
@@ -2417,7 +2417,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "function-limits",
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "origin": ".github/workflows/function-limits.yml:2:3 (jobs.function-limits)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -2428,7 +2428,7 @@
       "inputs": {},
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "ActionStep",
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[0]",
+      "origin": ".github/workflows/function-limits.yml:5:9 (jobs.function-limits.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2446,7 +2446,7 @@
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "Command",
       "line": "python -m pip install lizard",
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "origin": ".github/workflows/function-limits.yml:6:9 (jobs.function-limits.steps[1].run)",
       "via": []
     },
     {
@@ -2462,9 +2462,9 @@
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "Command",
       "line": "python -m pip install lizard",
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "origin": ".github/workflows/function-limits.yml:6:9 (jobs.function-limits.steps[1].run)",
       "via": [
-        ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run"
+        ".github/workflows/function-limits.yml:6:9 (jobs.function-limits.steps[1].run)"
       ]
     },
     {
@@ -2482,7 +2482,7 @@
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "origin": ".github/workflows/function-limits.yml:7:9 (jobs.function-limits.steps[2].run)",
       "via": []
     },
     {
@@ -2499,7 +2499,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Job",
       "name": ".github/workflows/ci-lint.yml: ci-lint",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:3:3 (jobs.ci-lint)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -2524,7 +2524,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 6.0, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -2554,7 +2554,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 6.0, --sanitize=address)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -2584,7 +2584,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 6.1, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -2614,7 +2614,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 6.1, --sanitize=address)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -2644,7 +2644,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (macos-latest, 6.0, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "macos",
       "services": [],
       "toolchains": [
@@ -2674,7 +2674,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (macos-latest, 6.0, --sanitize=address)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "macos",
       "services": [],
       "toolchains": [
@@ -2704,7 +2704,7 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (macos-latest, 6.1, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "macos",
       "services": [],
       "toolchains": [
@@ -2734,7 +2734,7 @@
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (macos-latest, 6.1, --sanitize=address)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "macos",
       "services": [],
       "toolchains": [
@@ -2764,7 +2764,7 @@
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (windows-latest, 6.0, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "windows",
       "services": [],
       "toolchains": [
@@ -2794,7 +2794,7 @@
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (windows-latest, 6.0, --sanitize=address)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "windows",
       "services": [],
       "toolchains": [
@@ -2824,7 +2824,7 @@
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (windows-latest, 6.1, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "windows",
       "services": [],
       "toolchains": [
@@ -2854,7 +2854,7 @@
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (windows-latest, 6.1, --sanitize=address)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:2:3 (jobs.test)",
       "os": "windows",
       "services": [],
       "toolchains": [
@@ -2880,7 +2880,7 @@
       "job": ".github/workflows/ci.yml:fuzz",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: fuzz",
-      "origin": ".github/workflows/ci.yml:jobs.fuzz",
+      "origin": ".github/workflows/ci.yml:21:3 (jobs.fuzz)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -2899,7 +2899,7 @@
       "job": ".github/workflows/codeql.yml:analyze",
       "kind": "Job",
       "name": ".github/workflows/codeql.yml: analyze",
-      "origin": ".github/workflows/codeql.yml:jobs.analyze",
+      "origin": ".github/workflows/codeql.yml:2:3 (jobs.analyze)",
       "os": "macos",
       "services": [],
       "toolchains": []
@@ -2913,7 +2913,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Job",
       "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:2:3 (jobs.copy-paste-detection)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -2929,7 +2929,7 @@
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "Job",
       "name": ".github/workflows/function-limits.yml: function-limits",
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "origin": ".github/workflows/function-limits.yml:2:3 (jobs.function-limits)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -2974,7 +2974,7 @@
       "heuristic": false,
       "key": "opt_in_rules",
       "kind": "Setting",
-      "origin": ".swiftlint.yml:opt_in_rules",
+      "origin": ".swiftlint.yml:1:1 (opt_in_rules)",
       "tool": "SwiftLint",
       "value": [
         "empty_count"
@@ -3060,7 +3060,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -3081,7 +3081,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "analysis": [
           "checks"
@@ -3102,7 +3102,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "function-length": [
           "limits",
@@ -3124,7 +3124,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "test": [
           "runs"
@@ -3145,7 +3145,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "coverage": [
           "line",
@@ -3167,7 +3167,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "provides": {
         "test": [
           "runs"
@@ -3188,7 +3188,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "provides": {
         "audit": [
           "runs"
@@ -3209,7 +3209,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "provides": {
         "mutation": [
           "runs"
@@ -3230,7 +3230,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -3251,7 +3251,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "analysis": [
           "checks"
@@ -3272,7 +3272,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "function-length": [
           "limits",
@@ -3294,7 +3294,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "test": [
           "runs"
@@ -3315,7 +3315,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "coverage": [
           "line",
@@ -3337,7 +3337,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "provides": {
         "test": [
           "runs"
@@ -3358,7 +3358,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "provides": {
         "audit": [
           "runs"
@@ -3379,7 +3379,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "provides": {
         "mutation": [
           "runs"
@@ -3400,7 +3400,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -3421,7 +3421,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "analysis": [
           "checks"
@@ -3442,7 +3442,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "function-length": [
           "limits",
@@ -3464,7 +3464,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "test": [
           "runs"
@@ -3485,7 +3485,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "coverage": [
           "line",
@@ -3507,7 +3507,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "provides": {
         "test": [
           "runs"
@@ -3528,7 +3528,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "provides": {
         "audit": [
           "runs"
@@ -3549,7 +3549,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "provides": {
         "mutation": [
           "runs"
@@ -3570,7 +3570,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -3591,7 +3591,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "analysis": [
           "checks"
@@ -3612,7 +3612,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "function-length": [
           "limits",
@@ -3634,7 +3634,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "test": [
           "runs"
@@ -3655,7 +3655,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "coverage": [
           "line",
@@ -3677,7 +3677,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "provides": {
         "test": [
           "runs"
@@ -3698,7 +3698,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "provides": {
         "audit": [
           "runs"
@@ -3719,7 +3719,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "provides": {
         "mutation": [
           "runs"
@@ -3740,7 +3740,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -3761,7 +3761,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "analysis": [
           "checks"
@@ -3782,7 +3782,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "function-length": [
           "limits",
@@ -3804,7 +3804,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "test": [
           "runs"
@@ -3825,7 +3825,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "coverage": [
           "line",
@@ -3847,7 +3847,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "provides": {
         "test": [
           "runs"
@@ -3868,7 +3868,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "provides": {
         "audit": [
           "runs"
@@ -3889,7 +3889,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "provides": {
         "mutation": [
           "runs"
@@ -3910,7 +3910,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -3931,7 +3931,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "analysis": [
           "checks"
@@ -3952,7 +3952,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "function-length": [
           "limits",
@@ -3974,7 +3974,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "test": [
           "runs"
@@ -3995,7 +3995,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "coverage": [
           "line",
@@ -4017,7 +4017,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "provides": {
         "test": [
           "runs"
@@ -4038,7 +4038,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "provides": {
         "audit": [
           "runs"
@@ -4059,7 +4059,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "provides": {
         "mutation": [
           "runs"
@@ -4080,7 +4080,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4101,7 +4101,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "analysis": [
           "checks"
@@ -4122,7 +4122,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "function-length": [
           "limits",
@@ -4144,7 +4144,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "test": [
           "runs"
@@ -4165,7 +4165,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "coverage": [
           "line",
@@ -4187,7 +4187,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "provides": {
         "test": [
           "runs"
@@ -4208,7 +4208,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "provides": {
         "audit": [
           "runs"
@@ -4229,7 +4229,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "provides": {
         "mutation": [
           "runs"
@@ -4250,7 +4250,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4271,7 +4271,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "analysis": [
           "checks"
@@ -4292,7 +4292,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "function-length": [
           "limits",
@@ -4314,7 +4314,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "test": [
           "runs"
@@ -4335,7 +4335,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "coverage": [
           "line",
@@ -4357,7 +4357,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "provides": {
         "test": [
           "runs"
@@ -4378,7 +4378,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "provides": {
         "audit": [
           "runs"
@@ -4399,7 +4399,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "provides": {
         "mutation": [
           "runs"
@@ -4420,7 +4420,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4441,7 +4441,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "analysis": [
           "checks"
@@ -4462,7 +4462,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "function-length": [
           "limits",
@@ -4484,7 +4484,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "test": [
           "runs"
@@ -4505,7 +4505,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "coverage": [
           "line",
@@ -4527,7 +4527,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "provides": {
         "test": [
           "runs"
@@ -4548,7 +4548,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "provides": {
         "audit": [
           "runs"
@@ -4569,7 +4569,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "provides": {
         "mutation": [
           "runs"
@@ -4590,7 +4590,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4611,7 +4611,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "analysis": [
           "checks"
@@ -4632,7 +4632,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "function-length": [
           "limits",
@@ -4654,7 +4654,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "test": [
           "runs"
@@ -4675,7 +4675,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "coverage": [
           "line",
@@ -4697,7 +4697,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "provides": {
         "test": [
           "runs"
@@ -4718,7 +4718,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "provides": {
         "audit": [
           "runs"
@@ -4739,7 +4739,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "provides": {
         "mutation": [
           "runs"
@@ -4760,7 +4760,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4781,7 +4781,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "analysis": [
           "checks"
@@ -4802,7 +4802,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "function-length": [
           "limits",
@@ -4824,7 +4824,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "test": [
           "runs"
@@ -4845,7 +4845,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "coverage": [
           "line",
@@ -4867,7 +4867,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "provides": {
         "test": [
           "runs"
@@ -4888,7 +4888,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "provides": {
         "audit": [
           "runs"
@@ -4909,7 +4909,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "provides": {
         "mutation": [
           "runs"
@@ -4930,7 +4930,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4951,7 +4951,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "analysis": [
           "checks"
@@ -4972,7 +4972,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
       "provides": {
         "function-length": [
           "limits",
@@ -4994,7 +4994,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "test": [
           "runs"
@@ -5015,7 +5015,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[5].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
       "provides": {
         "coverage": [
           "line",
@@ -5037,7 +5037,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[6].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[6].run)",
       "provides": {
         "test": [
           "runs"
@@ -5058,7 +5058,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[7].run",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[7].run)",
       "provides": {
         "audit": [
           "runs"
@@ -5079,7 +5079,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[8].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[8].run)",
       "provides": {
         "mutation": [
           "runs"
@@ -5100,7 +5100,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[3].run",
+      "origin": ".github/workflows/ci.yml:29:9 (jobs.fuzz.steps[3].run)",
       "provides": {
         "fuzz": [
           "runs"
@@ -5121,7 +5121,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/codeql.yml:jobs.analyze.steps[2]",
+      "origin": ".github/workflows/codeql.yml:9:9 (jobs.analyze.steps[2])",
       "provides": {
         "security": [
           "scans"
@@ -5142,7 +5142,7 @@
       "languages": [
         "Swift"
       ],
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "origin": ".github/workflows/function-limits.yml:7:9 (jobs.function-limits.steps[2].run)",
       "provides": {
         "function-length": [
           "limits",

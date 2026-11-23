@@ -312,10 +312,41 @@ class EvaluationTests(unittest.TestCase):
         self.assertEqual([option for option, *_ in _options(found)], ["-Wall", "/W2", "-example"])
         self.assertEqual(_settings(found), [("warning_level", "1", None, True), ("hardening", "true", None, True)])
 
+    def test_facts_are_placed_at_the_statement_they_come_from(self) -> None:
+        """A guard is placed at its own `if` or `elif`, not at the statement before it."""
+        found = _facts(
+            "project('x', default_options: ['warning_level=3'])",
+            "if get_option('a')",
+            "  add_project_arguments('-Wall',",
+            "    language: 'c')",
+            "elif not meson.is_subproject()",
+            "  test('t', exe)",
+            "endif",
+        )
+        placed = sorted(
+            {
+                (type(fact).__name__, str(fact.origin))
+                for fact in found
+                if isinstance(fact, (Setting, BuildSetting, CompilerOption))
+            }
+        )
+        self.assertEqual(
+            placed,
+            [
+                ("BuildSetting", "meson.build:1:1 (project)"),
+                ("CompilerOption", "meson.build:1:1 (project)"),
+                ("CompilerOption", "meson.build:3:3 (add_project_arguments)"),
+                ("Setting", "meson.build:2:1 (if)"),
+                ("Setting", "meson.build:5:1 (elif)"),
+                ("Setting", "meson.build:6:3 (test)"),
+            ],
+        )
+
     def test_what_cannot_be_evaluated_is_unknown(self) -> None:
         [unknown] = (fact for fact in _facts("if x") if isinstance(fact, UnknownFact))
         self.assertEqual(
-            (unknown.subject, unknown.reason), ("the Meson file meson.build", "line 2: expected elif or else or endif")
+            (unknown.subject, unknown.reason, str(unknown.origin)),
+            ("the Meson file meson.build", "line 2: expected elif or else or endif", "meson.build:2"),
         )
         with mock.patch.object(evaluation, "MOST_STATEMENTS", 2):
             [unknown] = (fact for fact in _facts("a = 1", "b = 2", "c = 3") if isinstance(fact, UnknownFact))

@@ -145,7 +145,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "ci-lint",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:3:3 (jobs.ci-lint)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -156,7 +156,7 @@
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "origin": ".github/workflows/ci-lint.yml:6:9 (jobs.ci-lint.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -173,7 +173,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "pipx run zizmor .github",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
       "via": []
     },
     {
@@ -188,9 +188,9 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "pipx run zizmor .github",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
       "via": [
-        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+        ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)"
       ]
     },
     {
@@ -199,7 +199,7 @@
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
@@ -213,7 +213,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
       "via": []
     },
     {
@@ -230,7 +230,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "gitleaks git --redact .",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "origin": ".github/workflows/ci-lint.yml:9:9 (jobs.ci-lint.steps[3].run)",
       "via": []
     },
     {
@@ -257,7 +257,7 @@
         "os": "ubuntu-latest"
       },
       "name": "test (ubuntu-latest, sbcl-bin)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -268,7 +268,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -279,7 +279,7 @@
       },
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "40ants/setup-lisp@011ae52ac776a259e128dab5eed5b18859ee0809"
     },
     {
@@ -292,7 +292,7 @@
       },
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "uses": "40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d"
     },
     {
@@ -311,7 +311,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "uses: 40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "via": []
     },
     {
@@ -328,7 +328,7 @@
         "os": "ubuntu-latest"
       },
       "name": "test (ubuntu-latest, ccl-bin)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -339,7 +339,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -350,7 +350,7 @@
       },
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "40ants/setup-lisp@011ae52ac776a259e128dab5eed5b18859ee0809"
     },
     {
@@ -363,7 +363,7 @@
       },
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "uses": "40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d"
     },
     {
@@ -382,7 +382,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "uses: 40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "via": []
     },
     {
@@ -399,7 +399,7 @@
         "os": "macos-latest"
       },
       "name": "test (macos-latest, sbcl-bin)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -410,7 +410,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -421,7 +421,7 @@
       },
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "40ants/setup-lisp@011ae52ac776a259e128dab5eed5b18859ee0809"
     },
     {
@@ -434,7 +434,7 @@
       },
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "uses": "40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d"
     },
     {
@@ -453,7 +453,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "uses: 40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "via": []
     },
     {
@@ -470,7 +470,7 @@
         "os": "macos-latest"
       },
       "name": "test (macos-latest, ccl-bin)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -481,7 +481,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -492,7 +492,7 @@
       },
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "40ants/setup-lisp@011ae52ac776a259e128dab5eed5b18859ee0809"
     },
     {
@@ -505,7 +505,7 @@
       },
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "uses": "40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d"
     },
     {
@@ -524,7 +524,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "uses: 40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "via": []
     },
     {
@@ -541,7 +541,7 @@
         "os": "windows-latest"
       },
       "name": "test (windows-latest, sbcl-bin)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -552,7 +552,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -563,7 +563,7 @@
       },
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "40ants/setup-lisp@011ae52ac776a259e128dab5eed5b18859ee0809"
     },
     {
@@ -576,7 +576,7 @@
       },
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "uses": "40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d"
     },
     {
@@ -595,7 +595,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "uses: 40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "via": []
     },
     {
@@ -612,7 +612,7 @@
         "os": "windows-latest"
       },
       "name": "test (windows-latest, ccl-bin)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -623,7 +623,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -634,7 +634,7 @@
       },
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "40ants/setup-lisp@011ae52ac776a259e128dab5eed5b18859ee0809"
     },
     {
@@ -647,7 +647,7 @@
       },
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "uses": "40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d"
     },
     {
@@ -666,7 +666,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "uses: 40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "via": []
     },
     {
@@ -680,7 +680,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "lint",
-      "origin": ".github/workflows/ci.yml:jobs.lint",
+      "origin": ".github/workflows/ci.yml:23:3 (jobs.lint)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -691,7 +691,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.lint.steps[0]",
+      "origin": ".github/workflows/ci.yml:28:9 (jobs.lint.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -700,7 +700,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.lint.steps[1]",
+      "origin": ".github/workflows/ci.yml:29:9 (jobs.lint.steps[1])",
       "uses": "40ants/setup-lisp@011ae52ac776a259e128dab5eed5b18859ee0809"
     },
     {
@@ -718,7 +718,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "Command",
       "line": "ros install cxxxr/sblint",
-      "origin": ".github/workflows/ci.yml:jobs.lint.steps[2].run",
+      "origin": ".github/workflows/ci.yml:30:9 (jobs.lint.steps[2].run)",
       "via": []
     },
     {
@@ -737,7 +737,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "Command",
       "line": "qlot exec sblint shop.asd",
-      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "origin": ".github/workflows/ci.yml:31:9 (jobs.lint.steps[3].run)",
       "via": []
     },
     {
@@ -754,9 +754,9 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "Command",
       "line": "qlot exec sblint shop.asd",
-      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "origin": ".github/workflows/ci.yml:31:9 (jobs.lint.steps[3].run)",
       "via": [
-        ".github/workflows/ci.yml:jobs.lint.steps[3].run"
+        ".github/workflows/ci.yml:31:9 (jobs.lint.steps[3].run)"
       ]
     },
     {
@@ -783,7 +783,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "copy-paste-detection",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:2:3 (jobs.copy-paste-detection)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -794,7 +794,7 @@
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "origin": ".github/workflows/copy-paste-detection.yml:5:9 (jobs.copy-paste-detection.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -813,7 +813,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
       "via": []
     },
     {
@@ -830,9 +830,9 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
       "via": [
-        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+        ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)"
       ]
     },
     {
@@ -849,7 +849,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Job",
       "name": ".github/workflows/ci-lint.yml: ci-lint",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:3:3 (jobs.ci-lint)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -865,7 +865,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, sbcl-bin)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -886,7 +886,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, ccl-bin)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -907,7 +907,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (macos-latest, sbcl-bin)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "services": [],
       "toolchains": [
@@ -928,7 +928,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (macos-latest, ccl-bin)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "services": [],
       "toolchains": [
@@ -949,7 +949,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (windows-latest, sbcl-bin)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "services": [],
       "toolchains": [
@@ -970,7 +970,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (windows-latest, ccl-bin)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "services": [],
       "toolchains": [
@@ -991,7 +991,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: lint",
-      "origin": ".github/workflows/ci.yml:jobs.lint",
+      "origin": ".github/workflows/ci.yml:23:3 (jobs.lint)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -1010,7 +1010,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Job",
       "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:2:3 (jobs.copy-paste-detection)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -1107,7 +1107,7 @@
       "languages": [
         "Common Lisp"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "provides": {
         "test": [
           "runs"
@@ -1128,7 +1128,7 @@
       "languages": [
         "Common Lisp"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "provides": {
         "coverage": [
           "branch reported",
@@ -1150,7 +1150,7 @@
       "languages": [
         "Common Lisp"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "provides": {
         "test": [
           "runs"
@@ -1171,7 +1171,7 @@
       "languages": [
         "Common Lisp"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "provides": {
         "coverage": [
           "branch reported",
@@ -1193,7 +1193,7 @@
       "languages": [
         "Common Lisp"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "provides": {
         "test": [
           "runs"
@@ -1214,7 +1214,7 @@
       "languages": [
         "Common Lisp"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "provides": {
         "coverage": [
           "branch reported",
@@ -1236,7 +1236,7 @@
       "languages": [
         "Common Lisp"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "provides": {
         "test": [
           "runs"
@@ -1257,7 +1257,7 @@
       "languages": [
         "Common Lisp"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "provides": {
         "coverage": [
           "branch reported",
@@ -1279,7 +1279,7 @@
       "languages": [
         "Common Lisp"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "provides": {
         "test": [
           "runs"
@@ -1300,7 +1300,7 @@
       "languages": [
         "Common Lisp"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "provides": {
         "coverage": [
           "branch reported",
@@ -1322,7 +1322,7 @@
       "languages": [
         "Common Lisp"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "provides": {
         "test": [
           "runs"
@@ -1343,7 +1343,7 @@
       "languages": [
         "Common Lisp"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2])",
       "provides": {
         "coverage": [
           "branch reported",
@@ -1365,7 +1365,7 @@
       "languages": [
         "Common Lisp"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.lint.steps[3].run",
+      "origin": ".github/workflows/ci.yml:31:9 (jobs.lint.steps[3].run)",
       "provides": {
         "analysis": [
           "checks"
@@ -1377,7 +1377,7 @@
       ],
       "tool": "sblint",
       "via": [
-        ".github/workflows/ci.yml:jobs.lint.steps[3].run"
+        ".github/workflows/ci.yml:31:9 (jobs.lint.steps[3].run)"
       ]
     }
   ],

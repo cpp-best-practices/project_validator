@@ -24,6 +24,7 @@ from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, O
 from project_validator.facts.arguments import starts_with
 from project_validator.facts.conditions import ALWAYS, DIMENSIONS, Condition, both, only
 from project_validator.facts.exit_status import Shell, masked
+from project_validator.facts.placed import Placed
 from project_validator.facts.shell import ShellCommand, ShellSyntaxError, Unsplittable, split_script
 from project_validator.templates import SHELL
 
@@ -41,7 +42,8 @@ class Script:
     # Text the shell does not split, because something else substitutes it first (a Make variable).
     opaque: re.Pattern[str] | None = None
     # Whether the text is the whole of a shell script, so that what it sets is seen (a repository's script file,
-    # unless it sources another), as a CI step's own script is.
+    # unless it sources another), as a CI step's own script is. Its text is the file's: its commands are placed where
+    # the file has them.
     whole: bool = False
     # The shell that runs the text, when known, which decides whether a command's failure fails it (see `masked`).
     shell: Shell | None = None
@@ -137,12 +139,12 @@ def script_facts(
 ) -> Iterator[Fact]:
     """The commands of a shell script a job runs (see `split_script`, `Script.whole`, `masked` for the rest)."""
     assigned, constants = _seen_assigned(script, whole or not via, powershell=powershell), _Constants(script)
-    command = partial(Command, origin=origin, job=job, condition=condition, via=via)
-    split = list(split_script(script, opaque, powershell=powershell))
-    yield from _unread(split, origin)
+    command = partial(Command, job=job, condition=condition, via=via)
+    yield from _unread(split := list(split_script(script, opaque, powershell=powershell)), origin)
     for found, advisory in _judged(split, shell, followed):
         if isinstance(found, ShellCommand):
             made = command(
+                origin=replace(origin, span=found.span) if whole else origin,
                 argv=found.argv,
                 line=found.line,
                 env={**env, **constants.before(found.line), **dict(found.env)},
@@ -391,8 +393,14 @@ def expanded(
     facts: Iterable[Fact], context: Context, expanders: Iterable[CommandExpander], actions: Iterable[Action] = ()
 ) -> Iterator[Fact]:
     """`facts`, each command followed by what it runs in turn, and each action step by the commands it runs (and what
-    they run), in the builds of the job that runs it."""
-    expanders, actions = tuple(expanders), tuple(actions)
+    they run), in the builds of the job that runs it; each placed where the YAML file it was read from has it."""
+    placed = Placed(lambda path: context.project.read_text(path) if context.project.exists(path) else None)
+    yield from map(placed.fact, _expanded(facts, context, tuple(expanders), tuple(actions)))
+
+
+def _expanded(
+    facts: Iterable[Fact], context: Context, expanders: tuple[CommandExpander, ...], actions: tuple[Action, ...]
+) -> Iterator[Fact]:
     platforms: dict[str, Condition] = {}
     for fact in facts:
         yield fact

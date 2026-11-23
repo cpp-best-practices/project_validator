@@ -138,7 +138,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "ci-lint",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:3:3 (jobs.ci-lint)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -149,7 +149,7 @@
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "origin": ".github/workflows/ci-lint.yml:6:9 (jobs.ci-lint.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -166,7 +166,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "pipx run zizmor .github",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
       "via": []
     },
     {
@@ -181,9 +181,9 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "pipx run zizmor .github",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
       "via": [
-        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+        ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)"
       ]
     },
     {
@@ -192,7 +192,7 @@
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
@@ -206,7 +206,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
       "via": []
     },
     {
@@ -223,7 +223,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "gitleaks git --redact .",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "origin": ".github/workflows/ci-lint.yml:9:9 (jobs.ci-lint.steps[3].run)",
       "via": []
     },
     {
@@ -249,7 +249,7 @@
         "variant": "CS"
       },
       "name": "test (ubuntu-latest, 8.12, CS)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -260,7 +260,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -272,7 +272,7 @@
       },
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[1])",
       "uses": "Bogdanp/setup-racket@8889db76ff6cdc86df8aa09fdd1729cd090b7144"
     },
     {
@@ -291,7 +291,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "raco pkg install --auto --batch --skip-installed",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -309,7 +309,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "raco test -x -p shop",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -325,7 +325,7 @@
         "variant": "CS"
       },
       "name": "test (ubuntu-latest, stable, CS)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -336,7 +336,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -348,7 +348,7 @@
       },
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[1])",
       "uses": "Bogdanp/setup-racket@8889db76ff6cdc86df8aa09fdd1729cd090b7144"
     },
     {
@@ -367,7 +367,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "raco pkg install --auto --batch --skip-installed",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -385,7 +385,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "raco test -x -p shop",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -401,7 +401,7 @@
         "variant": "CS"
       },
       "name": "test (macos-latest, 8.12, CS)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -412,7 +412,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -424,7 +424,7 @@
       },
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[1])",
       "uses": "Bogdanp/setup-racket@8889db76ff6cdc86df8aa09fdd1729cd090b7144"
     },
     {
@@ -443,7 +443,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "raco pkg install --auto --batch --skip-installed",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -461,7 +461,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "raco test -x -p shop",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -477,7 +477,7 @@
         "variant": "CS"
       },
       "name": "test (macos-latest, stable, CS)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -488,7 +488,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -500,7 +500,7 @@
       },
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[1])",
       "uses": "Bogdanp/setup-racket@8889db76ff6cdc86df8aa09fdd1729cd090b7144"
     },
     {
@@ -519,7 +519,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "raco pkg install --auto --batch --skip-installed",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -537,7 +537,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "raco test -x -p shop",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -553,7 +553,7 @@
         "variant": "CS"
       },
       "name": "test (windows-latest, 8.12, CS)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -564,7 +564,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -576,7 +576,7 @@
       },
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[1])",
       "uses": "Bogdanp/setup-racket@8889db76ff6cdc86df8aa09fdd1729cd090b7144"
     },
     {
@@ -595,7 +595,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "raco pkg install --auto --batch --skip-installed",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -613,7 +613,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "raco test -x -p shop",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -629,7 +629,7 @@
         "variant": "CS"
       },
       "name": "test (windows-latest, stable, CS)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -640,7 +640,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -652,7 +652,7 @@
       },
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[1])",
       "uses": "Bogdanp/setup-racket@8889db76ff6cdc86df8aa09fdd1729cd090b7144"
     },
     {
@@ -671,7 +671,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "raco pkg install --auto --batch --skip-installed",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -689,7 +689,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "raco test -x -p shop",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -705,7 +705,7 @@
         "variant": "BC"
       },
       "name": "test (ubuntu-latest, 8.12, BC)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -716,7 +716,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -728,7 +728,7 @@
       },
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[1])",
       "uses": "Bogdanp/setup-racket@8889db76ff6cdc86df8aa09fdd1729cd090b7144"
     },
     {
@@ -747,7 +747,7 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "Command",
       "line": "raco pkg install --auto --batch --skip-installed",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -765,7 +765,7 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "Command",
       "line": "raco test -x -p shop",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -777,7 +777,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "coverage",
-      "origin": ".github/workflows/ci.yml:jobs.coverage",
+      "origin": ".github/workflows/ci.yml:22:3 (jobs.coverage)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -788,7 +788,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[0]",
+      "origin": ".github/workflows/ci.yml:25:9 (jobs.coverage.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -800,7 +800,7 @@
       },
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[1]",
+      "origin": ".github/workflows/ci.yml:26:9 (jobs.coverage.steps[1])",
       "uses": "Bogdanp/setup-racket@8889db76ff6cdc86df8aa09fdd1729cd090b7144"
     },
     {
@@ -819,7 +819,7 @@
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "Command",
       "line": "raco pkg install --auto --batch --skip-installed",
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[2].run",
+      "origin": ".github/workflows/ci.yml:30:9 (jobs.coverage.steps[2].run)",
       "via": []
     },
     {
@@ -839,7 +839,7 @@
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "Command",
       "line": "raco cover -f codecov -d coverage .",
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[3].run",
+      "origin": ".github/workflows/ci.yml:31:9 (jobs.coverage.steps[3].run)",
       "via": []
     },
     {
@@ -855,7 +855,7 @@
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "Command",
       "line": "git ls-files '*.rkt'",
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[4].run",
+      "origin": ".github/workflows/ci.yml:32:9 (jobs.coverage.steps[4].run)",
       "via": []
     },
     {
@@ -872,7 +872,7 @@
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "Command",
       "line": "raco fmt -i $(git ls-files '*.rkt')",
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[4].run",
+      "origin": ".github/workflows/ci.yml:32:9 (jobs.coverage.steps[4].run)",
       "via": []
     },
     {
@@ -888,7 +888,7 @@
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "Command",
       "line": "git diff --exit-code",
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[5].run",
+      "origin": ".github/workflows/ci.yml:33:9 (jobs.coverage.steps[5].run)",
       "via": []
     },
     {
@@ -910,7 +910,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "copy-paste-detection",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:2:3 (jobs.copy-paste-detection)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -921,7 +921,7 @@
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "origin": ".github/workflows/copy-paste-detection.yml:5:9 (jobs.copy-paste-detection.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -940,7 +940,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
       "via": []
     },
     {
@@ -957,9 +957,9 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
       "via": [
-        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+        ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)"
       ]
     },
     {
@@ -976,7 +976,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Job",
       "name": ".github/workflows/ci-lint.yml: ci-lint",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:3:3 (jobs.ci-lint)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -992,7 +992,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 8.12, CS)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -1017,7 +1017,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, stable, CS)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -1042,7 +1042,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (macos-latest, 8.12, CS)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "services": [],
       "toolchains": [
@@ -1067,7 +1067,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (macos-latest, stable, CS)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "services": [],
       "toolchains": [
@@ -1092,7 +1092,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (windows-latest, 8.12, CS)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "services": [],
       "toolchains": [
@@ -1117,7 +1117,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (windows-latest, stable, CS)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "services": [],
       "toolchains": [
@@ -1142,7 +1142,7 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 8.12, BC)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -1167,7 +1167,7 @@
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: coverage",
-      "origin": ".github/workflows/ci.yml:jobs.coverage",
+      "origin": ".github/workflows/ci.yml:22:3 (jobs.coverage)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -1186,7 +1186,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Job",
       "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:2:3 (jobs.copy-paste-detection)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -1243,7 +1243,7 @@
       "languages": [
         "Racket"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -1264,7 +1264,7 @@
       "languages": [
         "Racket"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -1285,7 +1285,7 @@
       "languages": [
         "Racket"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -1306,7 +1306,7 @@
       "languages": [
         "Racket"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -1327,7 +1327,7 @@
       "languages": [
         "Racket"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -1348,7 +1348,7 @@
       "languages": [
         "Racket"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -1369,7 +1369,7 @@
       "languages": [
         "Racket"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -1390,7 +1390,7 @@
       "languages": [
         "Racket"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[3].run",
+      "origin": ".github/workflows/ci.yml:31:9 (jobs.coverage.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -1411,7 +1411,7 @@
       "languages": [
         "Racket"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[3].run",
+      "origin": ".github/workflows/ci.yml:31:9 (jobs.coverage.steps[3].run)",
       "provides": {
         "coverage": [
           "statement reported",
@@ -1433,7 +1433,7 @@
       "languages": [
         "Racket"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[4].run",
+      "origin": ".github/workflows/ci.yml:32:9 (jobs.coverage.steps[4].run)",
       "provides": {
         "format": [
           "check"

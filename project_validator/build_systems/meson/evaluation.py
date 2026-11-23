@@ -46,6 +46,7 @@ from project_validator.build_systems.meson.values import (
 )
 from project_validator.facts import Origin
 from project_validator.facts.conditions import ALWAYS, Condition, Dimension, assigned, both, combined, either, negated
+from project_validator.parsing import Problem, Span
 
 BUILD_FILE = "meson.build"
 MOST_ITERATIONS = 64
@@ -63,15 +64,15 @@ TARGETS = frozenset(
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Frame:
-    """Where evaluation is: the builds the statements run in, the directory and file, and the statement's line."""
+    """Where evaluation is: the builds the statements run in, the directory and file, and where the statement is."""
 
     condition: Condition
     directory: str
     path: str
-    line: int = 0
+    span: Span | None = None
 
     def origin(self, name: str) -> Origin:
-        return Origin(path=self.path, at=(name, self.line))
+        return Origin(path=self.path, at=(name,), span=self.span)
 
     def within(self, when: Condition) -> Frame:
         return replace(self, condition=both(self.condition, when))
@@ -91,7 +92,7 @@ class Observer(Protocol):
 
     def run_target(self, frame: Frame, name: str, command: tuple[str, ...]) -> None: ...
 
-    def guard(self, frame: Frame, text: str) -> None: ...
+    def guard(self, frame: Frame, keyword: str, text: str) -> None: ...
 
 
 class _TooMuch(Exception):
@@ -118,7 +119,7 @@ class Evaluation:
     observer: Observer
     variables: dict[str, Choices] = field(default_factory=dict)
     reached: set[str] = field(default_factory=set)
-    problems: dict[str, str] = field(default_factory=dict)
+    problems: dict[str, Problem] = field(default_factory=dict)
     _statements: int = 0
 
     def evaluate(self) -> None:
@@ -130,9 +131,9 @@ class Evaluation:
                 if path not in self.reached:
                     self.evaluate_alone(path)
         except _TooMuch:
-            self.problems[builds[0]] = f"evaluation stopped after {MOST_STATEMENTS} statements"
+            self.problems[builds[0]] = Problem(f"evaluation stopped after {MOST_STATEMENTS} statements")
         except RecursionError:
-            self.problems[path] = "nested too deeply to read"
+            self.problems[path] = Problem("nested too deeply to read")
 
     def evaluate_alone(self, path: str) -> None:
         """A file evaluated on its own (a top-level meson.build, or meson.options), with no variables."""
@@ -144,7 +145,7 @@ class Evaluation:
         try:
             nodes = syntax.parse(self.files[path])
         except syntax.MesonSyntaxError as error:
-            self.problems[path] = str(error)
+            self.problems[path] = Problem(str(error), error.span)
             return
         self.run(nodes, replace(frame, path=path, directory=posixpath.dirname(path) or "."))
 
@@ -154,9 +155,9 @@ class Evaluation:
             if self._statements > MOST_STATEMENTS:
                 raise _TooMuch
             if isinstance(node, syntax.Assignment):
-                self._assign(node, replace(frame, line=node.line))
+                self._assign(node, replace(frame, span=node.span))
             elif isinstance(node, syntax.Statement):
-                self.value(node.expression, replace(frame, line=node.line))
+                self.value(node.expression, replace(frame, span=node.span))
             elif isinstance(node, syntax.If):
                 self._if(node, frame)
             elif isinstance(node, syntax.Foreach):
@@ -171,9 +172,10 @@ class Evaluation:
             self.variables[node.name] = assigned(old, new, frame.condition)
 
     def _if(self, node: syntax.If, frame: Frame) -> None:
-        for condition, _ in node.branches:  # each guard as written, reached in some build or not
+        # Each guard as written, where its `if` or `elif` is, reached in some build or not.
+        for (condition, _), (keyword, span) in zip(node.branches, node.heads, strict=True):
             if condition is not None:
-                self.observer.guard(frame, written(condition))
+                self.observer.guard(replace(frame, span=span), keyword, written(condition))
         remaining = frame.condition
         for condition, body in node.branches:
             held = ALWAYS if condition is None else holds(self.value(condition, frame))

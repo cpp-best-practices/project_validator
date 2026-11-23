@@ -53,7 +53,11 @@ def _read_test_suites(path: str, text: str) -> Iterator[Fact]:
         except CabalSyntaxError as error:
             yield unreadable("Haskell test suites", path, error)
             return
-        names = [component.name for component in components(root) if component.kind == "test-suite"]
+        suites = [
+            (component.name, Origin(path=path, at=(component.kind,), span=component.span))
+            for component in components(root)
+            if component.kind == "test-suite"
+        ]
     else:
         try:
             document = yaml_support.load(text)
@@ -61,9 +65,9 @@ def _read_test_suites(path: str, text: str) -> Iterator[Fact]:
             yield unreadable("Haskell test suites", path, error)
             return
         tests = document.get("tests") if isinstance(document, Mapping) else None
-        names = [str(name) for name in tests] if isinstance(tests, Mapping) else []
-    for name in names:
-        yield Setting(origin=Origin(path=path), tool="Haskell test suites", key="test-suite", value=name)
+        suites = [(str(name), Origin(path=path)) for name in tests] if isinstance(tests, Mapping) else []
+    for name, origin in suites:
+        yield Setting(origin=origin, tool="Haskell test suites", key="test-suite", value=name)
 
 
 TEST_SUITES = SettingsReader(name="Haskell test suites", files=("*.cabal", "package.yaml"), read=_read_test_suites)

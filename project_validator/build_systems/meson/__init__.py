@@ -65,9 +65,9 @@ class Collector:
                     )
                 )
 
-    def guard(self, frame: Frame, text: str) -> None:
-        """What an `if` tests, as written (`not meson.is_subproject()`)."""
-        self.facts.append(Setting(origin=Origin(path=frame.path), tool=BUILD_SYSTEM, key="guard", value=text))
+    def guard(self, frame: Frame, keyword: str, text: str) -> None:
+        """What an `if` (or `elif`) tests, as written (`not meson.is_subproject()`)."""
+        self.facts.append(Setting(origin=frame.origin(keyword), tool=BUILD_SYSTEM, key="guard", value=text))
 
     def setting(self, frame: Frame, name: str, key: str, value: str, target: str | None, *, default: bool) -> None:
         if name != "option":
@@ -87,7 +87,7 @@ class Collector:
             )
 
     def test(self, frame: Frame) -> None:
-        self.facts.append(Setting(origin=Origin(path=frame.path), tool=BUILD_SYSTEM, key="test", value=True))
+        self.facts.append(Setting(origin=frame.origin("test"), tool=BUILD_SYSTEM, key="test", value=True))
 
     def run_target(self, frame: Frame, name: str, command: tuple[str, ...]) -> None:
         self.targets.setdefault(name, []).append((command, frame.origin("run_target"), frame.directory))
@@ -107,13 +107,13 @@ def _evaluated(files: Mapping[str, str]) -> MesonProject:
         evaluation.evaluate_alone(path)
     problems = (
         Unknown(
-            origin=Origin(path=path),
+            origin=Origin(path=path, span=problem.span),
             subject=f"the Meson file {path}",
-            reason=reason,
+            reason=problem.reason,
             hides="settings",
             tools=(BUILD_SYSTEM,),
         )
-        for path, reason in evaluation.problems.items()
+        for path, problem in evaluation.problems.items()
     )
     targets = {name: tuple(found) for name, found in collector.targets.items()}
     return MesonProject(facts=tuple(dict.fromkeys((*collector.facts, *problems))), targets=targets)

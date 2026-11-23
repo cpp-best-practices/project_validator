@@ -37,6 +37,7 @@ from project_validator.facts.mutation import mutated
 from project_validator.facts.schema import compatibility_checked, examples_checked, validated
 from project_validator.facts.security import scanned
 from project_validator.facts.testing import tested
+from project_validator.parsing import Span
 from project_validator.tools.pre_commit import _read_hooks
 from tests.support import command, make_context, temp_project
 
@@ -516,25 +517,21 @@ class MakeExpansionTests(unittest.TestCase):
     def test_each_recipe_is_placed_at_its_rule_and_line(self) -> None:
         makefile = "t:\n\t$(TOOL) x\n\t@-+${OTHER} y\n%.o: %.c\n\tcc -c $*.c -o $@\n%.c:\n\tgen $@\n"
         unset = "which neither the makefile nor the command line sets"
+
+        def at(target: str, line: int, end: int) -> Origin:
+            return Origin(path="Makefile", at=(target,), span=Span(line, 1, line, end))
+
+        def unknown(origin: Origin, recipe: str, name: str) -> Unknown:
+            reason = f"its program is the variable {name}, {unset}"
+            return Unknown(origin=origin, subject=f"the recipe {recipe!r}", reason=reason, hides="commands")
+
         self.assertEqual(
             _make({"Makefile": makefile}, "make t a.o"),
             [
-                Unknown(
-                    origin=Origin(path="Makefile", at=("t", 2)),
-                    subject="the recipe '$(TOOL) x'",
-                    reason=f"its program is the variable TOOL, {unset}",
-                    hides="commands",
-                ),
-                Unknown(
-                    origin=Origin(path="Makefile", at=("t", 3)),
-                    subject="the recipe '${OTHER} y'",
-                    reason=f"its program is the variable OTHER, {unset}",
-                    hides="commands",
-                ),
-                Script(text="gen a.c", origin=Origin(path="Makefile", at=("a.c", 7)), opaque=VARIABLE, shell=POSIX),
-                Script(
-                    text="cc -c a.c -o a.o", origin=Origin(path="Makefile", at=("a.o", 5)), opaque=VARIABLE, shell=POSIX
-                ),
+                unknown(at("t", 2, 11), "$(TOOL) x", "TOOL"),
+                unknown(at("t", 3, 15), "${OTHER} y", "OTHER"),
+                Script(text="gen a.c", origin=at("a.c", 7, 8), opaque=VARIABLE, shell=POSIX),
+                Script(text="cc -c a.c -o a.o", origin=at("a.o", 5, 18), opaque=VARIABLE, shell=POSIX),
             ],
         )
 

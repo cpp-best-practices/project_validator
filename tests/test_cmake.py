@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import unittest
+from dataclasses import dataclass, replace
 from unittest import mock
 
 from project_validator.build_systems import cmake
@@ -13,6 +14,7 @@ from project_validator.facts import Command, Fact, Origin, Setting, Unknown
 from project_validator.facts.build import Applies, BuildSetting, CompilerOption
 from project_validator.facts.conditions import DIMENSIONS
 from project_validator.facts.dependencies import Declared
+from project_validator.limits import CMAKE_NESTING
 from tests.support import github_job, make_context, temp_project
 
 # Every value of a dimension, as the profiles have extended it.
@@ -22,6 +24,23 @@ MSVC = Applies(compilers=frozenset({"msvc"}))
 NOT_MSVC = Applies(compilers=frozenset(COMPILERS) - {"msvc"})
 GCC = Applies(compilers=frozenset({"gcc"}))
 HOST = "${hostSystemName}"
+
+
+@dataclass(frozen=True)
+class _At:
+    """Equal to the origin of the invocation `name` on `line` of `path`, wherever on the line it starts and ends."""
+
+    path: str
+    name: str
+    line: int
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Origin) or other.span is None:
+            return NotImplemented if not isinstance(other, Origin) else False
+        return (other.path, other.at, other.span.line) == (self.path, (self.name,), self.line)
+
+    def __hash__(self) -> int:
+        return hash((self.path, self.name, self.line))
 
 
 def _lines(*lines: str) -> str:
@@ -426,6 +445,13 @@ class FileTests(unittest.TestCase):
             _options(_facts(files)), [("-top", None, ANY), ("-example", None, ANY), ("-unused", None, unused)]
         )
 
+    def test_a_file_nested_past_the_limit_is_unknown_where_it_goes_past(self) -> None:
+        files = {"CMakeLists.txt": _lines("project(x)", "include(a.cmake)"), "a.cmake": _lines("  include(b.cmake)")}
+        files["b.cmake"] = "add_compile_options(-b)\n"
+        with mock.patch.object(evaluation, "CMAKE_NESTING", replace(CMAKE_NESTING, most=1)):
+            unknowns = [str(fact.origin) for fact in _facts(files) if isinstance(fact, Unknown)]
+        self.assertEqual(unknowns, ["a.cmake:1:3"])
+
     def test_includes_that_would_never_end(self) -> None:
         files = {
             "CMakeLists.txt": _lines("include(a.cmake)"),
@@ -434,8 +460,13 @@ class FileTests(unittest.TestCase):
         self.assertEqual(_options(_facts(files)), [("-a", None, ANY)])
 
     def test_what_cannot_be_evaluated_is_unknown(self) -> None:
-        unknowns = [(fact.subject, fact.reason) for fact in _listed("if(A)") if isinstance(fact, Unknown)]
-        self.assertEqual(unknowns, [("the CMake file CMakeLists.txt", "line 1: if() is never closed with endif()")])
+        unknowns = [
+            (fact.subject, fact.reason, str(fact.origin))
+            for fact in _listed("set(A 1)", "if(A)")
+            if isinstance(fact, Unknown)
+        ]
+        reason = "line 2: if() is never closed with endif()"
+        self.assertEqual(unknowns, [("the CMake file CMakeLists.txt", reason, "CMakeLists.txt:2")])
         with mock.patch.object(evaluation, "MOST_COMMANDS", 3):
             [unknown] = (fact for fact in _listed(*["set(A 1)"] * 5) if isinstance(fact, Unknown))
         self.assertEqual(unknown.reason, "evaluation stopped after 3 commands")
@@ -504,6 +535,27 @@ class CommandTests(unittest.TestCase):
             ],
         )
 
+    def test_testing_guards_and_dependencies_are_placed_at_their_invocation(self) -> None:
+        files = {
+            "CMakeLists.txt": _lines(
+                "project(x)", "enable_testing()", "  FetchContent_Declare(x)", "if(PROJECT_IS_TOP_LEVEL)", "endif()"
+            )
+        }
+        found = [
+            (type(fact).__name__, str(fact.origin))
+            for fact in _facts(files)
+            if isinstance(fact, Declared)
+            or (isinstance(fact, Setting) and (fact.tool == "CTest" or fact.key == "guard"))
+        ]
+        self.assertEqual(
+            found,
+            [
+                ("Setting", "CMakeLists.txt:2:1 (enable_testing)"),
+                ("Declared", "CMakeLists.txt:3:3 (fetchcontent_declare)"),
+                ("Setting", "CMakeLists.txt:4:1 (if)"),
+            ],
+        )
+
     def test_tests_and_dependencies(self) -> None:
         files = {
             "CMakeLists.txt": _lines(
@@ -524,7 +576,8 @@ class CommandTests(unittest.TestCase):
                 ("Setting", "CMakeLists.txt", True),
                 ("Setting", "CMakeLists.txt", "add_test"),
                 ("Setting", "CMakeLists.txt", ("a", "a")),
-                ("Declared", "CMakeLists.txt", "CPM"),
+                ("Declared", "CMakeLists.txt", "CPM"),  # include(cmake/CPM.cmake)
+                ("Declared", "CMakeLists.txt", "CPM"),  # CPMAddPackage(x), on its own line
                 ("Setting", "test/CMakeLists.txt", True),
                 ("Setting", "test/CMakeLists.txt", "gtest_discover_tests"),
                 ("Declared", "test/CMakeLists.txt", "FetchContent"),
@@ -668,10 +721,10 @@ class CustomTargetTests(unittest.TestCase):
         self.assertEqual(
             _expanded("cmake --build build --target docs lint check -j 4"),
             [
-                (("clang-format", "-i", "src/a.cpp"), None, "CMakeLists.txt:add_custom_target[4]"),
-                (("clang-tidy", "-p", "build", "src/a.cpp"), None, "CMakeLists.txt:add_custom_target[3]"),
-                (("echo", "done"), None, "CMakeLists.txt:add_custom_target[3]"),
-                (("./run.sh",), "tools", "tools/CMakeLists.txt:add_custom_target[1]"),
+                (("clang-format", "-i", "src/a.cpp"), None, "CMakeLists.txt:4:1 (add_custom_target)"),
+                (("clang-tidy", "-p", "build", "src/a.cpp"), None, "CMakeLists.txt:3:1 (add_custom_target)"),
+                (("echo", "done"), None, "CMakeLists.txt:3:1 (add_custom_target)"),
+                (("./run.sh",), "tools", "tools/CMakeLists.txt:1:1 (add_custom_target)"),
             ],
         )
 
@@ -679,8 +732,8 @@ class CustomTargetTests(unittest.TestCase):
         self.assertEqual(
             _expanded("cmake --build build --target generated"),
             [
-                (("echo", "tool"), None, "CMakeLists.txt:add_custom_target[13]"),
-                (("generate", "gen"), None, "CMakeLists.txt:add_custom_command[10]"),
+                (("echo", "tool"), None, "CMakeLists.txt:13:1 (add_custom_target)"),
+                (("generate", "gen"), None, "CMakeLists.txt:10:1 (add_custom_command)"),
             ],
         )
 
@@ -716,7 +769,7 @@ class CustomTargetTests(unittest.TestCase):
             self.assertTrue(unknowns and unknowns[0].reason.startswith(reason), unknowns)
 
     def test_a_build_without_targets_builds_every_all_target(self) -> None:
-        expected = [(("echo", "built"), None, "CMakeLists.txt:add_custom_target[5]")]
+        expected = [(("echo", "built"), None, "CMakeLists.txt:5:1 (add_custom_target)")]
         self.assertEqual(_expanded("cmake --build build"), expected)
 
     def test_other_commands_are_not_expanded(self) -> None:
@@ -730,7 +783,7 @@ class CustomTargetTests(unittest.TestCase):
             context = make_context(root)
             self.assertIs(cmake.cmake_project(context), cmake.cmake_project(context))
             [option] = context.facts.of(CompilerOption)
-        self.assertEqual(option.origin, Origin(path="CMakeLists.txt", at=("add_compile_options", 1)))
+        self.assertEqual(option.origin, _At("CMakeLists.txt", "add_compile_options", 1))
 
 
 class GuardTests(unittest.TestCase):
@@ -796,7 +849,7 @@ class StringAndSeparateArgumentsTests(unittest.TestCase):
     def test_each_separated_word_comes_from_where_its_value_was_set(self) -> None:
         found = _listed('set(MORE "-Wshadow -Wconversion")', "separate_arguments(MORE)", "add_compile_options(${MORE})")
         origins = [fact.origin for fact in found if isinstance(fact, CompilerOption)]
-        self.assertEqual(origins, [Origin(path="CMakeLists.txt", at=("set", 1))] * 2)
+        self.assertEqual(origins, [_At("CMakeLists.txt", "set", 1)] * 2)
 
 
 class EvaluationEdgeTests(unittest.TestCase):
@@ -842,7 +895,7 @@ class EvaluationEdgeTests(unittest.TestCase):
     def test_a_listed_word_comes_from_the_list_command(self) -> None:
         found = _listed("list(APPEND FLAGS -Wall)", "add_compile_options(${FLAGS})")
         origins = [fact.origin for fact in found if isinstance(fact, CompilerOption)]
-        self.assertEqual(origins, [Origin(path="CMakeLists.txt", at=("list", 1))])
+        self.assertEqual(origins, [_At("CMakeLists.txt", "list", 1)])
 
 
 class LoopAndCallOriginTests(unittest.TestCase):
@@ -860,7 +913,7 @@ class LoopAndCallOriginTests(unittest.TestCase):
             "  add_compile_options(${flag})",
             "endforeach()",
         )
-        at_set = Origin(path="CMakeLists.txt", at=("set", 1))
+        at_set = _At("CMakeLists.txt", "set", 1)
         self.assertEqual([option for option, _ in found], ["-Wshadow", "-Wconversion", "-Wall", "-Wextra"])
         # A listed element comes from where the list was set.
         self.assertEqual([origin for option, origin in found if option in ("-Wall", "-Wextra")], [at_set, at_set])
@@ -874,13 +927,13 @@ class LoopAndCallOriginTests(unittest.TestCase):
     def test_a_function_s_options_come_from_the_file_that_defines_it(self) -> None:
         helpers = _lines("function(warn)", "  add_compile_options(-Wall)", "endfunction()")
         found = self._options_with_origins("include(cmake/helpers.cmake)", "warn()", **{"cmake/helpers.cmake": helpers})
-        self.assertEqual(found, [("-Wall", Origin(path="cmake/helpers.cmake", at=("add_compile_options", 2)))])
+        self.assertEqual(found, [("-Wall", _At("cmake/helpers.cmake", "add_compile_options", 2))])
 
     def test_add_definitions_keeps_where_each_definition_was_set(self) -> None:
         found = self._options_with_origins('set(DEFS "-DA -DB")', "add_definitions(${DEFS} -DC)")
-        at_set = Origin(path="CMakeLists.txt", at=("set", 1))
+        at_set = _At("CMakeLists.txt", "set", 1)
         self.assertEqual(
-            found, [("-DA", at_set), ("-DB", at_set), ("-DC", Origin(path="CMakeLists.txt", at=("add_definitions", 2)))]
+            found, [("-DA", at_set), ("-DB", at_set), ("-DC", _At("CMakeLists.txt", "add_definitions", 2))]
         )
 
     def test_set_property_on_a_target_skips_the_append_keywords_and_on_global_has_no_target(self) -> None:

@@ -187,7 +187,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "ci-lint",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:3:3 (jobs.ci-lint)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -198,7 +198,7 @@
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "origin": ".github/workflows/ci-lint.yml:6:9 (jobs.ci-lint.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -215,7 +215,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "pipx run zizmor .github",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
       "via": []
     },
     {
@@ -230,9 +230,9 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "pipx run zizmor .github",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
       "via": [
-        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+        ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)"
       ]
     },
     {
@@ -241,7 +241,7 @@
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
@@ -255,7 +255,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
       "via": []
     },
     {
@@ -272,7 +272,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "gitleaks git --redact .",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "origin": ".github/workflows/ci-lint.yml:9:9 (jobs.ci-lint.steps[3].run)",
       "via": []
     },
     {
@@ -299,7 +299,7 @@
         "zig": "0.13.0"
       },
       "name": "test (ubuntu-latest, 0.13.0, Debug, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -310,7 +310,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -321,7 +321,7 @@
       },
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -338,7 +338,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -356,7 +356,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "zig build -Doptimize=Debug --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -374,7 +374,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O Debug",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -391,7 +391,7 @@
         "zig": "0.13.0"
       },
       "name": "test (ubuntu-latest, 0.13.0, Debug, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -402,7 +402,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -413,7 +413,7 @@
       },
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -430,7 +430,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -448,7 +448,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "zig build -Doptimize=Debug --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -467,7 +467,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O Debug -fsanitize-c",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -484,7 +484,7 @@
         "zig": "0.13.0"
       },
       "name": "test (ubuntu-latest, 0.13.0, ReleaseSafe, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -495,7 +495,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -506,7 +506,7 @@
       },
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -523,7 +523,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -541,7 +541,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "zig build -Doptimize=ReleaseSafe --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -559,7 +559,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O ReleaseSafe",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -576,7 +576,7 @@
         "zig": "0.13.0"
       },
       "name": "test (ubuntu-latest, 0.13.0, ReleaseSafe, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -587,7 +587,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -598,7 +598,7 @@
       },
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -615,7 +615,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -633,7 +633,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "zig build -Doptimize=ReleaseSafe --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -652,7 +652,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O ReleaseSafe -fsanitize-c",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -669,7 +669,7 @@
         "zig": "0.14.1"
       },
       "name": "test (ubuntu-latest, 0.14.1, Debug, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -680,7 +680,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -691,7 +691,7 @@
       },
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -708,7 +708,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -726,7 +726,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "zig build -Doptimize=Debug --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -744,7 +744,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O Debug",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -761,7 +761,7 @@
         "zig": "0.14.1"
       },
       "name": "test (ubuntu-latest, 0.14.1, Debug, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -772,7 +772,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -783,7 +783,7 @@
       },
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -800,7 +800,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -818,7 +818,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "zig build -Doptimize=Debug --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -837,7 +837,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O Debug -fsanitize-c",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -854,7 +854,7 @@
         "zig": "0.14.1"
       },
       "name": "test (ubuntu-latest, 0.14.1, ReleaseSafe, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -865,7 +865,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -876,7 +876,7 @@
       },
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -893,7 +893,7 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -911,7 +911,7 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "Command",
       "line": "zig build -Doptimize=ReleaseSafe --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -929,7 +929,7 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O ReleaseSafe",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -946,7 +946,7 @@
         "zig": "0.14.1"
       },
       "name": "test (ubuntu-latest, 0.14.1, ReleaseSafe, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -957,7 +957,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -968,7 +968,7 @@
       },
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -985,7 +985,7 @@
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1003,7 +1003,7 @@
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "Command",
       "line": "zig build -Doptimize=ReleaseSafe --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1022,7 +1022,7 @@
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O ReleaseSafe -fsanitize-c",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1039,7 +1039,7 @@
         "zig": "0.13.0"
       },
       "name": "test (macos-latest, 0.13.0, Debug, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -1050,7 +1050,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1061,7 +1061,7 @@
       },
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -1078,7 +1078,7 @@
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1096,7 +1096,7 @@
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "Command",
       "line": "zig build -Doptimize=Debug --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1114,7 +1114,7 @@
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O Debug",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1131,7 +1131,7 @@
         "zig": "0.13.0"
       },
       "name": "test (macos-latest, 0.13.0, Debug, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -1142,7 +1142,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1153,7 +1153,7 @@
       },
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -1170,7 +1170,7 @@
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1188,7 +1188,7 @@
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "Command",
       "line": "zig build -Doptimize=Debug --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1207,7 +1207,7 @@
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O Debug -fsanitize-c",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1224,7 +1224,7 @@
         "zig": "0.13.0"
       },
       "name": "test (macos-latest, 0.13.0, ReleaseSafe, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -1235,7 +1235,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1246,7 +1246,7 @@
       },
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -1263,7 +1263,7 @@
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1281,7 +1281,7 @@
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "Command",
       "line": "zig build -Doptimize=ReleaseSafe --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1299,7 +1299,7 @@
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O ReleaseSafe",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1316,7 +1316,7 @@
         "zig": "0.13.0"
       },
       "name": "test (macos-latest, 0.13.0, ReleaseSafe, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -1327,7 +1327,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1338,7 +1338,7 @@
       },
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -1355,7 +1355,7 @@
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1373,7 +1373,7 @@
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "Command",
       "line": "zig build -Doptimize=ReleaseSafe --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1392,7 +1392,7 @@
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O ReleaseSafe -fsanitize-c",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1409,7 +1409,7 @@
         "zig": "0.14.1"
       },
       "name": "test (macos-latest, 0.14.1, Debug, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -1420,7 +1420,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[12]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1431,7 +1431,7 @@
       },
       "job": ".github/workflows/ci.yml:test[12]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -1448,7 +1448,7 @@
       "job": ".github/workflows/ci.yml:test[12]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1466,7 +1466,7 @@
       "job": ".github/workflows/ci.yml:test[12]",
       "kind": "Command",
       "line": "zig build -Doptimize=Debug --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1484,7 +1484,7 @@
       "job": ".github/workflows/ci.yml:test[12]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O Debug",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1501,7 +1501,7 @@
         "zig": "0.14.1"
       },
       "name": "test (macos-latest, 0.14.1, Debug, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -1512,7 +1512,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[13]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1523,7 +1523,7 @@
       },
       "job": ".github/workflows/ci.yml:test[13]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -1540,7 +1540,7 @@
       "job": ".github/workflows/ci.yml:test[13]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1558,7 +1558,7 @@
       "job": ".github/workflows/ci.yml:test[13]",
       "kind": "Command",
       "line": "zig build -Doptimize=Debug --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1577,7 +1577,7 @@
       "job": ".github/workflows/ci.yml:test[13]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O Debug -fsanitize-c",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1594,7 +1594,7 @@
         "zig": "0.14.1"
       },
       "name": "test (macos-latest, 0.14.1, ReleaseSafe, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -1605,7 +1605,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[14]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1616,7 +1616,7 @@
       },
       "job": ".github/workflows/ci.yml:test[14]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -1633,7 +1633,7 @@
       "job": ".github/workflows/ci.yml:test[14]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1651,7 +1651,7 @@
       "job": ".github/workflows/ci.yml:test[14]",
       "kind": "Command",
       "line": "zig build -Doptimize=ReleaseSafe --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1669,7 +1669,7 @@
       "job": ".github/workflows/ci.yml:test[14]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O ReleaseSafe",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1686,7 +1686,7 @@
         "zig": "0.14.1"
       },
       "name": "test (macos-latest, 0.14.1, ReleaseSafe, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "provider": "GitHub Actions",
       "services": []
@@ -1697,7 +1697,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[15]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1708,7 +1708,7 @@
       },
       "job": ".github/workflows/ci.yml:test[15]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -1725,7 +1725,7 @@
       "job": ".github/workflows/ci.yml:test[15]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1743,7 +1743,7 @@
       "job": ".github/workflows/ci.yml:test[15]",
       "kind": "Command",
       "line": "zig build -Doptimize=ReleaseSafe --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1762,7 +1762,7 @@
       "job": ".github/workflows/ci.yml:test[15]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O ReleaseSafe -fsanitize-c",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1779,7 +1779,7 @@
         "zig": "0.13.0"
       },
       "name": "test (windows-latest, 0.13.0, Debug, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -1790,7 +1790,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[16]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1801,7 +1801,7 @@
       },
       "job": ".github/workflows/ci.yml:test[16]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -1818,7 +1818,7 @@
       "job": ".github/workflows/ci.yml:test[16]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1836,7 +1836,7 @@
       "job": ".github/workflows/ci.yml:test[16]",
       "kind": "Command",
       "line": "zig build -Doptimize=Debug --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1854,7 +1854,7 @@
       "job": ".github/workflows/ci.yml:test[16]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O Debug",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1871,7 +1871,7 @@
         "zig": "0.13.0"
       },
       "name": "test (windows-latest, 0.13.0, Debug, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -1882,7 +1882,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[17]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1893,7 +1893,7 @@
       },
       "job": ".github/workflows/ci.yml:test[17]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -1910,7 +1910,7 @@
       "job": ".github/workflows/ci.yml:test[17]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -1928,7 +1928,7 @@
       "job": ".github/workflows/ci.yml:test[17]",
       "kind": "Command",
       "line": "zig build -Doptimize=Debug --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -1947,7 +1947,7 @@
       "job": ".github/workflows/ci.yml:test[17]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O Debug -fsanitize-c",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -1964,7 +1964,7 @@
         "zig": "0.13.0"
       },
       "name": "test (windows-latest, 0.13.0, ReleaseSafe, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -1975,7 +1975,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[18]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1986,7 +1986,7 @@
       },
       "job": ".github/workflows/ci.yml:test[18]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -2003,7 +2003,7 @@
       "job": ".github/workflows/ci.yml:test[18]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -2021,7 +2021,7 @@
       "job": ".github/workflows/ci.yml:test[18]",
       "kind": "Command",
       "line": "zig build -Doptimize=ReleaseSafe --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -2039,7 +2039,7 @@
       "job": ".github/workflows/ci.yml:test[18]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O ReleaseSafe",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -2056,7 +2056,7 @@
         "zig": "0.13.0"
       },
       "name": "test (windows-latest, 0.13.0, ReleaseSafe, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -2067,7 +2067,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[19]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2078,7 +2078,7 @@
       },
       "job": ".github/workflows/ci.yml:test[19]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -2095,7 +2095,7 @@
       "job": ".github/workflows/ci.yml:test[19]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -2113,7 +2113,7 @@
       "job": ".github/workflows/ci.yml:test[19]",
       "kind": "Command",
       "line": "zig build -Doptimize=ReleaseSafe --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -2132,7 +2132,7 @@
       "job": ".github/workflows/ci.yml:test[19]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O ReleaseSafe -fsanitize-c",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -2149,7 +2149,7 @@
         "zig": "0.14.1"
       },
       "name": "test (windows-latest, 0.14.1, Debug, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -2160,7 +2160,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[20]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2171,7 +2171,7 @@
       },
       "job": ".github/workflows/ci.yml:test[20]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -2188,7 +2188,7 @@
       "job": ".github/workflows/ci.yml:test[20]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -2206,7 +2206,7 @@
       "job": ".github/workflows/ci.yml:test[20]",
       "kind": "Command",
       "line": "zig build -Doptimize=Debug --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -2224,7 +2224,7 @@
       "job": ".github/workflows/ci.yml:test[20]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O Debug",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -2241,7 +2241,7 @@
         "zig": "0.14.1"
       },
       "name": "test (windows-latest, 0.14.1, Debug, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -2252,7 +2252,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[21]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2263,7 +2263,7 @@
       },
       "job": ".github/workflows/ci.yml:test[21]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -2280,7 +2280,7 @@
       "job": ".github/workflows/ci.yml:test[21]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -2298,7 +2298,7 @@
       "job": ".github/workflows/ci.yml:test[21]",
       "kind": "Command",
       "line": "zig build -Doptimize=Debug --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -2317,7 +2317,7 @@
       "job": ".github/workflows/ci.yml:test[21]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O Debug -fsanitize-c",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -2334,7 +2334,7 @@
         "zig": "0.14.1"
       },
       "name": "test (windows-latest, 0.14.1, ReleaseSafe, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -2345,7 +2345,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[22]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2356,7 +2356,7 @@
       },
       "job": ".github/workflows/ci.yml:test[22]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -2373,7 +2373,7 @@
       "job": ".github/workflows/ci.yml:test[22]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -2391,7 +2391,7 @@
       "job": ".github/workflows/ci.yml:test[22]",
       "kind": "Command",
       "line": "zig build -Doptimize=ReleaseSafe --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -2409,7 +2409,7 @@
       "job": ".github/workflows/ci.yml:test[22]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O ReleaseSafe",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -2426,7 +2426,7 @@
         "zig": "0.14.1"
       },
       "name": "test (windows-latest, 0.14.1, ReleaseSafe, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -2437,7 +2437,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[23]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[0]",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2448,7 +2448,7 @@
       },
       "job": ".github/workflows/ci.yml:test[23]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[1]",
+      "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -2465,7 +2465,7 @@
       "job": ".github/workflows/ci.yml:test[23]",
       "kind": "Command",
       "line": "zig fmt --check .",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "via": []
     },
     {
@@ -2483,7 +2483,7 @@
       "job": ".github/workflows/ci.yml:test[23]",
       "kind": "Command",
       "line": "zig build -Doptimize=ReleaseSafe --summary all",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[3].run",
+      "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
       "via": []
     },
     {
@@ -2502,7 +2502,7 @@
       "job": ".github/workflows/ci.yml:test[23]",
       "kind": "Command",
       "line": "zig test src/shop.zig -O ReleaseSafe -fsanitize-c",
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "via": []
     },
     {
@@ -2514,7 +2514,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "fuzz",
-      "origin": ".github/workflows/ci.yml:jobs.fuzz",
+      "origin": ".github/workflows/ci.yml:19:3 (jobs.fuzz)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -2525,7 +2525,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:fuzz",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[0]",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.fuzz.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2536,7 +2536,7 @@
       },
       "job": ".github/workflows/ci.yml:fuzz",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[1]",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.fuzz.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -2555,7 +2555,7 @@
       "job": ".github/workflows/ci.yml:fuzz",
       "kind": "Command",
       "line": "timeout 60 zig build test --fuzz || [ $? -eq 124 ]",
-      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[2].run",
+      "origin": ".github/workflows/ci.yml:26:9 (jobs.fuzz.steps[2].run)",
       "via": []
     },
     {
@@ -2572,9 +2572,9 @@
       "job": ".github/workflows/ci.yml:fuzz",
       "kind": "Command",
       "line": "timeout 60 zig build test --fuzz || [ $? -eq 124 ]",
-      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[2].run",
+      "origin": ".github/workflows/ci.yml:26:9 (jobs.fuzz.steps[2].run)",
       "via": [
-        ".github/workflows/ci.yml:jobs.fuzz.steps[2].run"
+        ".github/workflows/ci.yml:26:9 (jobs.fuzz.steps[2].run)"
       ]
     },
     {
@@ -2592,7 +2592,7 @@
       "job": ".github/workflows/ci.yml:fuzz",
       "kind": "Command",
       "line": "timeout 60 zig build test --fuzz || [ $? -eq 124 ]",
-      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[2].run",
+      "origin": ".github/workflows/ci.yml:26:9 (jobs.fuzz.steps[2].run)",
       "via": []
     },
     {
@@ -2604,7 +2604,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "coverage",
-      "origin": ".github/workflows/ci.yml:jobs.coverage",
+      "origin": ".github/workflows/ci.yml:27:3 (jobs.coverage)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -2615,7 +2615,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[0]",
+      "origin": ".github/workflows/ci.yml:30:9 (jobs.coverage.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2626,7 +2626,7 @@
       },
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[1]",
+      "origin": ".github/workflows/ci.yml:31:9 (jobs.coverage.steps[1])",
       "uses": "mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29"
     },
     {
@@ -2644,7 +2644,7 @@
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "Command",
       "line": "sudo apt-get install -y kcov",
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[2].run",
+      "origin": ".github/workflows/ci.yml:34:9 (jobs.coverage.steps[2].run)",
       "via": []
     },
     {
@@ -2661,9 +2661,9 @@
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "Command",
       "line": "sudo apt-get install -y kcov",
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[2].run",
+      "origin": ".github/workflows/ci.yml:34:9 (jobs.coverage.steps[2].run)",
       "via": [
-        ".github/workflows/ci.yml:jobs.coverage.steps[2].run"
+        ".github/workflows/ci.yml:34:9 (jobs.coverage.steps[2].run)"
       ]
     },
     {
@@ -2686,7 +2686,7 @@
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "Command",
       "line": "zig test src/shop.zig --test-cmd kcov --test-cmd --include-pattern=src --test-cmd kcov-output --test-cmd-bin",
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[3].run",
+      "origin": ".github/workflows/ci.yml:35:9 (jobs.coverage.steps[3].run)",
       "via": []
     },
     {
@@ -2708,7 +2708,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "copy-paste-detection",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:2:3 (jobs.copy-paste-detection)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -2719,7 +2719,7 @@
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "origin": ".github/workflows/copy-paste-detection.yml:5:9 (jobs.copy-paste-detection.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2738,7 +2738,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
       "via": []
     },
     {
@@ -2755,9 +2755,9 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
       "via": [
-        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+        ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)"
       ]
     },
     {
@@ -2774,7 +2774,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "function-limits",
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "origin": ".github/workflows/function-limits.yml:2:3 (jobs.function-limits)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -2785,7 +2785,7 @@
       "inputs": {},
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "ActionStep",
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[0]",
+      "origin": ".github/workflows/function-limits.yml:5:9 (jobs.function-limits.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2803,7 +2803,7 @@
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "Command",
       "line": "python -m pip install lizard",
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "origin": ".github/workflows/function-limits.yml:6:9 (jobs.function-limits.steps[1].run)",
       "via": []
     },
     {
@@ -2819,9 +2819,9 @@
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "Command",
       "line": "python -m pip install lizard",
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run",
+      "origin": ".github/workflows/function-limits.yml:6:9 (jobs.function-limits.steps[1].run)",
       "via": [
-        ".github/workflows/function-limits.yml:jobs.function-limits.steps[1].run"
+        ".github/workflows/function-limits.yml:6:9 (jobs.function-limits.steps[1].run)"
       ]
     },
     {
@@ -2839,7 +2839,7 @@
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "origin": ".github/workflows/function-limits.yml:7:9 (jobs.function-limits.steps[2].run)",
       "via": []
     },
     {
@@ -2856,7 +2856,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Job",
       "name": ".github/workflows/ci-lint.yml: ci-lint",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:3:3 (jobs.ci-lint)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -2877,7 +2877,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.13.0, Debug, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -2903,7 +2903,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.13.0, Debug, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -2929,7 +2929,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.13.0, ReleaseSafe, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -2955,7 +2955,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.13.0, ReleaseSafe, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -2981,7 +2981,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.14.1, Debug, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -3007,7 +3007,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.14.1, Debug, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -3033,7 +3033,7 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.14.1, ReleaseSafe, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -3059,7 +3059,7 @@
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (ubuntu-latest, 0.14.1, ReleaseSafe, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -3085,7 +3085,7 @@
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (macos-latest, 0.13.0, Debug, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "services": [],
       "toolchains": [
@@ -3111,7 +3111,7 @@
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (macos-latest, 0.13.0, Debug, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "services": [],
       "toolchains": [
@@ -3137,7 +3137,7 @@
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (macos-latest, 0.13.0, ReleaseSafe, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "services": [],
       "toolchains": [
@@ -3163,7 +3163,7 @@
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (macos-latest, 0.13.0, ReleaseSafe, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "services": [],
       "toolchains": [
@@ -3189,7 +3189,7 @@
       "job": ".github/workflows/ci.yml:test[12]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (macos-latest, 0.14.1, Debug, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "services": [],
       "toolchains": [
@@ -3215,7 +3215,7 @@
       "job": ".github/workflows/ci.yml:test[13]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (macos-latest, 0.14.1, Debug, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "services": [],
       "toolchains": [
@@ -3241,7 +3241,7 @@
       "job": ".github/workflows/ci.yml:test[14]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (macos-latest, 0.14.1, ReleaseSafe, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "services": [],
       "toolchains": [
@@ -3267,7 +3267,7 @@
       "job": ".github/workflows/ci.yml:test[15]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (macos-latest, 0.14.1, ReleaseSafe, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "macos",
       "services": [],
       "toolchains": [
@@ -3293,7 +3293,7 @@
       "job": ".github/workflows/ci.yml:test[16]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (windows-latest, 0.13.0, Debug, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "services": [],
       "toolchains": [
@@ -3319,7 +3319,7 @@
       "job": ".github/workflows/ci.yml:test[17]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (windows-latest, 0.13.0, Debug, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "services": [],
       "toolchains": [
@@ -3345,7 +3345,7 @@
       "job": ".github/workflows/ci.yml:test[18]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (windows-latest, 0.13.0, ReleaseSafe, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "services": [],
       "toolchains": [
@@ -3371,7 +3371,7 @@
       "job": ".github/workflows/ci.yml:test[19]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (windows-latest, 0.13.0, ReleaseSafe, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "services": [],
       "toolchains": [
@@ -3397,7 +3397,7 @@
       "job": ".github/workflows/ci.yml:test[20]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (windows-latest, 0.14.1, Debug, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "services": [],
       "toolchains": [
@@ -3423,7 +3423,7 @@
       "job": ".github/workflows/ci.yml:test[21]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (windows-latest, 0.14.1, Debug, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "services": [],
       "toolchains": [
@@ -3449,7 +3449,7 @@
       "job": ".github/workflows/ci.yml:test[22]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (windows-latest, 0.14.1, ReleaseSafe, )",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "services": [],
       "toolchains": [
@@ -3475,7 +3475,7 @@
       "job": ".github/workflows/ci.yml:test[23]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: test (windows-latest, 0.14.1, ReleaseSafe, -fsanitize-c)",
-      "origin": ".github/workflows/ci.yml:jobs.test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
       "os": "windows",
       "services": [],
       "toolchains": [
@@ -3501,7 +3501,7 @@
       "job": ".github/workflows/ci.yml:fuzz",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: fuzz",
-      "origin": ".github/workflows/ci.yml:jobs.fuzz",
+      "origin": ".github/workflows/ci.yml:19:3 (jobs.fuzz)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -3527,7 +3527,7 @@
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: coverage",
-      "origin": ".github/workflows/ci.yml:jobs.coverage",
+      "origin": ".github/workflows/ci.yml:27:3 (jobs.coverage)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -3546,7 +3546,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Job",
       "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:2:3 (jobs.copy-paste-detection)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -3562,7 +3562,7 @@
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "Job",
       "name": ".github/workflows/function-limits.yml: function-limits",
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits",
+      "origin": ".github/workflows/function-limits.yml:2:3 (jobs.function-limits)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -3651,7 +3651,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -3672,7 +3672,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -3693,7 +3693,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -3714,7 +3714,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -3735,7 +3735,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -3756,7 +3756,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -3777,7 +3777,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -3798,7 +3798,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -3819,7 +3819,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -3840,7 +3840,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -3861,7 +3861,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -3882,7 +3882,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -3903,7 +3903,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -3924,7 +3924,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -3945,7 +3945,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -3966,7 +3966,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -3987,7 +3987,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4008,7 +4008,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -4029,7 +4029,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4050,7 +4050,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -4071,7 +4071,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4092,7 +4092,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -4113,7 +4113,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4134,7 +4134,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -4155,7 +4155,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4176,7 +4176,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -4197,7 +4197,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4218,7 +4218,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -4239,7 +4239,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4260,7 +4260,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -4281,7 +4281,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4302,7 +4302,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -4323,7 +4323,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4344,7 +4344,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -4365,7 +4365,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4386,7 +4386,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -4407,7 +4407,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4428,7 +4428,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -4449,7 +4449,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4470,7 +4470,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -4491,7 +4491,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4512,7 +4512,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -4533,7 +4533,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4554,7 +4554,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -4575,7 +4575,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4596,7 +4596,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -4617,7 +4617,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[2].run",
+      "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
       "provides": {
         "format": [
           "check"
@@ -4638,7 +4638,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.test.steps[4].run",
+      "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
       "provides": {
         "test": [
           "runs"
@@ -4659,7 +4659,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[2].run",
+      "origin": ".github/workflows/ci.yml:26:9 (jobs.fuzz.steps[2].run)",
       "provides": {
         "test": [
           "runs"
@@ -4671,7 +4671,7 @@
       ],
       "tool": "zig build test",
       "via": [
-        ".github/workflows/ci.yml:jobs.fuzz.steps[2].run"
+        ".github/workflows/ci.yml:26:9 (jobs.fuzz.steps[2].run)"
       ]
     },
     {
@@ -4682,7 +4682,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.fuzz.steps[2].run",
+      "origin": ".github/workflows/ci.yml:26:9 (jobs.fuzz.steps[2].run)",
       "provides": {
         "fuzz": [
           "runs"
@@ -4694,7 +4694,7 @@
       ],
       "tool": "zig build fuzz",
       "via": [
-        ".github/workflows/ci.yml:jobs.fuzz.steps[2].run"
+        ".github/workflows/ci.yml:26:9 (jobs.fuzz.steps[2].run)"
       ]
     },
     {
@@ -4705,7 +4705,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[3].run",
+      "origin": ".github/workflows/ci.yml:35:9 (jobs.coverage.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -4726,7 +4726,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.coverage.steps[3].run",
+      "origin": ".github/workflows/ci.yml:35:9 (jobs.coverage.steps[3].run)",
       "provides": {
         "coverage": [
           "line reported",
@@ -4748,7 +4748,7 @@
       "languages": [
         "Zig"
       ],
-      "origin": ".github/workflows/function-limits.yml:jobs.function-limits.steps[2].run",
+      "origin": ".github/workflows/function-limits.yml:7:9 (jobs.function-limits.steps[2].run)",
       "provides": {
         "function-length": [
           "limits",

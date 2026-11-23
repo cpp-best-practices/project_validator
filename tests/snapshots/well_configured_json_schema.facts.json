@@ -198,7 +198,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "ci-lint",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:3:3 (jobs.ci-lint)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -209,7 +209,7 @@
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "origin": ".github/workflows/ci-lint.yml:6:9 (jobs.ci-lint.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -226,7 +226,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "pipx run zizmor .github",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
       "via": []
     },
     {
@@ -241,9 +241,9 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "pipx run zizmor .github",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
       "via": [
-        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+        ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)"
       ]
     },
     {
@@ -252,7 +252,7 @@
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
@@ -266,7 +266,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
       "via": []
     },
     {
@@ -283,7 +283,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "gitleaks git --redact .",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "origin": ".github/workflows/ci-lint.yml:9:9 (jobs.ci-lint.steps[3].run)",
       "via": []
     },
     {
@@ -305,7 +305,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "validate",
-      "origin": ".github/workflows/ci.yml:jobs.validate",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.validate)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -316,7 +316,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:validate",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[0]",
+      "origin": ".github/workflows/ci.yml:6:9 (jobs.validate.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -335,7 +335,7 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
       "line": "pipx run check-jsonschema --schemafile schema/catalog.schema.json data/catalog.json",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[1].run",
+      "origin": ".github/workflows/ci.yml:7:9 (jobs.validate.steps[1].run)",
       "via": []
     },
     {
@@ -352,9 +352,9 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
       "line": "pipx run check-jsonschema --schemafile schema/catalog.schema.json data/catalog.json",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[1].run",
+      "origin": ".github/workflows/ci.yml:7:9 (jobs.validate.steps[1].run)",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[1].run"
+        ".github/workflows/ci.yml:7:9 (jobs.validate.steps[1].run)"
       ]
     },
     {
@@ -376,7 +376,7 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
       "line": "npx --yes ajv-cli test -s schema/catalog.schema.json -d \"examples/valid/*.json\" --valid",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "origin": ".github/workflows/ci.yml:8:9 (jobs.validate.steps[2].run)",
       "via": []
     },
     {
@@ -396,9 +396,9 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
       "line": "npx --yes ajv-cli test -s schema/catalog.schema.json -d \"examples/valid/*.json\" --valid",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "origin": ".github/workflows/ci.yml:8:9 (jobs.validate.steps[2].run)",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[2].run"
+        ".github/workflows/ci.yml:8:9 (jobs.validate.steps[2].run)"
       ]
     },
     {
@@ -420,7 +420,7 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
       "line": "npx --yes ajv-cli test -s schema/catalog.schema.json -d \"examples/invalid/*.json\" --invalid",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "origin": ".github/workflows/ci.yml:9:9 (jobs.validate.steps[3].run)",
       "via": []
     },
     {
@@ -440,9 +440,9 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
       "line": "npx --yes ajv-cli test -s schema/catalog.schema.json -d \"examples/invalid/*.json\" --invalid",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "origin": ".github/workflows/ci.yml:9:9 (jobs.validate.steps[3].run)",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[3].run"
+        ".github/workflows/ci.yml:9:9 (jobs.validate.steps[3].run)"
       ]
     },
     {
@@ -460,7 +460,7 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
       "line": "git fetch --depth=1 origin main && git show origin/main:schema/catalog.schema.json > /tmp/base.schema.json",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "origin": ".github/workflows/ci.yml:10:9 (jobs.validate.steps[4].run)",
       "via": []
     },
     {
@@ -476,7 +476,7 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
       "line": "git fetch --depth=1 origin main && git show origin/main:schema/catalog.schema.json > /tmp/base.schema.json",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[4].run",
+      "origin": ".github/workflows/ci.yml:10:9 (jobs.validate.steps[4].run)",
       "via": []
     },
     {
@@ -494,7 +494,7 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
       "line": "npx --yes json-schema-diff /tmp/base.schema.json schema/catalog.schema.json",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.validate.steps[5].run)",
       "via": []
     },
     {
@@ -510,9 +510,9 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
       "line": "npx --yes json-schema-diff /tmp/base.schema.json schema/catalog.schema.json",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.validate.steps[5].run)",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[5].run"
+        ".github/workflows/ci.yml:11:9 (jobs.validate.steps[5].run)"
       ]
     },
     {
@@ -530,7 +530,7 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
       "line": "npx --yes prettier --check .",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[6].run",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.validate.steps[6].run)",
       "via": []
     },
     {
@@ -546,9 +546,9 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Command",
       "line": "npx --yes prettier --check .",
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[6].run",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.validate.steps[6].run)",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[6].run"
+        ".github/workflows/ci.yml:12:9 (jobs.validate.steps[6].run)"
       ]
     },
     {
@@ -565,7 +565,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "copy-paste-detection",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:2:3 (jobs.copy-paste-detection)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -576,7 +576,7 @@
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "origin": ".github/workflows/copy-paste-detection.yml:5:9 (jobs.copy-paste-detection.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -595,7 +595,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
       "via": []
     },
     {
@@ -612,9 +612,9 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
       "via": [
-        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+        ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)"
       ]
     },
     {
@@ -633,7 +633,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Job",
       "name": ".github/workflows/ci-lint.yml: ci-lint",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:3:3 (jobs.ci-lint)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -649,7 +649,7 @@
       "job": ".github/workflows/ci.yml:validate",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: validate",
-      "origin": ".github/workflows/ci.yml:jobs.validate",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.validate)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -665,7 +665,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Job",
       "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:2:3 (jobs.copy-paste-detection)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -702,7 +702,7 @@
       "languages": [
         "JSON Schema"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[1].run",
+      "origin": ".github/workflows/ci.yml:7:9 (jobs.validate.steps[1].run)",
       "provides": {
         "schema": [
           "validates"
@@ -714,7 +714,7 @@
       ],
       "tool": "check-jsonschema",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[1].run"
+        ".github/workflows/ci.yml:7:9 (jobs.validate.steps[1].run)"
       ]
     },
     {
@@ -725,7 +725,7 @@
       "languages": [
         "JSON Schema"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[2].run",
+      "origin": ".github/workflows/ci.yml:8:9 (jobs.validate.steps[2].run)",
       "provides": {
         "examples": [
           "checked"
@@ -740,7 +740,7 @@
       ],
       "tool": "ajv",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[2].run"
+        ".github/workflows/ci.yml:8:9 (jobs.validate.steps[2].run)"
       ]
     },
     {
@@ -751,7 +751,7 @@
       "languages": [
         "JSON Schema"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[3].run",
+      "origin": ".github/workflows/ci.yml:9:9 (jobs.validate.steps[3].run)",
       "provides": {
         "examples": [
           "checked"
@@ -766,7 +766,7 @@
       ],
       "tool": "ajv",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[3].run"
+        ".github/workflows/ci.yml:9:9 (jobs.validate.steps[3].run)"
       ]
     },
     {
@@ -777,7 +777,7 @@
       "languages": [
         "JSON Schema"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[5].run",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.validate.steps[5].run)",
       "provides": {
         "compatibility": [
           "breaking"
@@ -789,7 +789,7 @@
       ],
       "tool": "json-schema-diff",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[5].run"
+        ".github/workflows/ci.yml:11:9 (jobs.validate.steps[5].run)"
       ]
     },
     {
@@ -800,7 +800,7 @@
       "languages": [
         "JSON Schema"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.validate.steps[6].run",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.validate.steps[6].run)",
       "provides": {
         "format": [
           "check"
@@ -812,7 +812,7 @@
       ],
       "tool": "prettier",
       "via": [
-        ".github/workflows/ci.yml:jobs.validate.steps[6].run"
+        ".github/workflows/ci.yml:12:9 (jobs.validate.steps[6].run)"
       ]
     }
   ],

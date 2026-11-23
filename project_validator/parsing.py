@@ -1,5 +1,6 @@
-"""What every reader shares: where something is in a file (`Span`), why a file does not parse (`ParseError`), and how a
-line written over several physical lines is put back together (`continued`).
+"""What every reader shares: where something is in a file (`Span`), why a file does not parse (`ParseError`) or could
+not be evaluated in full (`Problem`), and how a line written over several physical lines is put back together
+(`continued`).
 
 Each reader's own syntax error (CMake's, Meson's, JSON's, Cabal's, YAML's) is a `ParseError`, so a caller can catch
 any of them, and a fact built from one (see `project_validator.facts.settings.unreadable`) says where it went wrong.
@@ -41,6 +42,14 @@ class ParseError(ValueError):
     @property
     def column(self) -> int | None:
         return None if self.span is None else self.span.column
+
+
+@dataclass(frozen=True, slots=True)
+class Problem:
+    """Why a file could not be read or evaluated (in full), and where in it, when that is known."""
+
+    reason: str
+    span: Span | None = None
 
 
 def _never(_line: str) -> bool:
