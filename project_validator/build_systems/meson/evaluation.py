@@ -39,15 +39,13 @@ from project_validator.build_systems.meson.values import (
     Unknown,
     Value,
     array,
-    assigned,
-    combined,
     elements,
     holds,
     single,
     strings,
 )
 from project_validator.facts import Origin
-from project_validator.facts.conditions import ALWAYS, Condition, Dimension, both, either, negated
+from project_validator.facts.conditions import ALWAYS, Condition, Dimension, assigned, both, combined, either, negated
 
 BUILD_FILE = "meson.build"
 MOST_ITERATIONS = 64

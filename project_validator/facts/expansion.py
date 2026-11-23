@@ -3,7 +3,9 @@
 A `CommandExpander` knows one way a command runs others (`npm test` runs the package's `test` script); an `Action`
 knows the command a reusable CI step runs (`psf/black@stable` runs `black --check`). Expanded
 commands are facts like those CI runs directly, in the same job, with `via` naming the commands that led to them.
-Expansion repeats on what it finds, and stops where a definition would run itself again.
+Expansion repeats on what it finds, and stops where a definition would run itself again. What holds in only some
+builds (`Only`: a recipe in a makefile's `ifeq ($(OS),Windows_NT)`) is followed only in a job whose builds it may hold
+in: one on a runner of that platform, or of a platform that is not known.
 """
 
 from __future__ import annotations
@@ -18,8 +20,9 @@ from typing import TYPE_CHECKING
 
 from project_validator.components import known
 from project_validator.evidence import DEVENV, DEVENV_HOOKS, PRE_COMMIT_CONFIGURATION
-from project_validator.facts import NOTHING, ActionStep, Command, Fact, Origin, PartlyRead, Unknown, resolved
+from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, Origin, PartlyRead, Unknown, resolved
 from project_validator.facts.arguments import starts_with
+from project_validator.facts.conditions import ALWAYS, DIMENSIONS, Condition, both, only
 from project_validator.facts.exit_status import Shell, masked
 from project_validator.facts.shell import ShellCommand, ShellSyntaxError, Unsplittable, split_script
 from project_validator.templates import SHELL
@@ -64,7 +67,15 @@ class Launched:
     env: Mapping[str, str] = NOTHING
 
 
-type Expansion = Script | Invocation | Launched | Unknown
+@dataclass(frozen=True, slots=True)
+class Only:
+    """An expansion that holds in only the builds `when` names (a recipe in a makefile's conditional)."""
+
+    expansion: Script | Unknown
+    when: Condition
+
+
+type Expansion = Script | Invocation | Launched | Unknown | Only
 type Expand = Callable[[Command, Context], Iterable[Expansion] | None]
 
 
@@ -284,7 +295,7 @@ def _changed(directory: str | None, argv: tuple[str, ...]) -> str | None:
 OUTSIDE = "/"
 
 
-def _children(command: Command, expansion: Expansion) -> Iterator[Fact]:
+def _children(command: Command, expansion: Script | Invocation | Launched | Unknown) -> Iterator[Fact]:
     via = (*command.via, command.origin)
     if isinstance(expansion, Unknown):
         yield expansion
@@ -331,13 +342,14 @@ def inside(context: Context, directory: str | None) -> bool:
     return (context.project.root / directory).is_dir()
 
 
-def expand_command(command: Command, context: Context, expanders: Iterable[CommandExpander]) -> Iterator[Fact]:
-    """What `command` runs in turn, through every expander that recognises it, depth first. A command run outside the
-    project's own directories is not expanded."""
+def expand_command(
+    command: Command, context: Context, expanders: Iterable[CommandExpander], where: Condition = ALWAYS
+) -> Iterator[Fact]:
+    """What `command`, run in the builds `where` names, runs in turn, through every expander that recognises it, depth
+    first. A command run outside the project's own directories is not expanded."""
     if not inside(context, command.directory):
         return
     expanders = tuple(expanders)
-    chain = (*command.via, command.origin)
     for expander in expanders:
         try:
             expansions = list(expander.expand(command, context) or ())
@@ -345,34 +357,54 @@ def expand_command(command: Command, context: Context, expanders: Iterable[Comma
             reason = f"what it runs does not split into words: {error}"
             yield Unknown(origin=command.origin, subject=f"the command {command.line!r}", reason=reason)
             continue
-        if any(isinstance(found, (Script, Invocation)) and found.origin in chain for found in expansions):
-            continue  # a definition that runs itself, which is followed once
-        # A launcher runs a shorter command than its own, so launching ends.
-        expansions = [
-            found for found in expansions if not isinstance(found, Launched) or len(found.argv) < len(command.argv)
-        ]
-        for expansion in expansions:
+        for expansion, held in _followed(command, expansions, where):
             for child in _children(command, expansion):
                 yield child
                 if isinstance(child, Command):
-                    yield from expand_command(child, context, expanders)
+                    yield from expand_command(child, context, expanders, held)
+
+
+def _followed(
+    command: Command, expansions: list[Expansion], where: Condition
+) -> Iterator[tuple[Script | Invocation | Launched | Unknown, Condition]]:
+    """The expansions to follow, each with the builds it is followed in: none, when one is a definition that runs
+    itself (which is followed once); and neither one that holds in none of the builds `where` names, nor a launcher's
+    command that is no shorter than its own (so launching ends)."""
+    held = [
+        (found.expansion, both(where, found.when)) if isinstance(found, Only) else (found, where)
+        for found in expansions
+    ]
+    chain = (*command.via, command.origin)
+    if any(isinstance(found, (Script, Invocation)) and found.origin in chain for found, _ in held):
+        return
+    for found, when in held:
+        if when and (not isinstance(found, Launched) or len(found.argv) < len(command.argv)):
+            yield found, when
+
+
+def _platform(job: CiJob) -> Condition:
+    """The builds a job runs: those on its runner's platform, or any, when that is not known."""
+    return only("platforms", [job.os]) if job.os in DIMENSIONS["platforms"] else ALWAYS
 
 
 def expanded(
     facts: Iterable[Fact], context: Context, expanders: Iterable[CommandExpander], actions: Iterable[Action] = ()
 ) -> Iterator[Fact]:
     """`facts`, each command followed by what it runs in turn, and each action step by the commands it runs (and what
-    they run)."""
+    they run), in the builds of the job that runs it."""
     expanders, actions = tuple(expanders), tuple(actions)
+    platforms: dict[str, Condition] = {}
     for fact in facts:
         yield fact
-        if isinstance(fact, Command):
-            yield from expand_command(fact, context, expanders)
+        if isinstance(fact, CiJob):
+            platforms[fact.id] = _platform(fact)
+        elif isinstance(fact, Command):
+            yield from expand_command(fact, context, expanders, platforms.get(fact.job, ALWAYS))
         elif isinstance(fact, ActionStep):
             for found in action_commands(fact, actions):
                 yield found
                 if isinstance(found, Command):
-                    yield from expand_command(found, context, expanders)
+                    yield from expand_command(found, context, expanders, platforms.get(fact.job, ALWAYS))
 
 
 def from_hook(command: Command) -> bool:
@@ -453,6 +485,7 @@ __all__ = [
     "Expansion",
     "Invocation",
     "Launched",
+    "Only",
     "Script",
     "action_commands",
     "advised",

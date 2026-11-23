@@ -186,6 +186,28 @@ def negated(condition: Condition) -> Condition:
     return Condition(_DIAGRAM.negate(condition.node))
 
 
+type Choices[T] = list[tuple[T, Condition]]
+"""The values something takes (a variable set in branches), each with the builds it takes it in."""
+# At most this many values of one thing are followed; the rest are left out.
+MOST_CHOICES = 32
+
+
+def assigned[T](old: Choices[T] | None, new: Choices[T], when: Condition) -> Choices[T]:
+    """A variable's values once it is set to `new` in the builds `when` names; other builds keep `old`."""
+    kept = [(value, held) for value, other in old or () if (held := both(other, negated(when)))]
+    return [*kept, *((value, held) for value, other in new if (held := both(other, when)))][:MOST_CHOICES]
+
+
+def combined[T](*choices: Choices[T]) -> Iterator[tuple[tuple[T, ...], Condition]]:
+    """Each combination of the values of several things, in the builds all of them take it in."""
+    found: list[tuple[tuple[T, ...], Condition]] = [((), ALWAYS)]
+    for values in choices:
+        found = [
+            ((*chosen, value), held) for chosen, when in found for value, other in values if (held := both(when, other))
+        ][:MOST_CHOICES]
+    return iter(found)
+
+
 def only(dimension: str, values: Iterable[str]) -> Condition:
     """The builds whose `dimension` takes one of `values`."""
     allowed = frozenset(values)
@@ -274,13 +296,17 @@ __all__ = [
     "CONFIGURATIONS",
     "DIMENSIONS",
     "LANGUAGES",
+    "MOST_CHOICES",
     "NEVER",
     "NOT",
     "OTHER",
     "PLATFORMS",
+    "Choices",
     "Condition",
     "Dimension",
+    "assigned",
     "both",
+    "combined",
     "either",
     "extend",
     "negated",

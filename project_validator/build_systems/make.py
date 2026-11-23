@@ -5,28 +5,45 @@ line's (`make test FLAGS=-race`) give their values; a recipe whose program is st
 makefiles are followed and pattern rules (`%:`, `lint-%:`) matched to the goals they cover; a goal no rule defines is
 unknown. Where make runs in a directory CMake configured in place (`cmake .`), it builds that directory's CMake targets.
 
-The makefile is parsed to a tree (`project_validator.build_systems.make_syntax`) and evaluated here, in order: a
-conditional the makefile's variables and the command line decide takes its branch; one that depends on what only the
-environment or the system can say (`ifeq ($(OS),Windows_NT)`, `$(shell uname)`) has every branch read, so what CI may
-run is not narrowed by a guess.
+The makefile is parsed to a tree (`project_validator.build_systems.make_syntax`) and evaluated here, in order, each
+line in the builds it is read in (a `Condition`). A conditional the makefile's variables and the command line decide
+takes its branch. One on the platform (`ifeq ($(OS),Windows_NT)`, `$(shell uname -s)`) has each branch read on the
+platforms it holds on, and one on what else only the environment can say (`ifdef DEBUG`, `ifeq ($(CC),clang)`) has
+each read behind that requirement, so what CI may run is not narrowed by a guess. A variable set in branches takes
+each value in the builds its branch holds in, and so does a recipe line: a job follows those that may hold on its
+runner (see `project_validator.facts.expansion.Only`).
 """
 
 from __future__ import annotations
 
 import posixpath
 import re
-from collections.abc import Iterator, Mapping, Sequence
+from collections.abc import Callable, Iterator, Mapping, Sequence
 from dataclasses import dataclass, field
 
 from project_validator.build_systems import make_syntax
 from project_validator.core import Context
 from project_validator.facts import Command, Origin, Unknown
 from project_validator.facts.arguments import positional
+from project_validator.facts.conditions import (
+    ALWAYS,
+    MOST_CHOICES,
+    NEVER,
+    Choices,
+    Condition,
+    assigned,
+    both,
+    combined,
+    either,
+    negated,
+    only,
+    requiring,
+)
 from project_validator.facts.exit_status import POSIX
-from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, inside, joined
+from project_validator.facts.expansion import CommandExpander, Expansion, Only, Script, found_at, inside, joined
 from project_validator.includes import Chain, Refused, follow
 from project_validator.limits import MAKE_INCLUDES
-from project_validator.templates import Syntax, known
+from project_validator.templates import Reference, Syntax
 
 MAKEFILES = ("GNUmakefile", "makefile", "Makefile")
 _PROGRAMS = frozenset({"make", "gmake", "mingw32-make"})
@@ -37,14 +54,38 @@ _ESCAPED_DOLLAR = "\0"
 VARIABLE = re.compile(r"\$(?:\([^()]*\)|\{[^{}]*\}|[^({$\s])")
 
 
+@dataclass(frozen=True, slots=True)
+class Step:
+    """A line of a recipe: where it is written, its text, and the builds it is read in."""
+
+    line: int
+    text: str
+    when: Condition = ALWAYS
+
+
 @dataclass(slots=True)
 class Rule:
-    prerequisites: list[str] = field(default_factory=list)
-    recipe: list[tuple[int, str]] = field(default_factory=list)
+    """A target's prerequisites and recipe, each in the builds it is written in."""
+
+    prerequisites: Choices[str] = field(default_factory=list)
+    recipe: list[Step] = field(default_factory=list)
+
+
+@dataclass(frozen=True, slots=True)
+class Setting:
+    """A value a variable is set to, and whether it is `settled`: the environment cannot change it (the command
+    line's, or one the makefile sets outright); make's own defaults (CC is cc), `?=` and `+=` onto a variable not yet
+    set give way to the environment."""
+
+    text: str
+    settled: bool = True
+
+
+type Variables = dict[str, Choices[Setting]]
 
 
 # The variables make itself defines, which a makefile may use without setting.
-_BUILT_IN = {
+_DEFAULTS = {
     "CC": "cc",
     "CXX": "g++",
     "CPP": "$(CC) -E",
@@ -56,11 +97,15 @@ _BUILT_IN = {
 }
 
 
+def _built_in() -> Variables:
+    return {name: [(Setting(value, settled=False), ALWAYS)] for name, value in _DEFAULTS.items()}
+
+
 @dataclass(slots=True)
 class Makefile:
     rules: dict[str, Rule] = field(default_factory=dict)
     default: str | None = None
-    variables: dict[str, str] = field(default_factory=lambda: dict(_BUILT_IN))
+    variables: Variables = field(default_factory=_built_in)
     includes: list[str] = field(default_factory=list)
     # Why an include was not followed (a cycle, the chain too deep), each reported as unknown where make runs.
     problems: list[str] = field(default_factory=list)
@@ -70,10 +115,64 @@ class Makefile:
 _REFERENCE = Syntax(re.compile(r"\$(?:\((?P<name>[A-Za-z_][\w.-]*)\)|\{(?P<name_brace>[A-Za-z_][\w.-]*)\})"))
 
 
-def expand_variables(line: str, variables: dict[str, str]) -> str:
-    """`line` with the references to `variables` replaced by their values, which may refer to others in turn; a
-    reference to a variable without a value stays as written."""
-    return _REFERENCE.substituted(line, known(variables), rounds=10)
+type _Lookup = Callable[[Reference], Choices[str] | None]
+
+
+def _lookup(variables: Variables, *, settled: bool = False) -> _Lookup:
+    """The values of `variables`, each in its builds (only the `settled` ones, when asked); in the builds a variable
+    has no such value, a reference to it stays as written."""
+
+    def values(reference: Reference) -> Choices[str] | None:
+        found = [
+            (setting.text, when)
+            for setting, when in variables.get(reference.name, ())
+            if setting.settled or not settled
+        ]
+        if not found:
+            return None
+        rest = negated(either(*(when for _, when in found)))
+        return [*found, *([(reference.written, rest)] if rest else [])]
+
+    return values
+
+
+def _expanded(text: str, lookup: _Lookup, inside: frozenset[str] = frozenset()) -> Choices[str]:
+    """The texts `text` takes, its references replaced by each of their values, expanded in turn, in the builds it
+    takes each; a reference whose name is computed (`$(verbose_$(V))`) is expanded once its name is. A reference
+    inside the value of the variable it names (or of one that value refers to) stays as written: make rejects a
+    variable that refers to itself, and substituting it again would double it each time."""
+    parts: list[Choices[str]] = []
+    names = set(inside)
+    for part in _REFERENCE.parse(text).parts:
+        if isinstance(part, str):
+            parts.append([(part, ALWAYS)])
+        elif part.name in inside or (values := lookup(part)) is None:
+            parts.append([(part.written, ALWAYS)])
+        else:
+            names.add(part.name)
+            parts.append(_within(values, lookup, inside | {part.name}))
+    joined = [("".join(chosen), when) for chosen, when in combined(*parts)]
+    # Each pass that substitutes guards more names, so expanding again ends.
+    return joined if names == inside else _within(joined, lookup, frozenset(names))
+
+
+def _within(values: Choices[str], lookup: _Lookup, inside: frozenset[str]) -> Choices[str]:
+    """Each of `values` expanded (see `_expanded`), in the builds both it and its expansion are in."""
+    expanded = (
+        (new, held)
+        for value, when in values
+        for new, other in _expanded(value, lookup, inside)
+        if (held := both(when, other))
+    )
+    return list(expanded)[:MOST_CHOICES]
+
+
+def _choices(text: str, lookup: _Lookup) -> Choices[str]:
+    """`text` expanded in each build (see `_expanded`); the builds that give the same text are one choice."""
+    merged: dict[str, Condition] = {}
+    for value, when in _expanded(text, lookup):
+        merged[value] = either(merged.get(value, NEVER), when)
+    return list(merged.items())
 
 
 # Why a recipe line written after `-` cannot fail make.
@@ -86,18 +185,17 @@ def _recipe_line(line: str) -> str:
 
 
 class _Evaluation:
-    """A walk over a makefile's tree, in order, as make reads it: variables are set as they are assigned (the command
-    line's `overrides` win over the makefile's, unless it says `override`), recipe lines go to the rules written
-    before them, and each conditional is decided where it can be (see `_holds`)."""
+    """A walk over a makefile's tree, in order, as make reads it, each line in the builds `when` names: variables are
+    set as they are assigned (the command line's `overrides` win over the makefile's, unless it says `override`),
+    recipe lines go to the rules written before them, and each branch of a conditional is read where it holds (see
+    `_Test`)."""
 
     def __init__(self, overrides: Mapping[str, str]) -> None:
         self.makefile = Makefile()
-        self.makefile.variables.update(overrides)
+        self.makefile.variables.update({name: [(Setting(value), ALWAYS)] for name, value in overrides.items()})
         self.overrides = frozenset(overrides)
-        # The variables whose value the environment cannot change: the command line's, and those the makefile sets
-        # outright. make's own defaults (CC is cc), `?=` and `+=` onto a variable not yet set give way to it.
-        self.settled = set(overrides)
         self.current: list[Rule] = []
+        self.when = ALWAYS
 
     def nodes(self, nodes: Sequence[make_syntax.Node]) -> None:
         for node in nodes:
@@ -106,11 +204,12 @@ class _Evaluation:
     def node(self, node: make_syntax.Node) -> None:
         if isinstance(node, make_syntax.RecipeLine):
             for rule in self.current:
-                rule.recipe.append((node.span.line, _recipe_line(node.text)))
+                rule.recipe.append(Step(node.span.line, _recipe_line(node.text), self.when))
         elif isinstance(node, make_syntax.Assignment):
             self.assign(node)
         elif isinstance(node, make_syntax.Include):
-            self.makefile.includes += expand_variables(node.files, self.makefile.variables).split()
+            lookup = _lookup(self.makefile.variables)
+            self.makefile.includes += [name for files, _ in _choices(node.files, lookup) for name in files.split()]
         elif isinstance(node, make_syntax.Rule):
             self.rule(node)
         elif isinstance(node, make_syntax.Conditional):
@@ -119,66 +218,115 @@ class _Evaluation:
             self.current = []  # any other line ends the recipe before it
 
     def assign(self, node: make_syntax.Assignment) -> None:
-        """Set the variable; `!=` (a shell command's output) has no value to read."""
+        """Set the variable in the builds the assignment is read in; `!=` (a shell command's output) has no value to
+        read."""
         variables = self.makefile.variables
         if node.how == "!=" or (node.name in self.overrides and not node.override):
             return
+        old = variables.get(node.name, [])
+        unset = both(self.when, negated(either(*(when for _, when in old))))
         if node.how == "?=":
-            variables.setdefault(node.name, node.value)
+            variables[node.name] = [*old, *([(Setting(node.value, settled=False), unset)] if unset else [])]
         elif node.how == "+=":
-            variables[node.name] = f"{variables[node.name]} {node.value}" if node.name in variables else node.value
+            appended = [(Setting(f"{setting.text} {node.value}", setting.settled), when) for setting, when in old]
+            variables[node.name] = assigned(old, appended, self.when)
+            if unset:
+                variables[node.name].append((Setting(node.value, settled=False), unset))
         else:
-            variables[node.name] = node.value
-            self.settled.add(node.name)
+            variables[node.name] = assigned(old, [(Setting(node.value), ALWAYS)], self.when)
 
     def rule(self, node: make_syntax.Rule) -> None:
         makefile = self.makefile
         self.current = [makefile.rules.setdefault(target, Rule()) for target in node.targets]
         for rule in self.current:
-            rule.prerequisites += node.prerequisites
+            rule.prerequisites += [(prerequisite, self.when) for prerequisite in node.prerequisites]
             if node.recipe:
-                rule.recipe.append((node.span.line, _recipe_line(node.recipe)))
+                rule.recipe.append(Step(node.span.line, _recipe_line(node.recipe), self.when))
         if makefile.default is None:
             makefile.default = next((target for target in node.targets if not target.startswith(".")), None)
 
     def conditional(self, node: make_syntax.Conditional) -> None:
-        """The first branch that holds; where one cannot be decided, it and every later branch are read."""
-        settled = {name: self.makefile.variables[name] for name in self.settled}
-        for index, branch in enumerate(node.branches):
-            holds = _holds(branch, settled)
-            if holds is None:
-                for undecided in node.branches[index:]:
-                    self.nodes(undecided.body)
-                self.nodes(node.otherwise or ())
-                return
-            if holds:
-                self.nodes(branch.body)
-                return
-        self.nodes(node.otherwise or ())
+        """Each branch, read in the builds where it holds and no branch before it does; what none holds in, after."""
+        remaining = self.when
+        for branch in node.branches:
+            holds = _Test(self.makefile.variables).holds(branch)
+            self.within(both(remaining, holds), branch.body)
+            remaining = both(remaining, negated(holds))
+        self.within(remaining, node.otherwise or ())
+
+    def within(self, when: Condition, nodes: Sequence[make_syntax.Node]) -> None:
+        if not when:
+            return  # a branch that holds in no build is not read
+        outer, self.when = self.when, when
+        self.nodes(nodes)
+        self.when = outer
 
 
-def _holds(branch: make_syntax.Branch, variables: Mapping[str, str]) -> bool | None:
-    """Whether the branch's test holds, from the settled `variables`; None when the makefile and the command line
-    cannot say: a variable they do not settle (the environment may set it), or a reference left unexpanded (`$(shell
-    uname)`, a function)."""
-    if branch.test in ("ifdef", "ifndef"):
-        name = _known(branch.arguments.strip(), variables)
-        if name is None or name not in variables:
-            return None
-        return bool(variables[name].strip()) == (branch.test == "ifdef")
-    compared = _compared(branch.arguments)
-    if compared is None:
-        return None
-    left, right = (_known(side, variables) for side in compared)
-    if left is None or right is None:
-        return None
-    return (left.strip() == right.strip()) == (branch.test == "ifeq")
+class _Test:
+    """Where a conditional's test holds, from the settled values of `variables`. What the makefile and the command
+    line cannot say (a variable they do not settle, a reference left unexpanded, `$(shell uname)`) holds behind a
+    requirement, or, where it names the platform, on the platforms it holds on (see `_platform`)."""
+
+    def __init__(self, variables: Variables) -> None:
+        self.variables = variables
+        self.lookup = _lookup(variables, settled=True)
+
+    def holds(self, branch: make_syntax.Branch) -> Condition:
+        positive = branch.test in ("ifdef", "ifeq")
+        held = self.defined(branch.arguments.strip()) if branch.test in ("ifdef", "ifndef") else self.equal(branch)
+        return held if positive else negated(held)
+
+    def defined(self, written: str) -> Condition:
+        """Where the variable `written` names has a value that is not empty (make does not expand it to say)."""
+        found: list[Condition] = []
+        for name, when in self.expanded(written):
+            settled = [(setting, held) for setting, held in self.variables.get(name, ()) if setting.settled]
+            decided = either(*(held for _, held in settled))
+            nonempty = either(*(held for setting, held in settled if setting.text.strip()))
+            unknown = both(negated(decided), requiring(f"defined {name}"))
+            found.append(both(when, either(nonempty, unknown)))
+        return either(*found)
+
+    def equal(self, branch: make_syntax.Branch) -> Condition:
+        compared = _compared(branch.arguments)
+        if compared is None:
+            return requiring(branch.arguments.strip())
+        left, right = (self.expanded(side) for side in compared)
+        return either(*(both(when, _equal(*sides)) for sides, when in combined(left, right)))
+
+    def expanded(self, text: str) -> Choices[str]:
+        """`text` expanded in each build, its `$$` kept apart (see `_ESCAPED_DOLLAR`), and stripped."""
+        return [(value.strip(), when) for value, when in _choices(text.replace("$$", _ESCAPED_DOLLAR), self.lookup)]
 
 
-def _known(text: str, variables: Mapping[str, str]) -> str | None:
-    """`text` with its references expanded, or None when one is left that the variables cannot expand."""
-    expanded = expand_variables(text.replace("$$", _ESCAPED_DOLLAR), dict(variables))
-    return None if VARIABLE.search(expanded) else expanded.replace(_ESCAPED_DOLLAR, "$")
+def _equal(left: str, right: str) -> Condition:
+    """Where two expanded texts are equal: in every build or none, when neither holds a reference left unexpanded."""
+    if not VARIABLE.search(left) and not VARIABLE.search(right):
+        return ALWAYS if left == right else NEVER
+    platform = _platform(left, right)
+    return platform if platform is not None else requiring(f"{left} == {right}")
+
+
+# What `uname -s` prints on each platform: Windows's are MSYS2's, Cygwin's and MinGW's.
+_UNAME = re.compile(r"\$[({]shell\s+uname(?:\s+-s)?\s*[)}]")
+_UNAME_PLATFORMS = {"Linux": "linux", "Darwin": "macos"}
+_WINDOWS_UNAME = ("MINGW", "MSYS", "CYGWIN")
+
+
+def _platform(left: str, right: str) -> Condition | None:
+    """Where one side names the platform and the other is plain text: `$(OS)`, which Windows sets to Windows_NT (and
+    others leave empty), or what `$(shell uname -s)` prints. None for any other comparison."""
+    for probe, text in ((left, right), (right, left)):
+        if VARIABLE.search(text):
+            continue
+        if probe in ("$(OS)", "${OS}") and text in ("Windows_NT", ""):
+            windows = only("platforms", ["windows"])
+            return windows if text else negated(windows)
+        if _UNAME.fullmatch(probe):
+            if text.startswith(_WINDOWS_UNAME):
+                return only("platforms", ["windows"])
+            return only("platforms", [_UNAME_PLATFORMS[text]]) if text in _UNAME_PLATFORMS else None
+    return None
 
 
 _QUOTED_PAIR = re.compile(r"""^(?P<q1>["'])(?P<left>.*?)(?P=q1)\s+(?P<q2>["'])(?P<right>.*?)(?P=q2)$""")
@@ -220,33 +368,61 @@ def _rule(makefile: Makefile, target: str) -> tuple[Rule, str] | None:
     return None
 
 
-def _recipes(makefile: Makefile, path: str, target: str, visited: set[str]) -> Iterator[Script | Unknown]:
+def _recipes(
+    makefile: Makefile, path: str, target: str, visited: set[str], when: Condition = ALWAYS
+) -> Iterator[Expansion]:
+    """The recipe lines `target` runs in the builds `when` names, after its prerequisites', each line once in each
+    of the texts its variables give it, in the builds it takes it in."""
     if target in visited or (found := _rule(makefile, target)) is None:
         return
     visited.add(target)
     rule, stem = found
-    for prerequisite in rule.prerequisites:
-        yield from _recipes(makefile, path, prerequisite.replace("%", stem), visited)
-    automatic = {**makefile.variables, "@": target, "*": stem}
-    for number, line in rule.recipe:
-        origin = Origin(path=path, at=(target, number))
+    for prerequisite, written in rule.prerequisites:
+        if held := both(when, written):
+            yield from _recipes(makefile, path, prerequisite.replace("%", stem), visited, held)
+    lookup = _lookup(makefile.variables)
+    for step in rule.recipe:
+        origin = Origin(path=path, at=(target, step.line))
         # A variable may hold the recipe's prefixes (`Q = @`, then `$(Q)$(CC) …`).
         # `$$` is a `$` the shell sees, never a reference (Documenter's `$$(biome_jll.biome())`).
-        line = line.replace("$$", _ESCAPED_DOLLAR).replace("$@", target).replace("$*", stem)
-        expanded = expand_variables(line, automatic)
-        unprefixed = expanded.lstrip("@-+ ")
-        text = unprefixed.replace(_ESCAPED_DOLLAR, "$")
-        ignored = _IGNORED if "-" in expanded[: len(expanded) - len(unprefixed)] else ""
-        if (program := _REFERENCE.parse(text).leading) is not None:
-            name = program.name
-            yield Unknown(
-                origin=origin,
-                subject=f"the recipe {text!r}",
-                reason=f"its program is the variable {name}, which neither the makefile nor the command line sets",
-            )
-            continue
-        # Each recipe line is a shell script of its own, run by `sh -c`.
-        yield Script(text=text, origin=origin, opaque=VARIABLE, shell=POSIX, advisory=ignored)
+        line = step.text.replace("$$", _ESCAPED_DOLLAR).replace("$@", target).replace("$*", stem)
+        yield from _step(_choices(line, lookup), origin, both(when, step.when))
+
+
+def _step(texts: Choices[str], origin: Origin, when: Condition) -> Iterator[Expansion]:
+    """A recipe line, in the builds `when` names, in each of the `texts` it takes: a shell script in each, but, where
+    its program is still a variable, one unknown, in every build any of those texts is in."""
+    unknown: Unknown | None = None
+    unknown_in = NEVER
+    for expanded, chosen in texts:
+        if held := both(when, chosen):
+            recipe = _recipe(expanded, origin)
+            if isinstance(recipe, Script):
+                yield _only(recipe, held)
+                continue
+            unknown, unknown_in = unknown or recipe, either(unknown_in, held)
+    if unknown is not None:
+        yield _only(unknown, unknown_in)
+
+
+def _only(expansion: Script | Unknown, when: Condition) -> Expansion:
+    return expansion if when == ALWAYS else Only(expansion, when)
+
+
+def _recipe(expanded: str, origin: Origin) -> Script | Unknown:
+    """A recipe line, expanded: the shell script it runs, or, when its program is still a variable, that what it runs
+    is unknown."""
+    unprefixed = expanded.lstrip("@-+ ")
+    text = unprefixed.replace(_ESCAPED_DOLLAR, "$")
+    ignored = _IGNORED if "-" in expanded[: len(expanded) - len(unprefixed)] else ""
+    if (program := _REFERENCE.parse(text).leading) is not None:
+        return Unknown(
+            origin=origin,
+            subject=f"the recipe {text!r}",
+            reason=f"its program is the variable {program.name}, which neither the makefile nor the command line sets",
+        )
+    # Each recipe line is a shell script of its own, run by `sh -c`.
+    return Script(text=text, origin=origin, opaque=VARIABLE, shell=POSIX, advisory=ignored)
 
 
 _OPTIONS = frozenset({"-C", "--directory", "-f", "--file", "-j", "--jobs"})

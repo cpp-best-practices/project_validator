@@ -6,10 +6,11 @@ import json
 import unittest
 from typing import ClassVar
 
-from project_validator.build_systems.make import parse_makefile
+from project_validator.build_systems.make import Makefile, parse_makefile
 from project_validator.ecosystems.python.tox import braces
 from project_validator.facts import Command, Facts, Origin, Unknown, as_dict, resolved
 from project_validator.facts.arguments import positional
+from project_validator.facts.conditions import ALWAYS
 from project_validator.facts.expansion import CommandExpander, known_expanders
 from project_validator.facts.tools import ToolRun
 from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, temp_project
@@ -22,6 +23,18 @@ def _facts(files: dict[str, str]) -> Facts:
 
 def _expanded(facts: Facts) -> list[tuple[str, ...]]:
     return [command.argv for command in facts.of(Command) if command.via]
+
+
+def _recipe(makefile: Makefile, target: str) -> list[tuple[int, str]]:
+    return [(step.line, step.text) for step in makefile.rules[target].recipe]
+
+
+def _value(makefile: Makefile, name: str) -> str:
+    """The value of a variable set once, in every build."""
+    ((setting, when),) = makefile.variables[name]
+    if when != ALWAYS:
+        raise AssertionError(f"{name} is set in only some builds")
+    return setting.text
 
 
 class EngineTests(unittest.TestCase):
@@ -140,8 +153,8 @@ lint:
         makefile = parse_makefile(self.MAKEFILE)
         self.assertEqual(makefile.default, "all")
         self.assertEqual(list(makefile.rules), [".PHONY", "all", "build", "check", "lint"])
-        self.assertEqual(makefile.rules["check"].recipe, [(7, "./app --selftest"), (8, "-make -C docs lint")])
-        self.assertEqual(makefile.rules["lint"].recipe[0][0], 10)
+        self.assertEqual(_recipe(makefile, "check"), [(7, "./app --selftest"), (8, "-make -C docs lint")])
+        self.assertEqual(_recipe(makefile, "lint")[0][0], 10)
 
     def test_make_runs_the_named_targets_after_their_prerequisites(self) -> None:
         files = {"Makefile": self.MAKEFILE, **github_job("ubuntu-latest", "make check")}
@@ -162,25 +175,21 @@ lint:
 
     def test_comments_and_blank_lines_keep_a_recipe_open_and_other_lines_close_it(self) -> None:
         makefile = parse_makefile("a:\n\techo 1\n# note\n\n\techo 2\nvpath %.c src\n\techo 3\n")
-        self.assertEqual(makefile.rules["a"].recipe, [(2, "echo 1"), (5, "echo 2")])
+        self.assertEqual(_recipe(makefile, "a"), [(2, "echo 1"), (5, "echo 2")])
 
     def test_assignments_append_default_and_drop_comments(self) -> None:
         makefile = parse_makefile("A = x\nA += y\nB ?= 1\nB ?= 2\nC += z\nD = a b # note # more\nE := e\n")
-        variables = makefile.variables
-        self.assertEqual(
-            (variables["A"], variables["B"], variables["C"], variables["D"], variables["E"]),
-            ("x y", "1", "z", "a b", "e"),
-        )
+        self.assertEqual([_value(makefile, name) for name in "ABCDE"], ["x y", "1", "z", "a b", "e"])
 
     def test_includes_and_prerequisites_accumulate(self) -> None:
         makefile = parse_makefile("include a.mk\ninclude b.mk c.mk\nx: a\nx: b c\n")
         self.assertEqual(makefile.includes, ["a.mk", "b.mk", "c.mk"])
-        self.assertEqual(makefile.rules["x"].prerequisites, ["a", "b", "c"])
+        self.assertEqual(makefile.rules["x"].prerequisites, [("a", ALWAYS), ("b", ALWAYS), ("c", ALWAYS)])
 
     def test_continued_lines_are_numbered_by_their_first_line(self) -> None:
         makefile = parse_makefile("a: \\\n  b \\\n  c\n\techo \\\n\t  done\n")
-        self.assertEqual(makefile.rules["a"].prerequisites, ["b", "c"])
-        self.assertEqual([number for number, _ in makefile.rules["a"].recipe], [4])
+        self.assertEqual(makefile.rules["a"].prerequisites, [("b", ALWAYS), ("c", ALWAYS)])
+        self.assertEqual([number for number, _ in _recipe(makefile, "a")], [4])
 
     def test_recipe_prefixes_are_not_part_of_the_command(self) -> None:
         files = {"Makefile": "all:\n\t@echo a\n\t-echo b\n\t+echo c\n\t@-echo d\n", **github_job("x", "make")}
@@ -202,12 +211,137 @@ lint:
         files = {"Makefile": makefile, **github_job("x", "make DEBUG=1")}
         self.assertEqual(_expanded(_facts(files)), [("cc", "-g", "a.c")])
 
-    def test_a_conditional_on_the_environment_reads_every_branch(self) -> None:
-        """Where the makefile cannot say (the OS make runs on, a variable only the environment may set), every branch
-        is read, as when conditionals were not followed: what CI may run is not narrowed by a guess."""
-        makefile = "all:\nifeq ($(OS),Windows_NT)\n\tbuild.bat\nelse\n\t./build.sh\nendif\n"
-        files = {"Makefile": makefile, **github_job("x", "make")}
-        self.assertEqual(_expanded(_facts(files)), [("build.bat",), ("./build.sh",)])
+    def test_a_conditional_on_the_os_is_read_for_the_os_the_job_runs_on(self) -> None:
+        """Windows sets `OS` to Windows_NT, and `uname -s` names the others: each branch holds on its own OS, so a
+        job runs the branches that hold on its runner. On a runner of unknown OS every branch is read: what CI may run
+        is not narrowed by a guess."""
+        windows = "all:\nifeq ($(OS),Windows_NT)\n\tbuild.bat\nelse\n\t./build.sh\nendif\n"
+        uname = (
+            "UNAME_S := $(shell uname -s)\n"
+            "all:\nifeq ($(UNAME_S),Darwin)\n\tbrew bundle\nelse\n\tapt-get check\nendif\n"
+        )
+        for makefile, runner, expected in (
+            (windows, "ubuntu-latest", [("./build.sh",)]),
+            (windows, "windows-latest", [("build.bat",)]),
+            (windows, "self-hosted", [("build.bat",), ("./build.sh",)]),
+            (uname, "macos-latest", [("brew", "bundle")]),
+            (uname, "ubuntu-latest", [("apt-get", "check")]),
+        ):
+            with self.subTest(makefile=makefile.splitlines()[0], runner=runner):
+                files = {"Makefile": makefile, **github_job(runner, "make")}
+                self.assertEqual(_expanded(_facts(files)), expected)
+
+    def test_a_variable_set_in_branches_takes_each_value_where_its_branch_holds(self) -> None:
+        makefile = "ifeq ($(OS),Windows_NT)\nRM = del /q\nelse\nRM = rm -f\nendif\nclean:\n\t$(RM) out\n"
+        for runner, expected in (
+            ("ubuntu-latest", [("rm", "-f", "out")]),
+            ("windows-latest", [("del", "/q", "out")]),
+            ("self-hosted", [("del", "/q", "out"), ("rm", "-f", "out")]),
+        ):
+            with self.subTest(runner=runner):
+                files = {"Makefile": makefile, **github_job(runner, "make clean")}
+                self.assertEqual(sorted(_expanded(_facts(files))), expected)
+
+    def test_a_conditional_on_a_variable_set_in_branches_holds_where_its_values_do(self) -> None:
+        makefile = (
+            "ifeq ($(OS),Windows_NT)\nEXE = .exe\nelse\nEXE =\nendif\n"
+            "all:\nifeq ($(EXE),.exe)\n\twin-test\nelse\n\tposix-test\nendif\n"
+        )
+        for runner, expected in (("ubuntu-latest", [("posix-test",)]), ("windows-latest", [("win-test",)])):
+            with self.subTest(runner=runner):
+                files = {"Makefile": makefile, **github_job(runner, "make")}
+                self.assertEqual(_expanded(_facts(files)), expected)
+
+    def test_appending_or_defaulting_in_a_branch_changes_only_its_builds(self) -> None:
+        makefile = (
+            "FLAGS = -O2\nifeq ($(OS),Windows_NT)\nFLAGS += /W4\nNAME ?= app.exe\nendif\nNAME ?= app\n"
+            "all:\n\tcc $(FLAGS) -o $(NAME)\n"
+        )
+        for runner, expected in (
+            ("ubuntu-latest", [("cc", "-O2", "-o", "app")]),
+            ("windows-latest", [("cc", "-O2", "/W4", "-o", "app.exe")]),
+        ):
+            with self.subTest(runner=runner):
+                files = {"Makefile": makefile, **github_job(runner, "make")}
+                self.assertEqual(_expanded(_facts(files)), expected)
+
+    def test_ifdef_on_a_variable_set_in_some_builds_is_decided_only_there(self) -> None:
+        """Where the makefile leaves DEBUG unset, the environment may set it: both branches may run."""
+        makefile = "ifeq ($(OS),Windows_NT)\nDEBUG = 1\nendif\nall:\nifdef DEBUG\n\tcc -g\nelse\n\tcc -O2\nendif\n"
+        for runner, expected in (
+            ("windows-latest", [("cc", "-g")]),
+            ("ubuntu-latest", [("cc", "-g"), ("cc", "-O2")]),
+        ):
+            with self.subTest(runner=runner):
+                files = {"Makefile": makefile, **github_job(runner, "make")}
+                self.assertEqual(_expanded(_facts(files)), expected)
+
+    def test_other_ways_of_naming_the_platform(self) -> None:
+        """`$(OS)` is empty off Windows; MSYS2's, MinGW's and Cygwin's `uname -s` name Windows."""
+        makefile = "all:\nifeq ($(OS),)\n\tposix\nendif\nifeq ($(shell uname),MINGW64_NT-10.0)\n\tmingw\nendif\n"
+        for runner, expected in (("ubuntu-latest", [("posix",)]), ("windows-latest", [("mingw",)])):
+            with self.subTest(runner=runner):
+                files = {"Makefile": makefile, **github_job(runner, "make")}
+                self.assertEqual(_expanded(_facts(files)), expected)
+
+    def test_a_recipe_unknown_only_in_a_branch_that_does_not_hold_is_not_unknown(self) -> None:
+        makefile = "all:\nifeq ($(OS),Windows_NT)\n\t$(MSBUILD) app.sln\nelse\n\tninja\nendif\n"
+        for runner, unknown in (("ubuntu-latest", []), ("windows-latest", ["the recipe '$(MSBUILD) app.sln'"])):
+            with self.subTest(runner=runner):
+                facts = _facts({"Makefile": makefile, **github_job(runner, "make")})
+                self.assertEqual(
+                    [fact.subject for fact in facts.of(Unknown) if fact.subject.startswith("the recipe")], unknown
+                )
+
+    def test_a_value_or_prerequisite_from_the_other_branch_is_not_followed_inside_this_one(self) -> None:
+        """Inside the Windows branch, `$(X)` is only Windows's value, and a prerequisite written for the others is no
+        prerequisite."""
+        makefile = (
+            "ifeq ($(OS),Windows_NT)\nX = a\nall: tool\nelse\nX = b\ntool: gen\nendif\n"
+            "tool:\nifeq ($(OS),Windows_NT)\n\techo $(X)\nendif\ngen:\n\tgenerate\n"
+        )
+        files = {"Makefile": makefile, **github_job("windows-latest", "make")}
+        self.assertEqual(_expanded(_facts(files)), [("echo", "a")])
+
+    def test_conditionals_written_other_ways(self) -> None:
+        """`ifeq "a" "b"` compares as `ifeq (a,b)` does; one that cannot be read holds behind a requirement, so both
+        branches may run."""
+        quoted = 'all:\nifeq "$(OS)" "Windows_NT"\n\tbuild.bat\nelse\n\t./build.sh\nendif\n'
+        unread = "all:\nifeq $(OS)\n\tbuild.bat\nelse\n\t./build.sh\nendif\n"
+        one_side = "all:\nifeq ($(OS))\n\tbuild.bat\nelse\n\t./build.sh\nendif\n"
+        both_branches = [("build.bat",), ("./build.sh",)]
+        for makefile, expected in ((quoted, [("./build.sh",)]), (unread, both_branches), (one_side, both_branches)):
+            with self.subTest(makefile=makefile.splitlines()[1]):
+                files = {"Makefile": makefile, **github_job("ubuntu-latest", "make")}
+                self.assertEqual(_expanded(_facts(files)), expected)
+
+    def test_a_reference_whose_name_is_computed_is_expanded_once_its_name_is(self) -> None:
+        """erlang.mk's `gen_verbose = $(gen_verbose_$(V))`, with `V ?= 0`, is `gen_verbose_0`'s value."""
+        makefile = "V ?= 0\nq_0 = @\nQ = $(q_$(V))\nall:\n\t$(Q)echo hi\n"
+        files = {"Makefile": makefile, **github_job("ubuntu-latest", "make")}
+        self.assertEqual(_expanded(_facts(files)), [("echo", "hi")])
+
+    def test_a_reference_to_a_variable_inside_its_own_value_stays_as_written(self) -> None:
+        """make rejects a variable that refers to itself; argo-cd's `BUILD_DATE := $(if $(BUILD_DATE),$(BUILD_DATE),…)`
+        refers to what the environment sets. Substituted again and again, its value would double each time."""
+        makefile = "A = $(A) x\nD := $(if $(D),$(D),now)\nall:\n\techo $(A)\n\techo $(D)\n"
+        files = {"Makefile": makefile, **github_job("ubuntu-latest", "make")}
+        expanded = _expanded(_facts(files))
+        self.assertIn(("echo", "$(A)", "x"), expanded)
+        self.assertIn(("echo", "$(if $(D),$(D),now)"), expanded)
+
+    def test_a_recipe_whose_program_is_unknown_is_reported_once_whatever_its_arguments(self) -> None:
+        makefile = "ifdef DEBUG\nFLAGS = -g\nelse\nFLAGS = -O2\nendif\nall:\n\t$(TOOL) $(FLAGS)\n"
+        facts = _facts({"Makefile": makefile, **github_job("ubuntu-latest", "make")})
+        recipes = [fact.subject for fact in facts.of(Unknown) if fact.subject.startswith("the recipe")]
+        self.assertEqual(recipes, ["the recipe '$(TOOL) -g'"])
+
+    def test_a_rule_written_in_a_branch_runs_only_where_it_holds(self) -> None:
+        makefile = "all: test\nifeq ($(OS),Windows_NT)\nall: package\nendif\ntest:\n\tctest\npackage:\n\tcpack\n"
+        for runner, expected in (("ubuntu-latest", [("ctest",)]), ("windows-latest", [("ctest",), ("cpack",)])):
+            with self.subTest(runner=runner):
+                files = {"Makefile": makefile, **github_job(runner, "make")}
+                self.assertEqual(_expanded(_facts(files)), expected)
 
     def test_what_the_environment_may_override_decides_no_conditional(self) -> None:
         """make's own defaults (CC is cc) and `?=` give way to the environment, which CI often sets (CC=clang): a
@@ -229,7 +363,7 @@ lint:
     def test_a_define_body_is_no_rule(self) -> None:
         makefile = parse_makefile("define HELP\nusage: make all\nendef\nall:\n\techo ok\n")
         self.assertEqual((makefile.default, list(makefile.rules)), ("all", ["all"]))
-        self.assertEqual(makefile.variables["HELP"], "usage: make all")
+        self.assertEqual(_value(makefile, "HELP"), "usage: make all")
 
     def test_includes_of_included_makefiles_are_followed(self) -> None:
         files = {
