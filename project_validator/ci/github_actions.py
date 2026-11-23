@@ -15,13 +15,15 @@ from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, O
 from project_validator.facts.exit_status import ERREXIT, STRICT, Shell, shell_of
 from project_validator.facts.expansion import advised, script_facts
 from project_validator.facts.shell import ShellSyntaxError, split_words
+from project_validator.includes import Chain, Refused, follow
 from project_validator.limits import COMPOSITE_ACTIONS, REUSABLE_WORKFLOWS
 from project_validator.platforms import detect_operating_systems
+from project_validator.templates import SHELL, Reference, Syntax, known
 from project_validator.text import pattern
 
 type Combination = dict[str, object]
 
-_MATRIX_EXPRESSION = re.compile(r"\$\{\{\s*matrix\.([\w.-]+)\s*\}\}")
+_MATRIX = Syntax(re.compile(r"\$\{\{\s*matrix\.(?P<name>[\w.-]+)\s*\}\}"))
 _RESERVED_MATRIX_KEYS = frozenset({"include", "exclude"})
 
 
@@ -38,13 +40,13 @@ def substitute_matrix(text: str, combination: Combination, missing: str | None =
     """`text` with `${{ matrix.<key> }}` replaced by the combination's values; a key the combination lacks is left as
     written, or replaced by `missing` (GitHub itself substitutes an empty string)."""
 
-    def replacement(match: re.Match[str]) -> str:
-        value = _lookup(combination, match[1])
+    def replacement(reference: Reference) -> str | None:
+        value = _lookup(combination, reference.name)
         if value is None:
-            return match[0] if missing is None else missing
+            return missing
         return value if isinstance(value, str) else json.dumps(value)
 
-    return _MATRIX_EXPRESSION.sub(replacement, text)
+    return _MATRIX.substituted(text, replacement)
 
 
 # An expression GitHub evaluates before the shell runs the step.
@@ -166,7 +168,6 @@ _EXPORT = re.compile(
 
 
 _ASSIGNMENT = re.compile(r"(?:^|[;&]\s*)\s*(?:export\s+)?(?P<name>[A-Za-z_]\w*)=(?P<value>[^\s;&|]*)", re.MULTILINE)
-_REFERENCE = re.compile(r"\$(?:\{(\w+)\}|(\w+))")
 
 
 def _exported(script: str) -> dict[str, str]:
@@ -196,7 +197,7 @@ def _conditional(script: str, at: int) -> bool:
 
 
 def _substituted(value: str, assigned: Mapping[str, str]) -> str:
-    return _REFERENCE.sub(lambda reference: assigned.get(reference[1] or reference[2], reference[0]), value)
+    return SHELL.substituted(value, known(assigned))
 
 
 def _job_facts(
@@ -473,10 +474,10 @@ class _Combination:
         steps = runs.get("steps") if isinstance(runs, Mapping) and runs.get("using") == "composite" else None
         if not isinstance(steps, list):
             return  # a JavaScript or Docker action, whose commands are its own code
-        if not COMPOSITE_ACTIONS.allows(len(via)):
-            yield Unknown(
-                origin=origin, subject=f"the action ./{directory}", reason=COMPOSITE_ACTIONS.reason, hides="commands"
-            )
+        # `via` holds the steps that use each action on the way here, the workflow's first.
+        reached = follow(Chain(tuple(step.path for step in via)), path, COMPOSITE_ACTIONS, verb="uses")
+        if isinstance(reached, Refused):
+            yield Unknown(origin=origin, subject=f"the action ./{directory}", reason=reached.reason, hides="commands")
             return
         values = {**_input_defaults(action.get("inputs")), **inputs}
         for number, step in enumerate(steps):
@@ -493,7 +494,7 @@ class _Combination:
         return None
 
 
-_INPUT = re.compile(r"\$\{\{\s*inputs\.([\w-]+)\s*\}\}")
+_INPUTS = Syntax(re.compile(r"\$\{\{\s*inputs\.(?P<name>[\w-]+)\s*\}\}"))
 
 
 def _local_action(uses: str) -> str | None:
@@ -517,7 +518,7 @@ def _with_inputs[T](value: T, inputs: Mapping[str, str]) -> T:
     """`value` (a step, or part of one) with each `${{ inputs.<name> }}` replaced by the input's value ("" when it has
     none)."""
     if isinstance(value, str):
-        return _INPUT.sub(lambda match: inputs.get(match[1], ""), value)  # type: ignore[return-value]
+        return _INPUTS.substituted(value, lambda reference: inputs.get(reference.name, ""))  # type: ignore[return-value]
     if isinstance(value, Mapping):
         return {key: _with_inputs(item, inputs) for key, item in value.items()}  # type: ignore[return-value]
     if isinstance(value, list):
@@ -575,11 +576,17 @@ def _local(uses: object) -> str | None:
 
 
 def workflow_facts(
-    path: str, document: object, load: Load | None = None, caller: str = "", inputs: Mapping[str, str] = NOTHING
+    path: str,
+    document: object,
+    load: Load | None = None,
+    caller: str = "",
+    inputs: Mapping[str, str] = NOTHING,
+    chain: Chain | None = None,
 ) -> Iterator[Fact]:
     """The jobs of a workflow, one per matrix combination, with the commands and actions each one runs. A job that
     calls a reusable workflow of the same repository runs that workflow's jobs (read with `load`), once per matrix
-    combination of the calling job, with the `inputs` it passes; one in another repository is unknown."""
+    combination of the calling job, with the `inputs` it passes; one in another repository is unknown. `caller` names
+    the calling jobs, for identities, and `chain` the workflows on the way here."""
     if not isinstance(document, Mapping) or not isinstance(jobs := document.get("jobs"), Mapping):
         return
     if not caller and _only_called(document):
@@ -590,20 +597,41 @@ def workflow_facts(
             continue
         if "uses" not in job:
             yield from _job_facts(path, str(job_id), job, document, caller, load, inputs, advisory)
-            continue
-        uses = str(job["uses"]).strip()
-        called = _local(uses) or _own(uses, load)
-        within_depth = REUSABLE_WORKFLOWS.allows(caller.count(" → ") + 1)
-        if called is not None and load is not None and within_depth and (target := load(called)) is not None:
-            for label, passed in _calls(job, target, inputs):
-                yield from workflow_facts(called, target, load, f"{caller}{path}:{job_id}{label} → ", passed)
-            continue
+        else:
+            yield from _reusable_facts(path, str(job_id), job, load, caller, inputs, chain or Chain.start(path))
+
+
+def _reusable_facts(
+    path: str,
+    job_id: str,
+    job: Mapping[str, object],
+    load: Load | None,
+    caller: str,
+    inputs: Mapping[str, str],
+    chain: Chain,
+) -> Iterator[Fact]:
+    """The jobs of the reusable workflow job `job_id` calls, once per call (see `_calls`); unknown when not read."""
+    found = _called(str(job["uses"]).strip(), load, chain)
+    if isinstance(found, str):
         yield Unknown(
-            origin=Origin(path=path, at=("jobs", str(job_id))),
-            subject=f"job {job_id}",
-            reason=f"it calls the reusable workflow {uses}, which is not read",
-            hides="jobs",
+            origin=Origin(path=path, at=("jobs", job_id)), subject=f"job {job_id}", reason=found, hides="jobs"
         )
+        return
+    reached, target = found
+    for label, passed in _calls(job, target, inputs):
+        identity = f"{caller}{path}:{job_id}{label} → "
+        yield from workflow_facts(reached.paths[-1], target, load, identity, passed, reached)
+
+
+def _called(uses: str, load: Load | None, chain: Chain) -> tuple[Chain, object] | str:
+    """The chain that reaches the reusable workflow `uses` names, and its document; why it is not read, when not."""
+    unread = f"it calls the reusable workflow {uses}, which is not read"
+    called = _local(uses) or _own(uses, load)
+    reached = follow(chain, called, REUSABLE_WORKFLOWS, verb="calls") if called is not None else Refused(unread)
+    if isinstance(reached, Refused):
+        return reached.reason
+    target = load(reached.paths[-1]) if load is not None else None
+    return unread if target is None else (reached, target)
 
 
 def _calls(

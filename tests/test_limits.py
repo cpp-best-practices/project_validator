@@ -74,7 +74,11 @@ class GitlabLimitTests(LimitTestCase):
 
     def test_includes_nest_at_most_the_limit_deep(self) -> None:
         self.assert_limit(GITLAB_INCLUDES, self._includes, lambda files: ("ctest",) in _commands(_facts(files)))
-        self.assertIn("it is not read", " ".join(_reasons(_facts(self._includes(GITLAB_INCLUDES.most + 1)))))
+        self.assertIn(GITLAB_INCLUDES.reason, _reasons(_facts(self._includes(GITLAB_INCLUDES.most + 1))))
+
+    def test_an_include_back_into_the_chain_is_a_cycle_not_a_chain_too_deep(self) -> None:
+        files = {".gitlab-ci.yml": "include:\n  - local: a.yml\n", "a.yml": "include:\n  - local: .gitlab-ci.yml\n"}
+        self.assertEqual(_reasons(_facts(files)), [".gitlab-ci.yml includes itself, through .gitlab-ci.yml → a.yml"])
 
     def test_extends_nest_at_most_the_limit_deep(self) -> None:
         self.assert_limit(GITLAB_EXTENDS, self._extends, lambda files: ("ctest",) in _commands(_facts(files)))
@@ -107,8 +111,14 @@ class GithubLimitTests(LimitTestCase):
         self.assert_limit(REUSABLE_WORKFLOWS, self._calls, lambda files: ("ctest",) in _commands(_facts(files)))
         limit = REUSABLE_WORKFLOWS.most
         reasons = _reasons(_facts(self._calls(limit + 1)))
+        self.assertEqual(reasons, [REUSABLE_WORKFLOWS.reason])
+
+    def test_a_reusable_workflow_that_calls_itself_is_a_cycle(self) -> None:
+        files = self._calls(1)
+        files[".github/workflows/w1.yml"] = "on: workflow_call\njobs:\n  c:\n    uses: ./.github/workflows/w1.yml\n"
         self.assertEqual(
-            reasons, [f"it calls the reusable workflow ./.github/workflows/w{limit + 1}.yml, which is not read"]
+            _reasons(_facts(files)),
+            [".github/workflows/w1.yml calls itself, through .github/workflows/ci.yml → .github/workflows/w1.yml"],
         )
 
     @staticmethod
@@ -126,6 +136,13 @@ class GithubLimitTests(LimitTestCase):
     def test_composite_actions_past_the_limit_say_so(self) -> None:
         reasons = _reasons(_facts(self._actions(COMPOSITE_ACTIONS.most + 1)))
         self.assertEqual(reasons, ["the composite actions it uses nest more than 4 levels deep"])
+
+    def test_a_composite_action_that_uses_itself_is_a_cycle(self) -> None:
+        files = self._actions(1)
+        files["a1/action.yml"] = "runs:\n  using: composite\n  steps:\n    - uses: ./a1\n"
+        self.assertEqual(
+            _reasons(_facts(files)), ["a1/action.yml uses itself, through .github/workflows/ci.yml → a1/action.yml"]
+        )
 
 
 class TsconfigLimitTests(LimitTestCase):

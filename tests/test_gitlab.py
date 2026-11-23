@@ -53,6 +53,15 @@ class PipelineJobTests(unittest.TestCase):
         jobs = parse_pipeline(pipeline)
         self.assertEqual([job.compilers for job in jobs], [frozenset({"gcc"}), frozenset({"clang"})])
 
+    def test_a_brace_after_a_variable_is_text_not_part_of_the_reference(self) -> None:
+        """`$CC}` is the value of CC and a `}`, as the shell reads it; `${CC` refers to nothing."""
+        pipeline = {
+            "build": {"parallel": {"matrix": [{"CC": "gcc"}]}, "script": ["echo $CC} ${CC"]},
+        }
+        with temp_project({".gitlab-ci.yml": json.dumps(pipeline)}) as root:
+            lines = [command.line for command in make_context(root).facts.of(Command)]
+        self.assertEqual(lines, ["echo gcc} ${CC"])
+
     def test_a_variable_naming_another_jobs_image_says_nothing_of_this_ones_compiler(self) -> None:
         """glib's global MINGW_IMAGE, the image of its cross-mingw64 job only, made every job a gcc job: its macOS
         job (appleclang), its vs2019 jobs (msvc) and its clang64 job (clang) (#228)."""

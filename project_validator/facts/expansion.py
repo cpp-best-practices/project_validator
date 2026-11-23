@@ -22,6 +22,7 @@ from project_validator.facts import NOTHING, ActionStep, Command, Fact, Origin, 
 from project_validator.facts.arguments import starts_with
 from project_validator.facts.exit_status import Shell, masked
 from project_validator.facts.shell import ShellCommand, ShellSyntaxError, Unsplittable, split_script
+from project_validator.templates import SHELL
 
 if TYPE_CHECKING:
     from project_validator.core import Context
@@ -173,9 +174,6 @@ def advised(facts: Iterable[Fact], advisory: str) -> Iterator[Fact]:
         yield replace(fact, advisory=advisory) if advisory and isinstance(fact, Command) else fact
 
 
-_WHOLE_VARIABLE = re.compile(r"\$(?:\{\w+\}|\w+)")
-
-
 # What sets a shell variable in a script: an assignment (`export NAME=`), a loop (`for NAME in`), `read NAME`.
 _ASSIGNED = re.compile(
     r"(?:^|[;&|(\s])(?:(?:export|local|readonly|declare|typeset)\s+(?:-\w+\s+)*)?(\w+)\+?="
@@ -241,9 +239,9 @@ def _with_program(command: Command, assigned: frozenset[str] | None) -> Iterator
     # A variable the job sets, to a value that cannot be read, is set all the same; `$0` is the script itself.
     name = PurePosixPath(argv[0]).name
     unset = [
-        match[0]
-        for match in _WHOLE_VARIABLE.finditer(name)
-        if match[0].strip("${}") not in {*assigned, *command.env, *_SHELL_SET}
+        reference.written
+        for reference in SHELL.parse(name).references
+        if reference.name not in {*assigned, *command.env, *_SHELL_SET}
     ]
     if unset:
         named = "is the variable" if unset[0] == name else "is named by the variable"

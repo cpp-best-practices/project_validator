@@ -18,8 +18,10 @@ from project_validator.facts import CiJob, Command, Fact, Origin, Unknown
 from project_validator.facts.exit_status import STRICT, after
 from project_validator.facts.expansion import advised, script_facts
 from project_validator.facts.shell import ShellCommand, split_script
+from project_validator.includes import Chain, Refused, follow
 from project_validator.limits import GITLAB_EXTENDS, GITLAB_INCLUDES, GITLAB_REFERENCES
 from project_validator.platforms import detect_operating_systems
+from project_validator.templates import SHELL, known
 from project_validator.text import pattern
 from project_validator.yaml_support import Tagged
 
@@ -29,7 +31,6 @@ _RESERVED_KEYS = frozenset(
     {"stages", "variables", "default", "include", "workflow"}
     | {"image", "services", "before_script", "after_script", "cache"}
 )
-_VARIABLE = re.compile(r"\$\{?(\w+)\}?")
 
 
 def _entry_combinations(entry: Mapping[str, object]) -> list[Variables]:
@@ -46,7 +47,7 @@ def expand_parallel(parallel: object) -> list[Variables]:
 
 
 def substitute_variables(text: str, variables: Variables) -> str:
-    return _VARIABLE.sub(lambda match: variables.get(match[1], match[0]), text)
+    return SHELL.substituted(text, known(variables))
 
 
 def _runner_os(tags: str) -> str:
@@ -194,12 +195,15 @@ def _include_entries(document: Mapping[str, object]) -> list[object]:
     return includes if isinstance(includes, list) else [] if includes is None else [includes]
 
 
+_UNREAD = Refused("it is not read")
+
 type _Pipeline = tuple[dict[str, object], dict[str, str], list[Fact]]
 
 
-def _included(path: str, document: Mapping[str, object], load: Load | None, depth: int = 0) -> _Pipeline:
+def _included(path: str, document: Mapping[str, object], load: Load | None, chain: Chain | None = None) -> _Pipeline:
     """The pipeline: `document` over the local files it includes; the file that defines each top-level key; and the
     facts of the includes that are not merged (the jobs of known templates, and unknowns for the others)."""
+    chain = chain or Chain.start(path)
     pipeline: dict[str, object] = {}
     sources: dict[str, str] = {}
     unread: list[Fact] = []
@@ -208,13 +212,15 @@ def _included(path: str, document: Mapping[str, object], load: Load | None, dept
             unread.extend(_template_facts(path, index, template))
             continue
         local = _local_include(entry)
-        found = load(local) if local is not None and load is not None and GITLAB_INCLUDES.allows(depth + 1) else None
-        if local is None or not isinstance(found, Mapping):
+        reached = _UNREAD if local is None else follow(chain, local, GITLAB_INCLUDES)
+        found = load(reached.paths[-1]) if isinstance(reached, Chain) and load is not None else None
+        if not isinstance(reached, Chain) or not isinstance(found, Mapping):
             subject = f"the include {json.dumps(entry, default=str)}"
+            reason = reached.reason if isinstance(reached, Refused) else _UNREAD.reason
             origin = Origin(path=path, at=("include", index))
-            unread.append(Unknown(origin=origin, subject=subject, reason="it is not read", hides="jobs"))
+            unread.append(Unknown(origin=origin, subject=subject, reason=reason, hides="jobs"))
             continue
-        nested, nested_sources, nested_unread = _included(local, found, load, depth + 1)
+        nested, nested_sources, nested_unread = _included(reached.paths[-1], found, load, reached)
         pipeline, unread = _merged(pipeline, nested), [*unread, *nested_unread]
         sources.update(nested_sources)
     own = {str(key): value for key, value in document.items() if key != "include"}
