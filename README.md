@@ -97,7 +97,7 @@ Every language is judged in each unit (build root or workspace member) of the pr
 
 | Check | Passes when |
 |---|---|
-| `ci-present` | at least one CI configuration is found |
+| `ci-present` | at least one live CI configuration is found; a defunct one (see `ci-current`) is no CI, and fails when it is the only one. Defunct configurations are left out of what every other check judges CI to do |
 | `tests-run` | each language's tests exist in each unit (a separate test project's count for all of them) and CI runs them (`ctest-runs` is accepted as an old name). Warns when CI never runs the tests |
 | `fuzz-testing` | each language with a fuzzer has fuzz targets in each unit (libFuzzer, cargo-fuzz, atheris, Go fuzzing, ...) and CI runs them (a ClusterFuzzLite or CIFuzz action, or a CTest registration that passes a libFuzzer option, counts). Warns when CI never runs the targets, when CI runs a fuzzer but no targets are recognised, or when only property-based tests exist |
 | `coverage` | A coverage tool CI runs measures branch coverage, or the finest coverage any known tool can measure for the language when none measures branches. The result says how far CI takes it: measured, reported (a report shows the numbers; an upload to Codecov or Coveralls counts) or gated (CI fails under a threshold; a Codecov status target counts), and suggests the next rung. Path or MC/DC coverage is a bonus. A setting counts when CI runs the tool that reads it |

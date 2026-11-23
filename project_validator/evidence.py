@@ -44,6 +44,10 @@ DEVENV_HOOKS = frozenset({"git-hooks", "pre-commit"})
 DOCUMENT_DIRECTORIES = ("", ".github", "docs")
 
 
+# A README, in any documentation markup.
+README = re.compile(r"README(?:\.(?:md|markdown|rst|txt|adoc|asciidoc|org|textile|pod|rdoc))?", re.IGNORECASE)
+
+
 def documents(context: Context, name: re.Pattern[str], directories: Iterable[str] = DOCUMENT_DIRECTORIES) -> list[str]:
     """The files in `directories` whose whole name matches `name`, in the order of `directories`."""
     found = []

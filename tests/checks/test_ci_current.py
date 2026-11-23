@@ -7,8 +7,13 @@ from collections.abc import Mapping
 from datetime import datetime
 from pathlib import Path
 
+from project_validator.analysis import analyse
 from project_validator.checks.ci_current import HISTORY_NOTE, REMOVE_HINT, ci_current
-from project_validator.core import Result
+from project_validator.checks.static_analysis import static_analysis
+from project_validator.core import Result, Status
+from project_validator.facts import CiConfiguration, CiJob, Command
+from project_validator.plugins import discover
+from project_validator.views import text
 from tests.support import make_context, temp_project
 from tests.test_project import git
 
@@ -183,6 +188,40 @@ class HistoryTests(unittest.TestCase):
                 git(parent, "clone", "-q", "--depth", "1", f"file://{source}", str(clone))
                 result = ci_current.run(make_context(clone))
         self.assertEqual(result, Result.passed("no CI configuration is known to be defunct", HISTORY_NOTE))
+
+
+class LeftOutTests(unittest.TestCase):
+    """A defunct configuration counts against the project once, here; what CI is judged to do is what live CI does."""
+
+    def test_a_defunct_configuration_leaves_no_facts(self) -> None:
+        with temp_project({**WORKFLOW, **TRAVIS, "README.md": f"# app\n{ORG_BADGE}"}) as root:
+            context = make_context(root)
+            self.assertEqual([found.path for found in context.live_ci_files], [".github/workflows/ci.yml"])
+            ci = (*context.facts.of(CiConfiguration), *context.facts.of(CiJob), *context.facts.of(Command))
+            self.assertEqual([fact for fact in ci if fact.origin.path == ".travis.yml"], [])
+
+    def test_a_defunct_configuration_read_only_heuristically_makes_nothing_unknown(self) -> None:
+        """ChaiScript's: its .travis.yml, scanned heuristically, made every question of what CI runs unknown."""
+        readable = {".github/workflows/ci.yml": WORKFLOW[".github/workflows/ci.yml"].replace("make", "echo build")}
+        files = {**readable, **TRAVIS, "README.md": f"# app\n{ORG_BADGE}", "main.cpp": "int main() {}\n"}
+        with temp_project(files) as root:
+            result = static_analysis.run(make_context(root))
+        self.assertNotEqual(result.status, Status.ERROR)
+        self.assertFalse([detail for detail in result.details if ".travis.yml" in detail])
+
+    @unittest.skipUnless(shutil.which("git"), "git is not installed")
+    def test_a_configuration_left_years_behind_is_left_out_too(self) -> None:
+        with temp_project({**WORKFLOW, **TRAVIS}) as root:
+            git(root, "init", "-q")
+            _commit(root, [".travis.yml"], "2018-10-20T14:50:08Z")
+            _commit(root, [".github"], "2026-04-14T17:49:00Z")
+            context = make_context(root)
+            self.assertEqual([found.path for found in context.live_ci_files], [".github/workflows/ci.yml"])
+
+    def test_the_summary_says_what_was_left_out(self) -> None:
+        with temp_project({**WORKFLOW, **TRAVIS, "README.md": f"# app\n{ORG_BADGE}"}) as root:
+            report = text.render(analyse(make_context(root), discover().checks))
+        self.assertIn("  CI: GitHub Actions: 1 job in 1 file; left out as defunct: Travis CI (.travis.yml)", report)
 
 
 if __name__ == "__main__":

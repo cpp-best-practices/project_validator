@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING, Literal, cast
 
 if TYPE_CHECKING:
     from project_validator.ci import CiAnalysis, CiFile, CiProvider
+    from project_validator.ci.defunct import CiCurrency
     from project_validator.facts import Facts
     from project_validator.project_map import ProjectStructure
 
@@ -349,6 +350,21 @@ class Context:
         return find_ci_files(self.project, self.providers)
 
     @cached_property
+    def ci_currency(self) -> CiCurrency:
+        """Which CI configurations are defunct (see `project_validator.ci.defunct`)."""
+        from project_validator.ci.defunct import ci_currency
+        from project_validator.evidence import README, documents
+
+        return ci_currency(self.project, self.ci_files, documents(self, README))
+
+    @cached_property
+    def live_ci_files(self) -> tuple[CiFile, ...]:
+        """The CI configuration files but those of a defunct provider: what CI is judged to do is what live CI does,
+        and a defunct configuration counts against the project once, in `ci-current`."""
+        left_out = {path for defunct in self.ci_currency.defunct for path in defunct.paths}
+        return tuple(ci_file for ci_file in self.ci_files if ci_file.path not in left_out)
+
+    @cached_property
     def ci_analysis(self) -> CiAnalysis:
         """The CI jobs the facts show, as the checks judge them."""
         from project_validator.ci import ci_analysis
@@ -385,7 +401,7 @@ class Context:
     def structure(self) -> ProjectStructure:
         from project_validator.project_map import map_project
 
-        return map_project(self.facts, self.ci_files, self.ci_analysis)
+        return map_project(self.facts, self.live_ci_files, self.ci_analysis, self.ci_currency.defunct)
 
     @cached_property
     def tracked_files(self) -> tuple[str, ...]:

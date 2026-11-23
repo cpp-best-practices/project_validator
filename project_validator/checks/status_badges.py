@@ -6,10 +6,9 @@ import re
 
 from project_validator.ci import CiProvider
 from project_validator.core import Context, Result, check
-from project_validator.evidence import documents
+from project_validator.evidence import README, documents
 from project_validator.text import matching_names, pattern
 
-README = re.compile(r"README(?:\.(?:md|markdown|rst|txt|adoc|asciidoc|org|textile|pod|rdoc))?", re.IGNORECASE)
 QUALITY_BADGES = (
     pattern("Codecov", r"codecov\.io/\S+(?:badge|graph|coverage\.svg)|img\.shields\.io/codecov/|badgen\.net/codecov/"),
     pattern(

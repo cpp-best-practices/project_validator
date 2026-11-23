@@ -3,10 +3,8 @@ readers about what is tested (see `project_validator.ci.defunct`)."""
 
 from __future__ import annotations
 
-from project_validator.checks.status_badges import README
-from project_validator.ci.defunct import Defunct, ci_currency
+from project_validator.ci.defunct import Defunct
 from project_validator.core import Context, Result, check
-from project_validator.evidence import documents
 
 REMOVE_HINT = (
     "remove a CI configuration the project no longer runs, or bring it back to life: "
@@ -24,7 +22,7 @@ HISTORY_NOTE = (
 def ci_current(context: Context) -> Result:
     if not context.ci_files:
         return Result.skipped("no CI configuration")
-    found = ci_currency(context.project, context.ci_files, documents(context, README))
+    found = context.ci_currency
     note = (HISTORY_NOTE,) if found.undated else ()
     reasons = tuple(reason for defunct in found.defunct for reason in (*defunct.certain, *defunct.history))
     if certain := [defunct for defunct in found.defunct if defunct.certain]:

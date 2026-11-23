@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from collections.abc import Iterable, Iterator, Mapping
+from collections.abc import Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
@@ -25,6 +25,7 @@ from project_validator.facts.structure import (
 
 if TYPE_CHECKING:
     from project_validator.ci import CiAnalysis, CiFile
+    from project_validator.ci.defunct import Defunct
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -76,6 +77,8 @@ class ProjectStructure:
     ci_providers: tuple[str, ...]
     ci_files: tuple[str, ...]
     ci_jobs: tuple[Job, ...]
+    # The defunct CI configurations left out of what CI is judged to do, as `Travis CI (.travis.yml)`.
+    ci_defunct: tuple[str, ...] = ()
     # Where each language's and format's files are, most files first.
     files: tuple[LanguageFiles, ...] = ()
 
@@ -108,6 +111,7 @@ class ProjectStructure:
                 "providers": list(self.ci_providers),
                 "files": list(self.ci_files),
                 "jobs": [_job_as_dict(job) for job in self.ci_jobs],
+                **({"defunct": list(self.ci_defunct)} if self.ci_defunct else {}),
             },
             "files": [found.as_dict() for found in self.files],
         }
@@ -222,8 +226,10 @@ def language_files(sources: Iterable[SourceFile], names: frozenset[str]) -> tupl
     return tuple(sorted(found, key=lambda language: (-language.files, language.language)))
 
 
-def map_project(facts: Facts, ci_files: tuple[CiFile, ...], analysis: CiAnalysis) -> ProjectStructure:
-    """The project map: a view over the structure facts, and the CI the facts show."""
+def map_project(
+    facts: Facts, ci_files: tuple[CiFile, ...], analysis: CiAnalysis, defunct: Sequence[Defunct] = ()
+) -> ProjectStructure:
+    """The project map: a view over the structure facts, the CI the facts show, and the `defunct` CI left out."""
     vendored = [source.path for source in facts.of(SourceFile) if source.vendored]
     languages, formats_ = project_languages(facts), project_formats(facts)
     return ProjectStructure(
@@ -237,5 +243,6 @@ def map_project(facts: Facts, ci_files: tuple[CiFile, ...], analysis: CiAnalysis
         ci_providers=tuple(dict.fromkeys(ci_file.provider.name for ci_file in ci_files)),
         ci_files=tuple(ci_file.path for ci_file in ci_files),
         ci_jobs=analysis.jobs,
+        ci_defunct=tuple(f"{found.provider} ({', '.join(found.paths)})" for found in defunct),
         files=language_files(facts.of(SourceFile), languages | formats_),
     )
