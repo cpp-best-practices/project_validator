@@ -14,7 +14,7 @@ from project_validator.ci.github_expressions import Known, evaluate, rendered
 from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, Origin, Unknown
 from project_validator.facts.exit_status import ERREXIT, STRICT, Shell, shell_of
 from project_validator.facts.expansion import advised, script_facts
-from project_validator.facts.shell import ShellSyntaxError, split_words
+from project_validator.facts.shell import POSIX, POWERSHELL, ShellSyntaxError, split_words
 from project_validator.includes import Chain, Refused, follow
 from project_validator.limits import COMPOSITE_ACTIONS, REUSABLE_WORKFLOWS
 from project_validator.platforms import detect_operating_systems
@@ -422,7 +422,7 @@ class _Combination:
             condition=condition,
             opaque=EXPRESSION,
             via=via,
-            powershell=self.powershell(step, known),
+            dialect=POWERSHELL if self.powershell(step, known) else POSIX,
             shell=self.exit_shell(step, known),
         )
         yield from advised(commands, self.advisory)

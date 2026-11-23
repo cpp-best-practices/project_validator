@@ -8,13 +8,13 @@ import sys
 import atheris
 
 with atheris.instrument_imports():
-    from project_validator.facts.shell import split_script
+    from project_validator.facts.shell import POWERSHELL, split_script
 
 
 def TestOneInput(data: bytes) -> None:
     text = data.decode("utf-8", "surrogateescape")
     list(split_script(text))
-    list(split_script(text, powershell=True))
+    list(split_script(text, dialect=POWERSHELL))
 
 
 if __name__ == "__main__":

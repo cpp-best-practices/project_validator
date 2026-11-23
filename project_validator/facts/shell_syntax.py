@@ -11,8 +11,9 @@ parser goes on past it. An unclosed quote (or `$'…'`, `${…}`) ends with the 
 is text; a substitution nested past `SHELL_NESTING` is kept as written, not parsed; a compound command that is never
 closed ends with the script; and a closing word that closes nothing is skipped.
 
-PowerShell (`powershell=True`) is split with the backquote as its escape character and without the POSIX shell's
-compound commands: its lines are lists of pipelines of simple commands, keywords and braces included as words.
+How a script is read is its shell's `Dialect`. A POSIX shell's (`POSIX`) is the structure above. PowerShell's
+(`POWERSHELL`) has the backquote as its escape character and none of the POSIX shell's compound commands: its lines are
+lists of pipelines of simple commands, keywords and braces included as words.
 """
 
 from __future__ import annotations
@@ -24,6 +25,22 @@ from dataclasses import dataclass
 
 from project_validator.limits import SHELL_COMPOUNDS, SHELL_NESTING
 from project_validator.parsing import ParseError, Span
+
+
+@dataclass(frozen=True, slots=True)
+class Dialect:
+    """How a shell reads a script: its `escape` character (which also continues a line), whether it has the POSIX
+    shell's compound commands (`if`, `while`, `for`, `case`, …: `compounds`) and its other quoting (`$'…'` and
+    backquoted command substitution: `posix_quoting`)."""
+
+    name: str
+    escape: str
+    compounds: bool = False
+    posix_quoting: bool = False
+
+
+POSIX = Dialect("sh", "\\", compounds=True, posix_quoting=True)
+POWERSHELL = Dialect("PowerShell", "`")
 
 
 class ShellSyntaxError(ParseError):
@@ -296,8 +313,8 @@ def _is(token: _Token | None, *operators: str) -> bool:
 class _Source:
     """The whole script, and positions in it as lines and columns."""
 
-    def __init__(self, text: str, opaque: re.Pattern[str] | None, escape: str) -> None:
-        self.text, self.escape = text, escape
+    def __init__(self, text: str, opaque: re.Pattern[str] | None, dialect: Dialect) -> None:
+        self.text, self.dialect, self.escape = text, dialect, dialect.escape
         self.newlines = [index for index, character in enumerate(text) if character == "\n"]
         self.opaque = {match.start(): match.end() for match in opaque.finditer(text)} if opaque else {}
 
@@ -341,9 +358,9 @@ def _closing(text: str, start: int, end: int, escape: str = "\\") -> int | None:
 class _Lexer:
     """The tokens of `text[start:end]`, one level of substitution deep (`depth`)."""
 
-    def __init__(self, source: _Source, start: int, end: int, depth: int, *, powershell: bool) -> None:
+    def __init__(self, source: _Source, start: int, end: int, depth: int) -> None:
         self.source, self.text, self.position, self.end = source, source.text, start, end
-        self.depth, self.powershell = depth, powershell
+        self.depth = depth
         self.tokens: list[_Token] = []
         self.heredocs: list[tuple[str, _Token]] = []  # delimiters waiting for the next newline, with their token
         self.bodies: dict[int, str] = {}  # a here-document's body by its delimiter word's offset
@@ -458,7 +475,12 @@ class _WordReader:
             self.escaped(position, quote)
         elif character == "'" and not quote:
             self.bounded(self.single_quoted, position)
-        elif character == "$" and not quote and self.text.startswith("$'", position) and escape == "\\":
+        elif (
+            character == "$"
+            and not quote
+            and self.text.startswith("$'", position)
+            and self.source.dialect.posix_quoting
+        ):
             self.bounded(self.ansi_c_quoted, position)
         elif character == '"' and not quote:
             self.bounded(self.double_quoted, position)
@@ -566,7 +588,7 @@ class _WordReader:
             if (end := _closing(text, position, lexer.end, self.source.escape)) is None:
                 return self.unclosed(position)
             self.substitution(position, end, position + 2, end - 1)
-        elif text.startswith("`", position) and self.source.escape != "`":
+        elif text.startswith("`", position) and self.source.dialect.posix_quoting:
             if (close := text.find("`", position + 1, lexer.end)) < 0:
                 return self.unclosed(position)
             end = close + 1
@@ -617,7 +639,7 @@ class _WordReader:
         self.add(
             Substitution(
                 self.text[start:end],
-                _parse(self.source, inner_start, inner_end, depth, powershell=self.lexer.powershell),
+                _parse(self.source, inner_start, inner_end, depth),
             )
         )
 
@@ -638,8 +660,9 @@ _LIST_TERMINATORS = frozenset({";", "&", ";;", ";&", ";;&"})
 
 
 class _Parser:
-    def __init__(self, source: _Source, tokens: list[_Token], bodies: dict[int, str], *, powershell: bool) -> None:
-        self.source, self.tokens, self.bodies, self.powershell = source, tokens, bodies, powershell
+    def __init__(self, source: _Source, tokens: list[_Token], bodies: dict[int, str]) -> None:
+        self.source, self.tokens, self.bodies = source, tokens, bodies
+        self.compounds_read = source.dialect.compounds
         self.index = 0
         self.stops: list[frozenset[str]] = []
         self.open_subshells = 0
@@ -652,9 +675,9 @@ class _Parser:
         self.flat = False
 
     def problem(self, message: str, offset: int) -> None:
-        """Report what is wrong at `offset`; PowerShell, read without compound commands, is not judged by them, nor a
+        """Report what is wrong at `offset`; a dialect read without compound commands is not judged by them, nor a
         script read flat past `SHELL_COMPOUNDS`, whose structure is no longer followed (its limit says so once)."""
-        if not self.powershell and not self.flat:
+        if self.compounds_read and not self.flat:
             self.errors.append(self.source.error(message, offset))
 
     # tokens
@@ -672,7 +695,7 @@ class _Parser:
         """Whether the next token is one of the reserved `words`, as written (unquoted)."""
         token = self.peek()
         return (
-            not self.powershell
+            self.compounds_read
             and token is not None
             and token.kind == "word"
             and token.word is not None
@@ -760,7 +783,7 @@ class _Parser:
         return Compounded(compound, self.redirections())
 
     def compound(self, start: int) -> Compound | None:
-        if self.powershell or self.peek() is None:
+        if not self.compounds_read or self.peek() is None:
             return None
         if self.nests() and not self.flat and not SHELL_COMPOUNDS.allows(self.compounds + 1):
             self.errors.append(self.source.error(SHELL_COMPOUNDS.reason, start))
@@ -1135,18 +1158,17 @@ def _lines(tokens: list[_Token], end: int) -> list[tuple[int, int]]:
     return lines
 
 
-def _parse(source: _Source, start: int, end: int, depth: int, *, powershell: bool) -> Script:
+def _parse(source: _Source, start: int, end: int, depth: int) -> Script:
     """The tree of `text[start:end]`, `depth` substitutions deep, with what is wrong in it."""
-    lexer = _Lexer(source, start, end, depth, powershell=powershell)
+    lexer = _Lexer(source, start, end, depth)
     lexer.run()
-    parser = _Parser(source, lexer.tokens, lexer.bodies, powershell=powershell)
+    parser = _Parser(source, lexer.tokens, lexer.bodies)
     script = parser.script(start)
     errors = sorted([*lexer.errors, *parser.errors], key=lambda error: error.offset)
     return Script(script.items, tuple(_lines(lexer.tokens, end)), start, end, tuple(errors))
 
 
-def parse(script: str, *, opaque: re.Pattern[str] | None = None, powershell: bool = False) -> Script:
+def parse(script: str, *, opaque: re.Pattern[str] | None = None, dialect: Dialect = POSIX) -> Script:
     """The tree of `script`. Text matching `opaque` (a CI expression the CI service evaluates first) is kept as
     written, quotes and all, inside the word it is part of."""
-    source = _Source(script, opaque, "`" if powershell else "\\")
-    return _parse(source, 0, len(script), 0, powershell=powershell)
+    return _parse(_Source(script, opaque, dialect), 0, len(script), 0)

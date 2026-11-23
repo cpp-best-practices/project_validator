@@ -6,7 +6,7 @@ import re
 import time
 import unittest
 
-from project_validator.facts.shell import ShellCommand, split_script
+from project_validator.facts.shell import POWERSHELL, ShellCommand, split_script
 from project_validator.facts.shell_syntax import (
     Arithmetic,
     Case,
@@ -326,7 +326,7 @@ class RecoveryTests(unittest.TestCase):
         self.assertEqual(_errors("make )"), [(") closes nothing", 1, 6)])
 
     def test_powershell_has_no_compound_commands_to_be_wrong_about(self) -> None:
-        self.assertEqual([error.message for error in parse("if ($x) { a }", powershell=True).errors], [])
+        self.assertEqual([error.message for error in parse("if ($x) { a }", dialect=POWERSHELL).errors], [])
 
 
 if __name__ == "__main__":

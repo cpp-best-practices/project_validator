@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 import unittest
 
-from project_validator.facts.shell import ShellCommand, Unsplittable, split_script
+from project_validator.facts.shell import POWERSHELL, ShellCommand, Unsplittable, split_script
 from project_validator.limits import SHELL_NESTING
 from project_validator.parsing import Span
 
@@ -103,7 +103,7 @@ class WordTests(unittest.TestCase):
 class PowerShellTests(unittest.TestCase):
     def test_an_assignment_is_no_command_but_a_command_it_assigns_runs(self) -> None:
         script = '$workspace = "C:\\" + (Split-Path $env:X -Leaf)\n$n = 3\n$r = gh issue create -t x\n$a += "b"\n'
-        found = [found.argv for found in split_script(script, powershell=True) if isinstance(found, ShellCommand)]
+        found = [found.argv for found in split_script(script, dialect=POWERSHELL) if isinstance(found, ShellCommand)]
         self.assertEqual(found, [("gh", "issue", "create", "-t", "x")])
 
 
