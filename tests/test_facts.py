@@ -204,7 +204,7 @@ class GitHubActionsFactTests(unittest.TestCase):
         )
         self.assertEqual(
             (str(commands[0].origin), commands[0].directory, commands[0].condition, commands[0].env["CC"]),
-            (f"{GITHUB_WORKFLOW}:jobs.test.steps[2].run", "build", None, "gcc"),
+            (f"{GITHUB_WORKFLOW}:20:9 (jobs.test.steps[2].run)", "build", None, "gcc"),
         )
 
     def test_a_step_runs_only_where_its_condition_holds(self) -> None:
@@ -308,7 +308,7 @@ class GitLabFactTests(unittest.TestCase):
                 ("ctest",),
             ],
         )
-        self.assertEqual(str(self.facts.of(Command)[0].origin), ".gitlab-ci.yml:default.before_script[0]")
+        self.assertEqual(str(self.facts.of(Command)[0].origin), ".gitlab-ci.yml:6:7 (default.before_script[0])")
 
     def test_extends_merges_the_templates_first(self) -> None:
         self.assertEqual(self.facts.of(Unknown), ())

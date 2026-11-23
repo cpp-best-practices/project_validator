@@ -24,6 +24,7 @@ from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, O
 from project_validator.facts.arguments import starts_with
 from project_validator.facts.conditions import ALWAYS, DIMENSIONS, Condition, both, only
 from project_validator.facts.exit_status import Shell, masked
+from project_validator.facts.placed import Placed
 from project_validator.facts.shell import ShellCommand, ShellSyntaxError, Unsplittable, split_script
 from project_validator.templates import SHELL
 
@@ -392,8 +393,14 @@ def expanded(
     facts: Iterable[Fact], context: Context, expanders: Iterable[CommandExpander], actions: Iterable[Action] = ()
 ) -> Iterator[Fact]:
     """`facts`, each command followed by what it runs in turn, and each action step by the commands it runs (and what
-    they run), in the builds of the job that runs it."""
-    expanders, actions = tuple(expanders), tuple(actions)
+    they run), in the builds of the job that runs it; each placed where the YAML file it was read from has it."""
+    placed = Placed(lambda path: context.project.read_text(path) if context.project.exists(path) else None)
+    yield from map(placed.fact, _expanded(facts, context, tuple(expanders), tuple(actions)))
+
+
+def _expanded(
+    facts: Iterable[Fact], context: Context, expanders: tuple[CommandExpander, ...], actions: tuple[Action, ...]
+) -> Iterator[Fact]:
     platforms: dict[str, Condition] = {}
     for fact in facts:
         yield fact

@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import importlib
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from functools import cache
 from types import ModuleType
 from typing import Any
 
-from project_validator.parsing import ParseError
+from project_validator.parsing import ParseError, Span
 
 MISSING_MESSAGE = "PyYAML >= 6.0 is required (python3 -m pip install PyYAML, or the distro's python3-yaml package)"
 NESTED_MESSAGE = "nested too deeply to read"
@@ -128,6 +129,58 @@ def load(text: str) -> object:
         raise YamlError(str(error).replace("\n", " "), *_position(error)) from error
     except RecursionError as error:
         raise YamlError(NESTED_MESSAGE) from error
+
+
+type Place = tuple[str | int, ...]
+# At most this deep, and this many places, are recorded of one document.
+_DEEPEST_PLACE = 64
+_MOST_PLACES = 100_000
+
+
+def places(text: str) -> Callable[[Place], Span | None]:
+    """Where each place of the YAML document of `text` is (`("jobs", "test", "steps", 3, "run")`, as the readers name
+    the place of what they find): a key from itself through its value, a sequence's item from its start to its end.
+    A key a mapping merges in (`<<: *defaults`) is placed where it is written, unless the mapping has its own. A place
+    the document does not have, or a document that does not parse, has no span."""
+    found: dict[Place, Span] = {}
+    if _yaml is not None:
+        try:
+            root = _yaml.compose(text, Loader=_yaml_1_2())
+        except (_yaml.YAMLError, RecursionError):
+            root = None
+        pending: list[tuple[Place, Any]] = [((), root)] if root is not None else []
+        while pending and len(found) < _MOST_PLACES:
+            place, node = pending.pop()
+            for at, start, child in _children(node, place) if len(place) < _DEEPEST_PLACE else ():
+                if at not in found:
+                    found[at] = Span(
+                        start.line + 1, start.column + 1, child.end_mark.line + 1, child.end_mark.column + 1
+                    )
+                    pending.append((at, child))
+    return found.get
+
+
+def _children(node: Any, place: Place) -> Iterator[tuple[Place, Any, Any]]:
+    """Each place under `node`, with where it starts and its node: a mapping's own keys before those it merges in."""
+    yaml: Any = _yaml
+    if isinstance(node, yaml.SequenceNode):
+        yield from (((*place, index), item.start_mark, item) for index, item in enumerate(node.value))
+    elif isinstance(node, yaml.MappingNode):
+        for key, value in _pairs(node):
+            if isinstance(key, yaml.ScalarNode):
+                yield (*place, key.value), key.start_mark, value
+
+
+def _pairs(node: Any) -> list[tuple[Any, Any]]:
+    """A mapping's (key, value) nodes: its own, then those of the mappings it merges in (`<<: *a`, `<<: [*a, *b]`)."""
+    yaml: Any = _yaml
+    merged = [pair for pair in node.value if isinstance(pair[0], yaml.ScalarNode) and pair[0].value == "<<"]
+    sources = [value.value if isinstance(value, yaml.SequenceNode) else [value] for _, value in merged]
+    mappings = [source for found in sources for source in found if isinstance(source, yaml.MappingNode)]
+    return [
+        *(pair for pair in node.value if pair not in merged),
+        *(pair for source in mappings for pair in source.value),
+    ]
 
 
 def check_documents(text: str) -> None:

@@ -11,6 +11,20 @@ from project_validator.facts.jobs import Job
 from tests.support import ci_jobs, make_context, temp_project
 
 
+class PlacedTests(unittest.TestCase):
+    def test_ci_facts_are_placed_where_the_yaml_has_them_in_each_file(self) -> None:
+        files = {
+            ".gitlab-ci.yml": "include: ci/lint.yml\n.base: &base\n  script:\n    - make\ntest:\n  <<: *base\n",
+            "ci/lint.yml": "lint:\n  script:\n    - ruff check .\n",
+            ".github/workflows/ci.yml": "on: push\njobs:\n  t:\n    runs-on: x\n    steps:\n      - run: ctest\n",
+        }
+        with temp_project(files) as root:
+            commands = {command.argv: str(command.origin) for command in make_context(root).facts.of(Command)}
+        self.assertEqual(commands[("ctest",)], ".github/workflows/ci.yml:6:9 (jobs.t.steps[0].run)")
+        self.assertEqual(commands[("ruff", "check", ".")], "ci/lint.yml:3:7 (lint.script[0])")
+        self.assertEqual(commands[("make",)], ".gitlab-ci.yml:4:7 (test.script[0])")
+
+
 class ExpandParallelTests(unittest.TestCase):
     def test_without_matrix_runs_once(self) -> None:
         self.assertEqual(expand_parallel(None), [{}])

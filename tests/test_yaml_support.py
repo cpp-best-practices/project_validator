@@ -4,6 +4,7 @@ import unittest
 from unittest import mock
 
 from project_validator import yaml_support
+from project_validator.parsing import Span
 
 
 class YamlSupportTests(unittest.TestCase):
@@ -46,6 +47,35 @@ class YamlSupportTests(unittest.TestCase):
                     yaml_support.load(text)
                 with self.assertRaisesRegex(yaml_support.YamlError, "nested too deeply to read"):
                     yaml_support.check_documents(text)
+
+
+class PlacesTests(unittest.TestCase):
+    TEXT = (
+        "defaults: &defaults\n"
+        "  image: gcc\n"
+        "jobs:\n"
+        "  test:\n"
+        "    <<: *defaults\n"
+        "    steps:\n"
+        "      - uses: actions/checkout@v4\n"
+        "      - run: |\n"
+        "          make\n"
+        "          ctest\n"
+    )
+
+    def test_each_key_is_placed_from_itself_through_its_value_and_each_item_at_itself(self) -> None:
+        places = yaml_support.places(self.TEXT)
+        self.assertEqual(places(("jobs", "test", "steps", 1, "run")), Span(8, 9, 11, 1))
+        self.assertEqual(places(("jobs", "test", "steps", 0)), Span(7, 9, 8, 7))
+        self.assertEqual(places(("jobs",)), Span(3, 1, 11, 1))
+
+    def test_a_merged_key_is_placed_where_it_is_written(self) -> None:
+        self.assertEqual(yaml_support.places(self.TEXT)(("jobs", "test", "image")), Span(2, 3, 2, 13))
+
+    def test_a_place_the_document_does_not_have_is_none(self) -> None:
+        places = yaml_support.places(self.TEXT)
+        self.assertEqual([places(("jobs", "build")), places(("jobs", "test", "steps", 7)), places(())], [None] * 3)
+        self.assertIsNone(yaml_support.places("a: [unclosed\n")(("a",)))
 
 
 class TaggedTests(unittest.TestCase):

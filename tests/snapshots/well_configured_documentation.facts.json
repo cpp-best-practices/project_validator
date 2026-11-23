@@ -155,7 +155,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "ci-lint",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:3:3 (jobs.ci-lint)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -166,7 +166,7 @@
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[0]",
+      "origin": ".github/workflows/ci-lint.yml:6:9 (jobs.ci-lint.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -183,7 +183,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "pipx run zizmor .github",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
       "via": []
     },
     {
@@ -198,9 +198,9 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "pipx run zizmor .github",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run",
+      "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
       "via": [
-        ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[1].run"
+        ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)"
       ]
     },
     {
@@ -209,7 +209,7 @@
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
@@ -223,7 +223,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[2]",
+      "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
       "via": []
     },
     {
@@ -240,7 +240,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Command",
       "line": "gitleaks git --redact .",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint.steps[3].run",
+      "origin": ".github/workflows/ci-lint.yml:9:9 (jobs.ci-lint.steps[3].run)",
       "via": []
     },
     {
@@ -262,7 +262,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "build",
-      "origin": ".github/workflows/ci.yml:jobs.build",
+      "origin": ".github/workflows/ci.yml:7:3 (jobs.build)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -273,7 +273,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:build",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.build.steps[0]",
+      "origin": ".github/workflows/ci.yml:10:9 (jobs.build.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -284,7 +284,7 @@
       },
       "job": ".github/workflows/ci.yml:build",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.build.steps[1]",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.build.steps[1])",
       "uses": "actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0"
     },
     {
@@ -300,7 +300,7 @@
       "job": ".github/workflows/ci.yml:build",
       "kind": "Command",
       "line": "pip install mkdocs-material",
-      "origin": ".github/workflows/ci.yml:jobs.build.steps[2].run",
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.build.steps[2].run)",
       "via": []
     },
     {
@@ -316,7 +316,7 @@
       "job": ".github/workflows/ci.yml:build",
       "kind": "Command",
       "line": "mkdocs build --strict",
-      "origin": ".github/workflows/ci.yml:jobs.build.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.build.steps[3].run)",
       "via": []
     },
     {
@@ -328,7 +328,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "prose",
-      "origin": ".github/workflows/ci.yml:jobs.prose",
+      "origin": ".github/workflows/ci.yml:16:3 (jobs.prose)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -339,7 +339,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:prose",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.prose.steps[0]",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.prose.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -350,7 +350,7 @@
       },
       "job": ".github/workflows/ci.yml:prose",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.prose.steps[1]",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.prose.steps[1])",
       "uses": "DavidAnson/markdownlint-cli2-action@696eb3f2509270d7b882d2aa68347bc676e7af34"
     },
     {
@@ -365,7 +365,7 @@
       "job": ".github/workflows/ci.yml:prose",
       "kind": "Command",
       "line": "uses: DavidAnson/markdownlint-cli2-action@696eb3f2509270d7b882d2aa68347bc676e7af34",
-      "origin": ".github/workflows/ci.yml:jobs.prose.steps[1]",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.prose.steps[1])",
       "via": []
     },
     {
@@ -376,7 +376,7 @@
       },
       "job": ".github/workflows/ci.yml:prose",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.prose.steps[2]",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.prose.steps[2])",
       "uses": "errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff"
     },
     {
@@ -391,7 +391,7 @@
       "job": ".github/workflows/ci.yml:prose",
       "kind": "Command",
       "line": "uses: errata-ai/vale-action@518a9136acc6e6668ce7c00d367051e0941e87ff",
-      "origin": ".github/workflows/ci.yml:jobs.prose.steps[2]",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.prose.steps[2])",
       "via": []
     },
     {
@@ -403,7 +403,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "links",
-      "origin": ".github/workflows/ci.yml:jobs.links",
+      "origin": ".github/workflows/ci.yml:26:3 (jobs.links)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -414,7 +414,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:links",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.links.steps[0]",
+      "origin": ".github/workflows/ci.yml:29:9 (jobs.links.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -425,7 +425,7 @@
       },
       "job": ".github/workflows/ci.yml:links",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:jobs.links.steps[1]",
+      "origin": ".github/workflows/ci.yml:30:9 (jobs.links.steps[1])",
       "uses": "lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8"
     },
     {
@@ -441,7 +441,7 @@
       "job": ".github/workflows/ci.yml:links",
       "kind": "Command",
       "line": "uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8",
-      "origin": ".github/workflows/ci.yml:jobs.links.steps[1]",
+      "origin": ".github/workflows/ci.yml:30:9 (jobs.links.steps[1])",
       "via": []
     },
     {
@@ -478,7 +478,7 @@
       "kind": "CiJob",
       "matrix": {},
       "name": "copy-paste-detection",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:2:3 (jobs.copy-paste-detection)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -489,7 +489,7 @@
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[0]",
+      "origin": ".github/workflows/copy-paste-detection.yml:5:9 (jobs.copy-paste-detection.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -508,7 +508,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
       "via": []
     },
     {
@@ -525,9 +525,9 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run",
+      "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
       "via": [
-        ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection.steps[1].run"
+        ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)"
       ]
     },
     {
@@ -546,7 +546,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "Job",
       "name": ".github/workflows/ci-lint.yml: ci-lint",
-      "origin": ".github/workflows/ci-lint.yml:jobs.ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:3:3 (jobs.ci-lint)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -563,7 +563,7 @@
       "job": ".github/workflows/ci.yml:build",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: build",
-      "origin": ".github/workflows/ci.yml:jobs.build",
+      "origin": ".github/workflows/ci.yml:7:3 (jobs.build)",
       "os": "linux",
       "services": [],
       "toolchains": [
@@ -584,7 +584,7 @@
       "job": ".github/workflows/ci.yml:prose",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: prose",
-      "origin": ".github/workflows/ci.yml:jobs.prose",
+      "origin": ".github/workflows/ci.yml:16:3 (jobs.prose)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -600,7 +600,7 @@
       "job": ".github/workflows/ci.yml:links",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: links",
-      "origin": ".github/workflows/ci.yml:jobs.links",
+      "origin": ".github/workflows/ci.yml:26:3 (jobs.links)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -616,7 +616,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "Job",
       "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
-      "origin": ".github/workflows/copy-paste-detection.yml:jobs.copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:2:3 (jobs.copy-paste-detection)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -675,7 +675,7 @@
       "languages": [
         "MkDocs"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.build.steps[3].run",
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.build.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -702,7 +702,7 @@
         "VitePress",
         "mdBook"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.prose.steps[1]",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.prose.steps[1])",
       "provides": {
         "analysis": [
           "checks"
@@ -729,7 +729,7 @@
         "VitePress",
         "mdBook"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.prose.steps[2]",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.prose.steps[2])",
       "provides": {
         "analysis": [
           "checks"
@@ -756,7 +756,7 @@
         "VitePress",
         "mdBook"
       ],
-      "origin": ".github/workflows/ci.yml:jobs.links.steps[1]",
+      "origin": ".github/workflows/ci.yml:30:9 (jobs.links.steps[1])",
       "provides": {
         "links": [
           "checked"

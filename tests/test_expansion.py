@@ -13,6 +13,7 @@ from project_validator.facts.arguments import positional
 from project_validator.facts.conditions import ALWAYS
 from project_validator.facts.expansion import CommandExpander, known_expanders
 from project_validator.facts.tools import ToolRun
+from project_validator.parsing import Span
 from tests.support import GITHUB_WORKFLOW, github_job, github_steps, make_context, temp_project
 
 
@@ -53,7 +54,7 @@ class EngineTests(unittest.TestCase):
         formatting = commands[("clang-format", "--dry-run", "-Werror", "a.cpp")]
         self.assertEqual(
             [str(origin) for origin in formatting.via],
-            [f"{GITHUB_WORKFLOW}:jobs.build.steps[0].run", "Makefile:4:1 (lint)"],
+            [f"{GITHUB_WORKFLOW}:1:60 (jobs.build.steps[0].run)", "Makefile:4:1 (lint)"],
         )
         self.assertEqual(str(formatting.origin), "Makefile:6:1 (format)")
         self.assertEqual(formatting.job, f"{GITHUB_WORKFLOW}:build")
@@ -443,7 +444,7 @@ class PreCommitTests(unittest.TestCase):
             (ruff.line, ruff.origin),
             (
                 "the ruff hook of https://github.com/astral-sh/ruff-pre-commit",
-                Origin(path=".pre-commit-config.yaml", at=("repos", 0, "hooks", 0)),
+                Origin(path=".pre-commit-config.yaml", at=("repos", 0, "hooks", 0), span=Span(5, 9, 7, 7)),
             ),
         )
 
@@ -650,7 +651,7 @@ class ShellScriptTests(unittest.TestCase):
         facts = _facts({**script, **github_job("ubuntu-latest", "./ci/build.sh\necho done")})
         placed = {command.argv: str(command.origin) for command in facts.of(Command)}
         self.assertEqual(placed[("make", "all")], "ci/build.sh:4:3")
-        self.assertEqual(placed[("echo", "done")], f"{GITHUB_WORKFLOW}:jobs.build.steps[0].run")
+        self.assertEqual(placed[("echo", "done")], f"{GITHUB_WORKFLOW}:1:60 (jobs.build.steps[0].run)")
 
     def test_other_files_and_inline_scripts_are_not_followed(self) -> None:
         files = {**self.SCRIPT, "tools/run.py": "print('x')\n", "ci/notes": "ruff check .\n"}
