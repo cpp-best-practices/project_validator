@@ -1,6 +1,7 @@
 """The Cabal file format, shared by package descriptions (`*.cabal`) and project files (`cabal.project`): fields
 (`name: value`, continued on more indented lines) and sections (`library`, `executable app`, `common warnings`,
-`package *`, `if flag(dev)`), nested by indentation. Comments are lines starting with `--`.
+`package *`, `if flag(dev)`), nested by indentation or by braces (`library {` … `}`, `} else {`). Comments are lines
+starting with `--`.
 
 A component's fields include those of the `common` stanzas it imports, and those under conditions (`if`, `elif`,
 `else`), each with the conditions it needs. Nothing is evaluated: a condition is kept as written.
@@ -35,20 +36,34 @@ class Section:
     sections: list[Section] = field(default_factory=list)
 
 
+# The kinds of section, which braces may enclose (`library {`); a `{` ending any other line is text.
+_SECTIONS = COMPONENTS | {"common", "flag", "source-repository", "source-repository-package", "custom-setup"}
+_SECTIONS |= {"if", "elif", "else"}
+# Braces nest as deep as indentation would: a line inside n pairs of braces is as indented as n of these, plus its own.
+_BRACED = 10_000
+
+
 def _lines(text: str) -> Iterator[tuple[int, int, str]]:
-    """(line number, indentation, content) of each line that is not blank or a comment."""
+    """(line number, indentation, content) of each line that is not blank or a comment; a section's braces are taken
+    as indentation (see `_BRACED`), and the lines that only open or close them are left out."""
+    depth = 0
     for number, raw in enumerate(text.splitlines(), start=1):
         stripped = raw.strip()
-        if stripped and not stripped.startswith("--"):
-            if "\t" in raw[: len(raw) - len(raw.lstrip())]:
-                raise CabalSyntaxError(f"line {number}: tab in indentation", number)
-            yield number, len(raw) - len(raw.lstrip()), stripped
+        if not stripped or stripped.startswith("--"):
+            continue
+        if "\t" in raw[: len(raw) - len(raw.lstrip())]:
+            raise CabalSyntaxError(f"line {number}: tab in indentation", number)
+        while stripped.startswith("}"):
+            depth, stripped = max(depth - 1, 0), stripped[1:].strip()
+        opens = stripped.endswith("{") and (stripped == "{" or stripped.split()[0].lower() in _SECTIONS)
+        stripped = stripped.removesuffix("{").strip() if opens else stripped
+        if stripped:
+            yield number, depth * _BRACED + len(raw) - len(raw.lstrip()), stripped
+        depth += opens
 
 
 def parse(text: str) -> Section:
     """The file as a section of kind "" holding its top-level fields and sections."""
-    if "{" in text and re.search(r"^\s*(?:library|executable|test-suite|if)\b[^\n]*\{", text, re.MULTILINE):
-        raise CabalSyntaxError("sections written with braces are not read")
     root = Section(kind="", name="", line=0)
     # The open sections, with the indentation of their header; the field being read, with its indentation.
     stack: list[tuple[int, Section]] = [(-1, root)]
