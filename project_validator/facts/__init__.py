@@ -28,14 +28,17 @@ class Origin:
 
     path: str
     at: Location = ()
-    # Where in the file, when the reader knows; it does not change how the origin reads.
+    # Where in the file, when the reader knows: the line, and the column when known.
     span: Span | None = None
 
     def __str__(self) -> str:
-        """`.github/workflows/ci.yml:jobs.test.steps[3].run`."""
+        """`.github/workflows/ci.yml:jobs.test.steps[3].run`; with a span, as compilers write it, then the place:
+        `CMakeLists.txt:12:1`, `Makefile:40:1 (check)`."""
         place = ""
         for part in self.at:
             place += f"[{part}]" if isinstance(part, int) else f".{part}" if place else part
+        if self.span is not None:
+            return f"{self.path}:{self.span} ({place})" if place else f"{self.path}:{self.span}"
         return f"{self.path}:{place}" if place else self.path
 
 

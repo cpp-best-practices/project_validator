@@ -88,8 +88,13 @@ class OriginSpanTests(unittest.TestCase):
         self.assertIsNone(Origin(path="a").span)
         self.assertEqual(Origin(path="a", span=Span(1, 2)).span, Span(1, 2))
 
-    def test_a_span_does_not_change_how_an_origin_reads(self) -> None:
-        self.assertEqual(str(Origin(path="a", at=("x",), span=Span(1, 2))), "a:x")
+    def test_an_origin_with_a_span_reads_path_line_column_then_its_place(self) -> None:
+        """As compilers write it, so that an editor or terminal opens the file there."""
+        self.assertEqual(
+            str(Origin(path="a", at=("jobs", "x", "steps", 3), span=Span(1, 2))), "a:1:2 (jobs.x.steps[3])"
+        )
+        self.assertEqual(str(Origin(path="a", span=Span(4))), "a:4")
+        self.assertEqual(str(Origin(path="a", at=("x",))), "a:x")
 
     def test_an_unreadable_file_is_unknown_where_its_error_is(self) -> None:
         self.assertEqual(unreadable("T", "f", ParseError("bad", 4, 2)).origin, Origin(path="f", span=Span(4, 2)))
