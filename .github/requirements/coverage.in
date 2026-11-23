@@ -1,5 +1,5 @@
 # coverage.py and the dependencies the tests run with.
-coverage==7.17.2
+coverage==7.17.3
 PyYAML==6.0.3
 pathspec==1.1.1
 Markdown==3.11.3
