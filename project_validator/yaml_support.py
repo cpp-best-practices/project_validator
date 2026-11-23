@@ -41,12 +41,28 @@ class Tagged:
 
 
 @cache
-def _yaml_1_2() -> type:
-    """The safe loader, reading a plain scalar that starts with `:` in a flow collection (`[:a, :b]`) as YAML 1.2
-    does: `:` starts a scalar when what follows it is not a space or a flow indicator."""
+def _escape_safe() -> type:
+    """The safe loader, where an escape past the last character (`"\\U99999999"`, which PyYAML hands to chr()) is a
+    scanner error at its scalar, not a ValueError."""
     yaml: Any = _yaml
 
     class Loader(yaml.SafeLoader):  # type: ignore[misc]
+        def scan_flow_scalar_non_spaces(self, double: bool, start_mark: Any) -> list[str]:
+            try:
+                return list(super().scan_flow_scalar_non_spaces(double, start_mark))
+            except ValueError as error:
+                problem = "found an escape that names no character"
+                raise yaml.scanner.ScannerError("while scanning a quoted scalar", start_mark, problem) from error
+
+    return Loader
+
+
+@cache
+def _yaml_1_2() -> type:
+    """The safe loader (see `_escape_safe`), reading a plain scalar that starts with `:` in a flow collection (`[:a,
+    :b]`) as YAML 1.2 does: `:` starts a scalar when what follows it is not a space or a flow indicator."""
+
+    class Loader(_escape_safe()):  # type: ignore[misc]
         def colon_scalar(self) -> bool:
             """Whether the `:` here starts a plain scalar: in a flow collection, at the start of an entry (after `[`,
             `{` or `,`, so not the value of a JSON-like key, `{"a":1}`), and followed by a safe character."""
