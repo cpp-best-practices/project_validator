@@ -3971,7 +3971,7 @@
       "heuristic": false,
       "key": "Checks",
       "kind": "Setting",
-      "origin": ".clang-tidy:Checks",
+      "origin": ".clang-tidy:1:1 (Checks)",
       "tool": "clang-tidy",
       "value": "-*,readability-function-size"
     },
@@ -3979,7 +3979,7 @@
       "heuristic": false,
       "key": "CheckOptions",
       "kind": "Setting",
-      "origin": ".clang-tidy:CheckOptions",
+      "origin": ".clang-tidy:2:1 (CheckOptions)",
       "tool": "clang-tidy",
       "value": [
         {

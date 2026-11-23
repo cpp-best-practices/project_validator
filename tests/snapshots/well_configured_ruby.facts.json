@@ -1781,7 +1781,7 @@
       "heuristic": false,
       "key": "AllCops.NewCops",
       "kind": "Setting",
-      "origin": ".rubocop.yml:AllCops.NewCops",
+      "origin": ".rubocop.yml:2:3 (AllCops.NewCops)",
       "tool": "RuboCop",
       "value": "enable"
     },

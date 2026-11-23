@@ -2649,7 +2649,7 @@
       "heuristic": false,
       "key": "version",
       "kind": "Setting",
-      "origin": ".golangci.yml:version",
+      "origin": ".golangci.yml:1:1 (version)",
       "tool": "golangci-lint",
       "value": "2"
     },
@@ -2657,7 +2657,7 @@
       "heuristic": false,
       "key": "linters.enable",
       "kind": "Setting",
-      "origin": ".golangci.yml:linters.enable",
+      "origin": ".golangci.yml:3:3 (linters.enable)",
       "tool": "golangci-lint",
       "value": [
         "errorlint",

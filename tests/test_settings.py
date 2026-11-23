@@ -14,6 +14,7 @@ from project_validator.facts.settings import (
     known_settings_readers,
     settings_facts,
     toml_settings,
+    yaml_settings,
 )
 from project_validator.facts.structure import SourceFile
 from project_validator.questions import known_questions
@@ -66,6 +67,11 @@ class QueryTests(unittest.TestCase):
 
 
 class FormatTests(unittest.TestCase):
+    def test_a_yaml_setting_is_placed_where_the_file_has_it(self) -> None:
+        text = "verifier:\n  name: ansible\n  options:\n    v: true\nother: 1\n"
+        found = [str(fact.origin) for fact in yaml_settings("molecule", "molecule.yml", text, "verifier")]
+        self.assertEqual(found, ["molecule.yml:2:3 (name)", "molecule.yml:4:5 (options.v)"])
+
     def test_tables_and_sections_are_flattened_under_dotted_keys(self) -> None:
         toml = list(toml_settings("t", "p.toml", '[tool.x.run]\nbranch = true\nomit = ["a"]\n', "tool", "x"))
         self.assertEqual([(found.key, found.value) for found in toml], [("run.branch", True), ("run.omit", ("a",))])  # type: ignore[attr-defined]

@@ -491,7 +491,7 @@
       "heuristic": false,
       "key": "version",
       "kind": "Setting",
-      "origin": "buf.yaml:version",
+      "origin": "buf.yaml:1:1 (version)",
       "tool": "buf",
       "value": "v2"
     },
@@ -499,7 +499,7 @@
       "heuristic": false,
       "key": "modules",
       "kind": "Setting",
-      "origin": "buf.yaml:modules",
+      "origin": "buf.yaml:2:1 (modules)",
       "tool": "buf",
       "value": [
         {
@@ -511,7 +511,7 @@
       "heuristic": false,
       "key": "lint.use",
       "kind": "Setting",
-      "origin": "buf.yaml:lint.use",
+      "origin": "buf.yaml:5:3 (lint.use)",
       "tool": "buf",
       "value": [
         "STANDARD"
@@ -521,7 +521,7 @@
       "heuristic": false,
       "key": "breaking.use",
       "kind": "Setting",
-      "origin": "buf.yaml:breaking.use",
+      "origin": "buf.yaml:8:3 (breaking.use)",
       "tool": "buf",
       "value": [
         "FILE"

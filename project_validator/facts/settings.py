@@ -14,7 +14,7 @@ import re
 import tomllib
 import xml.etree.ElementTree as ElementTree
 from collections.abc import Callable, Iterable, Iterator, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from fnmatch import fnmatchcase
 
 from project_validator import yaml_support
@@ -221,8 +221,12 @@ def json_settings(tool: str, path: str, text: str, *keys: str, comments: bool = 
 
 
 def yaml_settings(tool: str, path: str, text: str, *keys: str) -> Iterator[Fact]:
-    """The settings in the YAML mapping at `keys` of the file, flattened under dotted keys."""
-    return _document_settings(tool, path, lambda: yaml_support.load(text), yaml_support.YamlError, keys)
+    """The settings in the YAML mapping at `keys` of the file, flattened under dotted keys, each placed where the
+    file has it."""
+    places = yaml_support.places(text)
+    for fact in _document_settings(tool, path, lambda: yaml_support.load(text), yaml_support.YamlError, keys):
+        span = places((*keys, *fact.origin.at)) if isinstance(fact, Setting) else None
+        yield fact if span is None else replace(fact, origin=replace(fact.origin, span=span))
 
 
 def key_value_settings(tool: str, path: str, text: str) -> Iterator[Setting]:

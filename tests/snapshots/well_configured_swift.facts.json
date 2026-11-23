@@ -2974,7 +2974,7 @@
       "heuristic": false,
       "key": "opt_in_rules",
       "kind": "Setting",
-      "origin": ".swiftlint.yml:opt_in_rules",
+      "origin": ".swiftlint.yml:1:1 (opt_in_rules)",
       "tool": "SwiftLint",
       "value": [
         "empty_count"
