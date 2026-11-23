@@ -13,7 +13,10 @@ closed ends with the script; and a closing word that closes nothing is skipped.
 
 How a script is read is its shell's `Dialect`. A POSIX shell's (`POSIX`) is the structure above. PowerShell's
 (`POWERSHELL`) has the backquote as its escape character and none of the POSIX shell's compound commands: its lines are
-lists of pipelines of simple commands, keywords and braces included as words.
+lists of pipelines of simple commands, keywords and braces included as words. Windows's cmd (`CMD`) is read so too, with
+its own escape (`^`), quoting (only `"`, in which `^` is text), comments (`REM`, `::`) and operators (no `;`); its
+parentheses hold blocks where cmd opens one (where a command starts, after an `if`'s test, `else` or `do`), and each
+block's commands are lines of their own.
 """
 
 from __future__ import annotations
@@ -29,18 +32,45 @@ from project_validator.parsing import ParseError, Span
 
 @dataclass(frozen=True, slots=True)
 class Dialect:
-    """How a shell reads a script: its `escape` character (which also continues a line), whether it has the POSIX
-    shell's compound commands (`if`, `while`, `for`, `case`, …: `compounds`) and its other quoting (`$'…'` and
-    backquoted command substitution: `posix_quoting`)."""
+    """How a shell reads a script:
+    - its `escape` character, which also continues a line, and whether it escapes in double quotes;
+    - whether it has the POSIX shell's compound commands (`if`, `while`, `for`, `case`, …: `compounds`), its other
+      quoting (`$'…'` and backquoted command substitution: `posix_quoting`), single quotes, and the substitutions `$`
+      starts (`$(…)`, `${…}`, `$((…))`, and the process substitutions `<(…)`, `>(…)`);
+    - the characters that end an unquoted word, where its operators start (`breaks`);
+    - what starts a comment (`comment`), anywhere a word could start or only where a command does;
+    - whether parentheses hold blocks of commands (`blocks`, cmd's: see the module's documentation)."""
 
     name: str
     escape: str
     compounds: bool = False
     posix_quoting: bool = False
+    escapes_in_quotes: bool = True
+    single_quotes: bool = True
+    substitutions: bool = True
+    breaks: str = ";&|()<>"
+    comment: re.Pattern[str] = re.compile("#")
+    comments_start_commands: bool = False
+    blocks: bool = False
 
 
 POSIX = Dialect("sh", "\\", compounds=True, posix_quoting=True)
 POWERSHELL = Dialect("PowerShell", "`")
+CMD = Dialect(
+    "cmd",
+    "^",
+    escapes_in_quotes=False,
+    single_quotes=False,
+    substitutions=False,
+    breaks="&|<>",
+    comment=re.compile(r"(?i:rem)(?=[ \t\r\n]|$)|::"),
+    comments_start_commands=True,
+    blocks=True,
+)
+# What separates commands, so that the next word starts one (as cmd's comments need).
+_SEPARATORS = frozenset({"&&", "||", "&", "|", ";"})
+# The words after which, in cmd, a parenthesis opens a block (and an `if`'s, after its test).
+_BLOCK_OPENERS = frozenset({"else", "do"})
 
 
 class ShellSyntaxError(ParseError):
@@ -361,6 +391,8 @@ class _Lexer:
     def __init__(self, source: _Source, start: int, end: int, depth: int) -> None:
         self.source, self.text, self.position, self.end = source, source.text, start, end
         self.depth = depth
+        self.dialect = source.dialect
+        self.blocks_open = 0
         self.tokens: list[_Token] = []
         self.heredocs: list[tuple[str, _Token]] = []  # delimiters waiting for the next newline, with their token
         self.bodies: dict[int, str] = {}  # a here-document's body by its delimiter word's offset
@@ -382,10 +414,12 @@ class _Lexer:
                 self.tokens.append(_Token("newline", "\n", self.position, self.position + 1))
                 self.position += 1
                 self.read_heredocs()
-            elif character == "#":
+            elif self.at_comment():
                 newline = self.text.find("\n", self.position, self.end)
                 self.position = self.end if newline < 0 else newline
-            elif self.text.startswith(("<(", ">("), self.position):
+            elif self.block(character):
+                self.position += 1
+            elif self.dialect.substitutions and self.text.startswith(("<(", ">("), self.position):
                 self.tokens.append(self.word())
             elif (operator := self.operator()) is not None:
                 self.tokens.append(_Token("operator", operator, self.position, self.position + len(operator)))
@@ -393,7 +427,43 @@ class _Lexer:
             else:
                 self.tokens.append(self.word())
 
+    def at_comment(self) -> bool:
+        """Whether a comment starts here: where a word could, or, in a dialect whose comments are commands (cmd's
+        `REM`), where a command could."""
+        if not self.dialect.comment.match(self.text, self.position, self.end):
+            return False
+        return not self.dialect.comments_start_commands or not self.command_words()
+
+    def command_words(self) -> list[_Token]:
+        """The tokens of the command being read, since the line, block or operator before it."""
+        found: list[_Token] = []
+        for token in reversed(self.tokens):
+            if token.kind == "newline" or (token.kind == "operator" and token.text in _SEPARATORS):
+                break
+            found.append(token)
+        return found[::-1]
+
+    def block(self, character: str) -> bool:
+        """In a dialect with blocks, whether a parenthesis opens one (where a command starts, after an `if`'s test,
+        `else` or `do`) or closes the one open; each is a line break, so that a block's commands are lines of their own.
+        Any other parenthesis is text."""
+        if not self.dialect.blocks or character not in "()":
+            return False
+        if character == ")":
+            if not self.blocks_open:
+                return False
+            self.blocks_open -= 1
+        else:
+            words = [token.text.lower() for token in self.command_words()]
+            if words and words[0] != "if" and words[-1] not in _BLOCK_OPENERS:
+                return False
+            self.blocks_open += 1
+        self.tokens.append(_Token("newline", character, self.position, self.position + 1))
+        return True
+
     def operator(self) -> str | None:
+        if self.text[self.position] not in self.dialect.breaks:
+            return None
         return next(
             (operator for operator in _OPERATORS if self.text.startswith(operator, self.position, self.end)), None
         )
@@ -456,11 +526,14 @@ class _WordReader:
 
     def ends_word(self, position: int) -> bool:
         character = self.text[position]
-        if position == self.start and self.text.startswith(("<(", ">("), position):
+        dialect = self.source.dialect
+        if position == self.start and dialect.substitutions and self.text.startswith(("<(", ">("), position):
             return False  # a process substitution starts the word
         if character in " \t\r\n" or self.lexer.at_continuation(position):
             return True
-        return character in ";&|()<>" and position not in self.source.opaque
+        if character == ")" and self.lexer.blocks_open:
+            return True  # it closes a block
+        return character in dialect.breaks and position not in self.source.opaque
 
     def step(self, quote: str) -> None:
         """Read what starts at the lexer's position, inside `quote` ("", or `"`)."""
@@ -469,11 +542,11 @@ class _WordReader:
         if position in self.source.opaque:
             self.add(Verbatim(self.text[position : self.source.opaque[position]]))
             lexer.position = self.source.opaque[position]
-        elif self.expansion(position, quote):
+        elif self.source.dialect.substitutions and self.expansion(position, quote):
             return
-        elif character == escape:
+        elif character == escape and (not quote or self.source.dialect.escapes_in_quotes):
             self.escaped(position, quote)
-        elif character == "'" and not quote:
+        elif character == "'" and not quote and self.source.dialect.single_quotes:
             self.bounded(self.single_quoted, position)
         elif (
             character == "$"

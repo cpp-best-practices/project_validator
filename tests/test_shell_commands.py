@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 import unittest
 
-from project_validator.facts.shell import POWERSHELL, ShellCommand, Unsplittable, split_script
+from project_validator.facts.shell import CMD, POWERSHELL, ShellCommand, Unsplittable, split_script
 from project_validator.limits import SHELL_NESTING
 from project_validator.parsing import Span
 
@@ -105,6 +105,62 @@ class PowerShellTests(unittest.TestCase):
         script = '$workspace = "C:\\" + (Split-Path $env:X -Leaf)\n$n = 3\n$r = gh issue create -t x\n$a += "b"\n'
         found = [found.argv for found in split_script(script, dialect=POWERSHELL) if isinstance(found, ShellCommand)]
         self.assertEqual(found, [("gh", "issue", "create", "-t", "x")])
+
+
+class CmdTests(unittest.TestCase):
+    """Windows's cmd, as GitHub's `shell: cmd` and a batch file run a script."""
+
+    @staticmethod
+    def _split(script: str) -> list[tuple[str, ...]]:
+        return [found.argv for found in split_script(script, dialect=CMD) if isinstance(found, ShellCommand)]
+
+    def test_a_backslash_is_a_path_separator_and_the_caret_escapes_and_continues(self) -> None:
+        script = "build\\Release\\app.exe --x ^\n  --y\necho a^&b\n"
+        self.assertEqual(self._split(script), [("build\\Release\\app.exe", "--x", "--y"), ("echo", "a&b")])
+
+    def test_double_quotes_quote_and_keep_carets_but_single_quotes_and_dollars_are_text(self) -> None:
+        script = 'cmake -G "NMake Makefiles" "-DX=a^b" ..\necho \'a b\' $HOME #1\n'
+        self.assertEqual(
+            self._split(script),
+            [("cmake", "-G", "NMake Makefiles", "-DX=a^b", ".."), ("echo", "'a", "b'", "$HOME", "#1")],
+        )
+
+    def test_rem_and_double_colons_start_comments_only_where_a_command_starts(self) -> None:
+        self.assertEqual(self._split("REM build it\n:: and test it\nrem\necho rem ::\n"), [("echo", "rem", "::")])
+
+    def test_operators_separate_commands(self) -> None:
+        script = "cmake --build . && ctest || exit /b 1 & echo done ; x\n"
+        self.assertEqual(
+            self._split(script),
+            [("cmake", "--build", "."), ("ctest",), ("exit", "/b", "1"), ("echo", "done", ";", "x")],
+        )
+
+    def test_an_if_or_for_runs_its_command_and_a_block_holds_commands(self) -> None:
+        script = (
+            "@echo off\n"
+            "if errorlevel 1 exit /b 1\n"
+            'if not exist "build" (\n  mkdir build\n) else (\n  echo ok\n)\n'
+            'if /i "%CC%"=="cl" call vcvars.bat x64\n'
+            "if %A% EQU 1 (ctest) else (ctest -V)\n"
+            "for %%f in (*.c) do cl /c %%f\n"
+            "%ProgramFiles(x86)%\\tool.exe /x\n"
+            "call :label\n"
+            ":label\n"
+        )
+        self.assertEqual(
+            self._split(script),
+            [
+                ("echo", "off"),
+                ("exit", "/b", "1"),
+                ("mkdir", "build"),
+                ("echo", "ok"),
+                ("vcvars.bat", "x64"),
+                ("ctest",),
+                ("ctest", "-V"),
+                ("cl", "/c", "%%f"),
+                ("%ProgramFiles(x86)%\\tool.exe", "/x"),
+            ],
+        )
 
 
 class ErrorTests(unittest.TestCase):

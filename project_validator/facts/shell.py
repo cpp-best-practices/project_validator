@@ -16,6 +16,7 @@ from collections.abc import Iterable, Iterator
 from dataclasses import dataclass, field, replace
 
 from project_validator.facts.shell_syntax import (
+    CMD,
     POSIX,
     POWERSHELL,
     Assignment,
@@ -167,6 +168,8 @@ class _Level:
         argv = tuple(word.value for word in command.words)
         if self.dialect is POWERSHELL:
             argv, condition = self.powershell_words(command, argv, condition)
+        elif self.dialect is CMD:
+            argv = _cmd_words(argv)
         env = tuple((assignment.name, _assigned(assignment)) for assignment in command.assignments)
         if argv:
             self.found.append(_Found(command, argv, env, operator, condition, rest))
@@ -317,6 +320,43 @@ class _Level:
         )
 
 
+# What, in cmd, comes before the command a line runs: `@` (not echoed), and the words that run it (`else`, `call`).
+_CMD_PREFIXES = frozenset({"else", "call"})
+# The tests of cmd's `if` that take one word (`if exist build`), and its comparisons (`if %A% EQU 1`).
+_CMD_TESTS = frozenset({"errorlevel", "exist", "defined", "cmdextversion"})
+_CMD_COMPARISONS = frozenset({"==", "equ", "neq", "lss", "leq", "gtr", "geq"})
+
+
+def _cmd_words(argv: tuple[str, ...]) -> tuple[str, ...]:
+    """The command a cmd line runs: without `@`, an `if`'s test, a `for`'s loop up to `do`, `else` and `call`; none
+    for a label (`:build`, and `call :build`)."""
+    while argv:
+        head = argv[0].lower()
+        if head.startswith("@"):
+            argv = (argv[0][1:], *argv[1:]) if len(argv[0]) > 1 else argv[1:]
+        elif head == "if":
+            argv = _after_cmd_test(argv[1:])
+        elif head == "for":
+            lowered = [word.lower() for word in argv]
+            argv = argv[lowered.index("do") + 1 :] if "do" in lowered else ()
+        elif head in _CMD_PREFIXES:
+            argv = argv[1:]
+        else:
+            break
+    return () if argv[:1] and argv[0].startswith(":") else argv
+
+
+def _after_cmd_test(words: tuple[str, ...]) -> tuple[str, ...]:
+    """What follows an `if`'s test (`[/i] [not] exist build`, `"%A%"=="b"`, `%A% EQU 1`): the command it runs."""
+    while words[:1] and words[0].lower() in ("/i", "not"):
+        words = words[1:]
+    if words[:1] and words[0].lower() in _CMD_TESTS:
+        return words[2:]
+    if len(words) > 1 and words[1].lower() in _CMD_COMPARISONS:
+        return words[3:]
+    return words[1:]
+
+
 # A PowerShell assignment (`$x = …`, `$x += …`), and a command name its value may be the output of (`$r = gh …`).
 _POWERSHELL_ASSIGNMENT = frozenset({"=", "+=", "-=", "*=", "/=", "%=", "??="})
 _POWERSHELL_COMMAND = re.compile(r"[A-Za-z][\w.-]*")
@@ -379,6 +419,7 @@ def split_script(
 
 
 __all__ = [
+    "CMD",
     "POSIX",
     "POWERSHELL",
     "READS_STATUS",
