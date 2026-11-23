@@ -262,6 +262,12 @@ class RecoveryTests(unittest.TestCase):
         self.assertEqual(_errors(deeper), [(SHELL_COMPOUNDS.reason, 1, 2 * most + 1)])
         self.assertEqual(_all_argvs(f"{deeper}\nls"), [("make",), ("ls",)])
 
+    def test_a_for_whose_arithmetic_is_cut_short_is_read(self) -> None:
+        """`for (` at the end of a script opened one parenthesis of the two `for ((` has: the reader took two."""
+        for text in ("for (", "for ((", "for ( a"):
+            with self.subTest(text=text):
+                self.assertEqual(_all_argvs(text), [])
+
     def test_case_items_read_flat_past_the_limit_end(self) -> None:
         """Past the limit, a pattern's `)` ends the command it follows; the case item holding it still moves on."""
         most = SHELL_COMPOUNDS.most

@@ -956,8 +956,11 @@ class _Parser:
         return Subshell(body, start, end, self.span(start, end))
 
     def arithmetic(self, start: int) -> Arithmetic:
-        self.index += 2
-        depth = 2
+        """`(( … ))`, read to its balancing parentheses; `for (` cut short has only the one it opened."""
+        depth = 0
+        while depth < 2 and self.operator("("):
+            self.index += 1
+            depth += 1
         while (token := self.peek()) is not None and depth > 0:
             self.index += 1
             depth += {"(": 1, ")": -1}.get(token.text, 0)
