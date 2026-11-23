@@ -1,15 +1,18 @@
 """Whether a Dockerfile is well formed: the instructions it is made of, each one known and given arguments, and a
 `FROM` first (after the `ARG`s it may use), read as BuildKit reads them: comments, line continuations (with the
-`# escape=` directive's character), and heredocs (`RUN <<EOF … EOF`), whose bodies are not instructions."""
+`# escape=` directive's character), the flags of the instructions that take them (`COPY --from=build`, `RUN
+--mount=…`), and heredocs (`RUN <<EOF … EOF`), whose bodies are kept with their instruction, never read as
+instructions. Each instruction spans the lines it was written on, continuations and heredocs included."""
 
 from __future__ import annotations
 
 import re
 from collections.abc import Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from project_validator.ecosystems.docker import DOCKERFILE
 from project_validator.facts.wellformed import ParseError, Parser, decoded
+from project_validator.parsing import Span, continued
 
 INSTRUCTIONS = frozenset(
     {
@@ -38,13 +41,38 @@ _DIRECTIVE = re.compile(r"^#\s*(?P<key>\w+)\s*=\s*(?P<value>\S+)\s*$")
 _HEREDOC = re.compile(r"<<-?\s*(?:\"(?P<quoted>\w+)\"|'(?P<single>\w+)'|(?P<bare>\w+))")
 
 
+# The instructions that take flags (`--name=value`, or `--name`) before their arguments.
+_FLAGGED = frozenset({"ADD", "COPY", "FROM", "HEALTHCHECK", "RUN"})
+
+
+@dataclass(frozen=True, slots=True)
+class Flag:
+    """`--name=value`, or `--name` (`value` None)."""
+
+    name: str
+    value: str | None
+
+
+@dataclass(frozen=True, slots=True)
+class Heredoc:
+    """A heredoc an instruction opens (`<<EOF`, `<<-EOT` strips leading tabs): the lines up to its delimiter."""
+
+    delimiter: str
+    body: str
+    strip_tabs: bool = False
+
+
 @dataclass(frozen=True, slots=True)
 class Instruction:
-    """One instruction, its continuations joined: the keyword as written (upper-cased) and its arguments."""
+    """One instruction, its continuations joined: the keyword as written (upper-cased), its flags, its arguments, and
+    the bodies of the heredocs it opens."""
 
     line: int
     keyword: str
     arguments: str
+    flags: tuple[Flag, ...] = ()
+    heredocs: tuple[Heredoc, ...] = ()
+    span: Span | None = field(default=None, compare=False)
 
 
 def _comment(text: str) -> bool:
@@ -62,49 +90,58 @@ def _escape_character(lines: list[str]) -> str:
     return "\\"
 
 
-def _joined(lines: list[str], index: int, escape: str) -> tuple[str, int]:
-    """The logical line starting at `index`, its continuations joined (blank and comment lines between them skipped),
-    and the index after it."""
-    text = lines[index].strip()
-    index += 1
-    while text.endswith(escape):
-        text = f"{text[:-1].rstrip()} "
-        while index < len(lines) and (not lines[index].strip() or _comment(lines[index].strip())):
-            index += 1
-        if index == len(lines):
-            break
-        text += lines[index].strip()
-        index += 1
-    return text.strip(), index
+def _skipped(line: str) -> bool:
+    """Whether BuildKit passes over a line between continuations: a blank one, or a comment."""
+    stripped = line.strip()
+    return not stripped or _comment(stripped)
 
 
-def _after_heredocs(lines: list[str], index: int, arguments: str) -> int:
-    """The index after the bodies of the heredocs `arguments` open (`<<EOF`), each ended by a line of its word."""
-    for found in _HEREDOC.finditer(arguments):
-        word = found["quoted"] or found["single"] or found["bare"]
+def _flags(keyword: str, rest: str) -> tuple[tuple[Flag, ...], str]:
+    """The flags written first, for an instruction that takes them, and the arguments after them."""
+    flags = []
+    while keyword in _FLAGGED and rest.startswith("--"):
+        word, _, rest = rest.partition(" ")
+        name, equals, value = word[2:].partition("=")
+        flags.append(Flag(name, value if equals else None))
+        rest = rest.lstrip()
+    return tuple(flags), rest
+
+
+def _heredocs(lines: list[str], index: int, arguments: str) -> tuple[tuple[Heredoc, ...], int]:
+    """The heredocs `arguments` open (`<<EOF`), each the lines up to one of its delimiter alone, and the index after
+    them; one never closed runs to the end of the file."""
+    found = []
+    for opened in _HEREDOC.finditer(arguments):
+        word = opened["quoted"] or opened["single"] or opened["bare"]
+        start = index
         while index < len(lines) and lines[index].strip() != word:
             index += 1
-        index += 1
-    return min(index, len(lines))
+        found.append(Heredoc(word, "\n".join(lines[start:index]), strip_tabs=opened[0].startswith("<<-")))
+        index = min(index + 1, len(lines))
+    return tuple(found), index
 
 
 def instructions(text: str) -> Iterator[Instruction]:
     """The instructions of a Dockerfile, in order; the keyword of each is upper-cased, known or not."""
     lines = text.splitlines()
     escape = _escape_character(lines)
+    # BuildKit continues a line whose escape is followed by spaces; a heredoc body keeps its own (`lines`).
+    trimmed = [line.rstrip() for line in lines]
     index = 0
     while index < len(lines):
-        stripped = lines[index].strip()
-        if not stripped or _comment(stripped):
+        if _skipped(lines[index]):
             index += 1
             continue
-        line = index + 1
-        joined, index = _joined(lines, index, escape)
-        keyword, _, arguments = joined.partition(" ")
-        keyword, arguments = keyword.upper(), arguments.strip()
+        first = index + 1
+        pieces, index = continued(trimmed, index, escape=escape, skipped=_skipped)
+        keyword, _, rest = " ".join(piece.strip() for piece in pieces).strip().partition(" ")
+        keyword = keyword.upper()
+        flags, arguments = _flags(keyword, rest.strip())
+        heredocs: tuple[Heredoc, ...] = ()
         if keyword in ("RUN", "COPY", "ADD"):
-            index = _after_heredocs(lines, index, arguments)
-        yield Instruction(line=line, keyword=keyword, arguments=arguments)
+            heredocs, index = _heredocs(lines, index, arguments)
+        span = Span(first, 1, index, len(lines[index - 1]) + 1)
+        yield Instruction(first, keyword, arguments, flags, heredocs, span)
 
 
 def parse(_path: str, data: bytes) -> None:
@@ -116,7 +153,7 @@ def parse(_path: str, data: bytes) -> None:
     for instruction in found:
         if instruction.keyword not in INSTRUCTIONS:
             raise ParseError(f"unknown instruction {instruction.keyword}", instruction.line, 1)
-        if not instruction.arguments:
+        if not instruction.arguments and not instruction.flags:
             raise ParseError(f"{instruction.keyword} has no arguments", instruction.line, 1)
     stages = [instruction for instruction in found if instruction.keyword != "ARG"]
     if not stages:

@@ -13,9 +13,10 @@ from project_validator.checks.static_analysis import static_analysis
 from project_validator.core import Check, Result, Status
 from project_validator.ecosystems import claim_conflicts
 from project_validator.ecosystems.docker import DOCKER
-from project_validator.ecosystems.docker.dockerfile import DOCKERFILE_PARSER, Instruction, instructions
+from project_validator.ecosystems.docker.dockerfile import DOCKERFILE_PARSER, Flag, Heredoc, Instruction, instructions
 from project_validator.ecosystems.model import Ecosystem
 from project_validator.facts.wellformed import ParseError
+from project_validator.parsing import Span
 from tests.support import GITHUB_WORKFLOW, github_job, make_context, run_in_layout, temp_project, uses
 
 LAYOUT = "Dockerfile"
@@ -101,7 +102,12 @@ class ParserTests(unittest.TestCase):
                 Instruction(line=3, keyword="FROM", arguments="nginx:1.27-alpine AS serve"),
                 Instruction(line=5, keyword="COPY", arguments="site/ /usr/share/nginx/html/"),
                 Instruction(line=6, keyword="RUN", arguments="apk add --no-cache curl wget"),
-                Instruction(line=10, keyword="RUN", arguments="<<EOF"),
+                Instruction(
+                    line=10,
+                    keyword="RUN",
+                    arguments="<<EOF",
+                    heredocs=(Heredoc("EOF", "set -eu\nchown -R nginx:nginx /usr/share/nginx/html"),),
+                ),
                 Instruction(line=14, keyword="USER", arguments="nginx"),
                 Instruction(line=15, keyword="EXPOSE", arguments="8080"),
             ],
@@ -114,6 +120,45 @@ class ParserTests(unittest.TestCase):
         # A heredoc never closed, or a continuation on the last line, runs to the end of the file.
         self.assertEqual([i.keyword for i in instructions("FROM a\nRUN <<EOF\necho\n")], ["FROM", "RUN"])
         self.assertEqual([i.arguments for i in instructions("FROM a\nRUN echo \\\n")], ["a", "echo"])
+
+    def test_flags_are_read_apart_from_the_arguments(self) -> None:
+        text = (
+            "FROM a\nCOPY --from=build --chown=app:app /src /dst\n"
+            "RUN --mount=type=cache,target=/c --network=none make\nCOPY --link x y\n"
+        )
+        found = [(i.keyword, i.flags, i.arguments) for i in instructions(text)]
+        self.assertEqual(
+            found,
+            [
+                ("FROM", (), "a"),
+                ("COPY", (Flag("from", "build"), Flag("chown", "app:app")), "/src /dst"),
+                ("RUN", (Flag("mount", "type=cache,target=/c"), Flag("network", "none")), "make"),
+                ("COPY", (Flag("link", None),), "x y"),
+            ],
+        )
+
+    def test_heredoc_bodies_are_kept_with_their_instruction(self) -> None:
+        text = "FROM a\nCOPY <<-'EOT' <<\"EOU\" /x\n\tone\nEOT\ntwo\nEOU\nRUN <<EOF\necho\n"
+        heredocs = [i.heredocs for i in instructions(text)]
+        self.assertEqual(
+            heredocs,
+            [(), (Heredoc("EOT", "\tone", strip_tabs=True), Heredoc("EOU", "two")), (Heredoc("EOF", "echo"),)],
+        )
+
+    def test_an_instruction_spans_its_continuations_and_heredocs(self) -> None:
+        spans = [i.span for i in instructions(DOCKERFILE)]
+        self.assertEqual(spans[2], Span(6, 1, 9, 9))
+        self.assertEqual(spans[3], Span(10, 1, 13, 4))
+        self.assertEqual(spans[0], Span(3, 1, 3, 32))
+
+    def test_spaces_after_the_escape_still_continue_the_line(self) -> None:
+        """data.table's `RUN Rscript -e '  \\ ` (a space after the backslash): BuildKit continues the line."""
+        text = "FROM r\nRUN Rscript -e ' \\ \nread.dcf(x) \\\n  names()'\n"
+        self.assertEqual([i.keyword for i in instructions(text)], ["FROM", "RUN"])
+
+    def test_flags_alone_are_arguments_enough_for_well_formedness(self) -> None:
+        """BuildKit judges a flag-only instruction, not the parse: what was well formed stays so."""
+        self.assertEqual(_problem("FROM a\nCOPY --from=b\n"), ("", None))
 
     def test_well_formed_dockerfiles_and_the_problems_found(self) -> None:
         for text in (DOCKERFILE, FROM, "ARG VERSION=3.20\nFROM alpine:$VERSION\n", "from alpine\n"):
