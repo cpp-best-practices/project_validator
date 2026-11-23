@@ -1,4 +1,5 @@
-"""What every reader shares: where something is in a file (`Span`), and why a file does not parse (`ParseError`).
+"""What every reader shares: where something is in a file (`Span`), why a file does not parse (`ParseError`), and how a
+line written over several physical lines is put back together (`continued`).
 
 Each reader's own syntax error (CMake's, Meson's, JSON's, Cabal's, YAML's) is a `ParseError`, so a caller can catch
 any of them, and a fact built from one (see `project_validator.facts.settings.unreadable`) says where it went wrong.
@@ -6,6 +7,7 @@ any of them, and a fact built from one (see `project_validator.facts.settings.un
 
 from __future__ import annotations
 
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 
 
@@ -39,3 +41,27 @@ class ParseError(ValueError):
     @property
     def column(self) -> int | None:
         return None if self.span is None else self.span.column
+
+
+def _never(_line: str) -> bool:
+    return False
+
+
+def continued(
+    lines: Sequence[str], index: int, *, escape: str = "\\", skipped: Callable[[str], bool] = _never
+) -> tuple[list[str], int]:
+    """The physical lines of the logical line starting at `lines[index]`, each without the `escape` that continues it
+    on the next, and the index after them. Lines `skipped` between continuations (a Dockerfile's comments and blank
+    lines) are left out; how the pieces are joined is the reader's (Make keeps a recipe's indentation, a Dockerfile
+    strips each line)."""
+    pieces, line = [], lines[index]
+    index += 1
+    while line.endswith(escape):
+        pieces.append(line[: -len(escape)])
+        while index < len(lines) and skipped(lines[index]):
+            index += 1
+        if index == len(lines):
+            return pieces, index
+        line = lines[index]
+        index += 1
+    return [*pieces, line], index
