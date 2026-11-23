@@ -231,6 +231,25 @@ lint:
         self.assertEqual((makefile.default, list(makefile.rules)), ("all", ["all"]))
         self.assertEqual(makefile.variables["HELP"], "usage: make all")
 
+    def test_includes_of_included_makefiles_are_followed(self) -> None:
+        files = {
+            "Makefile": "include mk/common.mk\n",
+            "mk/common.mk": "include mk/lint.mk\n",
+            "mk/lint.mk": "lint:\n\tclang-tidy src/a.c\n",
+            **github_job("x", "make lint"),
+        }
+        self.assertEqual(_expanded(_facts(files)), [("clang-tidy", "src/a.c")])
+
+    def test_a_makefile_that_includes_itself_is_read_once_and_says_so(self) -> None:
+        files = {
+            "Makefile": "include a.mk\nall:\n\techo top\n",
+            "a.mk": "include Makefile\n",
+            **github_job("x", "make"),
+        }
+        facts = _facts(files)
+        self.assertEqual(_expanded(facts), [("echo", "top")])
+        self.assertIn("Makefile includes itself, through Makefile → a.mk", [fact.reason for fact in facts.of(Unknown)])
+
     def test_a_pattern_rule_covers_the_goals_it_matches_with_their_stem(self) -> None:
         makefile = "lint-%:\n\techo $* $@\n%.check: %.src\n\ttest -f $<\n"
         files = {"Makefile": makefile, **github_job("x", "make lint-docs")}
