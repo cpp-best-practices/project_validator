@@ -14,7 +14,7 @@ from project_validator.ecosystems.haskell.cabal import CabalSyntaxError
 from project_validator.ecosystems.haskell.cabal import parse as parse_cabal
 from project_validator.facts import Origin
 from project_validator.facts.settings import unreadable
-from project_validator.parsing import ParseError, Span
+from project_validator.parsing import ParseError, Span, continued
 from project_validator.text import JsonSyntaxError, check_json
 
 
@@ -23,6 +23,27 @@ class SpanTests(unittest.TestCase):
         self.assertEqual(str(Span(3, 7)), "3:7")
         self.assertEqual(str(Span(3)), "3")
         self.assertEqual(str(Span(3, 7, end_line=4, end_column=1)), "3:7")
+
+
+class ContinuedTests(unittest.TestCase):
+    """One logical line from physical ones, as Make and Dockerfiles continue them."""
+
+    def test_a_line_ending_in_the_escape_continues_on_the_next(self) -> None:
+        lines = ["a \\", "  b \\", "  c", "d"]
+        self.assertEqual(continued(lines, 0), (["a ", "  b ", "  c"], 3))
+        self.assertEqual(continued(lines, 3), (["d"], 4))
+
+    def test_the_escape_may_be_another_character(self) -> None:
+        self.assertEqual(continued(["RUN a `", "  b"], 0, escape="`"), (["RUN a ", "  b"], 2))
+
+    def test_lines_skipped_between_continuations_are_left_out(self) -> None:
+        lines = ["RUN a \\", "# note", "", "  b"]
+        self.assertEqual(
+            continued(lines, 0, skipped=lambda line: not line.strip() or line.startswith("#")), (["RUN a ", "  b"], 4)
+        )
+
+    def test_a_continuation_on_the_last_line_ends_there(self) -> None:
+        self.assertEqual(continued(["a \\"], 0), (["a "], 1))
 
 
 class ParseErrorTests(unittest.TestCase):

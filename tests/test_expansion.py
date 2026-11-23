@@ -192,6 +192,45 @@ lint:
         files = {"Makefile": makefile, **github_job("x", "make")}
         self.assertEqual(_expanded(_facts(files)), [("echo", "$HOME", "$(CC)", "gcc")])
 
+    def test_a_conditional_the_makefile_decides_takes_its_branch(self) -> None:
+        makefile = "V = 1\nall:\nifeq ($(V),1)\n\techo verbose\nelse\n\t@echo quiet\nendif\n"
+        files = {"Makefile": makefile, **github_job("x", "make")}
+        self.assertEqual(_expanded(_facts(files)), [("echo", "verbose")])
+
+    def test_the_command_line_decides_a_conditional(self) -> None:
+        makefile = "all:\nifdef DEBUG\n\tcc -g a.c\nelse\n\tcc -O2 a.c\nendif\n"
+        files = {"Makefile": makefile, **github_job("x", "make DEBUG=1")}
+        self.assertEqual(_expanded(_facts(files)), [("cc", "-g", "a.c")])
+
+    def test_a_conditional_on_the_environment_reads_every_branch(self) -> None:
+        """Where the makefile cannot say (the OS make runs on, a variable only the environment may set), every branch
+        is read, as when conditionals were not followed: what CI may run is not narrowed by a guess."""
+        makefile = "all:\nifeq ($(OS),Windows_NT)\n\tbuild.bat\nelse\n\t./build.sh\nendif\n"
+        files = {"Makefile": makefile, **github_job("x", "make")}
+        self.assertEqual(_expanded(_facts(files)), [("build.bat",), ("./build.sh",)])
+
+    def test_what_the_environment_may_override_decides_no_conditional(self) -> None:
+        """make's own defaults (CC is cc) and `?=` give way to the environment, which CI often sets (CC=clang): a
+        conditional on them reads every branch, as does one on a variable appended to before it is set."""
+        for makefile in (
+            "all:\nifeq ($(CC),clang)\n\tclang-tidy a.c\nelse\n\tcppcheck a.c\nendif\n",
+            "CC ?= gcc\nall:\nifeq ($(CC),clang)\n\tclang-tidy a.c\nelse\n\tcppcheck a.c\nendif\n",
+            "CC += -m64\nall:\nifeq ($(CC),clang -m64)\n\tclang-tidy a.c\nelse\n\tcppcheck a.c\nendif\n",
+        ):
+            with self.subTest(makefile=makefile.splitlines()[0]):
+                files = {"Makefile": makefile, **github_job("x", "make")}
+                self.assertEqual(_expanded(_facts(files)), [("clang-tidy", "a.c"), ("cppcheck", "a.c")])
+
+    def test_a_branch_not_taken_defines_nothing(self) -> None:
+        makefile = parse_makefile("CC = gcc\nifeq ($(CC),clang)\nFLAGS = -Weverything\nfirst:\nendif\nall:\n")
+        self.assertNotIn("FLAGS", makefile.variables)
+        self.assertEqual((makefile.default, list(makefile.rules)), ("all", ["all"]))
+
+    def test_a_define_body_is_no_rule(self) -> None:
+        makefile = parse_makefile("define HELP\nusage: make all\nendef\nall:\n\techo ok\n")
+        self.assertEqual((makefile.default, list(makefile.rules)), ("all", ["all"]))
+        self.assertEqual(makefile.variables["HELP"], "usage: make all")
+
     def test_a_pattern_rule_covers_the_goals_it_matches_with_their_stem(self) -> None:
         makefile = "lint-%:\n\techo $* $@\n%.check: %.src\n\ttest -f $<\n"
         files = {"Makefile": makefile, **github_job("x", "make lint-docs")}
