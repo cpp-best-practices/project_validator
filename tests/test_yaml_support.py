@@ -26,6 +26,14 @@ class YamlSupportTests(unittest.TestCase):
             yaml_support.load("a: [unclosed\n")
         self.assertNotIn("\n", str(raised.exception))
 
+    def test_an_escape_past_the_last_character_is_a_yaml_error_not_a_crash(self) -> None:
+        """PyYAML passes `\\U99999999` to chr(), which raises ValueError (found by the YAML fuzzer)."""
+        for check in (yaml_support.load, yaml_support.check_documents):
+            with self.subTest(check=check.__name__), self.assertRaises(yaml_support.YamlError) as raised:
+                check('a: 1\nb: "x\\U99999999"\n')
+            self.assertIn("escape", str(raised.exception))
+            self.assertEqual((raised.exception.line, raised.exception.column), (2, 4))
+
     def test_deep_nesting_is_a_yaml_error_not_a_crash(self) -> None:
         deep = (
             "[" * 5000 + "]" * 5000,
