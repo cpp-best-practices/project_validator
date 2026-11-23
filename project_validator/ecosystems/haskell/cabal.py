@@ -12,8 +12,9 @@ from __future__ import annotations
 import re
 from collections.abc import Iterator
 from dataclasses import dataclass, field
+from typing import NamedTuple
 
-from project_validator.parsing import ParseError
+from project_validator.parsing import ParseError, Span
 
 _FIELD = re.compile(r"(?P<name>[A-Za-z][\w-]*)\s*:(?P<value>.*)$")
 # The sections that are components of a package, or of a project the options apply to.
@@ -25,14 +26,24 @@ class CabalSyntaxError(ParseError):
     pass
 
 
+class Field(NamedTuple):
+    """A field (its name in lower case), its value (its continuation lines joined by newlines), and where it is
+    written, from its name to the end of its last line."""
+
+    name: str
+    value: str
+    span: Span
+
+
 @dataclass(slots=True)
 class Section:
-    """A section: its kind (`executable`, `if`), the rest of its header (`app`, `flag(dev)`), and what it holds."""
+    """A section: its kind (`executable`, `if`), the rest of its header (`app`, `flag(dev)`), where its header is,
+    and what it holds."""
 
     kind: str
     name: str
-    line: int
-    fields: list[tuple[str, str]] = field(default_factory=list)
+    span: Span
+    fields: list[Field] = field(default_factory=list)
     sections: list[Section] = field(default_factory=list)
 
 
@@ -43,9 +54,9 @@ _SECTIONS |= {"if", "elif", "else"}
 _BRACED = 10_000
 
 
-def _lines(text: str) -> Iterator[tuple[int, int, str]]:
-    """(line number, indentation, content) of each line that is not blank or a comment; a section's braces are taken
-    as indentation (see `_BRACED`), and the lines that only open or close them are left out."""
+def _lines(text: str) -> Iterator[tuple[Span, int, str]]:
+    """(where its content is, indentation, content) of each line that is not blank or a comment; a section's braces
+    are taken as indentation (see `_BRACED`), and the lines that only open or close them are left out."""
     depth = 0
     for number, raw in enumerate(text.splitlines(), start=1):
         stripped = raw.strip()
@@ -58,31 +69,34 @@ def _lines(text: str) -> Iterator[tuple[int, int, str]]:
         opens = stripped.endswith("{") and (stripped == "{" or stripped.split()[0].lower() in _SECTIONS)
         stripped = stripped.removesuffix("{").strip() if opens else stripped
         if stripped:
-            yield number, depth * _BRACED + len(raw) - len(raw.lstrip()), stripped
+            column = raw.index(stripped) + 1
+            indent = len(raw) - len(raw.lstrip())
+            yield Span(number, column, number, column + len(stripped)), depth * _BRACED + indent, stripped
         depth += opens
 
 
 def parse(text: str) -> Section:
     """The file as a section of kind "" holding its top-level fields and sections."""
-    root = Section(kind="", name="", line=0)
+    root = Section(kind="", name="", span=Span(0))
     # The open sections, with the indentation of their header; the field being read, with its indentation.
     stack: list[tuple[int, Section]] = [(-1, root)]
     current: tuple[int, Section, int] | None = None
-    for number, indent, content in _lines(text):
+    for span, indent, content in _lines(text):
         if current is not None and indent > current[0]:
             _, section, index = current
-            name, value = section.fields[index]
-            section.fields[index] = (name, f"{value}\n{content}" if value else content)
+            name, value, start = section.fields[index]
+            joined = f"{value}\n{content}" if value else content
+            section.fields[index] = Field(name, joined, Span(start.line, start.column, span.end_line, span.end_column))
             continue
         while indent <= stack[-1][0]:
             stack.pop()
         parent = stack[-1][1]
         if match := _FIELD.match(content):
-            parent.fields.append((match["name"].lower(), match["value"].strip()))
+            parent.fields.append(Field(match["name"].lower(), match["value"].strip(), span))
             current = (indent, parent, len(parent.fields) - 1)
             continue
         kind, _, name = content.partition(" ")
-        section = Section(kind=kind.lower(), name=name.strip(), line=number)
+        section = Section(kind=kind.lower(), name=name.strip(), span=span)
         parent.sections.append(section)
         stack.append((indent, section))
         current = None
@@ -95,6 +109,7 @@ class Value:
 
     value: str
     requires: frozenset[str] = frozenset()
+    span: Span | None = None
 
 
 def _conditional(section: Section, requires: frozenset[str], previous: list[str]) -> frozenset[str]:
@@ -108,9 +123,9 @@ def _values(
     section: Section, name: str, requires: frozenset[str], commons: dict[str, Section], seen: set[str]
 ) -> Iterator[Value]:
     """The values of field `name` in `section`, its conditional branches and the common stanzas it imports."""
-    for found, value in section.fields:
+    for found, value, span in section.fields:
         if found == name:
-            yield Value(value, requires)
+            yield Value(value, requires, span)
         elif found == "import":
             for imported in (part.strip() for part in value.split(",")):
                 if imported in commons and imported not in seen:
@@ -129,7 +144,7 @@ def _values(
 class Component:
     kind: str
     name: str
-    line: int
+    span: Span
 
     def __str__(self) -> str:
         return f"{self.kind} {self.name}".strip()
@@ -138,7 +153,7 @@ class Component:
 def components(root: Section) -> Iterator[Component]:
     for section in root.sections:
         if section.kind in COMPONENTS:
-            yield Component(section.kind, section.name, section.line)
+            yield Component(section.kind, section.name, section.span)
 
 
 def values(root: Section, name: str) -> Iterator[tuple[Component, Value]]:
@@ -146,13 +161,13 @@ def values(root: Section, name: str) -> Iterator[tuple[Component, Value]]:
     commons = {section.name: section for section in root.sections if section.kind == "common"}
     for section in root.sections:
         if section.kind in COMPONENTS:
-            component = Component(section.kind, section.name, section.line)
+            component = Component(section.kind, section.name, section.span)
             for found in _values(section, name, frozenset(), commons, set()):
                 yield component, found
 
 
 def top_level(root: Section, name: str) -> str | None:
-    return next((value for found, value in root.fields if found == name), None)
+    return next((value for found, value, _ in root.fields if found == name), None)
 
 
-__all__ = ["CabalSyntaxError", "Component", "Section", "Value", "components", "parse", "top_level", "values"]
+__all__ = ["CabalSyntaxError", "Component", "Field", "Section", "Value", "components", "parse", "top_level", "values"]

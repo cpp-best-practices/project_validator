@@ -15,6 +15,7 @@ from project_validator.facts.build import CompilerOption, disjuncts
 from project_validator.facts.conditions import both, extend, negated, only, requiring
 from project_validator.facts.settings import SettingsReader, unreadable
 from project_validator.facts.shell import ShellSyntaxError, split_words
+from project_validator.parsing import Span
 
 HASKELL_LANGUAGE = frozenset({"Haskell"})
 READER = "GHC options"
@@ -25,20 +26,26 @@ extend("languages", "Haskell")
 
 
 def ghc_options(
-    path: str, build_system: str, component: str, options: tuple[str, ...], requires: frozenset[str] = frozenset()
+    path: str,
+    build_system: str,
+    component: str,
+    options: tuple[str, ...],
+    requires: frozenset[str] = frozenset(),
+    span: Span | None = None,
 ) -> Iterator[Fact]:
     """The options GHC is given for a `component` (`library`, `executable app`, `package *`, Stack's `$locals`), as
     `CompilerOption` facts: for GHC and Haskell, in the builds the conditions (as written: `flag(dev)`, `not
-    impl(ghc < 9)`) hold in."""
+    impl(ghc < 9)`) hold in, placed at the `ghc-options` field when where it is written is known (`span`)."""
     conditions = (
         negated(requiring(found.removeprefix("not "))) if found.startswith("not ") else requiring(found)
         for found in sorted(requires)
     )
     builds = both(only("compilers", [GHC]), only("languages", HASKELL_LANGUAGE), *conditions)
+    origin = Origin(path=path) if span is None else Origin(path=path, at=("ghc-options",), span=span)
     for applies in disjuncts(builds):
         for option in options:
             yield CompilerOption(
-                origin=Origin(path=path), build_system=build_system, option=option, applies=applies, target=component
+                origin=origin, build_system=build_system, option=option, applies=applies, target=component
             )
 
 
@@ -56,7 +63,7 @@ def _cabal(path: str, text: str) -> Iterator[Fact]:
         yield unreadable(READER, path, error)
         return
     for component, found in values(root, "ghc-options"):
-        yield from ghc_options(path, "Cabal", str(component), _split(found.value), found.requires)
+        yield from ghc_options(path, "Cabal", str(component), _split(found.value), found.requires, found.span)
 
 
 def _words(value: object) -> tuple[str, ...]:

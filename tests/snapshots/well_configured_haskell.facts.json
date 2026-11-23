@@ -1380,7 +1380,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Wall",
-      "origin": "app.cabal",
+      "origin": "app.cabal:8:3 (ghc-options)",
       "target": "library"
     },
     {
@@ -1396,7 +1396,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Wcompat",
-      "origin": "app.cabal",
+      "origin": "app.cabal:8:3 (ghc-options)",
       "target": "library"
     },
     {
@@ -1412,7 +1412,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Widentities",
-      "origin": "app.cabal",
+      "origin": "app.cabal:8:3 (ghc-options)",
       "target": "library"
     },
     {
@@ -1428,7 +1428,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Wredundant-constraints",
-      "origin": "app.cabal",
+      "origin": "app.cabal:8:3 (ghc-options)",
       "target": "library"
     },
     {
@@ -1447,7 +1447,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Werror",
-      "origin": "app.cabal",
+      "origin": "app.cabal:10:5 (ghc-options)",
       "target": "library"
     },
     {
@@ -1463,7 +1463,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Wall",
-      "origin": "app.cabal",
+      "origin": "app.cabal:8:3 (ghc-options)",
       "target": "executable app"
     },
     {
@@ -1479,7 +1479,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Wcompat",
-      "origin": "app.cabal",
+      "origin": "app.cabal:8:3 (ghc-options)",
       "target": "executable app"
     },
     {
@@ -1495,7 +1495,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Widentities",
-      "origin": "app.cabal",
+      "origin": "app.cabal:8:3 (ghc-options)",
       "target": "executable app"
     },
     {
@@ -1511,7 +1511,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Wredundant-constraints",
-      "origin": "app.cabal",
+      "origin": "app.cabal:8:3 (ghc-options)",
       "target": "executable app"
     },
     {
@@ -1530,7 +1530,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Werror",
-      "origin": "app.cabal",
+      "origin": "app.cabal:10:5 (ghc-options)",
       "target": "executable app"
     },
     {
@@ -1546,7 +1546,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Wall",
-      "origin": "app.cabal",
+      "origin": "app.cabal:8:3 (ghc-options)",
       "target": "test-suite spec"
     },
     {
@@ -1562,7 +1562,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Wcompat",
-      "origin": "app.cabal",
+      "origin": "app.cabal:8:3 (ghc-options)",
       "target": "test-suite spec"
     },
     {
@@ -1578,7 +1578,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Widentities",
-      "origin": "app.cabal",
+      "origin": "app.cabal:8:3 (ghc-options)",
       "target": "test-suite spec"
     },
     {
@@ -1594,7 +1594,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Wredundant-constraints",
-      "origin": "app.cabal",
+      "origin": "app.cabal:8:3 (ghc-options)",
       "target": "test-suite spec"
     },
     {
@@ -1613,7 +1613,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-Werror",
-      "origin": "app.cabal",
+      "origin": "app.cabal:10:5 (ghc-options)",
       "target": "test-suite spec"
     },
     {
@@ -1625,7 +1625,7 @@
       "heuristic": false,
       "key": "test-suite",
       "kind": "Setting",
-      "origin": "app.cabal",
+      "origin": "app.cabal:31:1 (test-suite)",
       "tool": "Haskell test suites",
       "value": "spec"
     },

@@ -71,7 +71,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-O2",
-      "origin": "app.cabal",
+      "origin": "app.cabal:8:3 (ghc-options)",
       "target": "library"
     },
     {
@@ -87,7 +87,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-O2",
-      "origin": "app.cabal",
+      "origin": "app.cabal:8:3 (ghc-options)",
       "target": "executable app"
     },
     {
@@ -103,7 +103,7 @@
       "kind": "CompilerOption",
       "linking": false,
       "option": "-O2",
-      "origin": "app.cabal",
+      "origin": "app.cabal:8:3 (ghc-options)",
       "target": "test-suite spec"
     },
     {
@@ -115,7 +115,7 @@
       "heuristic": false,
       "key": "test-suite",
       "kind": "Setting",
-      "origin": "app.cabal",
+      "origin": "app.cabal:25:1 (test-suite)",
       "tool": "Haskell test suites",
       "value": "spec"
     },
