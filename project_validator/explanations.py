@@ -35,6 +35,11 @@ WHY: Mapping[str, Why] = {
         "Debug and release builds exercise different code: assertions, optimisations and undefined behaviour show up "
         "in one and not the other. Building both, with and without sanitizers, everywhere, catches what each hides.",
     ),
+    "ci-current": Why(
+        "CI",
+        "A configuration left from a CI the project moved away from no longer runs, yet reads as if it did: it "
+        "claims platforms and checks nothing tests any more, and its readers trust what nothing enforces.",
+    ),
     "ci-lint": Why(
         "CI",
         "CI configuration is code too. A linter catches the typo that silently skips a job, and the injection or "

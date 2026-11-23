@@ -618,6 +618,11 @@
       "message": "not applicable to R",
       "status": "SKIP"
     },
+    "ci-current": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
     "ci-lint": {
       "details": [],
       "message": "no CI configuration",

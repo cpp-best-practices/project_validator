@@ -4,7 +4,15 @@ import unittest
 
 from project_validator.checks.ci_present import ci_present
 from project_validator.core import Result, Status
-from tests.support import BARE_PROJECT, CI_FILES, PROJECT_LAYOUTS, WELL_CONFIGURED, run_in_every_layout
+from tests.support import (
+    BARE_PROJECT,
+    CI_FILES,
+    PROJECT_LAYOUTS,
+    WELL_CONFIGURED,
+    make_context,
+    run_in_every_layout,
+    temp_project,
+)
 
 
 class CiPresentTests(unittest.TestCase):
@@ -37,3 +45,15 @@ class CiPresentTests(unittest.TestCase):
         result = self._run(BARE_PROJECT)
         self.assertEqual(result.status, Status.FAIL)
         self.assertIn("GitLab CI", result.message)
+
+    def test_fails_when_its_only_ci_is_defunct(self) -> None:
+        """A CI that no longer runs is no CI: a .travis.yml whose README shows only travis-ci.org's badge."""
+        files = {
+            ".travis.yml": "language: cpp\n",
+            "README.md": "[![b](https://travis-ci.org/o/r.svg)](https://travis-ci.org/o/r)\n",
+        }
+        with temp_project(files) as root:
+            result = ci_present.run(make_context(root))
+        self.assertEqual(
+            result, Result.failed("only defunct CI configuration found: Travis CI (.travis.yml); see ci-current")
+        )

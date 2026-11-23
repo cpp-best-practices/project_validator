@@ -153,14 +153,16 @@ def role_judgement(summary_: RoleSummary) -> str:
 
 
 def ci_summary(analysis: Analysis) -> str:
-    """`GitHub Actions, GitLab CI: 33 jobs in 6 files`, or that there is none."""
+    """`GitHub Actions, GitLab CI: 33 jobs in 6 files`, or that there is none; then the defunct CI left out of what CI
+    is judged to do, `; left out as defunct: Travis CI (.travis.yml)`."""
     structure = analysis.structure
-    if structure is None or not structure.ci_files:
+    if structure is None or not (structure.ci_files or structure.ci_defunct):
         return "none found"
-    jobs = len(structure.ci_jobs)
-    files = len(structure.ci_files)
-    providers = ", ".join(structure.ci_providers)
-    return f"{providers}: {counted(jobs, 'job')} in {counted(files, 'file')}"
+    live = "none live"
+    if structure.ci_files:
+        providers = ", ".join(structure.ci_providers)
+        live = f"{providers}: {counted(len(structure.ci_jobs), 'job')} in {counted(len(structure.ci_files), 'file')}"
+    return f"{live}; left out as defunct: {', '.join(structure.ci_defunct)}" if structure.ci_defunct else live
 
 
 def reading(analysis: Analysis) -> str:

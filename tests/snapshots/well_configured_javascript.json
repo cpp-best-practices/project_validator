@@ -1017,6 +1017,11 @@
       "message": "not applicable to JavaScript",
       "status": "SKIP"
     },
+    "ci-current": {
+      "details": [],
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
     "ci-lint": {
       "details": [],
       "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",

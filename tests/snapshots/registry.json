@@ -8,6 +8,10 @@
       "aliases": [],
       "description": "CI builds Debug and Release, with and without sanitizers, everywhere"
     },
+    "ci-current": {
+      "aliases": [],
+      "description": "Every CI configuration is in use, none left from a CI the project moved away from"
+    },
     "ci-lint": {
       "aliases": [],
       "description": "CI lints its own configuration (e.g. actionlint or zizmor)"

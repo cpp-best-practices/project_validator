@@ -192,6 +192,11 @@
       "message": "not applicable to a project of no recognised language",
       "status": "SKIP"
     },
+    "ci-current": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
     "ci-lint": {
       "details": [],
       "message": "no CI configuration",
