@@ -13,10 +13,8 @@ from __future__ import annotations
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 
-from project_validator.facts.conditions import ALWAYS, NEVER, Condition, Dimension, both, either, negated, requiring
-
-# At most this many values of one expression are followed; the rest are left out.
-MOST_CHOICES = 32
+from project_validator.facts import conditions
+from project_validator.facts.conditions import ALWAYS, NEVER, Condition, Dimension, both, either, requiring
 
 
 @dataclass(frozen=True, slots=True)
@@ -69,7 +67,7 @@ class Object:
 
 
 type Value = str | int | Truth | Symbol | Unknown | Array | Dictionary | Compiler | Object
-type Choices = list[tuple[Value, Condition]]
+type Choices = conditions.Choices[Value]
 
 TRUE, FALSE = Truth(ALWAYS), Truth(NEVER)
 
@@ -92,22 +90,6 @@ def holds(choices: Choices) -> Condition:
     return either(*(both(when, truth(value)) for value, when in choices))
 
 
-def combined(*choices: Choices) -> Iterator[tuple[tuple[Value, ...], Condition]]:
-    """Each combination of the values of several expressions, in the builds all of them take it in."""
-    found: list[tuple[tuple[Value, ...], Condition]] = [((), ALWAYS)]
-    for values in choices:
-        found = [
-            ((*chosen, value), held) for chosen, when in found for value, other in values if (held := both(when, other))
-        ][:MOST_CHOICES]
-    return iter(found)
-
-
-def assigned(old: Choices | None, new: Choices, when: Condition) -> Choices:
-    """A variable's values once it is set to `new` in the builds `when` names; other builds keep `old`."""
-    kept = [(value, held) for value, other in old or () if (held := both(other, negated(when)))]
-    return [*kept, *((value, held) for value, other in new if (held := both(other, when)))][:MOST_CHOICES]
-
-
 def elements(choices: Choices) -> Iterator[tuple[Value, Condition]]:
     """The elements of an expression's values, flattened (Meson flattens nested arrays in arguments), each in its
     builds."""
@@ -128,7 +110,6 @@ def array(values: Iterable[tuple[Value, Condition]]) -> Array:
 
 __all__ = [
     "FALSE",
-    "MOST_CHOICES",
     "TRUE",
     "Array",
     "Choices",
@@ -140,8 +121,6 @@ __all__ = [
     "Unknown",
     "Value",
     "array",
-    "assigned",
-    "combined",
     "elements",
     "holds",
     "single",
