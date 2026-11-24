@@ -6191,6 +6191,19 @@
     },
     {
       "can": {
+        "test": {
+          "runs": "shelltest tests"
+        }
+      },
+      "languages": [
+        "Haskell"
+      ],
+      "name": "shelltest",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "format": {
           "apply": "shfmt -w .",
           "check": "shfmt -d ."

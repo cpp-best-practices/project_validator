@@ -235,6 +235,16 @@ class HaskellTests(unittest.TestCase):
             self._cabal(tests_run, {"app.cabal": PACKAGE, **_ci("stack build --test")}).status, Status.PASS
         )
         self.assertEqual(self._cabal(tests_run, _ci("cabal test")).status, Status.FAIL)
+
+    def test_shelltest_runs_the_functional_tests(self) -> None:
+        """hledger's 585 functional tests are shelltestrunner files (`*.test`), run with `stack exec -- shelltest`
+        (upstream #266); a `.test` file that is no shelltest is not one."""
+        shelltest = {"hledger/test/balance.test": "$ hledger -f- balance\n>\n                   1  a\n>= 0\n"}
+        result = self._cabal(tests_run, {**shelltest, **_ci("stack exec -- shelltest --execdir -j16 hledger/test")})
+        self.assertEqual(result.status, Status.PASS)
+        self.assertIn("run by shelltest", result.message)
+        other = {"checks/notes.test": "just some notes\n", **_ci("shelltest checks")}
+        self.assertEqual(self._cabal(tests_run, other).status, Status.FAIL)
         hpack = {"package.yaml": "name: app\nlibrary:\n  source-dirs: src\ntests:\n  spec:\n    main: Spec.hs\n"}
         self.assertEqual(
             run_in_layout(self, "hpack package", tests_run, {**hpack, **_ci("stack test")}).status, Status.PASS

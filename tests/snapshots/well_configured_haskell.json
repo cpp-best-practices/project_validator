@@ -676,6 +676,13 @@
                 },
                 "needs_definition": true,
                 "required": false
+              },
+              "shelltest": {
+                "can": {
+                  "runs": "shelltest tests"
+                },
+                "needs_definition": true,
+                "required": false
               }
             },
             "language": "Haskell",

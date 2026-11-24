@@ -16,13 +16,13 @@ from project_validator.facts.arguments import has_option, program
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
-from project_validator.facts.expansion import Action
+from project_validator.facts.expansion import Action, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.settings import SettingsReader, file_reader, unreadable
 from project_validator.facts.shell import split_words
-from project_validator.facts.testing import test_runner, tested
+from project_validator.facts.testing import TestFile, test_runner, tested, tests_of
 from project_validator.facts.tools import Definition, Run, defined_by, starts, when
 
 # --- running the tests
@@ -84,6 +84,28 @@ CABAL_TEST = test_runner(
     ),
     reads=("Haskell test suites",),
 )
+
+# shelltestrunner's tests (hledger's 585 functional tests): `*.test` files of commands (`$ cmd`, or `$$$ cmd` and
+# `<<<` in the older formats) and their expected output and exit status (`>`, `>2`, `>= 0`; `>>>`, `>>>2`, `>>>= 0`).
+SHELLTEST_TESTS = "shelltestrunner tests (*.test)"
+_SHELLTEST = re.compile(r"^(?:>>>=?|>=|\$\$\$ )|^\$ \S", re.MULTILINE)
+
+
+def _read_shelltest(path: str, text: str) -> Iterator[Fact]:
+    if _SHELLTEST.search(text):
+        yield TestFile(origin=Origin(path=path), language=min(HASKELL_LANGUAGE), kind=SHELLTEST_TESTS)
+
+
+SHELLTEST_FILES = SettingsReader(name="shelltestrunner tests", files=("*.test",), read=_read_shelltest)
+SHELLTEST = test_runner(
+    name="shelltest",
+    languages=HASKELL_LANGUAGE,
+    how="shelltest tests",
+    runs=when(starts(("shelltest",)), tested),
+    tests=tests_of(SHELLTEST_TESTS),
+)
+# `stack exec -- shelltest …` and `cabal exec`: the command after `--` runs with the package's programs on the path.
+STACK_EXEC = launcher("stack exec", (("stack", "exec"), ("cabal", "exec")))
 
 # --- coverage
 

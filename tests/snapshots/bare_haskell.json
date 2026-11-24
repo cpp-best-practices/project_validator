@@ -553,6 +553,13 @@
                 },
                 "needs_definition": true,
                 "required": false
+              },
+              "shelltest": {
+                "can": {
+                  "runs": "shelltest tests"
+                },
+                "needs_definition": true,
+                "required": false
               }
             },
             "language": "Haskell",
@@ -843,7 +850,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "test-suite sections in .cabal files (or tests: in package.yaml): 1 file(s), but no CI configuration runs cabal test (or stack test)",
+      "message": "test-suite sections in .cabal files (or tests: in package.yaml): 1 file(s), but no CI configuration runs cabal test (or stack test) or shelltest tests",
       "status": "WARN"
     },
     "top-level-guard": {
