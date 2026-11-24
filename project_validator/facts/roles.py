@@ -77,7 +77,10 @@ AUXILIARY_UNITS = AUXILIARY | {"template"}
 # Directories that hold a unit's sources: below them, directory names are the code's own (`com/example/App.java`),
 # but for the ones only tests and their data are kept in (`src/test/resources`, `pkg/x/testdata`).
 _SOURCE_ROOTS = frozenset({"src", "lib", "source", "sources", "main", "include", "pkg", "internal", "app"})
-_TESTS_BELOW_SOURCE_ROOTS = frozenset({"test", "tests", "testdata", "test-data", "test_data", "__tests__", "fixtures"})
+# Gradle's test fixtures source set (`src/testFixtures`) is code for tests too; parts are compared in lower case.
+_TESTS_BELOW_SOURCE_ROOTS = frozenset(
+    {"test", "tests", "testdata", "test-data", "test_data", "__tests__", "fixtures", "testfixtures"}
+)
 
 
 # Directories of a test suite's data: the projects in them are inputs to the tests, not projects of the repository.

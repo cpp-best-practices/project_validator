@@ -201,6 +201,8 @@ ROLES = (
     ("third_party/json/json.hpp", "vendored"),
     ("deps/jemalloc/src/arena.c", "vendored"),
     ("tests/test_app.py", "test"),
+    # Gradle's test fixtures source set (junit5's `src/testFixtures/groovy`).
+    ("junit-vintage-engine/src/testFixtures/groovy/x/Sample.groovy", "test"),
     ("platform-tooling-support-tests/projects/vintage/src/A.java", "test"),
     ("examples/minimal/server.ts", "example"),
     ("docs/mkdocs/scripts/build.py", "docs"),

@@ -978,7 +978,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no tests found (@Test methods, JUnit 3 TestCase classes or Kotest specs under src/test (or another test source set))",
+      "message": "no tests found (@Test methods, JUnit 3 TestCase classes, Kotest specs or Spock specifications under src/test (or another test source set))",
       "status": "FAIL"
     },
     "top-level-guard": {

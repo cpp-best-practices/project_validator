@@ -1,12 +1,15 @@
 # JVM
 
-Java and Kotlin, recognised by `.java` and `.kt` sources and Maven (`pom.xml`) or Gradle builds. The Maven or Gradle
+Java, Kotlin and Groovy, recognised by `.java`, `.kt` and `.groovy` sources and Maven (`pom.xml`) or Gradle builds.
+Groovy is most often tests (Spock specifications); the tools that work on compiled classes (SpotBugs, JaCoCo, PIT) and
+Spotless judge it too, but javac's and kotlinc's warning options and lizard do not apply to it. The Maven or Gradle
 build counts as CI configuration when CI runs it (`mvn verify`, `gradle check`), since that is where its plugins are
 wired in.
 
 ## `tests-run`
 
-`@Test` methods or Kotest specs under `src/test/java` or `src/test/kotlin`, run by `mvn test` / `verify` or
+`@Test` methods, JUnit 3 `TestCase` classes, Kotest specs or Spock specifications (`extends Specification`) under
+`src/test/java`, `src/test/kotlin` or `src/test/groovy` (or another test source set), run by `mvn test` / `verify` or
 `gradle test` / `check` / `build`.
 
 ## `fuzz-testing`

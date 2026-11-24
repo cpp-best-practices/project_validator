@@ -54,6 +54,7 @@
     {
       "kind": "CommittedOutput",
       "languages": [
+        "Groovy",
         "Java",
         "Kotlin"
       ],
@@ -63,6 +64,7 @@
     {
       "kind": "CommittedOutput",
       "languages": [
+        "Groovy",
         "Java",
         "Kotlin"
       ],
@@ -72,6 +74,7 @@
     {
       "kind": "CommittedOutput",
       "languages": [
+        "Groovy",
         "Java",
         "Kotlin"
       ],

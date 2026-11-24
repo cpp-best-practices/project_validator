@@ -206,7 +206,8 @@ LONG_METHOD = limiter(
     ),
     reads=("Maven", "Gradle", "detekt"),
 )
-FUNCTION_LENGTH_LIMITERS = (METHOD_LENGTH, LONG_METHOD, *function_length_limiters(JVM_LANGUAGES))
+# lizard measures Java and Kotlin, not Groovy.
+FUNCTION_LENGTH_LIMITERS = (METHOD_LENGTH, LONG_METHOD, *function_length_limiters(frozenset({JAVA, KOTLIN})))
 
 # Error Prone is a compiler plugin: on a Maven compiler's processor path or arguments, or the net.ltgt.errorprone
 # Gradle plugin. Matched in the build files until they are read structurally.

@@ -27,7 +27,11 @@ JAVA = "Java"
 KOTLIN = "Kotlin"
 
 
-JVM_LANGUAGES = frozenset({JAVA, KOTLIN})
+# Groovy compiles to JVM classes as Java and Kotlin do; its code is most often tests (Spock specifications).
+GROOVY = "Groovy"
+
+
+JVM_LANGUAGES = frozenset({JAVA, KOTLIN, GROOVY})
 
 
 POM = "pom.xml"
@@ -305,10 +309,10 @@ TEST_JDK = re.compile(
 
 JVM = Ecosystem(
     label="JVM",
-    languages=frozenset({JAVA, KOTLIN}),
+    languages=JVM_LANGUAGES,
     build_systems=(MAVEN, GRADLE),
-    source_suffixes={".java": JAVA, ".kt": KOTLIN},
-    # Kotlin and Groovy scripts are mostly Gradle builds and their helpers, which name no language.
+    source_suffixes={".java": JAVA, ".kt": KOTLIN, ".groovy": GROOVY},
+    # Kotlin scripts and `.gradle` files are mostly Gradle builds and their helpers, which name no language.
     ambiguous_suffixes={".kts": None, ".gradle": None},
     toolchain=replace(
         toolchain_patterns(
