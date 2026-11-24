@@ -29,7 +29,8 @@
         "Shell"
       ],
       "origin": ".",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "kind": "ConfigurationFile",

@@ -21,7 +21,8 @@
         "Typst"
       ],
       "origin": ".",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "kind": "documents (*.typ)",

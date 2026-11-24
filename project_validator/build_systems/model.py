@@ -31,6 +31,8 @@ class BuildSystem:
     of its own (a nested Package.swift, a package.json with a name; see `standalone_package`), a unit of the project
     with the role its directory tells; None: a nested build file is part of the one above it (a CMake
     subdirectory, a Maven module).
+    `path_dependencies` reads, from a build file, the directories (relative to it) of the packages it depends on by
+    path (Cargo's `path = "../x"`): what a unit of tests tests (see `project_validator.facts.structure.Unit`).
     """
 
     name: str
@@ -45,6 +47,7 @@ class BuildSystem:
     members: Callable[[str], tuple[str, ...]] | None = None
     compiler_evidence: Callable[[tuple[str, ...]], tuple[str, ...]] | None = None
     standalone: Callable[[str], bool] | None = None
+    path_dependencies: Callable[[str], tuple[str, ...]] | None = None
 
 
 def standalone_package(_text: str) -> bool:

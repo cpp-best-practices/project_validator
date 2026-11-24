@@ -25,7 +25,8 @@
       "kind": "Unit",
       "languages": [],
       "origin": ".",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "build_systems": [
@@ -37,7 +38,8 @@
         "C#"
       ],
       "origin": "src/App",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "kind": "CommittedOutput",

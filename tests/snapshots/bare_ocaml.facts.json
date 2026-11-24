@@ -39,7 +39,8 @@
         "OCaml"
       ],
       "origin": ".",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "kind": "CommittedOutput",

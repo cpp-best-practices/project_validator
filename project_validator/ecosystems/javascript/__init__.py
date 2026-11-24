@@ -111,6 +111,14 @@ def _declared_workspace(text: str) -> tuple[str, ...]:
     return _workspaces(text) or _pnpm_packages(text)
 
 
+def _path_dependencies(text: str) -> tuple[str, ...]:
+    """The directories of the packages a package.json depends on by path (`file:../x`, `link:../x`)."""
+    manifest = _manifest(text)
+    tables = (manifest.get(kind) for kind in ("dependencies", "devDependencies", "peerDependencies"))
+    specs = (spec for table in tables if isinstance(table, dict) for spec in table.values() if isinstance(spec, str))
+    return tuple(dict.fromkeys(spec.partition(":")[2] for spec in specs if spec.startswith(("file:", "link:"))))
+
+
 def _workspaces(text: str) -> tuple[str, ...]:
     """The workspaces a package.json declares (npm, yarn and bun: `workspaces`, as a list or under `packages`)."""
     found = _manifest(text).get("workspaces")
@@ -125,6 +133,7 @@ NPM = BuildSystem(
     declared_languages=_declared_by_package,
     members=_declared_workspace,
     standalone=_named_package,
+    path_dependencies=_path_dependencies,
 )
 DENO = BuildSystem(name="Deno", files=DENO_CONFIG_FILES, languages=frozenset({TYPESCRIPT}))
 

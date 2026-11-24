@@ -91,6 +91,20 @@ def _cargo_package(text: str) -> bool:
     return bool(re.search(r"^\[(package|workspace)\]", text, re.MULTILINE))
 
 
+def _path_dependencies(text: str) -> tuple[str, ...]:
+    """The directories of the crates a Cargo.toml depends on by path, in any of its dependency tables."""
+    try:
+        manifest = tomllib.loads(text)
+    except tomllib.TOMLDecodeError:
+        return ()
+    targets = manifest.get("target")
+    holders = [manifest, *(targets.values() if isinstance(targets, dict) else ())]
+    kinds = ("dependencies", "dev-dependencies", "build-dependencies")
+    tables = [holder.get(kind) for holder in holders if isinstance(holder, dict) for kind in kinds]
+    specs = (spec for table in tables if isinstance(table, dict) for spec in table.values() if isinstance(spec, dict))
+    return tuple(dict.fromkeys(spec["path"] for spec in specs if isinstance(spec.get("path"), str)))
+
+
 CARGO = BuildSystem(
     name="Cargo",
     files=("Cargo.toml",),
@@ -100,6 +114,7 @@ CARGO = BuildSystem(
     configured_build_types=cargo_profile_build_types,
     members=toml_members("workspace"),
     standalone=_cargo_package,
+    path_dependencies=_path_dependencies,
 )
 
 

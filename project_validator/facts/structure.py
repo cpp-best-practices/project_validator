@@ -6,6 +6,7 @@ The project map (`--map`, `project_validator.project_map`) is a view over these 
 
 from __future__ import annotations
 
+import posixpath
 from collections import Counter
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass, replace
@@ -110,6 +111,9 @@ class Unit(Fact):
     formats: frozenset[str] = frozenset()
     # What the unit is for, by its directory (see `role`); a name, not a judgement.
     role: str = "product"
+    # For a unit of tests, the units it tests: those it depends on by path and the unit it is in (upstream #230);
+    # none: every unit (see `tests_unit`).
+    tests: tuple[str, ...] = ()
 
     @property
     def directory(self) -> str:
@@ -537,7 +541,40 @@ def _units(project: Project, facts: Facts, named: Selectors) -> Iterator[Unit]:
             build_systems=tuple(roots.get(directory, ())),
             languages=frozenset(languages[directory]),
             formats=frozenset(formats_.get(directory, ())),
+            tests=_tested(project, facts, directory, tuple(languages)) if purpose == "test" else (),
         )
+
+
+def _tested(project: Project, facts: Facts, directory: str, units: tuple[str, ...]) -> tuple[str, ...]:
+    """The units a unit of tests at `directory` tests: those its build files depend on by path, and the unit it is in
+    but for the root (hledger-web/test/browser tests hledger-web); none when neither is known (it tests every unit)."""
+    others = tuple(unit for unit in units if unit != directory)
+    found = [owner(path, others) for path in _path_dependencies(project, facts, directory)]
+    if directory != "." and (parent := owner(str(PurePosixPath(directory).parent), others)) != ".":
+        found.append(parent)
+    return tuple(dict.fromkeys(unit for unit in found if unit != directory))
+
+
+def _path_dependencies(project: Project, facts: Facts, directory: str) -> Iterator[str]:
+    """The project paths of the packages the build files at `directory` depend on by path."""
+    systems = {system.name: system for system in build_systems()}
+    for build in facts.of(BuildFile):
+        system = systems.get(build.build_system)
+        if _directory(build) != directory or system is None or system.path_dependencies is None:
+            continue
+        for path in system.path_dependencies(project.read_text(build.origin.path)):
+            yield posixpath.normpath(posixpath.join(directory, path))
+
+
+def tests_unit(facts: Facts) -> Callable[[str, str], bool]:
+    """Whether a path is in a unit of tests (a separate test project) that tests a unit (see `Unit.tests`)."""
+    units = {found.directory: found for found in facts.of(Unit)}
+
+    def tests(path: str, unit: str) -> bool:
+        found = units.get(owner(path, units))
+        return found is not None and found.role == "test" and (not found.tests or unit in found.tests)
+
+    return tests
 
 
 type _Found = list[tuple[BuildFile | None, str]]
@@ -593,4 +630,5 @@ __all__ = [
     "source_languages",
     "source_signal",
     "structure_facts",
+    "tests_unit",
 ]

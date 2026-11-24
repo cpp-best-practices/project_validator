@@ -58,7 +58,8 @@
       "kind": "Unit",
       "languages": [],
       "origin": ".",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "column": null,

@@ -86,7 +86,8 @@
         "Terraform"
       ],
       "origin": ".",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "column": null,

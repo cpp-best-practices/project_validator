@@ -105,7 +105,8 @@
         "Rust"
       ],
       "origin": ".",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "build_systems": [
@@ -119,7 +120,10 @@
         "Rust"
       ],
       "origin": "fuzz",
-      "role": "test"
+      "role": "test",
+      "tests": [
+        "."
+      ]
     },
     {
       "column": null,
