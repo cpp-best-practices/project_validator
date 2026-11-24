@@ -8,7 +8,7 @@ import unittest
 
 from project_validator.build_systems.make import VARIABLE, _make_targets
 from project_validator.ci import CiFile, _heuristic_facts, gitlab, pre_commit_ci
-from project_validator.ci.heuristic_providers import TRAVIS_CI
+from project_validator.ci.travis import TRAVIS_CI
 from project_validator.ecosystems import emacs_lisp, ocaml, zig
 from project_validator.ecosystems.beam import _bracketed
 from project_validator.ecosystems.dotnet.tools import _coverlet, _read_run_settings

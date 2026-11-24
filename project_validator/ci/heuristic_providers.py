@@ -33,12 +33,6 @@ CIRCLECI = CiProvider(
         ),
     ),
 )
-TRAVIS_CI = CiProvider(
-    name="Travis CI",
-    files=(".travis.yml",),
-    badges=(pattern("Travis CI", r"travis-ci\.com/\S+\.svg|img\.shields\.io/travis/"),),
-    retired_badges=(pattern("travis-ci.org, which shut down in June 2021", r"(?<![\w.-])(?:api\.)?travis-ci\.org/"),),
-)
 JENKINS = CiProvider(
     name="Jenkins",
     files=("Jenkinsfile",),

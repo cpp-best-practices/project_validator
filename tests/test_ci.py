@@ -44,7 +44,7 @@ class HeuristicJobsTests(unittest.TestCase):
     """Configuration that is not parsed: one job per OS it names, judged by the whole file."""
 
     def test_one_job_per_operating_system(self) -> None:
-        jobs = ci_jobs({".travis.yml": "os: [ubuntu-latest, windows-latest]\ncxx: [g++, clang++]\n"})
+        jobs = ci_jobs({".drone.yml": "os: [ubuntu-latest, windows-latest]\ncxx: [g++, clang++]\n"})
         self.assertEqual([job.os for job in jobs], ["linux", "windows"])
         self.assertTrue(all(job.compilers == {"gcc", "clang"} and job.heuristic for job in jobs))
 
@@ -61,7 +61,7 @@ class HeuristicJobsTests(unittest.TestCase):
             (".circleci/config.yml", "jobs:\n  b:\n    macos:\n      xcode: 15.0\n    steps: [run: make]\n", ["macos"]),
             ("appveyor.yml", "image: Visual Studio 2022  # ported from linux\n# os: linux\n", ["windows"]),
             ("Jenkinsfile", "pipeline {\n  agent { label 'windows' }\n}\n", ["windows"]),
-            (".travis.yml", "matrix:\n  include:\n    - os: osx\n    - os: linux\n", ["macos", "linux"]),
+            (".drone.yml", "matrix:\n  include:\n    - os: osx\n    - os: linux\n", ["macos", "linux"]),
             # A sequence written at its key's indentation (scalafmt's AppVeyor), and an image behind an anchor (envoy).
             ("appveyor.yml", "image:\n- Visual Studio 2017\nbuild: off\n", ["windows"]),
             (".circleci/config.yml", "build-image: &image\n  envoyproxy/build-ubuntu:f4a8\njobs: {}\n", ["linux"]),
@@ -70,16 +70,16 @@ class HeuristicJobsTests(unittest.TestCase):
                 self.assertEqual(sorted(job.os for job in ci_jobs({path: text})), sorted(expected))
 
     def test_runner_default_when_no_compiler_is_named(self) -> None:
-        [job] = ci_jobs({".travis.yml": "os: osx\n"})
+        [job] = ci_jobs({".drone.yml": "os: osx\n"})
         self.assertEqual((job.compilers, job.default_compiler), (frozenset({"appleclang"}), True))
 
     def test_unknown_operating_system(self) -> None:
-        [job] = ci_jobs({".travis.yml": "script: make\n"})
+        [job] = ci_jobs({".drone.yml": "script: make\n"})
         self.assertEqual((job.os, job.compilers), ("unknown", frozenset()))
 
     def test_build_types_come_from_the_lines_that_could_be_commands(self) -> None:
         [job] = ci_jobs(
-            {".travis.yml": "os: linux\nscript:\n  - cmake -S . -DCMAKE_BUILD_TYPE=Debug\n  - 'cargo test --release'\n"}
+            {".drone.yml": "os: linux\nscript:\n  - cmake -S . -DCMAKE_BUILD_TYPE=Debug\n  - 'cargo test --release'\n"}
         )
         self.assertEqual({configuration.build_type for configuration in job.configurations}, {"debug", "release"})
 
@@ -122,8 +122,8 @@ class ParseJobsTests(unittest.TestCase):
         self.assertIn("invalid YAML", analysis.notes[0])
 
     def test_unstructured_providers_are_noted(self) -> None:
-        analysis = self._parse({".travis.yml": "os: linux\ncompiler: gcc\n"})
-        self.assertEqual(analysis.notes, (".travis.yml: Travis CI is scanned heuristically",))
+        analysis = self._parse({".drone.yml": "os: linux\ncompiler: gcc\n"})
+        self.assertEqual(analysis.notes, (".drone.yml: Drone is scanned heuristically",))
 
 
 class MatrixToolchainTests(unittest.TestCase):

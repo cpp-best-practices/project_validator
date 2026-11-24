@@ -15,7 +15,7 @@ from project_validator.core import Check, Context, Options, Project, Result
 from project_validator.ecosystems import BUILT_IN, C_FAMILY, Ecosystem, ecosystems_for
 from project_validator.ecosystems.c import C
 from project_validator.ecosystems.cpp import CXX
-from project_validator.facts import Command, Origin, resolved
+from project_validator.facts import Command, Facts, Origin, resolved
 from project_validator.facts.expansion import script_facts
 from project_validator.facts.jobs import Job
 from project_validator.plugins import discover
@@ -177,8 +177,11 @@ WELL_CONFIGURED_PHP = fixture_files("well_configured_php")
 WELL_CONFIGURED_RUBY = fixture_files("well_configured_ruby")
 WELL_CONFIGURED_SWIFT = fixture_files("well_configured_swift")
 
+# The providers whose configuration is not parsed, only scanned heuristically.
 UNSTRUCTURED_CI_FILES = {
-    provider: path for provider, path in CI_FILES.items() if provider not in {"GitHub Actions", "GitLab CI"}
+    provider.name: CI_FILES[provider.name]
+    for provider in discover().providers
+    if provider.name in CI_FILES and provider.facts is None
 }
 GITHUB_WORKFLOW = ".github/workflows/ci.yml"
 
@@ -231,6 +234,18 @@ def uses(ecosystem: Ecosystem, *lines: str) -> bool:
     return ecosystem.used_by(*evidence(*lines))
 
 
+def config_facts(path: str, document: object, **files: str) -> Facts:
+    """The facts of a project of a configuration file at `path` (`document`, written as JSON, which YAML reads) and
+    `files`."""
+    with temp_project({path: json.dumps(document), **files}) as root:
+        return make_context(root).facts
+
+
+def argvs(facts: Facts) -> list[tuple[str, ...]]:
+    """The arguments of each command the facts hold, in order."""
+    return [found.argv for found in facts.of(Command)]
+
+
 def ci_jobs(files: Mapping[str, str]) -> tuple[Job, ...]:
     """The CI jobs a project with `files` has, as the checks see them."""
     with temp_project(files) as root:
@@ -268,6 +283,8 @@ def ci_running(provider: str, *commands: str) -> dict[str, str]:
         return github_job("ubuntu-latest", *commands)
     if provider == "GitLab CI":
         return {CI_FILES[provider]: json.dumps({"test": {"script": list(commands)}})}
+    if provider == "Travis CI":
+        return {CI_FILES[provider]: json.dumps({"script": list(commands)})}
     return {CI_FILES[provider]: "".join(f"script: {command}\n" for command in commands)}
 
 
