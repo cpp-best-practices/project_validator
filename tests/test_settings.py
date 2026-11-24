@@ -253,6 +253,8 @@ class StructureTests(unittest.TestCase):
             ("koyo-lib/blueprints/standard/package.json", "template"),
             # bamarni/composer-bin-plugin's tool installs (guzzle).
             ("vendor-bin/phpstan/composer.json", "tooling"),
+            # An alternative build for an IDE beside the real one (json-fortran's hand-made .sln and .vfproj files).
+            ("visual_studio/jsonfortran.sln", "tooling"),
         ):
             with self.subTest(path=path):
                 self.assertEqual(role(path), expected)

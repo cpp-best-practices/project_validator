@@ -46,6 +46,8 @@ _ROLES = {
     # The editor integrations a tool ships (perl-code-tidyall's `etc/editors/`, dune's); not `editor/`, an editor's
     # own code.
     **dict.fromkeys(("editors", "editor-integration"), "tooling"),
+    # An IDE's alternative build beside the project's own (json-fortran's hand-made .sln and .vfproj files).
+    "visual_studio": "tooling",
     **dict.fromkeys(("bench", "benches", "benchmark", "benchmarks"), "benchmark"),
     # Files rendered before they are read (a Helm chart's manifests, Jinja pages, the projects a blueprint
     # generates): not well formed as they are.
