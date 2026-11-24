@@ -85,6 +85,12 @@ def cargo_argv(argv: tuple[str, ...]) -> tuple[str, ...]:
     return ("cargo", *words)
 
 
+def _cargo_package(text: str) -> bool:
+    """Whether a Cargo.toml below another is a project of its own: a package, or a workspace (not a manifest that
+    only sets a virtual workspace's members' shared settings)."""
+    return bool(re.search(r"^\[(package|workspace)\]", text, re.MULTILINE))
+
+
 CARGO = BuildSystem(
     name="Cargo",
     files=("Cargo.toml",),
@@ -93,6 +99,7 @@ CARGO = BuildSystem(
     build_types=cargo_build_types,
     configured_build_types=cargo_profile_build_types,
     members=toml_members("workspace"),
+    standalone=_cargo_package,
 )
 
 

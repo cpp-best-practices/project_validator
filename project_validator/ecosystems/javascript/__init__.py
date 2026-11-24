@@ -65,30 +65,43 @@ DENO_CONFIG_FILES = ("deno.json", "deno.jsonc")
 ENTRY_POINTS = ("main", "module", "exports", "bin")
 
 
-def _declared_by_package(_path: str, text: str) -> frozenset[str]:
-    """package.json is everywhere, as the tooling of projects in other languages; only a package's entry points (or
-    JavaScript sources, recognised by their suffixes) make a project a JavaScript one."""
+def _manifest(text: str) -> dict[str, object]:
+    """A package.json's fields; none when it is not a JSON object."""
     try:
         manifest = json.loads(text)
     except json.JSONDecodeError:
-        return frozenset()
-    is_package = isinstance(manifest, dict) and any(key in manifest for key in ENTRY_POINTS)
+        return {}
+    return manifest if isinstance(manifest, dict) else {}
+
+
+def _declared_by_package(_path: str, text: str) -> frozenset[str]:
+    """package.json is everywhere, as the tooling of projects in other languages; only a package's entry points (or
+    JavaScript sources, recognised by their suffixes) make a project a JavaScript one."""
+    is_package = any(key in _manifest(text) for key in ENTRY_POINTS)
     return frozenset({JAVASCRIPT}) if is_package else frozenset()
+
+
+def _named_package(text: str) -> bool:
+    """Whether a package.json below another is a package of its own: one with a name, not one that only marks its
+    directory's modules (`{"type": "module"}` in `dist/`)."""
+    return "name" in _manifest(text)
 
 
 def _workspaces(text: str) -> tuple[str, ...]:
     """The workspaces a package.json declares (npm, yarn and bun: `workspaces`, as a list or under `packages`)."""
-    try:
-        manifest = json.loads(text)
-    except json.JSONDecodeError:
-        return ()
-    found = manifest.get("workspaces") if isinstance(manifest, dict) else None
+    found = _manifest(text).get("workspaces")
     if isinstance(found, dict):
         found = found.get("packages")
     return tuple(str(member) for member in found) if isinstance(found, list) else ()
 
 
-NPM = BuildSystem(name="npm", files=(PACKAGE_JSON,), declared_languages=_declared_by_package, members=_workspaces)
+NPM = BuildSystem(
+    name="npm",
+    files=(PACKAGE_JSON,),
+    declared_languages=_declared_by_package,
+    members=_workspaces,
+    standalone=_named_package,
+)
 DENO = BuildSystem(name="Deno", files=DENO_CONFIG_FILES, languages=frozenset({TYPESCRIPT}))
 
 

@@ -9,6 +9,7 @@ from dataclasses import replace
 from pathlib import PurePosixPath
 
 from project_validator import yaml_support
+from project_validator.build_systems.model import standalone_package
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toml_members, toolchain_patterns
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
@@ -37,6 +38,7 @@ PYTHON_PACKAGING = BuildSystem(
     files=("pyproject.toml", "setup.py"),
     languages=PYTHON_ONLY,
     members=toml_members("tool", "uv", "workspace"),
+    standalone=standalone_package,
 )
 
 

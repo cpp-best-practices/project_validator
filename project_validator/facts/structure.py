@@ -16,7 +16,7 @@ from project_validator.core import Project
 from project_validator.ecosystems import Ecosystem, Kind, build_systems, families, formats, registered
 from project_validator.facts import Fact, Facts, Origin
 from project_validator.facts.auxiliary import AuxiliaryCode, Selectors
-from project_validator.facts.roles import AUXILIARY, role
+from project_validator.facts.roles import AUXILIARY, fixture_data, role
 from project_validator.facts.tools import owner, within
 
 # Suffixes of files that are not source code of any language: documents, styles, media, archives, binaries and plain
@@ -430,9 +430,20 @@ def _members(project: Project, build: BuildFile) -> list[str]:
     return [pattern.removeprefix("./") for pattern in patterns]
 
 
+def _standalone(project: Project, builds: list[BuildFile]) -> set[str]:
+    """The directories of `builds` (of one build system) whose build file is a project of its own wherever it is (a
+    nested Package.swift: see `BuildSystem.standalone`), but for test suites' data (`tests/fixtures/`)."""
+    system = next((found for found in build_systems() if found.name == builds[0].build_system), None)
+    if system is None or system.standalone is None:
+        return set()
+    files = (build for build in builds if not build.origin.path.endswith("/") and not fixture_data(build.origin.path))
+    return {_directory(build) for build in files if system.standalone(project.read_text(build.origin.path))}
+
+
 def _unit_roots(project: Project, builds: tuple[BuildFile, ...]) -> tuple[dict[str, list[str]], set[str]]:
-    """Unit directory -> its build systems (each build system's outermost directories, and workspace members), and
-    the directories of the build files that declare a workspace."""
+    """Unit directory -> its build systems (each build system's outermost directories, workspace members, and the
+    projects of their own below them: upstream #188), and the directories of the build files that declare a
+    workspace."""
     roots: dict[str, list[str]] = {}
     workspaces: set[str] = set()
     for system in dict.fromkeys(build.build_system for build in builds):
@@ -443,10 +454,11 @@ def _unit_roots(project: Project, builds: tuple[BuildFile, ...]) -> tuple[dict[s
             if declared := _members(project, build):
                 workspaces.add(_directory(build))
                 members += declared
+        standalone = _standalone(project, own)
         for directory in sorted(directories):
             declared_member = any(fnmatchcase(directory, pattern) for pattern in members)
             outer = not any(other != directory and within(directory, other) for other in directories)
-            if declared_member or outer:
+            if declared_member or outer or directory in standalone:
                 roots.setdefault(directory, []).append(system)
     return roots, workspaces
 

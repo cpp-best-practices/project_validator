@@ -220,6 +220,80 @@
             },
             "unit": ".",
             "unknowns": []
+          },
+          {
+            "branch": {
+              "answer": "yes",
+              "gated": [],
+              "known": [
+                "cargo llvm-cov --branch",
+                "cargo tarpaulin --branch",
+                "grcov --branch"
+              ],
+              "reported": [
+                "cargo-llvm-cov"
+              ],
+              "rung": "reported",
+              "tools": [
+                "cargo-llvm-cov"
+              ]
+            },
+            "language": "Rust",
+            "line": {
+              "answer": "yes",
+              "gated": [],
+              "known": [
+                "cargo llvm-cov",
+                "cargo tarpaulin",
+                "grcov"
+              ],
+              "reported": [
+                "cargo-llvm-cov"
+              ],
+              "rung": "reported",
+              "tools": [
+                "cargo-llvm-cov"
+              ]
+            },
+            "path": {
+              "answer": "yes",
+              "gated": [],
+              "known": [
+                "cargo llvm-cov --mcdc",
+                "RUSTFLAGS=-Zcoverage-options=mcdc"
+              ],
+              "reported": [
+                "cargo-llvm-cov"
+              ],
+              "rung": "reported",
+              "tools": [
+                "cargo-llvm-cov"
+              ]
+            },
+            "region": {
+              "answer": "yes",
+              "gated": [],
+              "known": [
+                "cargo llvm-cov"
+              ],
+              "reported": [
+                "cargo-llvm-cov"
+              ],
+              "rung": "reported",
+              "tools": [
+                "cargo-llvm-cov"
+              ]
+            },
+            "statement": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "unit": "fuzz",
+            "unknowns": []
           }
         ]
       }
@@ -290,6 +364,68 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          },
+          {
+            "advisory": {},
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "GitLab Dependency Scanning": {
+                "can": {
+                  "runs": "GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "cargo audit": {
+                "can": {
+                  "runs": "cargo audit"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "cargo deny": {
+                "can": {
+                  "runs": "cargo deny check advisories"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "osv-scanner": {
+                "can": {
+                  "runs": "osv-scanner"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "snyk": {
+                "can": {
+                  "runs": "snyk test"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "trivy": {
+                "can": {
+                  "runs": "trivy fs"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Rust",
+            "level": "runs",
+            "runs": {
+              "cargo audit": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": "fuzz",
+            "unknown_definitions": [],
+            "unknowns": []
           }
         ]
       }
@@ -299,6 +435,15 @@
         "auxiliary": {},
         "language": "Rust",
         "units": [
+          {
+            "answer": "yes",
+            "declared": [],
+            "language": "Rust",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          },
           {
             "answer": "yes",
             "declared": [
@@ -312,7 +457,7 @@
             "locked": [
               "fuzz/Cargo.lock"
             ],
-            "unit": ".",
+            "unit": "fuzz",
             "unknowns": []
           }
         ]
@@ -350,6 +495,34 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          },
+          {
+            "advisory": {},
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "rustfmt": {
+                "can": {
+                  "apply": "cargo fmt",
+                  "check": "cargo fmt --check"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Rust",
+            "level": "check",
+            "runs": {
+              "rustfmt": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": "fuzz",
+            "unknown_definitions": [],
+            "unknowns": []
           }
         ]
       }
@@ -384,6 +557,34 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          },
+          {
+            "advisory": {},
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "lizard": {
+                "can": {
+                  "limits": "lizard --length 30"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Rust",
+            "level": "limits",
+            "runs": {
+              "lizard": {
+                "levels": [
+                  "limits",
+                  "measures"
+                ],
+                "read": []
+              }
+            },
+            "unit": "fuzz",
             "unknown_definitions": [],
             "unknowns": []
           }
@@ -432,6 +633,44 @@
               "unknowns": []
             },
             "unit": "."
+          },
+          {
+            "answer": "yes",
+            "language": "Rust",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "advisory": {},
+              "answer": "yes",
+              "defined": {
+                "cargo-fuzz": [
+                  "fuzz/fuzz_targets/parse.rs"
+                ]
+              },
+              "known": {
+                "cargo-fuzz": {
+                  "can": {
+                    "runs": "cargo fuzz run <target> -- -max_total_time=60"
+                  },
+                  "needs_definition": true,
+                  "required": false
+                }
+              },
+              "language": "Rust",
+              "level": "runs",
+              "runs": {
+                "cargo-fuzz": {
+                  "levels": [
+                    "runs"
+                  ],
+                  "read": []
+                }
+              },
+              "unit": "fuzz",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "fuzz"
           }
         ]
       }
@@ -497,6 +736,18 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          },
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Rust",
+            "level": "checked",
+            "runs": {},
+            "unit": "fuzz",
+            "unknown_definitions": [],
+            "unknowns": []
           }
         ]
       }
@@ -515,6 +766,18 @@
             "level": "linted",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          },
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Rust",
+            "level": "linted",
+            "runs": {},
+            "unit": "fuzz",
             "unknown_definitions": [],
             "unknowns": []
           }
@@ -556,6 +819,35 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          },
+          {
+            "advisory": {},
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "cargo-mutants": {
+                "can": {
+                  "incremental": "cargo mutants --in-diff <changes.diff>",
+                  "runs": "cargo mutants"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Rust",
+            "level": "runs",
+            "runs": {
+              "cargo-mutants": {
+                "levels": [
+                  "incremental",
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": "fuzz",
             "unknown_definitions": [],
             "unknowns": []
           }
@@ -690,6 +982,18 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          },
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Rust",
+            "level": "breaking",
+            "runs": {},
+            "unit": "fuzz",
+            "unknown_definitions": [],
+            "unknowns": []
           }
         ]
       }
@@ -711,6 +1015,18 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          },
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Rust",
+            "level": "checked",
+            "runs": {},
+            "unit": "fuzz",
+            "unknown_definitions": [],
+            "unknowns": []
           }
         ]
       }
@@ -729,6 +1045,18 @@
             "level": "validates",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          },
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Rust",
+            "level": "validates",
+            "runs": {},
+            "unit": "fuzz",
             "unknown_definitions": [],
             "unknowns": []
           }
@@ -812,6 +1140,62 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          },
+          {
+            "advisory": {},
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "CodeQL": {
+                "can": {
+                  "scans": "CodeQL (github/codeql-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "GitLab SAST": {
+                "can": {
+                  "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "semgrep": {
+                "can": {
+                  "scans": "semgrep ci"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "unsafe_code forbidden": {
+                "can": {
+                  "scans": "unsafe_code = \"forbid\" in [lints.rust]"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Rust",
+            "level": "scans",
+            "runs": {
+              "CodeQL": {
+                "levels": [
+                  "scans"
+                ],
+                "read": []
+              },
+              "unsafe_code forbidden": {
+                "levels": [
+                  "scans"
+                ],
+                "read": [
+                  "Cargo.toml"
+                ]
+              }
+            },
+            "unit": "fuzz",
+            "unknown_definitions": [],
+            "unknowns": []
           }
         ]
       }
@@ -849,6 +1233,37 @@
               }
             },
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          },
+          {
+            "advisory": {},
+            "answer": "yes",
+            "defined": {
+              "clippy": [
+                "Cargo.toml"
+              ]
+            },
+            "known": {
+              "clippy": {
+                "can": {
+                  "checks": "cargo clippy"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Rust",
+            "level": "checks",
+            "runs": {
+              "clippy": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": "fuzz",
             "unknown_definitions": [],
             "unknowns": []
           }
@@ -890,6 +1305,33 @@
             "unit": ".",
             "unknown_definitions": [],
             "unknowns": []
+          },
+          {
+            "advisory": {},
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "cargo test": {
+                "can": {
+                  "runs": "cargo test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Rust",
+            "level": "runs",
+            "runs": {
+              "cargo test": {
+                "levels": [
+                  "runs"
+                ],
+                "read": []
+              }
+            },
+            "unit": "fuzz",
+            "unknown_definitions": [],
+            "unknowns": []
           }
         ]
       }
@@ -915,6 +1357,18 @@
             "level": "checks",
             "runs": {},
             "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          },
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Rust",
+            "level": "checks",
+            "runs": {},
+            "unit": "fuzz",
             "unknown_definitions": [],
             "unknowns": []
           }
@@ -977,11 +1431,21 @@
               "Cargo.toml"
             ],
             "problems": [],
+            "test_data": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          },
+          {
+            "answer": "yes",
+            "language": "TOML",
+            "parsed": [],
+            "problems": [],
             "test_data": [
               "fuzz/Cargo.toml"
             ],
             "test_problems": [],
-            "unit": ".",
+            "unit": "fuzz",
             "unread": {}
           }
         ]
@@ -1082,7 +1546,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "TOML: 1 TOML file parses; YAML: 6 YAML files parse",
+      "message": "TOML in the root: 1 TOML file parses; TOML in fuzz: 1 TOML file of test data, not judged; YAML in the root: 6 YAML files parse",
       "status": "PASS"
     },
     "dependency-audit": {
@@ -1092,7 +1556,7 @@
     },
     "dependency-management": {
       "details": [],
-      "message": "dependencies are declared in fuzz/Cargo.toml (Cargo) and locked in fuzz/Cargo.lock",
+      "message": "the root: no dependencies are declared; fuzz: dependencies are declared in fuzz/Cargo.toml (Cargo) and locked in fuzz/Cargo.lock",
       "status": "PASS"
     },
     "dependency-updates": {

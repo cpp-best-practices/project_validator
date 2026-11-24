@@ -26,6 +26,7 @@ from collections.abc import Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass, field
 
 from project_validator.core import Result, Status
+from project_validator.judging import NOT_FOR_AUXILIARY
 from project_validator.runner import Report
 
 SCORE_VERSION = "1"
@@ -49,20 +50,6 @@ LEVEL_NAMES: Mapping[int, str] = {0: "Getting started", 1: "Foundations", 2: "An
 
 # Reported, never scored: what a README shows is not a quality gate.
 UNSCORED = frozenset({"status-badges"})
-# The gates of the product alone, which auxiliary code (tests, examples, scripts) is not asked for.
-NOT_FOR_AUXILIARY = frozenset(
-    {
-        "coverage",
-        "fuzz-testing",
-        "mutation-testing",
-        "sanitizers",
-        "hardening",
-        "dependency-audit",
-        "platform-matrix",
-        "ci-build-types",
-        "security-scanning",
-    }
-)
 # The gates where each more tool finds more: two analysers are stronger than one; two formatters are not.
 EXTRA_CREDIT = frozenset(
     {

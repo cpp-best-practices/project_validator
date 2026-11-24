@@ -10,6 +10,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from project_validator.build_systems.model import standalone_package
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Facts, Origin, resolved
@@ -42,8 +43,20 @@ def _is_build_tree(directory: Path) -> bool:
     return directory.name == "target" and any((directory.parent / name).is_file() for name in (DEPS_EDN, PROJECT_CLJ))
 
 
-CLOJURE_CLI = BuildSystem(name="Clojure CLI", files=(DEPS_EDN,), languages=CLOJURE, is_build_tree=_is_build_tree)
-LEININGEN = BuildSystem(name="Leiningen", files=(PROJECT_CLJ,), languages=CLOJURE, is_build_tree=_is_build_tree)
+CLOJURE_CLI = BuildSystem(
+    name="Clojure CLI",
+    files=(DEPS_EDN,),
+    languages=CLOJURE,
+    is_build_tree=_is_build_tree,
+    standalone=standalone_package,
+)
+LEININGEN = BuildSystem(
+    name="Leiningen",
+    files=(PROJECT_CLJ,),
+    languages=CLOJURE,
+    is_build_tree=_is_build_tree,
+    standalone=standalone_package,
+)
 BABASHKA = BuildSystem(name="Babashka", files=("bb.edn",), languages=CLOJURE)
 SHADOW_CLJS = BuildSystem(
     name="shadow-cljs", files=("shadow-cljs.edn",), languages=CLOJURE, is_build_tree=_is_build_tree

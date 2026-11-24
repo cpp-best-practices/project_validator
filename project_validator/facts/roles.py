@@ -64,6 +64,15 @@ _SOURCE_ROOTS = frozenset({"src", "lib", "source", "sources", "main", "include",
 _TESTS_BELOW_SOURCE_ROOTS = frozenset({"test", "tests", "testdata", "test-data", "test_data", "__tests__", "fixtures"})
 
 
+# Directories of a test suite's data: the projects in them are inputs to the tests, not projects of the repository.
+_FIXTURE_DIRECTORIES = frozenset({"fixtures", "testdata", "test-data", "test_data", "inputs"})
+
+
+def fixture_data(path: str) -> bool:
+    """Whether `path` is below a directory of test data (`tests/fixtures/`, `pkg/x/testdata/`)."""
+    return any(part.lower() in _FIXTURE_DIRECTORIES for part in PurePosixPath(path).parts)
+
+
 def _named_role(part: str) -> str | None:
     """The role a directory's name tells (`tests`, `integration-tests`, `tests-build`, `examples`, `foo_bench`), if
     any."""
@@ -103,4 +112,4 @@ def role(path: str, *, directory: bool = False) -> str:
     return "product"
 
 
-__all__ = ["AUXILIARY", "VENDOR_DIRECTORIES", "role"]
+__all__ = ["AUXILIARY", "VENDOR_DIRECTORIES", "fixture_data", "role"]

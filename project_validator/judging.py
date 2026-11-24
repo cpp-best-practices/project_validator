@@ -121,6 +121,22 @@ def check_each_ecosystem[Rules](
     return by_ecosystem(_companions(results, context.facts))
 
 
+# The gates of the product alone, which auxiliary code (tests, examples, scripts) is not asked for: the score does
+# not count them for it, and an answer about a unit the map names auxiliary is not judged for them.
+NOT_FOR_AUXILIARY = frozenset(
+    {
+        "coverage",
+        "fuzz-testing",
+        "mutation-testing",
+        "sanitizers",
+        "hardening",
+        "dependency-audit",
+        "platform-matrix",
+        "ci-build-types",
+        "security-scanning",
+    }
+)
+
 type _Place = tuple[str, str]  # (language, unit)
 type _Auxiliary = Mapping[_Place, tuple[str, ...]]  # what named the auxiliary code a place's answer is about
 type _Found[A] = list[tuple[A, tuple[str, ...]]]  # each answer with what named its code (nothing: the product's)
@@ -147,7 +163,7 @@ def _advisory(result: Result, language: str, named: tuple[str, ...]) -> Result:
 _AUXILIARY_UNIT = "a warning, not a failure: {unit} is {role} code, not the product's"
 
 
-def _auxiliary_roles(facts: Facts) -> dict[str, str]:
+def auxiliary_unit_roles(facts: Facts) -> dict[str, str]:
     """The units the map names test, benchmark, example, docs or tooling code, with that role, when the project has
     a product unit with code of its own (a project of benchmarks alone is judged as it is)."""
     units = facts.of(Unit)
@@ -191,7 +207,7 @@ def judged[A: UnitAnswer](
     found = _found(languages, context, answers)
     auxiliary: _Auxiliary = {(answer.language, answer.unit): named for answer, named in found if named}
     results: dict[_Place, Result] = {}
-    roles = _auxiliary_roles(context.facts)
+    roles = auxiliary_unit_roles(context.facts)
     for answer, named in found:
         result = _advised(judge(answer, allow_unknown=context.options.allow_unknown), answer)
         if (role := roles.get(answer.unit)) and not named:
@@ -237,6 +253,22 @@ def _placed[A: UnitAnswer](
     )
 
 
+def _asked[A: UnitAnswer](
+    name: str, answers: Callable[[str, Facts], LanguageAnswers[A]], auxiliary_unit: Callable[[A], bool] | None
+) -> Callable[[str, Facts], LanguageAnswers[A]]:
+    """`answers`, but for those about units the map names auxiliary that the check does not ask (see
+    `answered_check`), beside a product unit."""
+    if auxiliary_unit is None and name not in NOT_FOR_AUXILIARY:
+        return answers
+    keep = auxiliary_unit or (lambda _answer: False)
+
+    def asked(language: str, facts: Facts) -> LanguageAnswers[A]:
+        found, roles = answers(language, facts), auxiliary_unit_roles(facts)
+        return replace(found, units=tuple(answer for answer in found.units if answer.unit not in roles or keep(answer)))
+
+    return asked
+
+
 def answered_check[A: UnitAnswer](
     *,
     name: str,
@@ -246,24 +278,36 @@ def answered_check[A: UnitAnswer](
     aspect: str | None = None,
     languages: Callable[[], frozenset[str]] | None = None,
     aliases: tuple[str, ...] = (),
+    auxiliary_unit: Callable[[A], bool] | None = None,
 ) -> Check:
     """A check that judges a question's answers by a policy, for each ecosystem the project uses (its findings
     labelled by ecosystem as other checks' are). It applies to the languages its known tools handle (`aspect`), or to
-    `languages`."""
+    `languages`. An answer about a unit the map names auxiliary (a cargo-fuzz crate, a benchmark package) is judged
+    when `auxiliary_unit` says so; by default unless the check is a gate of the product alone (`NOT_FOR_AUXILIARY`)."""
     if languages is None:
         if aspect is None:
             raise TypeError("answered_check needs an aspect or languages")
         languages = handling(aspect)
     handled = component_cache(languages)
+    asked = _asked(name, answers, auxiliary_unit)
 
     def run(context: Context) -> Result:
         now = handled()
         by_ecosystem_ = {e: e.languages & now for e in registered() if e.languages & now}
         return check_each_ecosystem(
-            context, by_ecosystem_, lambda judged_languages, found: judged(judged_languages, found, answers, judge)
+            context, by_ecosystem_, lambda judged_languages, found: judged(judged_languages, found, asked, judge)
         )
 
     return Check(name=name, description=description, run=run, languages_from=handled, aspect=aspect, aliases=aliases)
 
 
-__all__ = ["answered_check", "by_ecosystem", "check_each_ecosystem", "combined", "judged", "labelled"]
+__all__ = [
+    "NOT_FOR_AUXILIARY",
+    "answered_check",
+    "auxiliary_unit_roles",
+    "by_ecosystem",
+    "check_each_ecosystem",
+    "combined",
+    "judged",
+    "labelled",
+]

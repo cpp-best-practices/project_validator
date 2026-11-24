@@ -10,6 +10,7 @@ from collections.abc import Iterator
 from pathlib import Path
 
 from project_validator.build_configurations import build_type_kinds
+from project_validator.build_systems.model import standalone_package
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Facts, Origin, Setting, resolved
 from project_validator.facts.arguments import option_values, starts_with
@@ -57,6 +58,7 @@ ZIG_BUILD = BuildSystem(
     languages=ZIG,
     is_build_tree=_is_build_tree,
     build_types=zig_build_types,
+    standalone=standalone_package,
 )
 
 

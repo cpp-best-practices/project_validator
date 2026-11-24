@@ -108,6 +108,20 @@
       "role": "product"
     },
     {
+      "build_systems": [
+        "Cargo"
+      ],
+      "formats": [
+        "TOML"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Rust"
+      ],
+      "origin": "fuzz",
+      "role": "test"
+    },
+    {
       "column": null,
       "format": "YAML",
       "kind": "DataFile",
@@ -7196,6 +7210,19 @@
           "Rust"
         ],
         "role": "product"
+      },
+      {
+        "build_systems": [
+          "Cargo"
+        ],
+        "directory": "fuzz",
+        "formats": [
+          "TOML"
+        ],
+        "languages": [
+          "Rust"
+        ],
+        "role": "test"
       }
     ],
     "unrecognised_suffixes": []

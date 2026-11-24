@@ -12,4 +12,6 @@ tests_run = answered_check(
     answers=tests,
     judge=judge_tests,
     aliases=("ctest-runs",),
+    # A unit the map names auxiliary is asked for tests it has: a cargo-fuzz crate need hold none (upstream #230).
+    auxiliary_unit=lambda answer: bool(answer.definitions() or answer.unknown_definitions),
 )

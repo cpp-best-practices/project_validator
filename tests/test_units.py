@@ -74,8 +74,9 @@ class UnitTests(unittest.TestCase):
             _units(cargo),
             [(".", ("Cargo",), []), ("crates/x", ("Cargo",), ["Rust"]), ("crates/y", ("Cargo",), ["Rust"])],
         )
+        # A broken root declares no workspace; the named package below it is a package of its own all the same.
         broken = {"package.json": "{", **_package("a")}
-        self.assertEqual([unit for unit, _, _ in _units(broken)], ["."])
+        self.assertEqual([unit for unit, _, _ in _units(broken)], [".", "packages/a"])
         go = {"go.work": "go 1.23\n\nuse (\n\t./api\n\t./cli\n)\n", "api/go.mod": "", "api/a.go": "", "cli/go.mod": ""}
         self.assertEqual([unit for unit, _, _ in _units(go)], [".", "api", "cli"])
 
@@ -87,6 +88,53 @@ class UnitTests(unittest.TestCase):
 
     def test_a_mixed_language_project_has_a_unit_per_build_root(self) -> None:
         self.assertEqual(_units(MIXED), [(".", ("CMake",), ["C++"]), ("python", ("Python packaging",), ["Python"])])
+
+    def test_a_nested_package_is_a_unit_with_the_role_its_directory_tells(self) -> None:
+        """A package below another of its build system's is a project of its own (upstream #188): vapor's
+        Benchmarks/Package.swift, phoenix's installer/ and integration_test/ Mix projects, dbt-utils' test project."""
+        for files, expected in (
+            (
+                {"Package.swift": "", "Sources/a.swift": "", "Benchmarks/Package.swift": "", "Benchmarks/b.swift": ""},
+                [(".", "product"), ("Benchmarks", "benchmark")],
+            ),
+            (
+                {"mix.exs": "", "installer/mix.exs": "", "integration_test/mix.exs": ""},
+                [(".", "product"), ("installer", "product"), ("integration_test", "test")],
+            ),
+            (
+                {"dbt_project.yml": "name: utils\n", "integration_tests/dbt_project.yml": "name: utils_tests\n"},
+                [(".", "product"), ("integration_tests", "test")],
+            ),
+        ):
+            with self.subTest(files=files), temp_project(files) as root:
+                units = make_context(root).facts.of(Unit)
+                self.assertEqual([(unit.directory, unit.role) for unit in units], expected)
+
+    def test_an_auxiliary_unit_without_tests_of_its_own_is_not_asked_for_them(self) -> None:
+        """A cargo-fuzz crate or a benchmark package beside the product holds no tests, and need not (upstream #230);
+        one that has tests is judged for them."""
+        files = {
+            "Cargo.toml": "[package]\nname = 'app'\n",
+            "src/lib.rs": "#[test]\nfn t() {}\n",
+            "fuzz/Cargo.toml": "[package]\nname = 'app-fuzz'\n",
+            "fuzz/fuzz_targets/a.rs": "",
+            **_workflow(("cargo test", None)),
+        }
+        result = _check("tests-run", files)
+        self.assertEqual((result.status, [place.unit for place in result.places]), (Status.PASS, ["."]), result)
+        files["fuzz/src/lib.rs"] = "#[test]\nfn t() {}\n"
+        self.assertEqual([place.unit for place in _check("tests-run", files).places], [".", "fuzz"])
+
+    def test_a_nested_build_file_that_is_no_project_of_its_own_is_its_parents(self) -> None:
+        """A CMake subdirectory, a package.json that only marks its directory's modules (`{"type": "module"}`), and a
+        test fixture's manifest belong to the unit above them."""
+        for files in (
+            {"CMakeLists.txt": "", "lib/CMakeLists.txt": "", "lib/a.cpp": ""},
+            {"package.json": json.dumps({"name": "app"}), "dist/package.json": json.dumps({"type": "module"})},
+            {"pyproject.toml": "[project]\nname = 'app'\n", "tests/fixtures/x/pyproject.toml": "[project]\n"},
+        ):
+            with self.subTest(files=files):
+                self.assertEqual([unit for unit, _, _ in _units(files)], ["."])
 
 
 class MonorepoCoverageTests(unittest.TestCase):
