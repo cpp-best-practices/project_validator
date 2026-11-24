@@ -251,6 +251,8 @@ class StructureTests(unittest.TestCase):
             ("clap_bench/benches/a.rs", "benchmark"),
             ("crates/ruff_benchmark/src/lib.rs", "benchmark"),
             ("koyo-lib/blueprints/standard/package.json", "template"),
+            # bamarni/composer-bin-plugin's tool installs (guzzle).
+            ("vendor-bin/phpstan/composer.json", "tooling"),
         ):
             with self.subTest(path=path):
                 self.assertEqual(role(path), expected)

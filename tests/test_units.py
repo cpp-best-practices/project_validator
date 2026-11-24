@@ -143,6 +143,25 @@ class UnitTests(unittest.TestCase):
         files["fuzz/src/lib.rs"] = "#[test]\nfn t() {}\n"
         self.assertEqual([place.unit for place in _check("tests-run", files).places], [".", "fuzz"])
 
+    def test_a_template_or_benchmark_unit_is_not_asked_for_the_products_gates(self) -> None:
+        """fluentd's templates/new_gem is the gem `fluentd plugin-generator` writes, and puma's benchmark apps lock no
+        dependencies (upstream #188): neither is asked for tests or a lock file beside the product."""
+        files = {
+            "Gemfile": "source 'https://rubygems.org'\ngem 'rake'\n",
+            "Gemfile.lock": "GEM\n",
+            "lib/app.rb": "",
+            "spec/app_spec.rb": "describe 'app' do\nend\n",
+            "templates/new_gem/Gemfile": "gem 'rspec'\n",
+            "templates/new_gem/lib/x.rb": "",
+            "benchmarks/sinatra/Gemfile": "gem 'sinatra'\n",
+            "benchmarks/sinatra/app.rb": "",
+            **_workflow(("bundle exec rspec", None)),
+        }
+        for name in ("tests-run", "dependency-management"):
+            with self.subTest(name), temp_project(files) as root:
+                result = checks_named(name)[0].run(make_context(root))
+                self.assertEqual([place.unit for place in result.places], ["."], result)
+
     def test_a_nested_build_file_that_is_no_project_of_its_own_is_its_parents(self) -> None:
         """A CMake subdirectory, a package.json that only marks its directory's modules (`{"type": "module"}`), and a
         test fixture's manifest belong to the unit above them."""

@@ -38,7 +38,8 @@ _ROLES = {
     **dict.fromkeys(("example", "examples", "sample", "samples", "demo", "demos", "listings"), "example"),
     **dict.fromkeys(("doc", "docs", "documentation", "website"), "docs"),
     # `hack/` is the Kubernetes projects' name for maintainer scripts, `tool/` Dart's.
-    **dict.fromkeys(("tool", "tools", "tooling", "scripts", "hack"), "tooling"),
+    # `vendor-bin/` holds the tools bamarni/composer-bin-plugin installs, each a Composer project (guzzle).
+    **dict.fromkeys(("tool", "tools", "tooling", "scripts", "hack", "vendor-bin"), "tooling"),
     **dict.fromkeys(("bench", "benches", "benchmark", "benchmarks"), "benchmark"),
     # Files rendered before they are read (a Helm chart's manifests, Jinja pages, the projects a blueprint
     # generates): not well formed as they are.
@@ -56,6 +57,9 @@ _WORD_BREAK = re.compile(r"[-_]")
 # The roles `--auxiliary` may name as not the product's (see `project_validator.facts.auxiliary`); vendored code is
 # never judged, named or not.
 AUXILIARY = frozenset({"test", "example", "docs", "tooling", "benchmark"})
+# The roles of units that are not the product's (see `project_validator.judging`): the auxiliary ones, and a
+# template of a project (a generator's scaffold, fluentd's templates/new_gem).
+AUXILIARY_UNITS = AUXILIARY | {"template"}
 
 
 # Directories that hold a unit's sources: below them, directory names are the code's own (`com/example/App.java`),
@@ -112,4 +116,4 @@ def role(path: str, *, directory: bool = False) -> str:
     return "product"
 
 
-__all__ = ["AUXILIARY", "VENDOR_DIRECTORIES", "fixture_data", "role"]
+__all__ = ["AUXILIARY", "AUXILIARY_UNITS", "VENDOR_DIRECTORIES", "fixture_data", "role"]

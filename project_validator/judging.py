@@ -15,7 +15,7 @@ from project_validator.core import Check, Context, Placed, Result, Status
 from project_validator.ecosystems import Ecosystem, ecosystems_for, registered
 from project_validator.facts import Facts
 from project_validator.facts.auxiliary import as_given
-from project_validator.facts.roles import AUXILIARY
+from project_validator.facts.roles import AUXILIARY_UNITS
 from project_validator.facts.structure import SourceFile, Unit
 from project_validator.facts.tools import handling
 from project_validator.policy import Judge
@@ -126,6 +126,7 @@ def check_each_ecosystem[Rules](
 NOT_FOR_AUXILIARY = frozenset(
     {
         "coverage",
+        "dependency-management",
         "fuzz-testing",
         "mutation-testing",
         "sanitizers",
@@ -164,12 +165,12 @@ _AUXILIARY_UNIT = "a warning, not a failure: {unit} is {role} code, not the prod
 
 
 def auxiliary_unit_roles(facts: Facts) -> dict[str, str]:
-    """The units the map names test, benchmark, example, docs or tooling code, with that role, when the project has
-    a product unit with code of its own (a project of benchmarks alone is judged as it is)."""
+    """The units the map names test, benchmark, example, docs or tooling code, or a template, with that role, when the
+    project has a product unit with code of its own (a project of benchmarks alone is judged as it is)."""
     units = facts.of(Unit)
     if not any(unit.role == "product" and (unit.languages or unit.formats) for unit in units):
         return {}
-    return {unit.directory: unit.role for unit in units if unit.role in AUXILIARY}
+    return {unit.directory: unit.role for unit in units if unit.role in AUXILIARY_UNITS}
 
 
 def _advised(result: Result, answer: object) -> Result:

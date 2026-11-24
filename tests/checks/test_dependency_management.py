@@ -56,11 +56,8 @@ class DependencyManagementTests(unittest.TestCase):
         cases = {
             "well_configured_cpp": _declared("cmake/Dependencies.cmake", "FetchContent"),
             "well_configured_python": _declared("pyproject.toml", "Python packages", "uv.lock"),
-            # The fuzz crate is a unit of its own (upstream #188): the product declares no dependencies.
-            "well_configured_rust": Result.passed(
-                "the root: no dependencies are declared; fuzz: dependencies are declared in fuzz/Cargo.toml (Cargo) "
-                "and locked in fuzz/Cargo.lock"
-            ),
+            # The fuzz crate is a unit of its own, not judged for the product's dependencies (upstream #188).
+            "well_configured_rust": NO_DEPENDENCIES,
             "well_configured_go": NO_DEPENDENCIES,
         }
         for fixture, expected in cases.items():

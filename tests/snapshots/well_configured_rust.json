@@ -1556,7 +1556,7 @@
     },
     "dependency-management": {
       "details": [],
-      "message": "the root: no dependencies are declared; fuzz: dependencies are declared in fuzz/Cargo.toml (Cargo) and locked in fuzz/Cargo.lock",
+      "message": "no dependencies are declared",
       "status": "PASS"
     },
     "dependency-updates": {
