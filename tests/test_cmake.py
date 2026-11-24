@@ -213,6 +213,7 @@ class VariableTests(unittest.TestCase):
             'set(CMAKE_BUILD_TYPE Release CACHE STRING "")',
             "set(CMAKE_BUILD_TYPE Debug)",
             'set(LEVEL 2 CACHE STRING "level")',
+            'set(EMPTY CACHE STRING "nothing yet")',
             "set(ENV{CC} gcc)",
             "set()",
             "unset()",
@@ -222,6 +223,7 @@ class VariableTests(unittest.TestCase):
         self.assertEqual(_settings(found, "CMAKE_CXX_EXTENSIONS"), [("OFF", NOT_MSVC, False)])
         self.assertEqual(_settings(found, "CMAKE_BUILD_TYPE"), [("Release", ANY, True)])
         self.assertEqual(_settings(found, "LEVEL"), [("2", ANY, True)])
+        self.assertEqual(_settings(found, "EMPTY"), [("", ANY, True)])
 
     def test_a_function_sets_its_callers_variables_in_the_parent_scope(self) -> None:
         found = _listed(
