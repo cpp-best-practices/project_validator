@@ -253,11 +253,53 @@ class StructureTests(unittest.TestCase):
             ("koyo-lib/blueprints/standard/package.json", "template"),
             # bamarni/composer-bin-plugin's tool installs (guzzle).
             ("vendor-bin/phpstan/composer.json", "tooling"),
+            # An alternative build for an IDE beside the real one (json-fortran's hand-made .sln and .vfproj files).
+            ("visual_studio/jsonfortran.sln", "tooling"),
         ):
             with self.subTest(path=path):
                 self.assertEqual(role(path), expected)
         # A library for testing is the product (bloc's bloc_test package).
         self.assertEqual(role("packages/bloc_test", directory=True), "product")
+
+    def test_maintainer_scripts_and_editor_integrations_are_tooling(self) -> None:
+        """More names of maintainer scripts the corpus uses (upstream #182): googletest's and koyo's `ci/`, cli's
+        `script/` and the .NET Arcade SDK's `eng/` at the top of the project, scikit-learn's `build_tools/`, deno's
+        `_tools/`, and the editor integrations a tool ships (perl-code-tidyall's `etc/editors/`, dune's
+        `editor-integration/`)."""
+        for path in (
+            "ci/linux-presubmit.sh",
+            "script/build.ps1",
+            "eng/common/cross/build-rootfs.sh",
+            "build_tools/linting.sh",
+            "_tools/check_docs.ts",
+            "etc/editors/tidyall.el",
+            "editor-integration/emacs/dune.el",
+        ):
+            with self.subTest(path=path):
+                self.assertEqual(role(path), "tooling")
+        # Deeper, they are code of their own: graphql-inspector's published `@graphql-inspector/ci` package, a Helm
+        # chart's test values; and a package of tools is a product (bloc's `bloc_tools`).
+        for path in (
+            "packages/ci/src/index.ts",
+            "charts/alertmanager/ci/values.yaml",
+            "packages/bloc_tools/lib/a.dart",
+        ):
+            with self.subTest(path=path):
+                self.assertEqual(role(path), "product")
+
+    def test_a_vendor_directory_of_a_test_suite_holds_its_tests(self) -> None:
+        """A test suite's directory named for what it tests is its own (upstream #188): typed-racket's tests of
+        external packages, dune's test cases of vendoring, argo-cd's test data; a vendored copy elsewhere stays
+        vendored (testthat's inst/include/testthat/vendor/catch.h)."""
+        for path in (
+            "typed-racket-test/external/historical-counterexamples.rkt",
+            "test/blackbox-tests/test-cases/vendor/alerts.t",
+            "util/helm/testdata/external/external-secret.txt",
+        ):
+            with self.subTest(path=path):
+                self.assertEqual(role(path), "test")
+        self.assertEqual(role("inst/include/testthat/vendor/catch.h"), "vendored")
+        self.assertEqual(role("third_party/googletest/test/gtest_unittest.cc"), "vendored")
 
     def test_vendored_code_is_recorded_but_adds_no_language(self) -> None:
         with temp_project({"main.c": "", "web/sw.min.js": ""}) as root:

@@ -7,6 +7,7 @@ The project map (`--map`, `project_validator.project_map`) is a view over these 
 from __future__ import annotations
 
 import posixpath
+import re
 from collections import Counter
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass, replace
@@ -309,6 +310,16 @@ def _configuration(path: str) -> bool:
 
 # Editor settings written in a language's syntax (Emacs' per-directory variables): settings, not sources.
 _EDITOR_SETTINGS = frozenset({".dir-locals.el", ".dir-locals-2.el"})
+# markdownlint's (mdl) `.mdlrc` names its style file, written in Ruby's syntax (kubespray's `.md_style.rb`), where
+# `#{File.dirname(__FILE__)}` is the directory of the `.mdlrc`.
+_MDL_STYLE = re.compile(r"""^\s*style\s+["'](?:#\{File\.dirname\(__FILE__\)\}/)?([^"'#{}]+)["']""", re.MULTILINE)
+
+
+def _settings(project: Project) -> frozenset[str]:
+    """The files a tool's configuration names as its settings, written in a language's syntax: the style file the
+    root `.mdlrc` names. (Editor settings are told by their names: `_EDITOR_SETTINGS`.)"""
+    styles = _MDL_STYLE.findall(project.read_text(".mdlrc")) if project.exists(".mdlrc") else []
+    return frozenset(posixpath.normpath(style.removeprefix("./")) for style in styles)
 
 
 def _generated(project: Project) -> frozenset[str]:
@@ -357,10 +368,11 @@ def _outside(paths: Iterable[str], directories: frozenset[str]) -> list[str]:
 
 def _sources(project: Project, generated: frozenset[str]) -> Iterator[SourceFile]:
     """The sources of each language among the project's files, and of each format among those and the configuration
-    directories' files; not editor settings, nor what an ecosystem's build generates (`generated`)."""
-    known = _source_suffixes()
+    directories' files; not editor settings, nor a tool's settings (see `_settings`), nor what an ecosystem's
+    build generates (`generated`)."""
+    known, settings = _source_suffixes(), _settings(project)
     for path in _outside(project.files(hidden=CONFIGURATION_DIRECTORIES), generated):
-        if PurePosixPath(path).name in _EDITOR_SETTINGS:
+        if PurePosixPath(path).name in _EDITOR_SETTINGS or path in settings:
             continue
         found = known.get(PurePosixPath(path).suffix)
         if found is None and (named := _by_name(path)) is not None:
@@ -468,30 +480,35 @@ def _unit_roots(project: Project, builds: tuple[BuildFile, ...]) -> tuple[dict[s
 
 
 def _languages_by_purpose(facts: Facts) -> tuple[set[str], set[str]]:
-    """The languages of the project's own sources in product code, and those in auxiliary code."""
-    known = formats()
+    """The languages and formats of the project's own sources in product code, and those in auxiliary code."""
     product: set[str] = set()
     auxiliary: set[str] = set()
     for source in facts.of(SourceFile):
-        if source.language is not None and source.language not in known and not source.vendored:
+        if source.language is not None and not source.vendored:
             (auxiliary if source.role in AUXILIARY else product).add(source.language)
     return product, auxiliary
 
 
 def _auxiliary_languages(facts: Facts) -> frozenset[str]:
-    """The languages written only in auxiliary code (upstream #182): a test fixture in C, a docs theme's script, a
-    maintainer's script under `hack/`, that no build file outside auxiliary code builds, and of an ecosystem none of
-    whose languages is the product's (a Java project's tests in Kotlin are its own); none when the project has no
-    product language left (a project of examples alone is judged as it is)."""
-    known = formats()
+    """The languages (and formats) written only in auxiliary code (upstream #182): a test fixture in C, a docs
+    theme's script, a maintainer's script under `hack/`, a formatter's test notebooks, that no build file outside
+    auxiliary code builds, and of an ecosystem none of whose languages is the product's (a Java project's tests in
+    Kotlin are its own); none when the project has no product language left (a project of examples alone is judged
+    as it is). The product left is its languages and the content the probes find (a Helm chart): a format's files
+    alone (CI's YAML, a `renovate.json`) leave no product."""
     product, auxiliary = _languages_by_purpose(facts)
     built = (build for build in facts.of(BuildFile) if role(_directory(build), directory=True) not in AUXILIARY)
     product |= given_way((language for build in built for language in build.languages), product)
-    product |= {name for name in _content_names(facts) if name not in known}
+    product |= set(_content_names(facts))
     product |= {
         language for ecosystem in registered() if ecosystem.languages & product for language in ecosystem.languages
     }
-    return frozenset(auxiliary - product) if product else frozenset()
+    return frozenset(auxiliary - product) if product - _plain_formats(facts) else frozenset()
+
+
+def _plain_formats(facts: Facts) -> set[str]:
+    """The formats that are no product on their own: every format but the content a probe found (a Helm chart)."""
+    return set(formats()) - set(_content_names(facts))
 
 
 def _own(languages: Iterable[str], path: str, named: Selectors, *, directory: bool = False) -> set[str]:

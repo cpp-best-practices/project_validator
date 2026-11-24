@@ -37,14 +37,26 @@ _ROLES = {
     # rust-lang/book's `listings/` are the book's example programs.
     **dict.fromkeys(("example", "examples", "sample", "samples", "demo", "demos", "listings"), "example"),
     **dict.fromkeys(("doc", "docs", "documentation", "website"), "docs"),
-    # `hack/` is the Kubernetes projects' name for maintainer scripts, `tool/` Dart's.
-    # `vendor-bin/` holds the tools bamarni/composer-bin-plugin installs, each a Composer project (guzzle).
-    **dict.fromkeys(("tool", "tools", "tooling", "scripts", "hack", "vendor-bin"), "tooling"),
+    # `hack/` is the Kubernetes projects' name for maintainer scripts, `tool/` Dart's; `build_tools/` scikit-learn's,
+    # `_tools/` deno's. `vendor-bin/` holds the tools bamarni/composer-bin-plugin installs, each a Composer project
+    # (guzzle).
+    **dict.fromkeys(
+        ("tool", "tools", "tooling", "scripts", "hack", "build_tools", "build-tools", "_tools", "vendor-bin"), "tooling"
+    ),
+    # The editor integrations a tool ships (perl-code-tidyall's `etc/editors/`, dune's); not `editor/`, an editor's
+    # own code.
+    **dict.fromkeys(("editors", "editor-integration"), "tooling"),
+    # An IDE's alternative build beside the project's own (json-fortran's hand-made .sln and .vfproj files).
+    "visual_studio": "tooling",
     **dict.fromkeys(("bench", "benches", "benchmark", "benchmarks"), "benchmark"),
     # Files rendered before they are read (a Helm chart's manifests, Jinja pages, the projects a blueprint
     # generates): not well formed as they are.
     **dict.fromkeys(("template", "templates", "blueprint", "blueprints"), "template"),
 }
+# Names that tell a role at the top of the project only: the scripts CI runs (`ci/`), cli's `script/` and the .NET
+# Arcade SDK's `eng/`. Deeper, a directory so named is code of its own (graphql-inspector's `packages/ci`, a Helm
+# chart's `ci/` test values).
+_TOP_LEVEL_ROLES = dict.fromkeys(("ci", "script", "eng"), "tooling")
 # The roles a directory's name tells by its first or last word (`tests-build`, `integration_test`, `clap_bench`,
 # `flutter_http_example`, `example_packages`). A last word `test` does not: a library for testing is a product
 # (bloc's `bloc_test`), and Racket's `foo-test` packages are told by what they say.
@@ -77,6 +89,14 @@ def fixture_data(path: str) -> bool:
     return any(part.lower() in _FIXTURE_DIRECTORIES for part in PurePosixPath(path).parts)
 
 
+def loose_example(path: str, unit: str) -> bool:
+    """Whether `path` is an example's file in `unit`, a unit that is not the example's own (Perl-Critic's
+    examples/perlcriticrc): not an example unit's own files, nor the tests an example keeps (a Flutter plugin's
+    example/integration_test/)."""
+    tests = any(_named_role(part.lower()) == "test" for part in PurePosixPath(path).parts[:-1])
+    return role(path) == "example" and role(unit, directory=True) != "example" and not tests
+
+
 def _named_role(part: str) -> str | None:
     """The role a directory's name tells (`tests`, `integration-tests`, `tests-build`, `examples`, `foo_bench`), if
     any."""
@@ -90,15 +110,25 @@ def _named_role(part: str) -> str | None:
 
 
 def _vendored(posix: PurePosixPath, parts: list[str], directory: bool) -> bool:
-    return any(_ROLES.get(part) == "vendored" for part in parts) or (
-        not directory and bool(_MINIFIED.search(posix.name))
-    )
+    return _in_vendor_directory(parts) or (not directory and bool(_MINIFIED.search(posix.name)))
+
+
+def _in_vendor_directory(parts: list[str]) -> bool:
+    """Whether a vendor directory holds the path, outside a test suite's directory: there, a directory named
+    `external` or `vendor` holds tests of external packages or of vendoring (typed-racket's, dune's: upstream
+    #188)."""
+    for part in parts:
+        if _ROLES.get(part) == "vendored":
+            return True
+        if _named_role(part) == "test" or not {"test", "tests"}.isdisjoint(_WORD_BREAK.split(part)):
+            return False
+    return False
 
 
 def role(path: str, *, directory: bool = False) -> str:
-    """What the code at `path` is for: `vendored` code of other projects (below a vendor directory anywhere, or a
-    minified bundle), else by the outermost directory that tells, above any source root (`src`, `lib`): the
-    `product`, its `test`s (test fixtures, fuzz and stress tests too), an `example`, `docs`, `tooling`, a
+    """What the code at `path` is for: `vendored` code of other projects (below a vendor directory outside a test
+    suite's, or a minified bundle), else by the outermost directory that tells, above any source root (`src`,
+    `lib`): the `product`, its `test`s (test fixtures, fuzz and stress tests too), an `example`, `docs`, `tooling`, a
     `benchmark` or a `template`; below a source root only a test directory tells (`src/test/resources`). A
     directory's own name tells first, below a source root too (`internal/tools`)."""
     posix = PurePosixPath(path)
@@ -108,12 +138,15 @@ def role(path: str, *, directory: bool = False) -> str:
     # A directory that is a unit of its own is told by its own name first (`internal/tools`, a Go tools module).
     if directory and parts and (own := _named_role(parts[-1])):
         return own
+    if parts and parts[0] in _TOP_LEVEL_ROLES:
+        return _TOP_LEVEL_ROLES[parts[0]]
     for index, part in enumerate(parts):
         if part in _SOURCE_ROOTS:
             return "test" if _TESTS_BELOW_SOURCE_ROOTS.intersection(parts[index + 1 :]) else "product"
         if found := _named_role(part):
-            return found
+            # A vendor directory here is inside a test suite's (see `_in_vendor_directory`).
+            return "test" if found == "vendored" else found
     return "product"
 
 
-__all__ = ["AUXILIARY", "AUXILIARY_UNITS", "VENDOR_DIRECTORIES", "fixture_data", "role"]
+__all__ = ["AUXILIARY", "AUXILIARY_UNITS", "VENDOR_DIRECTORIES", "fixture_data", "loose_example", "role"]

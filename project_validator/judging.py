@@ -135,6 +135,8 @@ NOT_FOR_AUXILIARY = frozenset(
         "platform-matrix",
         "ci-build-types",
         "security-scanning",
+        # A template's or a test's migrations change no deployed database (koyo's blueprints).
+        "migration-safety",
     }
 )
 

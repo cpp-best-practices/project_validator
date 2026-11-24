@@ -104,10 +104,32 @@ class AuxiliaryLanguageTests(unittest.TestCase):
         result = _result(tests_run, {**files, **github_job("ubuntu-latest", "cargo test")})
         self.assertNotEqual(result.status, Status.FAIL, result)
 
+    def test_a_format_only_in_auxiliary_files_is_not_the_products(self) -> None:
+        """Notebooks that are a formatter's test inputs are auxiliary, and tests-run does not fail for them (black's
+        tests/data/jupyter/*.ipynb)."""
+        notebook = '{"nbformat": 4, "nbformat_minor": 5, "metadata": {}, "cells": []}\n'
+        files = {**RUST, "tests/data/jupyter/a.ipynb": notebook, **github_job("ubuntu-latest", "cargo test")}
+        result = _result(tests_run, files)
+        self.assertNotEqual(result.status, Status.FAIL, result)
+        self.assertIn("Jupyter (auxiliary: only in test code)", result.message)
+
     def test_editor_settings_files_are_not_sources(self) -> None:
         """Emacs's per-directory settings file beside a Clojure project adds no language (clj-kondo, glib, frog)."""
         settings = {".dir-locals.el": '((nil . ((cider-clojure-cli-aliases . ":test"))))\n'}
         structure = _structure({"deps.edn": "{}\n", "src/a.clj": "(ns a)\n", **settings})
+        self.assertEqual(structure.languages, frozenset({"Clojure"}))
+
+    def test_a_style_file_markdownlint_reads_is_not_a_source(self) -> None:
+        """The style file `.mdlrc` names is markdownlint's settings in Ruby's syntax, not Ruby code (kubespray)."""
+        style = {
+            ".mdlrc": 'style "#{File.dirname(__FILE__)}/.md_style.rb"\n',
+            ".md_style.rb": "all\nexclude_rule 'MD013'\n",
+            "docs/style/rules.rb": "rule 'MD007', :indent => 2\n",
+        }
+        structure = _structure({"deps.edn": "{}\n", "src/a.clj": "(ns a)\n", **style})
+        self.assertEqual(structure.languages, frozenset({"Clojure", "Ruby"}))
+        del style["docs/style/rules.rb"]
+        structure = _structure({"deps.edn": "{}\n", "src/a.clj": "(ns a)\n", **style})
         self.assertEqual(structure.languages, frozenset({"Clojure"}))
 
 

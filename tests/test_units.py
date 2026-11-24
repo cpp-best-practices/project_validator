@@ -162,6 +162,19 @@ class UnitTests(unittest.TestCase):
                 result = checks_named(name)[0].run(make_context(root))
                 self.assertEqual([place.unit for place in result.places], ["."], result)
 
+    def test_a_templates_migrations_are_not_the_products(self) -> None:
+        """koyo's blueprints are the projects `raco koyo new` writes, migrations included (upstream #188): the
+        template's migrations are not asked to be checked beside the product's."""
+        files = {
+            "package.json": json.dumps({"name": "app"}),
+            "migrations/0001-init.sql": "create table a (id int);\n",
+            "blueprints/standard/package.json": json.dumps({"name": "app-name-here"}),
+            "blueprints/standard/migrations/0001-users.sql": "create table users (id int);\n",
+        }
+        with temp_project(files) as root:
+            result = checks_named("migration-safety")[0].run(make_context(root))
+            self.assertEqual([place.unit for place in result.places], ["."], result)
+
     def test_a_nested_build_file_that_is_no_project_of_its_own_is_its_parents(self) -> None:
         """A CMake subdirectory, a package.json that only marks its directory's modules (`{"type": "module"}`), and a
         test fixture's manifest belong to the unit above them."""
@@ -483,6 +496,31 @@ class AuxiliaryCodeTests(unittest.TestCase):
         formatting = _check("code-formatting", files)
         self.assertIn("phpcs.xml.dist is defined", formatting.message)
         self.assertNotIn("Fixtures", formatting.message)
+
+    def test_an_examples_configuration_configures_nothing_of_the_product(self) -> None:
+        """A tool configuration an example directory shows its readers is not the product's (upstream #188:
+        Perl-Critic's examples/perlcriticrc), though the example is no project of its own."""
+        files = {
+            "composer.json": json.dumps({"require": {"php": ">=8.1"}}),
+            "src/A.php": "<?php\n",
+            "phpcs.xml.dist": "<ruleset/>\n",
+            "examples/phpcs.xml.dist": "<ruleset/>\n",
+            **_workflow(("vendor/bin/phpcs", None)),
+        }
+        formatting = _check("code-formatting", files)
+        self.assertIn("phpcs.xml.dist is defined", formatting.message)
+        self.assertNotIn("examples/", formatting.message)
+
+    def test_an_examples_tests_are_still_tests(self) -> None:
+        """What an example holds is set apart as configuration, not as tests: Awesome-CV's tests are the example
+        documents CI builds (examples/cv.tex)."""
+        files = {
+            "awesome-cv.cls": "\\ProvidesClass{awesome-cv}\n",
+            "examples/cv.tex": "\\documentclass{awesome-cv}\n\\begin{document}\n\\end{document}\n",
+            **_workflow(("latexmk -pdf -cd examples/cv.tex", None)),
+        }
+        result = _check("tests-run", files)
+        self.assertEqual(result.status, Status.PASS, result.message)
 
     def test_what_is_named_must_be_a_role_a_language_or_a_directory(self) -> None:
         with temp_project(HELPER_SCRIPTS) as root:
