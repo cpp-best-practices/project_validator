@@ -101,7 +101,8 @@ def _shell_script(command: Command, context: Context) -> list[Expansion] | None:
     found = joined(command.directory, path.removeprefix("./"))
     if not context.project.exists(found):
         # A program the build makes (`./build/app`) is not in the repository either; a shell script is written by CI.
-        return [_missing(command, found)] if found.lower().endswith((".sh", ".bash", *_SUFFIXES)) else None
+        # A batch file or PowerShell script most often is a program (`npm.cmd`) or generated (`vendor/bin/x.bat`).
+        return [_missing(command, found)] if dialect is POSIX and found.endswith((".sh", ".bash")) else None
     if not _is_shell_script(text := context.project.read_text(found), found, dialect):
         return None
     origin = Origin(path=str(PurePosixPath(found)))

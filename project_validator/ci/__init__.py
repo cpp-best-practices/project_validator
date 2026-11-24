@@ -27,6 +27,7 @@ from project_validator.facts import (
 )
 from project_validator.facts.expansion import script_facts
 from project_validator.facts.jobs import Job, Toolchain
+from project_validator.facts.shell import CMD, POSIX
 from project_validator.platforms import (
     COMPILING_ECOSYSTEMS,
     RUNNER_DEFAULT_COMPILERS,
@@ -302,7 +303,8 @@ _CONFIGURATION_LINE = re.compile(r"^\s*(?:-\s+)?(?:[\w.-]+:\s*)?(?P<value>.*?)\s
 
 
 def _heuristic_facts(ci_file: CiFile, text: str, reason: str) -> Iterator[Fact]:
-    """Configuration that is not parsed: one job per OS it names, running each line that could be a command."""
+    """Configuration that is not parsed: one job per OS it names, running each line that could be a command, read as
+    a Windows job's are most often written, in cmd (`.\\build.bat`), or else in a POSIX shell."""
     origin = Origin(path=ci_file.path)
     operating_systems = detect_operating_systems(text) or ["unknown"]
     lines = (match["value"].strip("'\"") for line in text.splitlines() if (match := _CONFIGURATION_LINE.match(line)))
@@ -312,7 +314,9 @@ def _heuristic_facts(ci_file: CiFile, text: str, reason: str) -> Iterator[Fact]:
         yield CiJob(
             origin=origin, id=identity, provider=ci_file.provider.name, name=ci_file.path, os=os, heuristic=True
         )
-        yield from (fact for fact in script_facts(script, job=identity, origin=origin) if isinstance(fact, Command))
+        dialect = CMD if os == "windows" else POSIX
+        found = script_facts(script, job=identity, origin=origin, dialect=dialect)
+        yield from (fact for fact in found if isinstance(fact, Command))
     yield Unknown(origin=origin, subject=_JOBS, reason=reason, hides="jobs")
 
 

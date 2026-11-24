@@ -669,11 +669,24 @@ class ShellScriptTests(unittest.TestCase):
                 facts = _facts({**files, GITHUB_WORKFLOW: json.dumps({"jobs": {"test": job}})})
                 self.assertIn(expected, _expanded(facts))
 
-    def test_a_missing_batch_file_is_unknown_and_one_outside_the_project_is_not_followed(self) -> None:
-        steps = [{"run": "call ci\\setup.bat\ncall C:\\BuildTools\\vcvars64.bat", "shell": "cmd"}]
+    def test_a_batch_file_the_project_does_not_hold_is_not_followed_nor_unknown(self) -> None:
+        """Most are generated (Composer's `vendor/bin/phpunit.bat`) or programs (`npm.cmd`), not the project's."""
+        steps = [
+            {"run": "call vendor\\bin\\phpunit.bat\nnpm.cmd ci\ncall C:\\BuildTools\\vcvars64.bat", "shell": "cmd"}
+        ]
         job = {"runs-on": "windows-latest", "steps": steps}
         facts = _facts({GITHUB_WORKFLOW: json.dumps({"jobs": {"test": job}})})
-        self.assertEqual([fact.subject for fact in facts.of(Unknown)], ["the script ci/setup.bat"])
+        self.assertEqual([fact.subject for fact in facts.of(Unknown)], [])
+
+    def test_a_ci_file_scanned_heuristically_is_read_as_cmd_on_windows(self) -> None:
+        """Catch2's AppVeyor runs `.\\tools\\misc\\appveyorBuildConfigurationScript.bat`."""
+        files = {
+            "appveyor.yml": "image: Visual Studio 2019\nbuild_script:\n  - cmd: .\\tools\\build.bat\n",
+            "tools/build.bat": "cmake --build build\r\n",
+        }
+        facts = _facts(files)
+        self.assertIn(("cmake", "--build", "build"), _expanded(facts))
+        self.assertEqual([fact.subject for fact in facts.of(Unknown) if fact.subject.startswith("the script")], [])
 
     def test_other_files_and_inline_scripts_are_not_followed(self) -> None:
         files = {**self.SCRIPT, "tools/run.py": "print('x')\n", "ci/notes": "ruff check .\n"}
