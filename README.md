@@ -145,12 +145,13 @@ and `!reference`) are parsed as YAML, and so is `.travis.yml` (its build matrix,
 `allow_failures`; a job left to its language's default script is unknown) and `.circleci/config.yml` (the jobs its
 workflows run, `matrix: parameters:`, the config's `commands:` and executors; an orb's commands and jobs are
 unknown) and Azure Pipelines (`azure-pipelines.yml`, `.azure-pipelines/azure-pipelines.yml`, `.vsts-ci.yml`: stages,
-jobs, matrix legs, `$(variables)` and the common tasks; templates are unknown). A job is judged by what it runs: its commands (and the commands those run in turn), its image,
+jobs, matrix legs, `$(variables)` and the common tasks; templates are unknown) and AppVeyor (its image, platform,
+configuration and environment matrix, `for:` sections and `%VARIABLES%`). A job is judged by what it runs: its commands (and the commands those run in turn), its image,
 environment and actions. A GitHub step or job whose `if:` is false for a matrix combination does not run in it
 (`runner.os`, `matrix.*`, `env.*` and `contains`/`startsWith`/`endsWith` are evaluated; conditions on anything else
 are kept), and expressions whose values are known are evaluated the way GitHub evaluates them before a step runs.
 Each build system reads the build types from its own commands (`-DCMAKE_BUILD_TYPE`, `--config`, `ctest -C`,
-`meson setup --buildtype`, `cargo --release`, `swift build -c`, `xcodebuild -configuration`). AppVeyor, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines and Woodpecker are detected
+`meson setup --buildtype`, `cargo --release`, `swift build -c`, `xcodebuild -configuration`). Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines and Woodpecker are detected
 and scanned heuristically. pre-commit.ci is the CI of a `.pre-commit-config.yaml` with a `ci:` section: it runs the
 hooks (but `ci.skip`), and builds nothing, so it is no platform or build configuration. A pre-commit hook counts only
 where CI runs it (pre-commit.ci, `pre-commit run` or `pre-commit/action`). A job that names no compiler is counted with its runner's default compiler (gcc on Linux,

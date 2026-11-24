@@ -283,6 +283,8 @@ def ci_running(provider: str, *commands: str) -> dict[str, str]:
         return github_job("ubuntu-latest", *commands)
     if provider == "GitLab CI":
         return {CI_FILES[provider]: json.dumps({"test": {"script": list(commands)}})}
+    if provider == "AppVeyor":
+        return {CI_FILES[provider]: json.dumps({"image": "Ubuntu2204", "build": "off", "test_script": list(commands)})}
     if provider == "Azure Pipelines":
         return {CI_FILES[provider]: json.dumps({"steps": [{"script": command} for command in commands]})}
     if provider == "CircleCI":

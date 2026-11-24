@@ -5,12 +5,6 @@ from __future__ import annotations
 from project_validator.ci import CiProvider
 from project_validator.text import pattern
 
-APPVEYOR = CiProvider(
-    name="AppVeyor",
-    files=("appveyor.yml", ".appveyor.yml"),
-    badges=(pattern("AppVeyor", r"ci\.appveyor\.com/api/projects/status|img\.shields\.io/appveyor/"),),
-    configured_elsewhere=True,
-)
 JENKINS = CiProvider(
     name="Jenkins",
     files=("Jenkinsfile",),
