@@ -690,7 +690,19 @@ class PresetTests(unittest.TestCase):
                 self.assertEqual(_preset_condition(condition), expected)
 
     def test_presets_that_do_not_parse_are_unknown(self) -> None:
-        self.assertEqual([type(fact).__name__ for fact in preset_facts({"CMakePresets.json": "{"})], ["Unknown"])
+        [unknown] = preset_facts({"CMakePresets.json": "{"})
+        if not isinstance(unknown, Unknown):
+            self.fail(f"not an Unknown: {unknown}")
+        self.assertEqual(
+            replace(unknown, reason=""),
+            Unknown(
+                origin=Origin(path="CMakePresets.json"),
+                subject="the CMake presets",
+                reason="",
+                hides="settings",
+                tools=("CMake",),
+            ),
+        )
         self.assertEqual(list(preset_facts({"CMakePresets.json": "[]"})), [])
 
 
