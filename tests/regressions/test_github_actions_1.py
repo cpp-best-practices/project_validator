@@ -236,6 +236,26 @@ class WorkingDirectoryTests(unittest.TestCase):
             self.assertNotIn(result.status, (Status.WARN, Status.FAIL), result)
 
 
+class CompositeInputTests(unittest.TestCase):
+    def test_an_input_the_caller_leaves_out_is_empty(self) -> None:
+        """A composite action's `${{ inputs.<name> }}` is the caller's value, and empty when the caller gives none
+        and the action declares no default (upstream #302)."""
+        action = (
+            "inputs:\n  flags:\n    required: false\nruns:\n  using: composite\n  steps:\n"
+            "    - run: ctest ${{ inputs.flags }} --test-dir build\n      shell: bash\n"
+        )
+        job: Job = {"runs-on": UBUNTU, "steps": [{"uses": "./.github/actions/t"}]}
+        given: Job = {"runs-on": UBUNTU, "steps": [{"uses": "./.github/actions/t", "with": {"flags": "-V"}}]}
+        for steps, expected in (
+            (job, ("ctest", "--test-dir", "build")),
+            (given, ("ctest", "-V", "--test-dir", "build")),
+        ):
+            with self.subTest(expected=expected):
+                files = {".github/actions/t/action.yml": action, GITHUB_WORKFLOW: _workflow(test=steps)}
+                commands, _, _ = _facts(files)
+                self.assertIn(expected, [argv for argv, _ in commands])
+
+
 class ExpressionOperandTests(unittest.TestCase):
     def test_and_and_or_yield_the_deciding_operand(self) -> None:
         """GitHub's `a && b` is `b` when `a` is truthy, and `a || b` is `a` or else `b`: a ternary renders its branch,

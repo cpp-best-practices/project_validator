@@ -350,6 +350,8 @@ class EvaluationTests(unittest.TestCase):
         )
         with mock.patch.object(evaluation, "MOST_STATEMENTS", 2):
             [unknown] = (fact for fact in _facts("a = 1", "b = 2", "c = 3") if isinstance(fact, UnknownFact))
+            # At the limit, every statement is evaluated (upstream #303).
+            self.assertEqual([fact for fact in _facts("a = 1", "b = 2") if isinstance(fact, UnknownFact)], [])
         self.assertEqual(unknown.reason, "evaluation stopped after 2 statements")
 
     def test_declared_languages(self) -> None:
@@ -480,3 +482,17 @@ class EvaluationEdgeTests(unittest.TestCase):
 class RunTargetEdgeTests(unittest.TestCase):
     def test_a_run_target_without_a_command_runs_nothing(self) -> None:
         self.assertEqual(_expanded("ninja -C build empty"), [])
+
+    def test_a_run_target_without_a_name_is_no_target(self) -> None:
+        """Meson rejects a run_target() with a command but no name; reading one records no target (upstream
+        #301)."""
+        with temp_project({"meson.build": "project('app')\nrun_target(command: ['clang-tidy'])\n"}) as root:
+            self.assertEqual(dict(meson.meson_project(make_context(root)).targets), {})
+
+    def test_an_executable_the_project_builds_runs_by_its_name(self) -> None:
+        """`run_target('gen', command: [exe, '--all'])` runs the executable `exe = executable('tool', ...)` builds:
+        the command's word is the target's name, as a found program's is (upstream #302)."""
+        build = "project('app')\nexe = executable('tool', 'tool.c')\nrun_target('gen', command: [exe, '--all'])\n"
+        with temp_project({"meson.build": build}) as root:
+            [(argv, _, _)] = meson.meson_project(make_context(root)).targets["gen"]
+        self.assertEqual(argv, ("tool", "--all"))

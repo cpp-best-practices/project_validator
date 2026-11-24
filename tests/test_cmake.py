@@ -213,6 +213,7 @@ class VariableTests(unittest.TestCase):
             'set(CMAKE_BUILD_TYPE Release CACHE STRING "")',
             "set(CMAKE_BUILD_TYPE Debug)",
             'set(LEVEL 2 CACHE STRING "level")',
+            'set(EMPTY CACHE STRING "nothing yet")',
             "set(ENV{CC} gcc)",
             "set()",
             "unset()",
@@ -222,6 +223,7 @@ class VariableTests(unittest.TestCase):
         self.assertEqual(_settings(found, "CMAKE_CXX_EXTENSIONS"), [("OFF", NOT_MSVC, False)])
         self.assertEqual(_settings(found, "CMAKE_BUILD_TYPE"), [("Release", ANY, True)])
         self.assertEqual(_settings(found, "LEVEL"), [("2", ANY, True)])
+        self.assertEqual(_settings(found, "EMPTY"), [("", ANY, True)])
 
     def test_a_function_sets_its_callers_variables_in_the_parent_scope(self) -> None:
         found = _listed(
@@ -469,6 +471,8 @@ class FileTests(unittest.TestCase):
         self.assertEqual(unknowns, [("the CMake file CMakeLists.txt", reason, "CMakeLists.txt:2")])
         with mock.patch.object(evaluation, "MOST_COMMANDS", 3):
             [unknown] = (fact for fact in _listed(*["set(A 1)"] * 5) if isinstance(fact, Unknown))
+            # At the limit, every command is evaluated (upstream #303).
+            self.assertEqual([fact for fact in _listed(*["set(A 1)"] * 3) if isinstance(fact, Unknown)], [])
         self.assertEqual(unknown.reason, "evaluation stopped after 3 commands")
 
 
@@ -686,7 +690,19 @@ class PresetTests(unittest.TestCase):
                 self.assertEqual(_preset_condition(condition), expected)
 
     def test_presets_that_do_not_parse_are_unknown(self) -> None:
-        self.assertEqual([type(fact).__name__ for fact in preset_facts({"CMakePresets.json": "{"})], ["Unknown"])
+        [unknown] = preset_facts({"CMakePresets.json": "{"})
+        if not isinstance(unknown, Unknown):
+            self.fail(f"not an Unknown: {unknown}")
+        self.assertEqual(
+            replace(unknown, reason=""),
+            Unknown(
+                origin=Origin(path="CMakePresets.json"),
+                subject="the CMake presets",
+                reason="",
+                hides="settings",
+                tools=("CMake",),
+            ),
+        )
         self.assertEqual(list(preset_facts({"CMakePresets.json": "[]"})), [])
 
 
@@ -853,6 +869,28 @@ class StringAndSeparateArgumentsTests(unittest.TestCase):
 
 
 class EvaluationEdgeTests(unittest.TestCase):
+    def test_an_argument_a_function_passes_on_comes_from_where_its_value_was_set(self) -> None:
+        """A function's parameter keeps the origin of the value the call passed (upstream #304)."""
+        found = _listed("set(W -Wall)", "function(f x)", "  add_compile_options(${x})", "endfunction()", "f(${W})")
+        origins = [fact.origin for fact in found if isinstance(fact, CompilerOption)]
+        self.assertEqual(origins, [_At("CMakeLists.txt", "set", 1)])
+
+    def test_a_test_generator_expression_as_a_value_is_one_or_zero_per_build(self) -> None:
+        """`$<CONFIG:Debug>` written as a value is 1 in Debug builds and 0 in the others (upstream #304)."""
+        found = _listed("add_compile_options(-DDEBUG=$<CONFIG:Debug>)")
+        by_value = {option: applies.configurations for option, _, applies in _options(found)}
+        self.assertEqual(by_value["-DDEBUG=1"], frozenset({"debug"}))
+        self.assertNotIn("debug", by_value["-DDEBUG=0"] or {"debug"})
+
+    def test_project_names_the_project(self) -> None:
+        """`${PROJECT_NAME}` is the name project() gave (upstream #305)."""
+        found = _listed(
+            "project(app)",
+            "add_executable(${PROJECT_NAME} a.cpp)",
+            "target_compile_options(${PROJECT_NAME} PRIVATE -Wall)",
+        )
+        self.assertEqual([target for _, target, _ in _options(found)], ["app"])
+
     def test_a_quoted_first_argument_with_values_per_build_is_one_argument(self) -> None:
         found = _listed(
             "if(MSVC)",

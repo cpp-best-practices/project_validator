@@ -192,6 +192,12 @@ class CabalTests(unittest.TestCase):
         )
         self.assertEqual(options("app.cabal", 'library\n  ghc-options: "unclosed\n'), [("library", ('"unclosed',))])
 
+    def test_an_hpack_option_under_when_holds_where_its_condition_does(self) -> None:
+        hpack = "executables:\n  app:\n    when:\n    - condition: flag(dev)\n      ghc-options: -Werror\n"
+        facts = GHC_OPTIONS.read("package.yaml", hpack)
+        requires = [fact.applies.requires for fact in facts if isinstance(fact, CompilerOption)]
+        self.assertEqual(requires, [frozenset({"flag(dev)"})])
+
 
 class HaskellTests(unittest.TestCase):
     def _run(self, selected: Check, files: dict[str, str]) -> Result:
