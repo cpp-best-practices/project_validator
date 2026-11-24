@@ -89,6 +89,14 @@ def fixture_data(path: str) -> bool:
     return any(part.lower() in _FIXTURE_DIRECTORIES for part in PurePosixPath(path).parts)
 
 
+def loose_example(path: str, unit: str) -> bool:
+    """Whether `path` is an example's file in `unit`, a unit that is not the example's own (Perl-Critic's
+    examples/perlcriticrc): not an example unit's own files, nor the tests an example keeps (a Flutter plugin's
+    example/integration_test/)."""
+    tests = any(_named_role(part.lower()) == "test" for part in PurePosixPath(path).parts[:-1])
+    return role(path) == "example" and role(unit, directory=True) != "example" and not tests
+
+
 def _named_role(part: str) -> str | None:
     """The role a directory's name tells (`tests`, `integration-tests`, `tests-build`, `examples`, `foo_bench`), if
     any."""
@@ -141,4 +149,4 @@ def role(path: str, *, directory: bool = False) -> str:
     return "product"
 
 
-__all__ = ["AUXILIARY", "AUXILIARY_UNITS", "VENDOR_DIRECTORIES", "fixture_data", "role"]
+__all__ = ["AUXILIARY", "AUXILIARY_UNITS", "VENDOR_DIRECTORIES", "fixture_data", "loose_example", "role"]

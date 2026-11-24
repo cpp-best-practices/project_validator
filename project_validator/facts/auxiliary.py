@@ -17,7 +17,7 @@ from dataclasses import dataclass
 
 from project_validator.ecosystems import registered
 from project_validator.facts import Fact, Facts
-from project_validator.facts.roles import AUXILIARY, fixture_data, role
+from project_validator.facts.roles import AUXILIARY, fixture_data, loose_example, role
 from project_validator.facts.tools import within
 
 
@@ -97,13 +97,16 @@ class Selectors:
             return found
         return implied(purpose) if language in self.implied and purpose in AUXILIARY else ""
 
-    def apart(self, path: str) -> str:
-        """What sets a file of no language (a manifest, a tool's configuration) apart from the code around it: what
-        names it (see `matching`), else being a test suite's data (`tests/fixtures/`: upstream #188); "" when it is
-        the code's around it. An example's files are not set apart: a Flutter plugin's tests are its example app's."""
+    def apart(self, path: str, unit: str | None = None) -> str:
+        """What sets a file (a manifest, a tool's configuration, a test) apart from the code around it: what names it
+        (see `matching`), else being a test suite's data (`tests/fixtures/`), or, for configuration in `unit`, an
+        example's in a unit that is not the example (`examples/perlcriticrc`: see `loose_example`; upstream #188);
+        "" when it is the code's around it. An example's tests are not set apart: Awesome-CV's are its examples."""
         if found := self.matching(path, None):
             return found
-        return implied("test") if fixture_data(path) else ""
+        if fixture_data(path):
+            return implied("test")
+        return implied("example") if unit is not None and loose_example(path, unit) else ""
 
 
 def selectors(facts: Facts) -> Selectors:
