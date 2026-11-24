@@ -36,7 +36,15 @@ from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured, reported
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.exit_status import POSIX
-from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, joined, launcher
+from project_validator.facts.expansion import (
+    CommandExpander,
+    Expansion,
+    Launched,
+    Script,
+    found_at,
+    joined,
+    launcher,
+)
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
@@ -227,7 +235,7 @@ def _package_scripts(command: Command, context: Context) -> Iterator[Expansion] 
     scripts = _json_strings(json_value(context, path, "scripts"))
     if run.name not in scripts:
         if not run.explicit:
-            return None
+            return _binary(command, run)
         return iter((Unknown(origin=command.origin, subject=f"the script {run.name}", reason=f"{path} has none"),))
     names = [f"{prefix}{run.name}" for prefix in (("pre", "", "post") if command.argv[0] in ("npm", "yarn") else ("",))]
     return (
@@ -236,6 +244,14 @@ def _package_scripts(command: Command, context: Context) -> Iterator[Expansion] 
         for name in names
         if name in scripts
     )
+
+
+def _binary(command: Command, run: _ScriptRun) -> Iterator[Expansion] | None:
+    """`yarn c8 yarn test`, where the package has no script c8: the c8 binary it runs, as `yarn exec c8 yarn test`
+    does (prettier, upstream #188)."""
+    if run.name not in command.argv:
+        return None
+    return iter((Launched(argv=command.argv[command.argv.index(run.name) :]),))
 
 
 PACKAGE_SCRIPTS = CommandExpander(name="package.json scripts", expand=_package_scripts)
