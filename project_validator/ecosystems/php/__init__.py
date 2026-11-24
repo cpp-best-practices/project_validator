@@ -9,6 +9,7 @@ import json
 import re
 from collections.abc import Callable
 
+from project_validator.build_systems.model import standalone_package
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
@@ -28,7 +29,7 @@ PHP_ONLY = frozenset({PHP_LANGUAGE})
 COMPOSER_JSON = "composer.json"
 
 
-COMPOSER = BuildSystem(name="Composer", files=(COMPOSER_JSON,), languages=PHP_ONLY)
+COMPOSER = BuildSystem(name="Composer", files=(COMPOSER_JSON,), languages=PHP_ONLY, standalone=standalone_package)
 
 
 PHPUNIT_CONFIG_FILES = ("phpunit.xml", "phpunit.xml.dist", "phpunit.dist.xml")

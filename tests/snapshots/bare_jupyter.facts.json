@@ -1,16 +1,17 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Jupyter",
       "origin": "notebooks/prices.ipynb",
       "role": "product"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [],
@@ -20,7 +21,8 @@
       "kind": "Unit",
       "languages": [],
       "origin": ".",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "column": null,

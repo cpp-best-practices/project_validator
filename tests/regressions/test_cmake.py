@@ -152,7 +152,7 @@ class SkippedConstructTests(unittest.TestCase):
         credited."""
         files = {"CMakeLists.txt": C_PROJECT + GLOB_TARGET, "scripts/x.sh": "#!/bin/sh\n", **_built_target("lintsh")}
         result = _run(static_analysis, files)
-        self.assertIn("Shell: shellcheck runs", result.message)
+        self.assertIn("Shell (auxiliary: only in tooling code): shellcheck runs", result.message)
 
     def test_a_cmake_script_test_runner_runs_the_tests_it_executes(self) -> None:
         """neovim's unittest target runs busted through `cmake -D TEST_TYPE=unit -P cmake/RunTests.cmake`: the Lua

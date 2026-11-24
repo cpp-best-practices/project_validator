@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "MSBuild",
       "kind": "BuildFile",
       "languages": [],
@@ -19,12 +14,19 @@
       "role": "product"
     },
     {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
       "build_systems": [],
       "formats": [],
       "kind": "Unit",
       "languages": [],
       "origin": ".",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "build_systems": [
@@ -36,7 +38,8 @@
         "C#"
       ],
       "origin": "src/App",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "kind": "CommittedOutput",

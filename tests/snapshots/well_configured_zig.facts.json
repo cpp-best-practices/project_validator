@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "Zig build",
       "kind": "BuildFile",
       "languages": [
@@ -85,6 +80,12 @@
       "role": "product"
     },
     {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
       "build_systems": [
         "Zig build"
       ],
@@ -96,7 +97,8 @@
         "Zig"
       ],
       "origin": ".",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "column": null,

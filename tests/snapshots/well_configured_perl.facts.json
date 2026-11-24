@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "ExtUtils::MakeMaker",
       "kind": "BuildFile",
       "languages": [
@@ -78,6 +73,12 @@
       "role": "test"
     },
     {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
       "build_systems": [
         "ExtUtils::MakeMaker",
         "cpanfile"
@@ -90,7 +91,8 @@
         "Perl"
       ],
       "origin": ".",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "column": null,

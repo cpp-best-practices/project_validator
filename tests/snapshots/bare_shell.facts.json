@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "PowerShell",
@@ -20,6 +15,12 @@
       "role": "product"
     },
     {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
       "build_systems": [],
       "formats": [],
       "kind": "Unit",
@@ -28,7 +29,8 @@
         "Shell"
       ],
       "origin": ".",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "kind": "ConfigurationFile",

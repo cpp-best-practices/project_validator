@@ -6,6 +6,7 @@ The project map (`--map`, `project_validator.project_map`) is a view over these 
 
 from __future__ import annotations
 
+import posixpath
 from collections import Counter
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass, replace
@@ -16,7 +17,7 @@ from project_validator.core import Project
 from project_validator.ecosystems import Ecosystem, Kind, build_systems, families, formats, registered
 from project_validator.facts import Fact, Facts, Origin
 from project_validator.facts.auxiliary import AuxiliaryCode, Selectors
-from project_validator.facts.roles import role
+from project_validator.facts.roles import AUXILIARY, fixture_data, role
 from project_validator.facts.tools import owner, within
 
 # Suffixes of files that are not source code of any language: documents, styles, media, archives, binaries and plain
@@ -110,6 +111,9 @@ class Unit(Fact):
     formats: frozenset[str] = frozenset()
     # What the unit is for, by its directory (see `role`); a name, not a judgement.
     role: str = "product"
+    # For a unit of tests, the units it tests: those it depends on by path and the unit it is in (upstream #230);
+    # none: every unit (see `tests_unit`).
+    tests: tuple[str, ...] = ()
 
     @property
     def directory(self) -> str:
@@ -430,9 +434,20 @@ def _members(project: Project, build: BuildFile) -> list[str]:
     return [pattern.removeprefix("./") for pattern in patterns]
 
 
+def _standalone(project: Project, builds: list[BuildFile]) -> set[str]:
+    """The directories of `builds` (of one build system) whose build file is a project of its own wherever it is (a
+    nested Package.swift: see `BuildSystem.standalone`), but for test suites' data (`tests/fixtures/`)."""
+    system = next((found for found in build_systems() if found.name == builds[0].build_system), None)
+    if system is None or system.standalone is None:
+        return set()
+    files = (build for build in builds if not build.origin.path.endswith("/") and not fixture_data(build.origin.path))
+    return {_directory(build) for build in files if system.standalone(project.read_text(build.origin.path))}
+
+
 def _unit_roots(project: Project, builds: tuple[BuildFile, ...]) -> tuple[dict[str, list[str]], set[str]]:
-    """Unit directory -> its build systems (each build system's outermost directories, and workspace members), and
-    the directories of the build files that declare a workspace."""
+    """Unit directory -> its build systems (each build system's outermost directories, workspace members, and the
+    projects of their own below them: upstream #188), and the directories of the build files that declare a
+    workspace."""
     roots: dict[str, list[str]] = {}
     workspaces: set[str] = set()
     for system in dict.fromkeys(build.build_system for build in builds):
@@ -443,12 +458,40 @@ def _unit_roots(project: Project, builds: tuple[BuildFile, ...]) -> tuple[dict[s
             if declared := _members(project, build):
                 workspaces.add(_directory(build))
                 members += declared
+        standalone = _standalone(project, own)
         for directory in sorted(directories):
             declared_member = any(fnmatchcase(directory, pattern) for pattern in members)
             outer = not any(other != directory and within(directory, other) for other in directories)
-            if declared_member or outer:
+            if declared_member or outer or directory in standalone:
                 roots.setdefault(directory, []).append(system)
     return roots, workspaces
+
+
+def _languages_by_purpose(facts: Facts) -> tuple[set[str], set[str]]:
+    """The languages of the project's own sources in product code, and those in auxiliary code."""
+    known = formats()
+    product: set[str] = set()
+    auxiliary: set[str] = set()
+    for source in facts.of(SourceFile):
+        if source.language is not None and source.language not in known and not source.vendored:
+            (auxiliary if source.role in AUXILIARY else product).add(source.language)
+    return product, auxiliary
+
+
+def _auxiliary_languages(facts: Facts) -> frozenset[str]:
+    """The languages written only in auxiliary code (upstream #182): a test fixture in C, a docs theme's script, a
+    maintainer's script under `hack/`, that no build file outside auxiliary code builds, and of an ecosystem none of
+    whose languages is the product's (a Java project's tests in Kotlin are its own); none when the project has no
+    product language left (a project of examples alone is judged as it is)."""
+    known = formats()
+    product, auxiliary = _languages_by_purpose(facts)
+    built = (build for build in facts.of(BuildFile) if role(_directory(build), directory=True) not in AUXILIARY)
+    product |= given_way((language for build in built for language in build.languages), product)
+    product |= {name for name in _content_names(facts) if name not in known}
+    product |= {
+        language for ecosystem in registered() if ecosystem.languages & product for language in ecosystem.languages
+    }
+    return frozenset(auxiliary - product) if product else frozenset()
 
 
 def _own(languages: Iterable[str], path: str, named: Selectors, *, directory: bool = False) -> set[str]:
@@ -498,7 +541,40 @@ def _units(project: Project, facts: Facts, named: Selectors) -> Iterator[Unit]:
             build_systems=tuple(roots.get(directory, ())),
             languages=frozenset(languages[directory]),
             formats=frozenset(formats_.get(directory, ())),
+            tests=_tested(project, facts, directory, tuple(languages)) if purpose == "test" else (),
         )
+
+
+def _tested(project: Project, facts: Facts, directory: str, units: tuple[str, ...]) -> tuple[str, ...]:
+    """The units a unit of tests at `directory` tests: those its build files depend on by path, and the unit it is in
+    but for the root (hledger-web/test/browser tests hledger-web); none when neither is known (it tests every unit)."""
+    others = tuple(unit for unit in units if unit != directory)
+    found = [owner(path, others) for path in _path_dependencies(project, facts, directory)]
+    if directory != "." and (parent := owner(str(PurePosixPath(directory).parent), others)) != ".":
+        found.append(parent)
+    return tuple(dict.fromkeys(unit for unit in found if unit != directory))
+
+
+def _path_dependencies(project: Project, facts: Facts, directory: str) -> Iterator[str]:
+    """The project paths of the packages the build files at `directory` depend on by path."""
+    systems = {system.name: system for system in build_systems()}
+    for build in facts.of(BuildFile):
+        system = systems.get(build.build_system)
+        if _directory(build) != directory or system is None or system.path_dependencies is None:
+            continue
+        for path in system.path_dependencies(project.read_text(build.origin.path)):
+            yield posixpath.normpath(posixpath.join(directory, path))
+
+
+def tests_unit(facts: Facts) -> Callable[[str, str], bool]:
+    """Whether a path is in a unit of tests (a separate test project) that tests a unit (see `Unit.tests`)."""
+    units = {found.directory: found for found in facts.of(Unit)}
+
+    def tests(path: str, unit: str) -> bool:
+        found = units.get(owner(path, units))
+        return found is not None and found.role == "test" and (not found.tests or unit in found.tests)
+
+    return tests
 
 
 type _Found = list[tuple[BuildFile | None, str]]
@@ -520,8 +596,6 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     ecosystems those show, and the unrecognised suffixes."""
     generated = _generated(project)
     files = _outside(project.files(), generated)
-    named = Selectors.parse(project.auxiliary)
-    yield AuxiliaryCode(origin=Origin(path="."), named=tuple(project.auxiliary))
     found, found_sources = _builds_and_sources(project, files, generated)
     content, located = _content(project)
     plain = Facts((*(fact for fact, _ in found if fact is not None), *found_sources, *content))
@@ -536,7 +610,11 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     recognised |= {suffix for name in names for suffix in BUILT_LANGUAGE_SUFFIXES.get(name, ())}
     accounted = {*(path for _, path in found), *(source.path for source in sources), *located}
     yield from _unrecognised(files, accounted, recognised)
-    yield from _units(project, Facts((*plain, *ambiguous)), named)
+    every = Facts((*plain, *ambiguous))
+    implied = _auxiliary_languages(every)
+    named = Selectors.parse(project.auxiliary, implied)
+    yield AuxiliaryCode(origin=Origin(path="."), named=tuple(project.auxiliary), implied=tuple(sorted(implied)))
+    yield from _units(project, every, named)
 
 
 __all__ = [
@@ -552,4 +630,5 @@ __all__ = [
     "source_languages",
     "source_signal",
     "structure_facts",
+    "tests_unit",
 ]

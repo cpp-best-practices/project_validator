@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
@@ -27,6 +22,12 @@
       "role": "product"
     },
     {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
       "build_systems": [],
       "formats": [
         "JSON",
@@ -36,7 +37,8 @@
       "kind": "Unit",
       "languages": [],
       "origin": ".",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "column": 1,

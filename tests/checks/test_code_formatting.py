@@ -388,7 +388,8 @@ class AnswerTests(unittest.TestCase):
         files = {"CMakeLists.txt": "project(app)\n", "src/a.cpp": "", "docs/conf.py": "", **CLANG_FORMAT}
         files |= github_job("ubuntu-latest", "clang-format -n -Werror src/a.cpp")
         with temp_project(files) as root:
-            self.assertEqual(code_formatting.run(make_context(root)).status, Status.FAIL)
+            # Python only in the docs is auxiliary by default (upstream #182), as it is when named.
+            self.assertEqual(code_formatting.run(make_context(root)).status, Status.WARN)
             context = make_context(root, auxiliary=("docs",))
             self.assertIn("Python", context.structure.languages)
             result = code_formatting.run(context)

@@ -16,7 +16,7 @@ from pathlib import PurePosixPath
 from project_validator.facts import Facts
 from project_validator.facts.auxiliary import selectors
 from project_validator.facts.roles import role
-from project_validator.facts.structure import Unit
+from project_validator.facts.structure import Unit, tests_unit
 from project_validator.facts.tools import Tool, known_tools, owner, within
 from project_validator.questions import Answer, LanguageAnswers, answer_dict, per_unit, runs_of, unknowns_for
 
@@ -141,12 +141,12 @@ class ToolAnswer:
 def _relevant(path: str, unit: str, facts: Facts, auxiliary: tuple[str, ...]) -> bool:
     """Whether a definition file applies to code in `unit`: tools look for theirs in a file's directory and the
     directories above it, so one at or above the unit applies to all of it, and one inside it (not in a unit of its
-    own) to part of it, unless that part is vendored or auxiliary code (an example's own configuration, with
-    `--auxiliary example`) the answer is not about (`auxiliary`: what named the code it is about)."""
+    own) to part of it, unless that part is vendored or auxiliary code (an example's own configuration, a test
+    fixture's: see `Selectors.apart`) the answer is not about (`auxiliary`: what named the code it is about)."""
     directory = str(PurePosixPath(path).parent)
     if within(unit, directory):
         return True
-    named = selectors(facts).matching(path, None)
+    named = selectors(facts).apart(path)
     inside = within(directory, unit) and _owner(path, facts) == unit
     return inside and role(path) != "vendored" and (not named or named in auxiliary)
 
@@ -189,21 +189,15 @@ def _known(tool: Tool, aspect: str) -> KnownTool:
 type _Defined = tuple[tuple[str, tuple[str, ...]], ...]
 
 
-def _test_unit_files(facts: Facts) -> Callable[[str], bool]:
-    """Whether a file is in a unit of tests (a separate test project)."""
-    units = {found.directory: found.role for found in facts.of(Unit)}
-    return lambda path: units.get(owner(path, units), "product") == "test"
-
-
 def _defined(aspect: str, known: tuple[Tool, ...], facts: Facts, unit: str, auxiliary: tuple[str, ...]) -> _Defined:
     """Each known tool whose definition a file that applies to `unit` (or to the auxiliary code the answer is about)
     holds, with those files."""
-    in_test_unit = _test_unit_files(facts)
+    in_test_unit = tests_unit(facts)
 
     def applies(tool: Tool, path: str) -> bool:
         definition = tool.definitions.get(aspect)
         relevant = _relevant(path, unit, facts, auxiliary)
-        return relevant or (definition is not None and definition.from_test_units and in_test_unit(path))
+        return relevant or (definition is not None and definition.from_test_units and in_test_unit(path, unit))
 
     found = ((tool.name, tuple(path for path in tool.defined(aspect, facts) if applies(tool, path))) for tool in known)
     return tuple((name, paths) for name, paths in found if paths)

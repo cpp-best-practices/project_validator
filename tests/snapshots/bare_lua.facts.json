@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "LuaRocks",
       "kind": "BuildFile",
       "languages": [
@@ -27,6 +22,12 @@
       "suffix": ".out"
     },
     {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
       "build_systems": [
         "LuaRocks"
       ],
@@ -36,7 +37,8 @@
         "Lua"
       ],
       "origin": ".",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "kind": "CommittedOutput",

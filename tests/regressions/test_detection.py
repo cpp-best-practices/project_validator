@@ -96,7 +96,6 @@ def _job(files: Mapping[str, str]) -> Job:
 
 
 class AuxiliaryLanguageTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #182: a fixture .c or docs .js makes a product language of the unit
     def test_a_language_only_in_auxiliary_files_is_not_the_products(self) -> None:
         """A Rust crate with a test fixture in C and a docs theme script is a Rust product: C and JavaScript are
         auxiliary, and tests-run does not fail for them (ripgrep, glib, fmt, ansible community.general)."""
@@ -182,7 +181,8 @@ class ContentFormatOwnershipTests(unittest.TestCase):
 class TestUnitRunTests(unittest.TestCase):
     def test_a_test_units_test_run_runs_the_tests_of_every_unit(self) -> None:
         """serde's CI runs `cd test_suite && cargo test`: the workspace's unit of tests, whose tests count for every
-        unit, runs them for every unit (#230). Its clippy run still lints only test_suite."""
+        unit when it names none it tests, runs them for every unit (#230). Its clippy run still lints only
+        test_suite."""
         lib = "[package]\nname = '{}'\nversion = '0.1.0'\n"
         files = {
             "Cargo.toml": "[workspace]\nmembers = ['serde', 'test_suite']\n",
@@ -202,10 +202,42 @@ class TestUnitRunTests(unittest.TestCase):
         )
 
 
+class TestUnitCreditTests(unittest.TestCase):
+    """A unit of tests counts for the units it tests (upstream #230): those it depends on by path, and the unit it is
+    in; for every unit only when it says neither."""
+
+    def test_a_test_crate_counts_for_the_crates_it_depends_on(self) -> None:
+        """tokio's tests-integration depends on tokio by path: its tests are tokio's, not the benches' nor another
+        crate's."""
+        lib = "[package]\nname = '{}'\nversion = '0.1.0'\n"
+        files = {
+            "Cargo.toml": "[workspace]\nmembers = ['tokio', 'benches', 'other', 'tests-integration']\n",
+            **{f"{name}/Cargo.toml": lib.format(name) for name in ("tokio", "benches", "other")},
+            **{f"{name}/src/lib.rs": "" for name in ("tokio", "benches", "other")},
+            "tests-integration/Cargo.toml": lib.format("ti") + "\n[dependencies]\ntokio = { path = '../tokio' }\n",
+            "tests-integration/tests/a.rs": "#[test]\nfn a() {}\n",
+            **github_job("ubuntu-latest", "cargo test --workspace"),
+        }
+        places = {place.unit: place.result.status for place in _result(tests_run, files).places}
+        self.assertEqual(places, {"tokio": Status.PASS, "other": Status.FAIL, "tests-integration": Status.PASS})
+
+    def test_a_test_project_inside_a_unit_counts_for_that_unit(self) -> None:
+        """hledger-web/test/browser's Playwright specs test hledger-web, not the root package (hledger)."""
+        files = {
+            "app.cabal": "name: app\n",
+            "static/root.js": "",
+            "web/web.cabal": "name: web\n",
+            "web/static/app.js": "",
+            "web/test/browser/package.json": json.dumps({"name": "e2e", "devDependencies": {"@playwright/test": "1"}}),
+            "web/test/browser/a.spec.js": "test('a', () => {})\n",
+        }
+        self.assertEqual(_root_unit_tests(files, "JavaScript"), ())
+
+
 class TestsCountedPerUnitTests(unittest.TestCase):
     def test_a_unit_reports_only_the_test_files_it_owns(self) -> None:
         """The root unit, which owns no tests, has none: a child package's test files are its own (bloc, drift,
-        Pluto.jl). (A separate test project's tests, hledger's web/test/browser, count for every unit by design.)"""
+        Pluto.jl). (A separate test project's tests count for the units it tests: see `TestUnitCreditTests`.)"""
         dart = {
             "tool/gen.dart": "void main() {}\n",
             "packages/a/pubspec.yaml": "name: a\nenvironment:\n  sdk: ^3.5.0\n",

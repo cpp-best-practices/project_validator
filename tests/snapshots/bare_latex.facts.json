@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "ecosystem": "LaTeX",
       "kind": "ContentLanguages",
       "languages": [
@@ -27,6 +22,12 @@
       "suffix": ".aux"
     },
     {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
       "build_systems": [],
       "formats": [],
       "kind": "Unit",
@@ -34,7 +35,8 @@
         "LaTeX"
       ],
       "origin": ".",
-      "role": "product"
+      "role": "product",
+      "tests": []
     },
     {
       "kind": "CommittedOutput",

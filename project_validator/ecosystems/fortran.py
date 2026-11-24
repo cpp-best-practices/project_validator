@@ -14,6 +14,7 @@ from collections.abc import Iterator
 from project_validator.build_configurations import build_type_kinds
 from project_validator.build_systems.cmake.build import CMAKE
 from project_validator.build_systems.meson.build import MESON
+from project_validator.build_systems.model import standalone_package
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
@@ -63,6 +64,7 @@ FPM = BuildSystem(
     files=(FPM_MANIFEST,),
     languages=FORTRAN_LANGUAGE,
     build_types=fpm_build_types,
+    standalone=standalone_package,
 )
 FPM_SETTINGS = SettingsReader(
     name="fpm", files=(FPM_MANIFEST,), read=lambda path, text: toml_settings("fpm", path, text)

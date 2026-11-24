@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import re
 
+from project_validator.build_systems.model import standalone_package
 from project_validator.ecosystems.model import VERSION, BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
@@ -23,7 +24,7 @@ RUBY_ONLY = frozenset({RUBY_LANGUAGE})
 GEMFILE = "Gemfile"
 
 
-BUNDLER = BuildSystem(name="Bundler", files=(GEMFILE, "*.gemspec"), languages=RUBY_ONLY)
+BUNDLER = BuildSystem(name="Bundler", files=(GEMFILE, "*.gemspec"), languages=RUBY_ONLY, standalone=standalone_package)
 
 
 RUNS_RAKE = re.compile(r"(?<![\w-])rake\b")

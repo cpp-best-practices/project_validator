@@ -27,6 +27,12 @@ class BuildSystem:
     `members` reads, from a build file, the directories (globs relative to it) of the workspace it declares; each
     member is a unit of the project of its own (see `project_validator.facts.structure.Unit`).
     `compiler_evidence` gives the words of one of its commands that show the compiler it builds with.
+    `standalone` tells, from its text, whether one of its build files below another of its build files is a project
+    of its own (a nested Package.swift, a package.json with a name; see `standalone_package`), a unit of the project
+    with the role its directory tells; None: a nested build file is part of the one above it (a CMake
+    subdirectory, a Maven module).
+    `path_dependencies` reads, from a build file, the directories (relative to it) of the packages it depends on by
+    path (Cargo's `path = "../x"`): what a unit of tests tests (see `project_validator.facts.structure.Unit`).
     """
 
     name: str
@@ -40,6 +46,14 @@ class BuildSystem:
     configured_build_types: Callable[[Command, Callable[[str], str | None]], frozenset[str]] | None = None
     members: Callable[[str], tuple[str, ...]] | None = None
     compiler_evidence: Callable[[tuple[str, ...]], tuple[str, ...]] | None = None
+    standalone: Callable[[str], bool] | None = None
+    path_dependencies: Callable[[str], tuple[str, ...]] | None = None
 
 
-__all__ = ["C_FAMILY", "BuildSystem"]
+def standalone_package(_text: str) -> bool:
+    """Every build file of a build system whose nested build files are projects of their own (a nested Mix project
+    is a package of its own, whatever it says)."""
+    return True
+
+
+__all__ = ["C_FAMILY", "BuildSystem", "standalone_package"]

@@ -9,6 +9,7 @@ from collections.abc import Mapping
 from pathlib import Path, PurePosixPath
 
 from project_validator import yaml_support
+from project_validator.build_systems.model import standalone_package
 from project_validator.core import Project
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Facts, resolved
@@ -55,7 +56,12 @@ def _build_beside_pubspec(directory: Path) -> bool:
 
 
 PUB = BuildSystem(
-    name="pub", files=(PUBSPEC,), languages=DART, members=_workspace_members, is_build_tree=_build_beside_pubspec
+    name="pub",
+    files=(PUBSPEC,),
+    languages=DART,
+    members=_workspace_members,
+    is_build_tree=_build_beside_pubspec,
+    standalone=standalone_package,
 )
 
 

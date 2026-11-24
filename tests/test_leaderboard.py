@@ -259,7 +259,10 @@ class EvaluationTests(unittest.TestCase):
     def test_the_entry_s_auxiliary_and_exclude_reach_the_validator(self) -> None:
         with _directory() as root:
             shutil.copytree(FIXTURES / "well_configured_python", root / "p")
-            shutil.copytree(FIXTURES / "bare_cpp", root / "p" / "examples" / "c")
+            # Examples in the product's language: naming them auxiliary changes the score (a language only examples
+            # are written in is auxiliary already).
+            shutil.copytree(FIXTURES / "bare_python", root / "p" / "examples" / "py")
+            (root / "p" / "examples" / "py" / "broken.json").write_text("{\n")
             percents = {}
             for label, entry in (
                 ("plain", self.ENTRY),

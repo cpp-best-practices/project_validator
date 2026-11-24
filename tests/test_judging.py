@@ -266,9 +266,10 @@ class AuxiliaryUnitTests(unittest.TestCase):
     def test_a_benchmark_units_failure_beside_a_passing_product_warns(self) -> None:
         result = self._result({**PRODUCT, **BENCHMARK})
         self.assertEqual(result.status, Status.WARN, result)
-        self.assertIn(
-            "Rust: a warning, not a failure: benches is benchmark code, not the product's", result.details, result
-        )
+        # Rust, written only in the benchmark, is auxiliary code by its language (upstream #182), which says so once.
+        advisory = "a warning, not a failure: the Rust here is auxiliary code (only in benchmark code)"
+        self.assertIn(f"Rust (auxiliary: only in benchmark code): {advisory}", result.details, result)
+        self.assertFalse(any("benches is benchmark code" in detail for detail in result.details), result)
 
     def test_a_benchmark_unit_alone_is_judged_as_it_is(self) -> None:
         result = self._result(BENCHMARK)

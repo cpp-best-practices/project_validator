@@ -10,6 +10,7 @@ from collections.abc import Iterator
 from pathlib import PurePosixPath
 
 from project_validator.build_configurations import build_type_kinds
+from project_validator.build_systems.model import standalone_package
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Fact, Facts, Setting, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
@@ -65,6 +66,7 @@ SWIFTPM = BuildSystem(
     files=(PACKAGE_SWIFT,),
     languages=SWIFT_ONLY,
     build_types=swiftpm_build_types,
+    standalone=standalone_package,
 )
 SWIFTPM_BUILD_DIRECTORY = BuildOutput(
     name="the .build directory",

@@ -36,7 +36,15 @@ from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured, reported
 from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.exit_status import POSIX
-from project_validator.facts.expansion import CommandExpander, Expansion, Script, found_at, joined, launcher
+from project_validator.facts.expansion import (
+    CommandExpander,
+    Expansion,
+    Launched,
+    Script,
+    found_at,
+    joined,
+    launcher,
+)
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
@@ -60,35 +68,73 @@ from project_validator.tools.prettier import prettier_tool
 JAVASCRIPT = "JavaScript"
 TYPESCRIPT = "TypeScript"
 PACKAGE_JSON = "package.json"
+PNPM_WORKSPACE = "pnpm-workspace.yaml"
 DENO_CONFIG_FILES = ("deno.json", "deno.jsonc")
 # A package.json that names what it provides is a JavaScript package, even before any source is found.
 ENTRY_POINTS = ("main", "module", "exports", "bin")
 
 
-def _declared_by_package(_path: str, text: str) -> frozenset[str]:
-    """package.json is everywhere, as the tooling of projects in other languages; only a package's entry points (or
-    JavaScript sources, recognised by their suffixes) make a project a JavaScript one."""
+def _manifest(text: str) -> dict[str, object]:
+    """A package.json's fields; none when it is not a JSON object."""
     try:
         manifest = json.loads(text)
     except json.JSONDecodeError:
-        return frozenset()
-    is_package = isinstance(manifest, dict) and any(key in manifest for key in ENTRY_POINTS)
+        return {}
+    return manifest if isinstance(manifest, dict) else {}
+
+
+def _declared_by_package(_path: str, text: str) -> frozenset[str]:
+    """package.json is everywhere, as the tooling of projects in other languages; only a package's entry points (or
+    JavaScript sources, recognised by their suffixes) make a project a JavaScript one."""
+    is_package = any(key in _manifest(text) for key in ENTRY_POINTS)
     return frozenset({JAVASCRIPT}) if is_package else frozenset()
+
+
+def _named_package(text: str) -> bool:
+    """Whether a package.json below another is a package of its own: one with a name, not one that only marks its
+    directory's modules (`{"type": "module"}` in `dist/`)."""
+    return "name" in _manifest(text)
+
+
+def _pnpm_packages(text: str) -> tuple[str, ...]:
+    """The packages a pnpm-workspace.yaml declares (`packages:`, globs; `!` before one leaves it out)."""
+    try:
+        declared = yaml_support.load(text)
+    except yaml_support.YamlError:
+        return ()
+    packages = declared.get("packages") if isinstance(declared, dict) else None
+    return tuple(str(pattern) for pattern in packages) if isinstance(packages, list) else ()
+
+
+def _declared_workspace(text: str) -> tuple[str, ...]:
+    """The workspace members a package.json or a pnpm-workspace.yaml declares, each a unit of its own."""
+    return _workspaces(text) or _pnpm_packages(text)
+
+
+def _path_dependencies(text: str) -> tuple[str, ...]:
+    """The directories of the packages a package.json depends on by path (`file:../x`, `link:../x`)."""
+    manifest = _manifest(text)
+    tables = (manifest.get(kind) for kind in ("dependencies", "devDependencies", "peerDependencies"))
+    specs = (spec for table in tables if isinstance(table, dict) for spec in table.values() if isinstance(spec, str))
+    return tuple(dict.fromkeys(spec.partition(":")[2] for spec in specs if spec.startswith(("file:", "link:"))))
 
 
 def _workspaces(text: str) -> tuple[str, ...]:
     """The workspaces a package.json declares (npm, yarn and bun: `workspaces`, as a list or under `packages`)."""
-    try:
-        manifest = json.loads(text)
-    except json.JSONDecodeError:
-        return ()
-    found = manifest.get("workspaces") if isinstance(manifest, dict) else None
+    found = _manifest(text).get("workspaces")
     if isinstance(found, dict):
         found = found.get("packages")
     return tuple(str(member) for member in found) if isinstance(found, list) else ()
 
 
-NPM = BuildSystem(name="npm", files=(PACKAGE_JSON,), declared_languages=_declared_by_package, members=_workspaces)
+NPM = BuildSystem(
+    name="npm",
+    files=(PACKAGE_JSON, PNPM_WORKSPACE),
+    declared_languages=_declared_by_package,
+    members=_declared_workspace,
+    standalone=_named_package,
+    path_dependencies=_path_dependencies,
+)
 DENO = BuildSystem(name="Deno", files=DENO_CONFIG_FILES, languages=frozenset({TYPESCRIPT}))
 
 
@@ -161,13 +207,8 @@ def workspace_members(context: Context, directory: str | None) -> list[str]:
         if context.project.exists(path := joined(directory, PACKAGE_JSON))
         else []
     )
-    if context.project.exists(pnpm := joined(directory, "pnpm-workspace.yaml")):
-        try:
-            declared = yaml_support.load(context.project.read_text(pnpm))
-        except yaml_support.YamlError:
-            declared = None
-        packages = declared.get("packages") if isinstance(declared, dict) else None
-        patterns += [str(pattern) for pattern in packages] if isinstance(packages, list) else []
+    if context.project.exists(pnpm := joined(directory, PNPM_WORKSPACE)):
+        patterns += _pnpm_packages(context.project.read_text(pnpm))
     globs = [
         joined(directory, pattern.removeprefix("./").rstrip("/")) for pattern in patterns if not pattern.startswith("!")
     ]
@@ -203,7 +244,7 @@ def _package_scripts(command: Command, context: Context) -> Iterator[Expansion] 
     scripts = _json_strings(json_value(context, path, "scripts"))
     if run.name not in scripts:
         if not run.explicit:
-            return None
+            return _binary(command, run)
         return iter((Unknown(origin=command.origin, subject=f"the script {run.name}", reason=f"{path} has none"),))
     names = [f"{prefix}{run.name}" for prefix in (("pre", "", "post") if command.argv[0] in ("npm", "yarn") else ("",))]
     return (
@@ -212,6 +253,14 @@ def _package_scripts(command: Command, context: Context) -> Iterator[Expansion] 
         for name in names
         if name in scripts
     )
+
+
+def _binary(command: Command, run: _ScriptRun) -> Iterator[Expansion] | None:
+    """`yarn c8 yarn test`, where the package has no script c8: the c8 binary it runs, as `yarn exec c8 yarn test`
+    does (prettier, upstream #188)."""
+    if run.name not in command.argv:
+        return None
+    return iter((Launched(argv=command.argv[command.argv.index(run.name) :]),))
 
 
 PACKAGE_SCRIPTS = CommandExpander(name="package.json scripts", expand=_package_scripts)

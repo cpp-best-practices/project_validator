@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from collections.abc import Callable, Iterator, Mapping
 
+from project_validator.build_systems.model import standalone_package
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Fact, Facts, Origin, Setting, resolved
@@ -55,6 +56,7 @@ GO_MODULES = BuildSystem(
     files=("go.mod", "go.sum", "go.work", "go.work.sum"),
     languages=GO_LANGUAGE,
     members=_go_work_members,
+    standalone=standalone_package,
 )
 
 GOLANGCI_CONFIG_FILES = (".golangci.yml", ".golangci.yaml", ".golangci.toml", ".golangci.json")

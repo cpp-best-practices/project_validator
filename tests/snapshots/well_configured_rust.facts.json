@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "Cargo",
       "kind": "BuildFile",
       "languages": [
@@ -92,6 +87,12 @@
       "role": "product"
     },
     {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
       "build_systems": [
         "Cargo"
       ],
@@ -104,7 +105,25 @@
         "Rust"
       ],
       "origin": ".",
-      "role": "product"
+      "role": "product",
+      "tests": []
+    },
+    {
+      "build_systems": [
+        "Cargo"
+      ],
+      "formats": [
+        "TOML"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Rust"
+      ],
+      "origin": "fuzz",
+      "role": "test",
+      "tests": [
+        "."
+      ]
     },
     {
       "column": null,
@@ -7195,6 +7214,19 @@
           "Rust"
         ],
         "role": "product"
+      },
+      {
+        "build_systems": [
+          "Cargo"
+        ],
+        "directory": "fuzz",
+        "formats": [
+          "TOML"
+        ],
+        "languages": [
+          "Rust"
+        ],
+        "role": "test"
       }
     ],
     "unrecognised_suffixes": []

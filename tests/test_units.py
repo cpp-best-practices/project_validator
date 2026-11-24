@@ -74,8 +74,9 @@ class UnitTests(unittest.TestCase):
             _units(cargo),
             [(".", ("Cargo",), []), ("crates/x", ("Cargo",), ["Rust"]), ("crates/y", ("Cargo",), ["Rust"])],
         )
+        # A broken root declares no workspace; the named package below it is a package of its own all the same.
         broken = {"package.json": "{", **_package("a")}
-        self.assertEqual([unit for unit, _, _ in _units(broken)], ["."])
+        self.assertEqual([unit for unit, _, _ in _units(broken)], [".", "packages/a"])
         go = {"go.work": "go 1.23\n\nuse (\n\t./api\n\t./cli\n)\n", "api/go.mod": "", "api/a.go": "", "cli/go.mod": ""}
         self.assertEqual([unit for unit, _, _ in _units(go)], [".", "api", "cli"])
 
@@ -85,8 +86,92 @@ class UnitTests(unittest.TestCase):
         vendored = {"CMakeLists.txt": "", "main.c": "", "deps/lib/package.json": "{}", "deps/lib/x.js": ""}
         self.assertEqual([unit for unit, _, _ in _units(vendored)], ["."])
 
+    def test_pnpm_workspace_members_are_units_of_their_own(self) -> None:
+        """pnpm declares its workspace in pnpm-workspace.yaml, not package.json (graphql-eslint, graphql-inspector:
+        upstream #188): each member is a unit, named or not, with the role its directory tells."""
+        unnamed = {"packages/c/package.json": json.dumps({"private": True, "main": "x.js"}), "packages/c/x.js": ""}
+        files = {
+            "package.json": json.dumps({"private": True}),
+            "pnpm-workspace.yaml": "packages:\n  - packages/*\n  - examples/*\n  - '!packages/skipped'\n",
+            **unnamed,
+            "examples/b/package.json": json.dumps({"private": True}),
+            "examples/b/index.js": "",
+        }
+        with temp_project(files) as root:
+            units = make_context(root).facts.of(Unit)
+        self.assertEqual(
+            [(unit.directory, unit.role) for unit in units],
+            [(".", "product"), ("examples/b", "example"), ("packages/c", "product")],
+        )
+
     def test_a_mixed_language_project_has_a_unit_per_build_root(self) -> None:
         self.assertEqual(_units(MIXED), [(".", ("CMake",), ["C++"]), ("python", ("Python packaging",), ["Python"])])
+
+    def test_a_nested_package_is_a_unit_with_the_role_its_directory_tells(self) -> None:
+        """A package below another of its build system's is a project of its own (upstream #188): vapor's
+        Benchmarks/Package.swift, phoenix's installer/ and integration_test/ Mix projects, dbt-utils' test project."""
+        for files, expected in (
+            (
+                {"Package.swift": "", "Sources/a.swift": "", "Benchmarks/Package.swift": "", "Benchmarks/b.swift": ""},
+                [(".", "product"), ("Benchmarks", "benchmark")],
+            ),
+            (
+                {"mix.exs": "", "installer/mix.exs": "", "integration_test/mix.exs": ""},
+                [(".", "product"), ("installer", "product"), ("integration_test", "test")],
+            ),
+            (
+                {"dbt_project.yml": "name: utils\n", "integration_tests/dbt_project.yml": "name: utils_tests\n"},
+                [(".", "product"), ("integration_tests", "test")],
+            ),
+        ):
+            with self.subTest(files=files), temp_project(files) as root:
+                units = make_context(root).facts.of(Unit)
+                self.assertEqual([(unit.directory, unit.role) for unit in units], expected)
+
+    def test_an_auxiliary_unit_without_tests_of_its_own_is_not_asked_for_them(self) -> None:
+        """A cargo-fuzz crate or a benchmark package beside the product holds no tests, and need not (upstream #230);
+        one that has tests is judged for them."""
+        files = {
+            "Cargo.toml": "[package]\nname = 'app'\n",
+            "src/lib.rs": "#[test]\nfn t() {}\n",
+            "fuzz/Cargo.toml": "[package]\nname = 'app-fuzz'\n",
+            "fuzz/fuzz_targets/a.rs": "",
+            **_workflow(("cargo test", None)),
+        }
+        result = _check("tests-run", files)
+        self.assertEqual((result.status, [place.unit for place in result.places]), (Status.PASS, ["."]), result)
+        files["fuzz/src/lib.rs"] = "#[test]\nfn t() {}\n"
+        self.assertEqual([place.unit for place in _check("tests-run", files).places], [".", "fuzz"])
+
+    def test_a_template_or_benchmark_unit_is_not_asked_for_the_products_gates(self) -> None:
+        """fluentd's templates/new_gem is the gem `fluentd plugin-generator` writes, and puma's benchmark apps lock no
+        dependencies (upstream #188): neither is asked for tests or a lock file beside the product."""
+        files = {
+            "Gemfile": "source 'https://rubygems.org'\ngem 'rake'\n",
+            "Gemfile.lock": "GEM\n",
+            "lib/app.rb": "",
+            "spec/app_spec.rb": "describe 'app' do\nend\n",
+            "templates/new_gem/Gemfile": "gem 'rspec'\n",
+            "templates/new_gem/lib/x.rb": "",
+            "benchmarks/sinatra/Gemfile": "gem 'sinatra'\n",
+            "benchmarks/sinatra/app.rb": "",
+            **_workflow(("bundle exec rspec", None)),
+        }
+        for name in ("tests-run", "dependency-management"):
+            with self.subTest(name), temp_project(files) as root:
+                result = checks_named(name)[0].run(make_context(root))
+                self.assertEqual([place.unit for place in result.places], ["."], result)
+
+    def test_a_nested_build_file_that_is_no_project_of_its_own_is_its_parents(self) -> None:
+        """A CMake subdirectory, a package.json that only marks its directory's modules (`{"type": "module"}`), and a
+        test fixture's manifest belong to the unit above them."""
+        for files in (
+            {"CMakeLists.txt": "", "lib/CMakeLists.txt": "", "lib/a.cpp": ""},
+            {"package.json": json.dumps({"name": "app"}), "dist/package.json": json.dumps({"type": "module"})},
+            {"pyproject.toml": "[project]\nname = 'app'\n", "tests/fixtures/x/pyproject.toml": "[project]\n"},
+        ):
+            with self.subTest(files=files):
+                self.assertEqual([unit for unit, _, _ in _units(files)], ["."])
 
 
 class MonorepoCoverageTests(unittest.TestCase):
@@ -282,14 +367,26 @@ def _ecosystems(result: Result) -> set[str]:
 
 
 class AuxiliaryCodeTests(unittest.TestCase):
-    """Every language is the product's and held to every practice, in whatever directory it is, until `--auxiliary`
-    names code (by role, language or directory) that is not: that code is still judged in full, but a failure is a
+    """A language is the product's and held to every practice, in whatever directory it is, until `--auxiliary`
+    names code (by role, language or directory) that is not, or unless it is written only in auxiliary code (tests,
+    examples, docs, tooling, benchmarks: upstream #182): that code is still judged in full, but a failure is a
     warning, and the report says what named the code."""
 
-    def test_helper_scripts_are_judged_as_the_product_by_default(self) -> None:
+    def test_a_language_only_in_helper_scripts_is_auxiliary_by_default(self) -> None:
+        """A C++ project's release script in Python is tooling: Python is not a language of the product."""
+        advisory = "a warning, not a failure: the Python here is auxiliary code (only in tooling code)"
         for name in (*PRACTICES, "platform-matrix"):
             with self.subTest(name):
                 result = _check(name, HELPER_SCRIPTS)
+                python = _place(result, "Python")
+                self.assertEqual((python.result.status, python.auxiliary), (Status.WARN, ("only in tooling code",)))
+                self.assertIn(advisory, python.result.details)
+                self.assertIn("Python (auxiliary: only in tooling code): ", result.message)
+
+    def test_a_language_with_product_code_is_judged_as_the_products_in_its_helper_scripts_too(self) -> None:
+        for name in (*PRACTICES, "platform-matrix"):
+            with self.subTest(name):
+                result = _check(name, {**HELPER_SCRIPTS, "src/gen.py": ""})
                 python = _place(result, "Python")
                 self.assertEqual((python.result.status, python.auxiliary), (Status.FAIL, ()))
                 self.assertNotIn("auxiliary", result.message + "".join(result.details))
@@ -362,11 +459,30 @@ class AuxiliaryCodeTests(unittest.TestCase):
         files["CMakeLists.txt"] = "project(app CXX)\nenable_testing()\nadd_test(NAME t COMMAND t)\n"
         files |= _workflow(("ctest --test-dir build", None))
         del files["scripts/release.py"]
-        self.assertEqual(_place(_check("static-analysis", files), "Python").result.status, Status.FAIL)
+        python = _place(_check("static-analysis", files), "Python")
+        self.assertEqual((python.result.status, python.auxiliary), (Status.WARN, ("only in test code",)))
         named = _check("tests-run", files, ("test",))
         self.assertEqual(_place(named, "C++").result.status, Status.PASS, named.message)
         python = _place(named, "Python")
         self.assertEqual((python.result.status, python.auxiliary), (Status.WARN, ("test",)))
+
+    def test_test_fixtures_configure_nothing_of_the_product(self) -> None:
+        """A test fixture's manifest or tool configuration is not the product's (upstream #188: PHP_CodeSniffer's
+        tests/**/Fixtures/phpcs.xml.dist, composer's fixture composer.json files)."""
+        files = {
+            "composer.json": json.dumps({"require": {"php": ">=8.1"}}),
+            "composer.lock": "{}",
+            "src/A.php": "<?php\n",
+            "phpcs.xml.dist": "<ruleset/>\n",
+            "tests/Fixtures/a/composer.json": json.dumps({"require": {"x/y": "1"}}),
+            "tests/Fixtures/a/phpcs.xml.dist": "<ruleset/>\n",
+            **_workflow(("vendor/bin/phpcs", None)),
+        }
+        dependencies = _check("dependency-management", files)
+        self.assertNotIn("Fixtures", dependencies.message)
+        formatting = _check("code-formatting", files)
+        self.assertIn("phpcs.xml.dist is defined", formatting.message)
+        self.assertNotIn("Fixtures", formatting.message)
 
     def test_what_is_named_must_be_a_role_a_language_or_a_directory(self) -> None:
         with temp_project(HELPER_SCRIPTS) as root:
@@ -386,7 +502,9 @@ class AuxiliaryCodeTests(unittest.TestCase):
             places = {(place["ecosystem"], place["unit"]): place for place in report["places"]}
             self.assertEqual(set(places), {("C++", "."), ("Python", ".")})
             python = places[("Python", ".")]
-            self.assertEqual((python["status"], python["auxiliary"], python["tools"]), ("FAIL", [], []))
+            self.assertEqual(
+                (python["status"], python["auxiliary"], python["tools"]), ("WARN", ["only in tooling code"], [])
+            )
             self.assertEqual(python["message"], "no static analyzer runs")
             arguments = ("--only", "static-analysis", "--auxiliary", "tooling", str(root))
             code, output, _ = run_cli(*arguments, "--format", "json")
@@ -398,7 +516,9 @@ class AuxiliaryCodeTests(unittest.TestCase):
             code, grid, _ = run_cli(*arguments, "--format", "markdown")
             self.assertIn(f"| {MARKS[Status.WARN]} (auxiliary) |", grid)
             code, facts, _ = run_cli(*arguments, "--facts")
-            self.assertIn({"kind": "AuxiliaryCode", "origin": ".", "named": ["tooling"]}, json.loads(facts))
+            self.assertIn(
+                {"kind": "AuxiliaryCode", "origin": ".", "named": ["tooling"], "implied": ["Python"]}, json.loads(facts)
+            )
 
     def test_the_answers_say_what_named_the_code(self) -> None:
         with temp_project({**HELPER_SCRIPTS, "benchmarks/run.py": ""}) as root:

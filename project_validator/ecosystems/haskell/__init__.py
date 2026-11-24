@@ -13,6 +13,7 @@ from collections.abc import Mapping
 from pathlib import Path, PurePosixPath
 
 from project_validator import yaml_support
+from project_validator.build_systems.model import standalone_package
 from project_validator.ecosystems.haskell.cabal import CabalSyntaxError, parse, top_level
 from project_validator.ecosystems.haskell.options import HASKELL_LANGUAGE
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
@@ -70,6 +71,7 @@ CABAL = BuildSystem(
     languages=HASKELL_LANGUAGE,
     is_build_tree=_is_build_tree,
     members=_members,
+    standalone=standalone_package,
 )
 STACK = BuildSystem(name="Stack", files=("stack.yaml",), languages=HASKELL_LANGUAGE, members=_members)
 HPACK = BuildSystem(

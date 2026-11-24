@@ -11,6 +11,7 @@ from __future__ import annotations
 import re
 from collections.abc import Callable, Iterator
 
+from project_validator.build_systems.model import standalone_package
 from project_validator.core import Context
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Facts, Origin, Setting, resolved
@@ -53,7 +54,9 @@ def _umbrella_members(text: str) -> tuple[str, ...]:
 
 
 # A Mix project compiles the Erlang sources in `src/` too; an umbrella's applications are the units.
-MIX = BuildSystem(name="Mix", files=(MIX_FILE,), languages=ELIXIR_ONLY, members=_umbrella_members)
+MIX = BuildSystem(
+    name="Mix", files=(MIX_FILE,), languages=ELIXIR_ONLY, members=_umbrella_members, standalone=standalone_package
+)
 REBAR3 = BuildSystem(name="rebar3", files=(REBAR_CONFIG, "rebar.config.script"), languages=ERLANG_ONLY)
 
 

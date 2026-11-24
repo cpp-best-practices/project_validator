@@ -175,6 +175,14 @@ class JavaScriptTests(unittest.TestCase):
         lines = self._run(coverage, _ci("npx c8 --check-coverage node --test"))
         self.assertEqual(lines, Result.passed("branch coverage is reported with c8", _GATE_HINT))
 
+    def test_a_package_manager_runs_the_binary_a_name_that_is_no_script_names(self) -> None:
+        """`yarn c8 yarn test` runs the c8 binary, as `yarn exec c8` does, when the package has no script c8
+        (prettier, upstream #188); its own `yarn test` runs the package's test script."""
+        files = {**_package(scripts={"test": "node --test"}), **_ci("yarn c8 yarn test")}
+        self.assertEqual(self._run(coverage, files), Result.passed("branch coverage is reported with c8", _GATE_HINT))
+        script = {**_package(scripts={"c8": "echo nothing"}), **_ci("yarn c8")}
+        self.assertEqual(self._run(coverage, script).status, Status.FAIL)
+
     def test_one_linter_is_enough(self) -> None:
         # oxlint is one too: vite was told "no JavaScript linters found" while static-analysis credited it (#248).
         for command, linter in (
@@ -409,9 +417,10 @@ class ScriptExpansionTests(unittest.TestCase):
             "pnpm install",
             "yarn add left-pad",
             "bun test",
-            "pnpm vitest",
         )
         self.assertEqual(self._expanded(*commands), [])
+        # A name that is no script runs the binary of that name (upstream #188).
+        self.assertEqual(self._expanded("pnpm vitest"), [("vitest",)])
 
     def test_a_script_that_does_not_exist_is_unknown(self) -> None:
         with temp_project({**PACKAGES, **github_job("ubuntu-latest", "npm run build", "deno task nope")}) as root:

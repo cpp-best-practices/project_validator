@@ -19,6 +19,7 @@ import re
 from collections.abc import Iterator, Mapping
 
 from project_validator import yaml_support
+from project_validator.build_systems.model import standalone_package
 from project_validator.core import Project
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands
 from project_validator.facts import Fact, Origin
@@ -40,7 +41,7 @@ SQL_LANGUAGE = frozenset({SQL})
 # --- dbt
 
 DBT_PROJECT = "dbt_project.yml"
-DBT = BuildSystem(name="dbt", files=(DBT_PROJECT,), languages=SQL_LANGUAGE)
+DBT = BuildSystem(name="dbt", files=(DBT_PROJECT,), languages=SQL_LANGUAGE, standalone=standalone_package)
 
 
 def _dbt_output(name: str, what: str) -> BuildOutput:
