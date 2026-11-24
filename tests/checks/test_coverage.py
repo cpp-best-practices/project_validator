@@ -117,6 +117,19 @@ class CoverageTests(unittest.TestCase):
         configured = {"gcovr.cfg": "# reports\nxml = coverage.xml\n", **github_job("ubuntu-latest", "gcovr")}
         self.assertEqual(self._run(configured).status, Status.PASS)
 
+    def test_lcov_reads_the_configuration_file_it_names_or_the_lcovrc_beside_it(self) -> None:
+        rc = "# counters\nbranch_coverage = 1\n"
+        cases = {
+            ".lcovrc": (".lcovrc", "lcov --capture -o c.info"),
+            "--config-file": ("ci/lcov.rc", "lcov --config-file ci/lcov.rc --capture -o c.info"),
+        }
+        for name, (path, line) in cases.items():
+            with self.subTest(configuration=name):
+                files = {path: rc, **github_job("ubuntu-latest", line)}
+                self.assertEqual(self._run(files).message, "branch coverage is measured with lcov")
+        unconfigured = self._run(github_job("ubuntu-latest", "lcov --capture -o c.info"), ALLOW_UNKNOWN)
+        self.assertEqual(unconfigured.status, Status.FAIL)
+
     def test_gcov_and_llvm_cov(self) -> None:
         for line, expected in (
             ("gcov -b main.gcda", "branch coverage is reported with gcov"),

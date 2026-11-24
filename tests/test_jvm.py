@@ -246,6 +246,18 @@ class SecurityTests(unittest.TestCase):
         # PMD's copy-paste detector is not its static analysis.
         self.assertEqual(_maven(self, STATIC_ANALYSIS, _ci("pmd cpd --minimum-tokens 100")).status, Status.FAIL)
 
+    def test_a_checkstyle_configuration_with_a_module_that_analyses_code_configures_it(self) -> None:
+        self.assertEqual(
+            _maven(self, STATIC_ANALYSIS, CHECKSTYLE),
+            Result.warned("Checkstyle is configured (config/checkstyle/checkstyle.xml) but does not run", JVM_HINT),
+        )
+        structure_only = {
+            "config/checkstyle/checkstyle.xml": '<module name="Checker"><module name="TreeWalker"/></module>'
+        }
+        self.assertEqual(
+            _maven(self, STATIC_ANALYSIS, structure_only), Result.failed("no static analyzer runs", JVM_HINT)
+        )
+
 
 JVM_HINT = (
     "consider running SpotBugs (spotbugs-maven-plugin bound to check, or the com.github.spotbugs Gradle plugin), "
