@@ -7,6 +7,7 @@ The project map (`--map`, `project_validator.project_map`) is a view over these 
 from __future__ import annotations
 
 import posixpath
+import re
 from collections import Counter
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass, replace
@@ -309,6 +310,16 @@ def _configuration(path: str) -> bool:
 
 # Editor settings written in a language's syntax (Emacs' per-directory variables): settings, not sources.
 _EDITOR_SETTINGS = frozenset({".dir-locals.el", ".dir-locals-2.el"})
+# markdownlint's (mdl) `.mdlrc` names its style file, written in Ruby's syntax (kubespray's `.md_style.rb`), where
+# `#{File.dirname(__FILE__)}` is the directory of the `.mdlrc`.
+_MDL_STYLE = re.compile(r"""^\s*style\s+["'](?:#\{File\.dirname\(__FILE__\)\}/)?([^"'#{}]+)["']""", re.MULTILINE)
+
+
+def _settings(project: Project) -> frozenset[str]:
+    """The files a tool's configuration names as its settings, written in a language's syntax: the style file the
+    root `.mdlrc` names. (Editor settings are told by their names: `_EDITOR_SETTINGS`.)"""
+    styles = _MDL_STYLE.findall(project.read_text(".mdlrc")) if project.exists(".mdlrc") else []
+    return frozenset(posixpath.normpath(style.removeprefix("./")) for style in styles)
 
 
 def _generated(project: Project) -> frozenset[str]:
@@ -357,10 +368,11 @@ def _outside(paths: Iterable[str], directories: frozenset[str]) -> list[str]:
 
 def _sources(project: Project, generated: frozenset[str]) -> Iterator[SourceFile]:
     """The sources of each language among the project's files, and of each format among those and the configuration
-    directories' files; not editor settings, nor what an ecosystem's build generates (`generated`)."""
-    known = _source_suffixes()
+    directories' files; not editor settings, nor a tool's settings (see `_settings`), nor what an ecosystem's
+    build generates (`generated`)."""
+    known, settings = _source_suffixes(), _settings(project)
     for path in _outside(project.files(hidden=CONFIGURATION_DIRECTORIES), generated):
-        if PurePosixPath(path).name in _EDITOR_SETTINGS:
+        if PurePosixPath(path).name in _EDITOR_SETTINGS or path in settings:
             continue
         found = known.get(PurePosixPath(path).suffix)
         if found is None and (named := _by_name(path)) is not None:

@@ -119,6 +119,19 @@ class AuxiliaryLanguageTests(unittest.TestCase):
         structure = _structure({"deps.edn": "{}\n", "src/a.clj": "(ns a)\n", **settings})
         self.assertEqual(structure.languages, frozenset({"Clojure"}))
 
+    def test_a_style_file_markdownlint_reads_is_not_a_source(self) -> None:
+        """The style file `.mdlrc` names is markdownlint's settings in Ruby's syntax, not Ruby code (kubespray)."""
+        style = {
+            ".mdlrc": 'style "#{File.dirname(__FILE__)}/.md_style.rb"\n',
+            ".md_style.rb": "all\nexclude_rule 'MD013'\n",
+            "docs/style/rules.rb": "rule 'MD007', :indent => 2\n",
+        }
+        structure = _structure({"deps.edn": "{}\n", "src/a.clj": "(ns a)\n", **style})
+        self.assertEqual(structure.languages, frozenset({"Clojure", "Ruby"}))
+        del style["docs/style/rules.rb"]
+        structure = _structure({"deps.edn": "{}\n", "src/a.clj": "(ns a)\n", **style})
+        self.assertEqual(structure.languages, frozenset({"Clojure"}))
+
 
 class RoleBelowSourceRootTests(unittest.TestCase):
     def test_a_test_directory_below_a_source_root_names_the_test_role(self) -> None:
