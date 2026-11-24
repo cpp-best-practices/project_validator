@@ -283,6 +283,9 @@ def ci_running(provider: str, *commands: str) -> dict[str, str]:
         return github_job("ubuntu-latest", *commands)
     if provider == "GitLab CI":
         return {CI_FILES[provider]: json.dumps({"test": {"script": list(commands)}})}
+    if provider == "CircleCI":
+        steps = [{"run": command} for command in commands]
+        return {CI_FILES[provider]: json.dumps({"jobs": {"test": {"docker": [{"image": "x"}], "steps": steps}}})}
     if provider == "Travis CI":
         return {CI_FILES[provider]: json.dumps({"script": list(commands)})}
     return {CI_FILES[provider]: "".join(f"script: {command}\n" for command in commands)}

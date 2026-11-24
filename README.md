@@ -142,13 +142,15 @@ Every language is judged in each unit (build root or workspace member) of the pr
 CI detection is pluggable too. GitHub Actions workflows (including `strategy.matrix`
 with `include`/`exclude`) and GitLab CI pipelines (including `parallel: matrix:`, local `include:` files, `extends:`
 and `!reference`) are parsed as YAML, and so is `.travis.yml` (its build matrix, with `jobs.include`, `exclude` and
-`allow_failures`; a job left to its language's default script is unknown). A job is judged by what it runs: its commands (and the commands those run in turn), its image,
+`allow_failures`; a job left to its language's default script is unknown) and `.circleci/config.yml` (the jobs its
+workflows run, `matrix: parameters:`, the config's `commands:` and executors; an orb's commands and jobs are
+unknown). A job is judged by what it runs: its commands (and the commands those run in turn), its image,
 environment and actions. A GitHub step or job whose `if:` is false for a matrix combination does not run in it
 (`runner.os`, `matrix.*`, `env.*` and `contains`/`startsWith`/`endsWith` are evaluated; conditions on anything else
 are kept), and expressions whose values are known are evaluated the way GitHub evaluates them before a step runs.
 Each build system reads the build types from its own commands (`-DCMAKE_BUILD_TYPE`, `--config`, `ctest -C`,
 `meson setup --buildtype`, `cargo --release`, `swift build -c`, `xcodebuild -configuration`). Azure Pipelines,
-AppVeyor, CircleCI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines and Woodpecker are detected
+AppVeyor, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines and Woodpecker are detected
 and scanned heuristically. pre-commit.ci is the CI of a `.pre-commit-config.yaml` with a `ci:` section: it runs the
 hooks (but `ci.skip`), and builds nothing, so it is no platform or build configuration. A pre-commit hook counts only
 where CI runs it (pre-commit.ci, `pre-commit run` or `pre-commit/action`). A job that names no compiler is counted with its runner's default compiler (gcc on Linux,

@@ -22,17 +22,6 @@ APPVEYOR = CiProvider(
     badges=(pattern("AppVeyor", r"ci\.appveyor\.com/api/projects/status|img\.shields\.io/appveyor/"),),
     configured_elsewhere=True,
 )
-CIRCLECI = CiProvider(
-    name="CircleCI",
-    files=(".circleci/config.yml",),
-    linters=(pattern("circleci config validate", r"\bcircleci\s+config\s+validate\b"),),
-    lint_hint="CircleCI: run circleci config validate in CI",
-    badges=(
-        pattern(
-            "CircleCI", r"circleci\.com/(?:gh|bb)/\S+\.svg|dl\.circleci\.com/status-badge/|img\.shields\.io/circleci/"
-        ),
-    ),
-)
 JENKINS = CiProvider(
     name="Jenkins",
     files=("Jenkinsfile",),

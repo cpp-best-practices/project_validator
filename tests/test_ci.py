@@ -64,7 +64,7 @@ class HeuristicJobsTests(unittest.TestCase):
             (".drone.yml", "matrix:\n  include:\n    - os: osx\n    - os: linux\n", ["macos", "linux"]),
             # A sequence written at its key's indentation (scalafmt's AppVeyor), and an image behind an anchor (envoy).
             ("appveyor.yml", "image:\n- Visual Studio 2017\nbuild: off\n", ["windows"]),
-            (".circleci/config.yml", "build-image: &image\n  envoyproxy/build-ubuntu:f4a8\njobs: {}\n", ["linux"]),
+            (".drone.yml", "build-image: &image\n  envoyproxy/build-ubuntu:f4a8\nsteps: []\n", ["linux"]),
         ):
             with self.subTest(path=path, text=text.splitlines()[0]):
                 self.assertEqual(sorted(job.os for job in ci_jobs({path: text})), sorted(expected))

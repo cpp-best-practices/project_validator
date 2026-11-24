@@ -342,10 +342,13 @@ CI_PROGRAMS = (
 # Image name (the registry path, without a tag) -> the engine; the tag's leading version is the engine's.
 _ENGINES = {
     "postgres": "PostgreSQL",
+    "cimg/postgres": "PostgreSQL",
     "postgis/postgis": "PostgreSQL",
     "timescale/timescaledb": "TimescaleDB",
     "mysql": "MySQL",
+    "cimg/mysql": "MySQL",
     "mariadb": "MariaDB",
+    "cimg/mariadb": "MariaDB",
     "mcr.microsoft.com/mssql/server": "SQL Server",
     "cockroachdb/cockroach": "CockroachDB",
     "clickhouse/clickhouse-server": "ClickHouse",
