@@ -104,6 +104,15 @@ class AuxiliaryLanguageTests(unittest.TestCase):
         result = _result(tests_run, {**files, **github_job("ubuntu-latest", "cargo test")})
         self.assertNotEqual(result.status, Status.FAIL, result)
 
+    def test_a_format_only_in_auxiliary_files_is_not_the_products(self) -> None:
+        """Notebooks that are a formatter's test inputs are auxiliary, and tests-run does not fail for them (black's
+        tests/data/jupyter/*.ipynb)."""
+        notebook = '{"nbformat": 4, "nbformat_minor": 5, "metadata": {}, "cells": []}\n'
+        files = {**RUST, "tests/data/jupyter/a.ipynb": notebook, **github_job("ubuntu-latest", "cargo test")}
+        result = _result(tests_run, files)
+        self.assertNotEqual(result.status, Status.FAIL, result)
+        self.assertIn("Jupyter (auxiliary: only in test code)", result.message)
+
     def test_editor_settings_files_are_not_sources(self) -> None:
         """Emacs's per-directory settings file beside a Clojure project adds no language (clj-kondo, glib, frog)."""
         settings = {".dir-locals.el": '((nil . ((cider-clojure-cli-aliases . ":test"))))\n'}

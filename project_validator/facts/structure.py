@@ -468,30 +468,35 @@ def _unit_roots(project: Project, builds: tuple[BuildFile, ...]) -> tuple[dict[s
 
 
 def _languages_by_purpose(facts: Facts) -> tuple[set[str], set[str]]:
-    """The languages of the project's own sources in product code, and those in auxiliary code."""
-    known = formats()
+    """The languages and formats of the project's own sources in product code, and those in auxiliary code."""
     product: set[str] = set()
     auxiliary: set[str] = set()
     for source in facts.of(SourceFile):
-        if source.language is not None and source.language not in known and not source.vendored:
+        if source.language is not None and not source.vendored:
             (auxiliary if source.role in AUXILIARY else product).add(source.language)
     return product, auxiliary
 
 
 def _auxiliary_languages(facts: Facts) -> frozenset[str]:
-    """The languages written only in auxiliary code (upstream #182): a test fixture in C, a docs theme's script, a
-    maintainer's script under `hack/`, that no build file outside auxiliary code builds, and of an ecosystem none of
-    whose languages is the product's (a Java project's tests in Kotlin are its own); none when the project has no
-    product language left (a project of examples alone is judged as it is)."""
-    known = formats()
+    """The languages (and formats) written only in auxiliary code (upstream #182): a test fixture in C, a docs
+    theme's script, a maintainer's script under `hack/`, a formatter's test notebooks, that no build file outside
+    auxiliary code builds, and of an ecosystem none of whose languages is the product's (a Java project's tests in
+    Kotlin are its own); none when the project has no product language left (a project of examples alone is judged
+    as it is). The product left is its languages and the content the probes find (a Helm chart): a format's files
+    alone (CI's YAML, a `renovate.json`) leave no product."""
     product, auxiliary = _languages_by_purpose(facts)
     built = (build for build in facts.of(BuildFile) if role(_directory(build), directory=True) not in AUXILIARY)
     product |= given_way((language for build in built for language in build.languages), product)
-    product |= {name for name in _content_names(facts) if name not in known}
+    product |= set(_content_names(facts))
     product |= {
         language for ecosystem in registered() if ecosystem.languages & product for language in ecosystem.languages
     }
-    return frozenset(auxiliary - product) if product else frozenset()
+    return frozenset(auxiliary - product) if product - _plain_formats(facts) else frozenset()
+
+
+def _plain_formats(facts: Facts) -> set[str]:
+    """The formats that are no product on their own: every format but the content a probe found (a Helm chart)."""
+    return set(formats()) - set(_content_names(facts))
 
 
 def _own(languages: Iterable[str], path: str, named: Selectors, *, directory: bool = False) -> set[str]:
