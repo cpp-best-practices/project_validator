@@ -127,6 +127,13 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "aspell": {
+                "can": {
+                  "checks": ""
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "codespell": {
                 "can": {
                   "checks": ""
@@ -293,7 +300,7 @@
     },
     "ci-present": {
       "details": [],
-      "message": "no CI configuration found (looked for AppVeyor, Azure Pipelines, CircleCI, Google Cloud Build, GitHub Actions, GitLab CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci, Travis CI)",
+      "message": "no CI configuration found (looked for AppVeyor, Azure Pipelines, CircleCI, Google Cloud Build, GitHub Actions, GitLab CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci, Read the Docs, Travis CI)",
       "status": "FAIL"
     },
     "code-formatting": {

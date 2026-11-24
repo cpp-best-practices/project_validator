@@ -2026,6 +2026,25 @@
     },
     {
       "can": {
+        "analysis": {
+          "checks": ""
+        }
+      },
+      "languages": [
+        "Docusaurus",
+        "Hugo",
+        "Jekyll",
+        "MkDocs",
+        "Sphinx",
+        "VitePress",
+        "mdBook"
+      ],
+      "name": "aspell",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "format": {
           "apply": ""
         }

@@ -151,7 +151,8 @@ CI detection is pluggable too. These configurations are parsed as YAML:
   matrix legs, `$(variables)` and the common tasks. Templates are unknown;
 - AppVeyor: its image, platform, configuration and environment matrix, `for:` sections and `%VARIABLES%`;
 - Google Cloud Build (`cloudbuild.yaml`, and `*.cloudbuild.yaml` at the top or in `build/`): each step's command
-  in its builder's image.
+  in its builder's image;
+- Read the Docs (`.readthedocs.yaml`): the documentation build it runs, which builds nothing of the project's.
 
 A job is judged by what it runs: its commands (and the commands those run in turn), its image,
 environment and actions. A GitHub step or job whose `if:` is false for a matrix combination does not run in it

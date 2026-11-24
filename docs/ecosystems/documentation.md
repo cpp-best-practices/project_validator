@@ -17,7 +17,9 @@ htmltest, htmlproofer, linkchecker), or one of the `actions-hugo`, `actions-mdbo
 CI builds the site: `mkdocs build` (or `mkdocs gh-deploy`, `mhausenblas/mkdocs-deploy-gh-pages`), `sphinx-build`
 (or `python -m sphinx`, `sphinx-notes/pages`), `docusaurus build` (through `npm run build`), `mdbook build` or
 `mdbook test`, `hugo` or `hugo build`, `jekyll build` (through `bundle exec`, or `actions/jekyll-build-pages`),
-`vitepress build` (through a package script). The generator's configuration file is what defines the site.
+`vitepress build` (through a package script). The generator's configuration file is what defines the site. Read the
+Docs builds the site its `.readthedocs.yaml` describes on every push: its `build: commands:`, or `mkdocs build`, or
+`sphinx-build` (with `-W` or `--strict` where `fail_on_warning: true`, which counts for `warnings-as-errors`).
 
 ## `warnings-as-errors`
 
@@ -30,7 +32,7 @@ switch, so the check does not apply to them.
 The prose is linted: markdownlint (`markdownlint-cli2`, `markdownlint` or `npm exec markdownlint-cli`, or
 `DavidAnson/markdownlint-cli2-action`; settings in `.markdownlint.yaml`, `.markdownlint.json` or
 `.markdownlint-cli2.*`) or vale (`vale`, or `errata-ai/vale-action`; `.vale.ini`, which it needs); a Sphinx site's
-reStructuredText by sphinx-lint. codespell, checking the spelling, counts where a site runs it.
+reStructuredText by sphinx-lint. codespell and aspell, checking the spelling, count where a site runs them.
 
 ## `link-check`
 

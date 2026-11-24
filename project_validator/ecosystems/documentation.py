@@ -293,12 +293,19 @@ SPHINX_LINT = analyzer(
     how="sphinx-lint docs",
     analyses=when(starts(("sphinx-lint",)), analysed),
 )
-# codespell checks the prose's spelling (mkdocs); recognised where a site runs it, not suggested.
+# codespell (mkdocs) and aspell (rust-lang/book's spellcheck script) check the prose's spelling; recognised where a
+# site runs them, not suggested.
 CODESPELL = analyzer(
     name="codespell",
     languages=GENERATORS,
     how="",
     analyses=when(starts(("codespell",)), analysed),
+)
+ASPELL = analyzer(
+    name="aspell",
+    languages=GENERATORS,
+    how="",
+    analyses=when(starts(("aspell",)), analysed),
 )
 MARKDOWNLINT_ACTION = Action(
     name="DavidAnson/markdownlint-cli2-action",
