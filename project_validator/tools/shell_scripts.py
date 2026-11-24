@@ -129,3 +129,26 @@ def _missing(command: Command, path: str) -> Unknown:
 
 
 SHELL_SCRIPTS = CommandExpander(name="shell scripts", expand=_shell_script)
+
+
+def _command_string(command: Command, _context: Context) -> list[Expansion] | None:
+    """`bash -c 'cd test && go test ./...'`: the commands of the string a POSIX shell runs, with the options before
+    it its own (`bash -ec '…'`, `sh -o pipefail -c '…'`)."""
+    argv = resolved(command)
+    if program(argv) not in SHELLS:
+        return None
+    words = iter(enumerate(argv[1:], start=1))
+    for index, word in words:
+        if word in _SHELL_VALUES:
+            next(words, None)
+        elif word.startswith("-") and not word.startswith("--") and "c" in word[1:]:
+            if index + 1 >= len(argv):
+                return None
+            shell = shell_of(" ".join(argv[: index + 1]))
+            return [Script(text=argv[index + 1], origin=command.origin, shell=shell, inline=True)]
+        elif not word.startswith(("-", "+")):
+            return None
+    return None
+
+
+SHELL_COMMAND_STRINGS = CommandExpander(name="shell command strings", expand=_command_string)

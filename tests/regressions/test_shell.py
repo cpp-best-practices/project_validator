@@ -168,6 +168,22 @@ class UnknownCommandTests(unittest.TestCase):
                 unread = [unknown for unknown in facts.of(Unknown) if unknown.hides == "commands"]
                 self.assertTrue(unread or followed in resolutions, followed)
 
+    def test_the_command_string_a_shell_runs_is_read(self) -> None:
+        """`bash -c '…'` runs the commands of its string, where the shell runs and with the shell's own options
+        (terraform-google-modules' Cloud Build steps, `['/bin/bash', '-c', 'cft test run …']`)."""
+        steps = ("/bin/bash -ec 'cd test && go test ./...'", "sh -o pipefail -c 'make lint | tee lint.log'")
+        facts = _facts_of(github_job("ubuntu-latest", *steps))
+        found = [(command.argv, command.directory) for command in facts.of(Command) if command.via]
+        self.assertEqual(
+            found,
+            [
+                (("cd", "test"), "test"),
+                (("go", "test", "./..."), "test"),
+                (("make", "lint"), None),
+                (("tee", "lint.log"), None),
+            ],
+        )
+
     @unittest.expectedFailure  # upstream #324 (from #195): an unknown action that is the whole job is not unknown
     def test_an_unknown_composite_action_that_is_the_whole_job_is_unknown(self) -> None:
         """A job that is one composite action the validator does not know (as terraform-aws-modules' pre-commit job
