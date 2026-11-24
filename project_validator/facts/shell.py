@@ -16,9 +16,13 @@ from collections.abc import Iterable, Iterator
 from dataclasses import dataclass, field, replace
 
 from project_validator.facts.shell_syntax import (
+    CMD,
+    POSIX,
+    POWERSHELL,
     Assignment,
     Case,
     Compounded,
+    Dialect,
     For,
     Function,
     Group,
@@ -92,8 +96,6 @@ def quoted(word: str) -> str:
 READS_STATUS = re.compile(r"\$\?|\$\{\?\}|PIPESTATUS")
 # The longest fallback named whole; a longer one is named by its program.
 _FALLBACK_SHOWN = 24
-_CONTINUATION = re.compile(r"\\\r?\n")
-_POWERSHELL_CONTINUATION = re.compile(r"`\r?\n")
 # PowerShell has no compound commands in the tree: its keywords and braces are words, read as they always were.
 _KEYWORDS = frozenset({"then", "do", "else", "elif", "if", "while", "until", "!", "{", "}"})
 _CLOSING = frozenset({"fi", "done", "esac"})
@@ -126,7 +128,7 @@ class _Level:
 
     text: str
     root: Script
-    powershell: bool
+    dialect: Dialect
     found: list[_Found] = field(default_factory=list)
     substitutions: list[Word] = field(default_factory=list)  # the words that hold them, in order
 
@@ -135,7 +137,7 @@ class _Level:
 
     def line_text(self, index: int) -> str:
         start, end = self.root.lines[index]
-        continuation = _POWERSHELL_CONTINUATION if self.powershell else _CONTINUATION
+        continuation = re.compile(re.escape(self.dialect.escape) + r"\r?\n")
         return continuation.sub(" ", self.text[start:end]).strip()
 
     # walking the tree
@@ -164,8 +166,10 @@ class _Level:
     def simple(self, command: Simple, operator: str, condition: str, rest: tuple[Pipeline, ...]) -> None:
         self.substitutions.extend(_words_of(command))
         argv = tuple(word.value for word in command.words)
-        if self.powershell:
+        if self.dialect is POWERSHELL:
             argv, condition = self.powershell_words(command, argv, condition)
+        elif self.dialect is CMD:
+            argv = _cmd_words(argv)
         env = tuple((assignment.name, _assigned(assignment)) for assignment in command.assignments)
         if argv:
             self.found.append(_Found(command, argv, env, operator, condition, rest))
@@ -259,7 +263,7 @@ class _Level:
         line = self.line(found.command.start)
         if self.line(end[1] - 1) != line or READS_STATUS.search(self.text[start[0] : end[1]]):
             return ""
-        level = _Level(self.text, self.root, self.powershell)
+        level = _Level(self.text, self.root, self.dialect)
         for pipeline in found.rest:
             level.pipeline(pipeline, "", (), "")
         commands = level.found
@@ -301,7 +305,7 @@ class _Level:
         words = sorted((word for word in self.substitutions if self.line(word.start) == line), key=lambda w: w.start)
         for word in words:
             for substitution in word.substitutions():
-                yield from map(_nested, _derived(self.text, substitution.script, self.powershell))
+                yield from map(_nested, _derived(self.text, substitution.script, self.dialect))
 
     def shell_command(self, found: _Found, line: str) -> ShellCommand:
         return ShellCommand(
@@ -314,6 +318,43 @@ class _Level:
             checked=found.checked,
             span=found.command.span,
         )
+
+
+# What, in cmd, comes before the command a line runs: `@` (not echoed), and the words that run it (`else`, `call`).
+_CMD_PREFIXES = frozenset({"else", "call"})
+# The tests of cmd's `if` that take one word (`if exist build`), and its comparisons (`if %A% EQU 1`).
+_CMD_TESTS = frozenset({"errorlevel", "exist", "defined", "cmdextversion"})
+_CMD_COMPARISONS = frozenset({"==", "equ", "neq", "lss", "leq", "gtr", "geq"})
+
+
+def _cmd_words(argv: tuple[str, ...]) -> tuple[str, ...]:
+    """The command a cmd line runs: without `@`, an `if`'s test, a `for`'s loop up to `do`, `else` and `call`; none
+    for a label (`:build`, and `call :build`)."""
+    while argv:
+        head = argv[0].lower()
+        if head.startswith("@"):
+            argv = (argv[0][1:], *argv[1:]) if len(argv[0]) > 1 else argv[1:]
+        elif head == "if":
+            argv = _after_cmd_test(argv[1:])
+        elif head == "for":
+            lowered = [word.lower() for word in argv]
+            argv = argv[lowered.index("do") + 1 :] if "do" in lowered else ()
+        elif head in _CMD_PREFIXES:
+            argv = argv[1:]
+        else:
+            break
+    return () if argv[:1] and argv[0].startswith(":") else argv
+
+
+def _after_cmd_test(words: tuple[str, ...]) -> tuple[str, ...]:
+    """What follows an `if`'s test (`[/i] [not] exist build`, `"%A%"=="b"`, `%A% EQU 1`): the command it runs."""
+    while words[:1] and words[0].lower() in ("/i", "not"):
+        words = words[1:]
+    if words[:1] and words[0].lower() in _CMD_TESTS:
+        return words[2:]
+    if len(words) > 1 and words[1].lower() in _CMD_COMPARISONS:
+        return words[3:]
+    return words[1:]
 
 
 # A PowerShell assignment (`$x = …`, `$x += …`), and a command name its value may be the output of (`$r = gh …`).
@@ -358,27 +399,31 @@ def _nested(found: ShellCommand | Unsplittable) -> ShellCommand | Unsplittable:
     return replace(found, nested=True) if isinstance(found, ShellCommand) else found
 
 
-def _derived(text: str, script: Script, powershell: bool) -> Iterator[ShellCommand | Unsplittable]:
-    level = _Level(text, script, powershell)
+def _derived(text: str, script: Script, dialect: Dialect) -> Iterator[ShellCommand | Unsplittable]:
+    level = _Level(text, script, dialect)
     level.script(script, "")
     return level.stream()
 
 
 def split_script(
-    script: str, opaque: re.Pattern[str] | None = None, *, powershell: bool = False
+    script: str, opaque: re.Pattern[str] | None = None, *, dialect: Dialect = POSIX
 ) -> Iterator[ShellCommand | Unsplittable]:
     """The simple commands of `script`, in order, each with the line it was written on; the commands of a command
     substitution come before the line they are part of.
 
     Text matching `opaque` (such as a CI expression the CI service evaluates before the shell runs) is kept as
-    written, quotes and all, inside the word it is part of. PowerShell scripts (`powershell=True`) are split with
-    PowerShell's escape character, the backquote, in place of the backslash (which is text there).
+    written, quotes and all, inside the word it is part of. The script is read as its shell's `dialect` reads it
+    (`POWERSHELL`: the backquote escapes, and the backslash is text).
     """
-    yield from _derived(script, parse(script, opaque=opaque, powershell=powershell), powershell)
+    yield from _derived(script, parse(script, opaque=opaque, dialect=dialect), dialect)
 
 
 __all__ = [
+    "CMD",
+    "POSIX",
+    "POWERSHELL",
     "READS_STATUS",
+    "Dialect",
     "ShellCommand",
     "ShellSyntaxError",
     "Unsplittable",

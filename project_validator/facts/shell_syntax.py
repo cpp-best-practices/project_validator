@@ -11,8 +11,12 @@ parser goes on past it. An unclosed quote (or `$'…'`, `${…}`) ends with the 
 is text; a substitution nested past `SHELL_NESTING` is kept as written, not parsed; a compound command that is never
 closed ends with the script; and a closing word that closes nothing is skipped.
 
-PowerShell (`powershell=True`) is split with the backquote as its escape character and without the POSIX shell's
-compound commands: its lines are lists of pipelines of simple commands, keywords and braces included as words.
+How a script is read is its shell's `Dialect`. A POSIX shell's (`POSIX`) is the structure above. PowerShell's
+(`POWERSHELL`) has the backquote as its escape character and none of the POSIX shell's compound commands: its lines are
+lists of pipelines of simple commands, keywords and braces included as words. Windows's cmd (`CMD`) is read so too, with
+its own escape (`^`), quoting (only `"`, in which `^` is text), comments (`REM`, `::`) and operators (no `;`); its
+parentheses hold blocks where cmd opens one (where a command starts, after an `if`'s test, `else` or `do`), and each
+block's commands are lines of their own.
 """
 
 from __future__ import annotations
@@ -24,6 +28,49 @@ from dataclasses import dataclass
 
 from project_validator.limits import SHELL_COMPOUNDS, SHELL_NESTING
 from project_validator.parsing import ParseError, Span
+
+
+@dataclass(frozen=True, slots=True)
+class Dialect:
+    """How a shell reads a script:
+    - its `escape` character, which also continues a line, and whether it escapes in double quotes;
+    - whether it has the POSIX shell's compound commands (`if`, `while`, `for`, `case`, …: `compounds`), its other
+      quoting (`$'…'` and backquoted command substitution: `posix_quoting`), single quotes, and the substitutions `$`
+      starts (`$(…)`, `${…}`, `$((…))`, and the process substitutions `<(…)`, `>(…)`);
+    - the characters that end an unquoted word, where its operators start (`breaks`);
+    - what starts a comment (`comment`), anywhere a word could start or only where a command does;
+    - whether parentheses hold blocks of commands (`blocks`, cmd's: see the module's documentation)."""
+
+    name: str
+    escape: str
+    compounds: bool = False
+    posix_quoting: bool = False
+    escapes_in_quotes: bool = True
+    single_quotes: bool = True
+    substitutions: bool = True
+    breaks: str = ";&|()<>"
+    comment: re.Pattern[str] = re.compile("#")
+    comments_start_commands: bool = False
+    blocks: bool = False
+
+
+POSIX = Dialect("sh", "\\", compounds=True, posix_quoting=True)
+POWERSHELL = Dialect("PowerShell", "`")
+CMD = Dialect(
+    "cmd",
+    "^",
+    escapes_in_quotes=False,
+    single_quotes=False,
+    substitutions=False,
+    breaks="&|<>",
+    comment=re.compile(r"(?i:rem)(?=[ \t\r\n]|$)|::"),
+    comments_start_commands=True,
+    blocks=True,
+)
+# What separates commands, so that the next word starts one (as cmd's comments need).
+_SEPARATORS = frozenset({"&&", "||", "&", "|", ";"})
+# The words after which, in cmd, a parenthesis opens a block (and an `if`'s, after its test).
+_BLOCK_OPENERS = frozenset({"else", "do"})
 
 
 class ShellSyntaxError(ParseError):
@@ -296,8 +343,8 @@ def _is(token: _Token | None, *operators: str) -> bool:
 class _Source:
     """The whole script, and positions in it as lines and columns."""
 
-    def __init__(self, text: str, opaque: re.Pattern[str] | None, escape: str) -> None:
-        self.text, self.escape = text, escape
+    def __init__(self, text: str, opaque: re.Pattern[str] | None, dialect: Dialect) -> None:
+        self.text, self.dialect, self.escape = text, dialect, dialect.escape
         self.newlines = [index for index, character in enumerate(text) if character == "\n"]
         self.opaque = {match.start(): match.end() for match in opaque.finditer(text)} if opaque else {}
 
@@ -341,9 +388,11 @@ def _closing(text: str, start: int, end: int, escape: str = "\\") -> int | None:
 class _Lexer:
     """The tokens of `text[start:end]`, one level of substitution deep (`depth`)."""
 
-    def __init__(self, source: _Source, start: int, end: int, depth: int, *, powershell: bool) -> None:
+    def __init__(self, source: _Source, start: int, end: int, depth: int) -> None:
         self.source, self.text, self.position, self.end = source, source.text, start, end
-        self.depth, self.powershell = depth, powershell
+        self.depth = depth
+        self.dialect = source.dialect
+        self.blocks_open = 0
         self.tokens: list[_Token] = []
         self.heredocs: list[tuple[str, _Token]] = []  # delimiters waiting for the next newline, with their token
         self.bodies: dict[int, str] = {}  # a here-document's body by its delimiter word's offset
@@ -365,10 +414,12 @@ class _Lexer:
                 self.tokens.append(_Token("newline", "\n", self.position, self.position + 1))
                 self.position += 1
                 self.read_heredocs()
-            elif character == "#":
+            elif self.at_comment():
                 newline = self.text.find("\n", self.position, self.end)
                 self.position = self.end if newline < 0 else newline
-            elif self.text.startswith(("<(", ">("), self.position):
+            elif self.block(character):
+                self.position += 1
+            elif self.dialect.substitutions and self.text.startswith(("<(", ">("), self.position):
                 self.tokens.append(self.word())
             elif (operator := self.operator()) is not None:
                 self.tokens.append(_Token("operator", operator, self.position, self.position + len(operator)))
@@ -376,7 +427,43 @@ class _Lexer:
             else:
                 self.tokens.append(self.word())
 
+    def at_comment(self) -> bool:
+        """Whether a comment starts here: where a word could, or, in a dialect whose comments are commands (cmd's
+        `REM`), where a command could."""
+        if not self.dialect.comment.match(self.text, self.position, self.end):
+            return False
+        return not self.dialect.comments_start_commands or not self.command_words()
+
+    def command_words(self) -> list[_Token]:
+        """The tokens of the command being read, since the line, block or operator before it."""
+        found: list[_Token] = []
+        for token in reversed(self.tokens):
+            if token.kind == "newline" or (token.kind == "operator" and token.text in _SEPARATORS):
+                break
+            found.append(token)
+        return found[::-1]
+
+    def block(self, character: str) -> bool:
+        """In a dialect with blocks, whether a parenthesis opens one (where a command starts, after an `if`'s test,
+        `else` or `do`) or closes the one open; each is a line break, so that a block's commands are lines of their own.
+        Any other parenthesis is text."""
+        if not self.dialect.blocks or character not in "()":
+            return False
+        if character == ")":
+            if not self.blocks_open:
+                return False
+            self.blocks_open -= 1
+        else:
+            words = [token.text.lower() for token in self.command_words()]
+            if words and words[0] != "if" and words[-1] not in _BLOCK_OPENERS:
+                return False
+            self.blocks_open += 1
+        self.tokens.append(_Token("newline", character, self.position, self.position + 1))
+        return True
+
     def operator(self) -> str | None:
+        if self.text[self.position] not in self.dialect.breaks:
+            return None
         return next(
             (operator for operator in _OPERATORS if self.text.startswith(operator, self.position, self.end)), None
         )
@@ -439,32 +526,43 @@ class _WordReader:
 
     def ends_word(self, position: int) -> bool:
         character = self.text[position]
-        if position == self.start and self.text.startswith(("<(", ">("), position):
+        dialect = self.source.dialect
+        if position == self.start and dialect.substitutions and self.text.startswith(("<(", ">("), position):
             return False  # a process substitution starts the word
         if character in " \t\r\n" or self.lexer.at_continuation(position):
             return True
-        return character in ";&|()<>" and position not in self.source.opaque
+        if character == ")" and self.lexer.blocks_open:
+            return True  # it closes a block
+        return character in dialect.breaks and position not in self.source.opaque
 
     def step(self, quote: str) -> None:
         """Read what starts at the lexer's position, inside `quote` ("", or `"`)."""
-        lexer, position, escape = self.lexer, self.lexer.position, self.source.escape
+        lexer, position = self.lexer, self.lexer.position
         character = self.text[position]
         if position in self.source.opaque:
             self.add(Verbatim(self.text[position : self.source.opaque[position]]))
             lexer.position = self.source.opaque[position]
-        elif self.expansion(position, quote):
+        elif self.source.dialect.substitutions and self.expansion(position, quote):
             return
-        elif character == escape:
+        elif character == self.source.escape and (not quote or self.source.dialect.escapes_in_quotes):
             self.escaped(position, quote)
-        elif character == "'" and not quote:
-            self.bounded(self.single_quoted, position)
-        elif character == "$" and not quote and self.text.startswith("$'", position) and escape == "\\":
-            self.bounded(self.ansi_c_quoted, position)
-        elif character == '"' and not quote:
-            self.bounded(self.double_quoted, position)
+        elif (reader := self.quoting(character, position, quote)) is not None:
+            self.bounded(reader, position)
         else:
             self.literal.append(character)
             lexer.position += 1
+
+    def quoting(self, character: str, position: int, quote: str) -> Callable[[int], None] | None:
+        """The reader of the quoted part that starts at `position`, outside quotes, in the dialect's quoting; None
+        where none starts."""
+        dialect = self.source.dialect
+        if quote:
+            return None
+        if character == "'" and dialect.single_quotes:
+            return self.single_quoted
+        if character == "$" and dialect.posix_quoting and self.text.startswith("$'", position):
+            return self.ansi_c_quoted
+        return self.double_quoted if character == '"' else None
 
     def bounded(self, reader: Callable[[int], None], position: int) -> None:
         """Read a quoted part with `reader`; when it is never closed, report it, and read it again to the end of the
@@ -566,7 +664,7 @@ class _WordReader:
             if (end := _closing(text, position, lexer.end, self.source.escape)) is None:
                 return self.unclosed(position)
             self.substitution(position, end, position + 2, end - 1)
-        elif text.startswith("`", position) and self.source.escape != "`":
+        elif text.startswith("`", position) and self.source.dialect.posix_quoting:
             if (close := text.find("`", position + 1, lexer.end)) < 0:
                 return self.unclosed(position)
             end = close + 1
@@ -617,7 +715,7 @@ class _WordReader:
         self.add(
             Substitution(
                 self.text[start:end],
-                _parse(self.source, inner_start, inner_end, depth, powershell=self.lexer.powershell),
+                _parse(self.source, inner_start, inner_end, depth),
             )
         )
 
@@ -638,8 +736,9 @@ _LIST_TERMINATORS = frozenset({";", "&", ";;", ";&", ";;&"})
 
 
 class _Parser:
-    def __init__(self, source: _Source, tokens: list[_Token], bodies: dict[int, str], *, powershell: bool) -> None:
-        self.source, self.tokens, self.bodies, self.powershell = source, tokens, bodies, powershell
+    def __init__(self, source: _Source, tokens: list[_Token], bodies: dict[int, str]) -> None:
+        self.source, self.tokens, self.bodies = source, tokens, bodies
+        self.compounds_read = source.dialect.compounds
         self.index = 0
         self.stops: list[frozenset[str]] = []
         self.open_subshells = 0
@@ -652,9 +751,9 @@ class _Parser:
         self.flat = False
 
     def problem(self, message: str, offset: int) -> None:
-        """Report what is wrong at `offset`; PowerShell, read without compound commands, is not judged by them, nor a
+        """Report what is wrong at `offset`; a dialect read without compound commands is not judged by them, nor a
         script read flat past `SHELL_COMPOUNDS`, whose structure is no longer followed (its limit says so once)."""
-        if not self.powershell and not self.flat:
+        if self.compounds_read and not self.flat:
             self.errors.append(self.source.error(message, offset))
 
     # tokens
@@ -672,7 +771,7 @@ class _Parser:
         """Whether the next token is one of the reserved `words`, as written (unquoted)."""
         token = self.peek()
         return (
-            not self.powershell
+            self.compounds_read
             and token is not None
             and token.kind == "word"
             and token.word is not None
@@ -760,7 +859,7 @@ class _Parser:
         return Compounded(compound, self.redirections())
 
     def compound(self, start: int) -> Compound | None:
-        if self.powershell or self.peek() is None:
+        if not self.compounds_read or self.peek() is None:
             return None
         if self.nests() and not self.flat and not SHELL_COMPOUNDS.allows(self.compounds + 1):
             self.errors.append(self.source.error(SHELL_COMPOUNDS.reason, start))
@@ -1135,18 +1234,17 @@ def _lines(tokens: list[_Token], end: int) -> list[tuple[int, int]]:
     return lines
 
 
-def _parse(source: _Source, start: int, end: int, depth: int, *, powershell: bool) -> Script:
+def _parse(source: _Source, start: int, end: int, depth: int) -> Script:
     """The tree of `text[start:end]`, `depth` substitutions deep, with what is wrong in it."""
-    lexer = _Lexer(source, start, end, depth, powershell=powershell)
+    lexer = _Lexer(source, start, end, depth)
     lexer.run()
-    parser = _Parser(source, lexer.tokens, lexer.bodies, powershell=powershell)
+    parser = _Parser(source, lexer.tokens, lexer.bodies)
     script = parser.script(start)
     errors = sorted([*lexer.errors, *parser.errors], key=lambda error: error.offset)
     return Script(script.items, tuple(_lines(lexer.tokens, end)), start, end, tuple(errors))
 
 
-def parse(script: str, *, opaque: re.Pattern[str] | None = None, powershell: bool = False) -> Script:
+def parse(script: str, *, opaque: re.Pattern[str] | None = None, dialect: Dialect = POSIX) -> Script:
     """The tree of `script`. Text matching `opaque` (a CI expression the CI service evaluates first) is kept as
     written, quotes and all, inside the word it is part of."""
-    source = _Source(script, opaque, "`" if powershell else "\\")
-    return _parse(source, 0, len(script), 0, powershell=powershell)
+    return _parse(_Source(script, opaque, dialect), 0, len(script), 0)

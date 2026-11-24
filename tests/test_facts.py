@@ -343,6 +343,23 @@ class GitLabFactTests(unittest.TestCase):
         self.assertEqual(facts.of(Unknown), ())
         self.assertIn(("cmake", "--build", "build", "--config", "Release"), [c.argv for c in facts.of(Command)])
 
+    def test_a_cmd_step_is_read_as_cmd(self) -> None:
+        """fmt's `ctest … -j %NUMBER_OF_PROCESSORS%` and a path written with backslashes, as cmd reads them."""
+        steps = [
+            {"run": "if not exist build mkdir build\nbuild\\Release\\test.exe ^\n  --x", "shell": "cmd"},
+            {"run": "ctest -C Release -j %NUMBER_OF_PROCESSORS%"},
+        ]
+        job = {"runs-on": "windows-latest", "defaults": {"run": {"shell": "cmd"}}, "steps": steps}
+        facts = _facts({GITHUB_WORKFLOW: json.dumps({"jobs": {"test": job}})})
+        self.assertEqual(
+            [command.argv for command in facts.of(Command)],
+            [
+                ("mkdir", "build"),
+                ("build\\Release\\test.exe", "--x"),
+                ("ctest", "-C", "Release", "-j", "%NUMBER_OF_PROCESSORS%"),
+            ],
+        )
+
     def test_a_custom_shell_runs_the_script_as_one_command(self) -> None:
         script = "cov <- covr::package_coverage(quiet = FALSE)\ncovr::to_cobertura(cov)\n"
         job = {

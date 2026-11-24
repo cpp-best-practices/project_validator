@@ -25,7 +25,7 @@ from project_validator.facts.arguments import starts_with
 from project_validator.facts.conditions import ALWAYS, DIMENSIONS, Condition, both, only
 from project_validator.facts.exit_status import Shell, masked
 from project_validator.facts.placed import Placed
-from project_validator.facts.shell import ShellCommand, ShellSyntaxError, Unsplittable, split_script
+from project_validator.facts.shell import POSIX, Dialect, ShellCommand, ShellSyntaxError, Unsplittable, split_script
 from project_validator.templates import SHELL
 
 if TYPE_CHECKING:
@@ -49,6 +49,8 @@ class Script:
     shell: Shell | None = None
     # Why none of the text's commands can fail what runs it (make's `-` before a recipe line), when none can.
     advisory: str = ""
+    # How the text is read: as the shell that runs it reads it (a batch file's is cmd's).
+    dialect: Dialect = POSIX
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -132,15 +134,15 @@ def script_facts(
     condition: str | None = None,
     opaque: re.Pattern[str] | None = None,
     via: tuple[Origin, ...] = (),
-    powershell: bool = False,
+    dialect: Dialect = POSIX,
     whole: bool = False,
     shell: Shell | None = None,
     followed: bool = False,
 ) -> Iterator[Fact]:
     """The commands of a shell script a job runs (see `split_script`, `Script.whole`, `masked` for the rest)."""
-    assigned, constants = _seen_assigned(script, whole or not via, powershell=powershell), _Constants(script)
+    assigned, constants = _seen_assigned(script, whole or not via, dialect=dialect), _Constants(script)
     command = partial(Command, job=job, condition=condition, via=via)
-    yield from _unread(split := list(split_script(script, opaque, powershell=powershell)), origin)
+    yield from _unread(split := list(split_script(script, opaque, dialect=dialect)), origin)
     for found, advisory in _judged(split, shell, followed):
         if isinstance(found, ShellCommand):
             made = command(
@@ -199,10 +201,10 @@ def _assigned(script: str) -> frozenset[str]:
     return frozenset(name for match in _ASSIGNED.finditer(script) for name in match.groups() if name)
 
 
-def _seen_assigned(script: str, whole: bool, *, powershell: bool) -> frozenset[str] | None:
-    """The variables a script sets, when what it sets is all seen: a whole shell script that sources no other file;
-    None otherwise (a script read in part, PowerShell, a script that reads another into itself)."""
-    return _assigned(script) if whole and not powershell and not _SOURCES.search(script) else None
+def _seen_assigned(script: str, whole: bool, *, dialect: Dialect) -> frozenset[str] | None:
+    """The variables a POSIX shell script sets, when what it sets is all seen: a whole script that sources no other
+    file; None otherwise (a script read in part, another shell's, a script that reads another into itself)."""
+    return _assigned(script) if whole and dialect is POSIX and not _SOURCES.search(script) else None
 
 
 # A script that reads another into itself (`. ./env.sh`, `source ci/vars`) may set what is not seen.
@@ -330,6 +332,7 @@ def _script_children(command: Command, script: Script, via: tuple[Origin, ...]) 
         via=via,
         whole=script.whole,
         shell=script.shell,
+        dialect=script.dialect,
     )
     yield from advised(commands, command.advisory or script.advisory)
 

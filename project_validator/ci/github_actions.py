@@ -14,7 +14,7 @@ from project_validator.ci.github_expressions import Known, evaluate, rendered
 from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, Origin, Unknown
 from project_validator.facts.exit_status import ERREXIT, STRICT, Shell, shell_of
 from project_validator.facts.expansion import advised, script_facts
-from project_validator.facts.shell import ShellSyntaxError, split_words
+from project_validator.facts.shell import CMD, POSIX, POWERSHELL, Dialect, ShellSyntaxError, split_words
 from project_validator.includes import Chain, Refused, follow
 from project_validator.limits import COMPOSITE_ACTIONS, REUSABLE_WORKFLOWS
 from project_validator.platforms import detect_operating_systems
@@ -52,13 +52,13 @@ def substitute_matrix(text: str, combination: Combination, missing: str | None =
 # An expression GitHub evaluates before the shell runs the step.
 EXPRESSION = re.compile(r"\$\{\{.*?\}\}")
 
+# The POSIX shells GitHub runs by name, as it runs them.
+_NAMED_SHELLS = {"bash": STRICT, "sh": ERREXIT}
+# The shells GitHub knows that are not POSIX shells, and how each reads a script.
+_DIALECTS = {"pwsh": POWERSHELL, "powershell": POWERSHELL, "cmd": CMD}
 # The shells whose scripts are split into commands; another `shell:` names a program that runs the step's script as a
 # whole (`python {0}`, `Rscript {0}`).
-_SHELLS = frozenset({"bash", "sh", "pwsh", "powershell", "cmd"})
-
-
-# The shells GitHub runs by name, as it runs them.
-_NAMED_SHELLS = {"bash": STRICT, "sh": ERREXIT}
+_SHELLS = frozenset({*_NAMED_SHELLS, *_DIALECTS})
 
 
 def custom_shell(shell: str | None) -> tuple[str, ...] | None:
@@ -422,7 +422,7 @@ class _Combination:
             condition=condition,
             opaque=EXPRESSION,
             via=via,
-            powershell=self.powershell(step, known),
+            dialect=self.dialect(step, known),
             shell=self.exit_shell(step, known),
         )
         yield from advised(commands, self.advisory)
@@ -437,17 +437,18 @@ class _Combination:
         argv = tuple(script if word == "{0}" else word for word in custom)
         return Command(origin=at, job=self.identity, argv=argv, line=script, env=env, directory=directory)
 
-    def powershell(self, step: Mapping[str, object], known: Known) -> bool:
-        """Whether a step's script is PowerShell: its `shell`, the job's default, or the runner's (pwsh on Windows)."""
+    def dialect(self, step: Mapping[str, object], known: Known) -> Dialect:
+        """How a step's script is read: as its `shell` reads it, the job's default, or the runner's (pwsh on
+        Windows, else bash)."""
         shell = step.get("shell") or self.shell
         if shell is None:
-            return known.os == "windows"
-        return str(shell).split()[0] in ("pwsh", "powershell")
+            return POWERSHELL if known.os == "windows" else POSIX
+        return _DIALECTS.get(str(shell).split()[0], POSIX)
 
     def exit_shell(self, step: Mapping[str, object], known: Known) -> Shell | None:
         """How a step's shell treats a failing command (see `Shell`): GitHub's default, `bash -e {0}`, has no pipefail,
         unlike `shell: bash`; None for PowerShell and cmd, and a shell an expression names."""
-        if self.powershell(step, known):
+        if self.dialect(step, known) is not POSIX:
             return None
         shell = self.optional(step.get("shell")) or self.shell
         if shell is None:

@@ -690,6 +690,41 @@ class ShellScriptTests(unittest.TestCase):
         self.assertEqual(placed[("make", "all")], "ci/build.sh:4:3")
         self.assertEqual(placed[("echo", "done")], f"{GITHUB_WORKFLOW}:1:60 (jobs.build.steps[0].run)")
 
+    def test_batch_and_powershell_script_files_are_read_in_their_shells_dialect(self) -> None:
+        files = {
+            "scripts/build.bat": "@echo off\r\ncmake --build build --config %1\r\nif errorlevel 1 exit /b 1\r\n",
+            "ci/test.ps1": "Invoke-Pester -Path tests `\n  -CI\n",
+        }
+        for shell, line, expected in (
+            ("cmd", "call scripts\\build.bat Release", ("cmake", "--build", "build", "--config", "%1")),
+            ("bash", "cmd /c scripts/build.bat", ("cmake", "--build", "build", "--config", "%1")),
+            ("pwsh", "pwsh -File ci/test.ps1", ("Invoke-Pester", "-Path", "tests", "-CI")),
+            ("pwsh", "./ci/test.ps1", ("Invoke-Pester", "-Path", "tests", "-CI")),
+        ):
+            with self.subTest(line=line):
+                job = {"runs-on": "windows-latest", "steps": [{"run": line, "shell": shell}]}
+                facts = _facts({**files, GITHUB_WORKFLOW: json.dumps({"jobs": {"test": job}})})
+                self.assertIn(expected, _expanded(facts))
+
+    def test_a_batch_file_the_project_does_not_hold_is_not_followed_nor_unknown(self) -> None:
+        """Most are generated (Composer's `vendor/bin/phpunit.bat`) or programs (`npm.cmd`), not the project's."""
+        steps = [
+            {"run": "call vendor\\bin\\phpunit.bat\nnpm.cmd ci\ncall C:\\BuildTools\\vcvars64.bat", "shell": "cmd"}
+        ]
+        job = {"runs-on": "windows-latest", "steps": steps}
+        facts = _facts({GITHUB_WORKFLOW: json.dumps({"jobs": {"test": job}})})
+        self.assertEqual([fact.subject for fact in facts.of(Unknown)], [])
+
+    def test_a_ci_file_scanned_heuristically_is_read_as_cmd_on_windows(self) -> None:
+        """Catch2's AppVeyor runs `.\\tools\\misc\\appveyorBuildConfigurationScript.bat`."""
+        files = {
+            "appveyor.yml": "image: Visual Studio 2019\nbuild_script:\n  - cmd: .\\tools\\build.bat\n",
+            "tools/build.bat": "cmake --build build\r\n",
+        }
+        facts = _facts(files)
+        self.assertIn(("cmake", "--build", "build"), _expanded(facts))
+        self.assertEqual([fact.subject for fact in facts.of(Unknown) if fact.subject.startswith("the script")], [])
+
     def test_other_files_and_inline_scripts_are_not_followed(self) -> None:
         files = {**self.SCRIPT, "tools/run.py": "print('x')\n", "ci/notes": "ruff check .\n"}
         for line in (

@@ -17,7 +17,7 @@ from project_validator.ci import CiProvider, Load, strings
 from project_validator.facts import CiJob, Command, Fact, Origin, Unknown
 from project_validator.facts.exit_status import STRICT, after
 from project_validator.facts.expansion import advised, script_facts
-from project_validator.facts.shell import ShellCommand, split_script
+from project_validator.facts.shell import POSIX, POWERSHELL, ShellCommand, split_script
 from project_validator.includes import Chain, Refused, follow
 from project_validator.limits import GITLAB_EXTENDS, GITLAB_INCLUDES, GITLAB_REFERENCES
 from project_validator.platforms import detect_operating_systems
@@ -142,13 +142,19 @@ def _lines_facts(
     for number, (text, origin) in enumerate(script):
         followed = number < len(script) - 1
         yield from script_facts(
-            text, job=job, origin=origin, env=env, powershell=windows, shell=shell, followed=followed
+            text,
+            job=job,
+            origin=origin,
+            env=env,
+            dialect=POWERSHELL if windows else POSIX,
+            shell=shell,
+            followed=followed,
         )
         if shell is not None:
             shell = after([found for found in split_script(text) if isinstance(found, ShellCommand)], shell)
     for key, text, origin in lines:
         if key == "after_script":
-            facts = script_facts(text, job=job, origin=origin, env=env, powershell=windows)
+            facts = script_facts(text, job=job, origin=origin, env=env, dialect=POWERSHELL if windows else POSIX)
             yield from advised(facts, _AFTER_SCRIPT)
 
 
