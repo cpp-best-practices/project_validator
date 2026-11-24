@@ -86,6 +86,24 @@ class UnitTests(unittest.TestCase):
         vendored = {"CMakeLists.txt": "", "main.c": "", "deps/lib/package.json": "{}", "deps/lib/x.js": ""}
         self.assertEqual([unit for unit, _, _ in _units(vendored)], ["."])
 
+    def test_pnpm_workspace_members_are_units_of_their_own(self) -> None:
+        """pnpm declares its workspace in pnpm-workspace.yaml, not package.json (graphql-eslint, graphql-inspector:
+        upstream #188): each member is a unit, named or not, with the role its directory tells."""
+        unnamed = {"packages/c/package.json": json.dumps({"private": True, "main": "x.js"}), "packages/c/x.js": ""}
+        files = {
+            "package.json": json.dumps({"private": True}),
+            "pnpm-workspace.yaml": "packages:\n  - packages/*\n  - examples/*\n  - '!packages/skipped'\n",
+            **unnamed,
+            "examples/b/package.json": json.dumps({"private": True}),
+            "examples/b/index.js": "",
+        }
+        with temp_project(files) as root:
+            units = make_context(root).facts.of(Unit)
+        self.assertEqual(
+            [(unit.directory, unit.role) for unit in units],
+            [(".", "product"), ("examples/b", "example"), ("packages/c", "product")],
+        )
+
     def test_a_mixed_language_project_has_a_unit_per_build_root(self) -> None:
         self.assertEqual(_units(MIXED), [(".", ("CMake",), ["C++"]), ("python", ("Python packaging",), ["Python"])])
 

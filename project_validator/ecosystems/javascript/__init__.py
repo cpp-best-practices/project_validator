@@ -60,6 +60,7 @@ from project_validator.tools.prettier import prettier_tool
 JAVASCRIPT = "JavaScript"
 TYPESCRIPT = "TypeScript"
 PACKAGE_JSON = "package.json"
+PNPM_WORKSPACE = "pnpm-workspace.yaml"
 DENO_CONFIG_FILES = ("deno.json", "deno.jsonc")
 # A package.json that names what it provides is a JavaScript package, even before any source is found.
 ENTRY_POINTS = ("main", "module", "exports", "bin")
@@ -87,6 +88,21 @@ def _named_package(text: str) -> bool:
     return "name" in _manifest(text)
 
 
+def _pnpm_packages(text: str) -> tuple[str, ...]:
+    """The packages a pnpm-workspace.yaml declares (`packages:`, globs; `!` before one leaves it out)."""
+    try:
+        declared = yaml_support.load(text)
+    except yaml_support.YamlError:
+        return ()
+    packages = declared.get("packages") if isinstance(declared, dict) else None
+    return tuple(str(pattern) for pattern in packages) if isinstance(packages, list) else ()
+
+
+def _declared_workspace(text: str) -> tuple[str, ...]:
+    """The workspace members a package.json or a pnpm-workspace.yaml declares, each a unit of its own."""
+    return _workspaces(text) or _pnpm_packages(text)
+
+
 def _workspaces(text: str) -> tuple[str, ...]:
     """The workspaces a package.json declares (npm, yarn and bun: `workspaces`, as a list or under `packages`)."""
     found = _manifest(text).get("workspaces")
@@ -97,9 +113,9 @@ def _workspaces(text: str) -> tuple[str, ...]:
 
 NPM = BuildSystem(
     name="npm",
-    files=(PACKAGE_JSON,),
+    files=(PACKAGE_JSON, PNPM_WORKSPACE),
     declared_languages=_declared_by_package,
-    members=_workspaces,
+    members=_declared_workspace,
     standalone=_named_package,
 )
 DENO = BuildSystem(name="Deno", files=DENO_CONFIG_FILES, languages=frozenset({TYPESCRIPT}))
@@ -174,13 +190,8 @@ def workspace_members(context: Context, directory: str | None) -> list[str]:
         if context.project.exists(path := joined(directory, PACKAGE_JSON))
         else []
     )
-    if context.project.exists(pnpm := joined(directory, "pnpm-workspace.yaml")):
-        try:
-            declared = yaml_support.load(context.project.read_text(pnpm))
-        except yaml_support.YamlError:
-            declared = None
-        packages = declared.get("packages") if isinstance(declared, dict) else None
-        patterns += [str(pattern) for pattern in packages] if isinstance(packages, list) else []
+    if context.project.exists(pnpm := joined(directory, PNPM_WORKSPACE)):
+        patterns += _pnpm_packages(context.project.read_text(pnpm))
     globs = [
         joined(directory, pattern.removeprefix("./").rstrip("/")) for pattern in patterns if not pattern.startswith("!")
     ]
