@@ -259,6 +259,32 @@ class StructureTests(unittest.TestCase):
         # A library for testing is the product (bloc's bloc_test package).
         self.assertEqual(role("packages/bloc_test", directory=True), "product")
 
+    def test_maintainer_scripts_and_editor_integrations_are_tooling(self) -> None:
+        """More names of maintainer scripts the corpus uses (upstream #182): googletest's and koyo's `ci/`, cli's
+        `script/` and the .NET Arcade SDK's `eng/` at the top of the project, scikit-learn's `build_tools/`, deno's
+        `_tools/`, and the editor integrations a tool ships (perl-code-tidyall's `etc/editors/`, dune's
+        `editor-integration/`)."""
+        for path in (
+            "ci/linux-presubmit.sh",
+            "script/build.ps1",
+            "eng/common/cross/build-rootfs.sh",
+            "build_tools/linting.sh",
+            "_tools/check_docs.ts",
+            "etc/editors/tidyall.el",
+            "editor-integration/emacs/dune.el",
+        ):
+            with self.subTest(path=path):
+                self.assertEqual(role(path), "tooling")
+        # Deeper, they are code of their own: graphql-inspector's published `@graphql-inspector/ci` package, a Helm
+        # chart's test values; and a package of tools is a product (bloc's `bloc_tools`).
+        for path in (
+            "packages/ci/src/index.ts",
+            "charts/alertmanager/ci/values.yaml",
+            "packages/bloc_tools/lib/a.dart",
+        ):
+            with self.subTest(path=path):
+                self.assertEqual(role(path), "product")
+
     def test_vendored_code_is_recorded_but_adds_no_language(self) -> None:
         with temp_project({"main.c": "", "web/sw.min.js": ""}) as root:
             context = make_context(root)

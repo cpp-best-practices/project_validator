@@ -37,14 +37,24 @@ _ROLES = {
     # rust-lang/book's `listings/` are the book's example programs.
     **dict.fromkeys(("example", "examples", "sample", "samples", "demo", "demos", "listings"), "example"),
     **dict.fromkeys(("doc", "docs", "documentation", "website"), "docs"),
-    # `hack/` is the Kubernetes projects' name for maintainer scripts, `tool/` Dart's.
-    # `vendor-bin/` holds the tools bamarni/composer-bin-plugin installs, each a Composer project (guzzle).
-    **dict.fromkeys(("tool", "tools", "tooling", "scripts", "hack", "vendor-bin"), "tooling"),
+    # `hack/` is the Kubernetes projects' name for maintainer scripts, `tool/` Dart's; `build_tools/` scikit-learn's,
+    # `_tools/` deno's. `vendor-bin/` holds the tools bamarni/composer-bin-plugin installs, each a Composer project
+    # (guzzle).
+    **dict.fromkeys(
+        ("tool", "tools", "tooling", "scripts", "hack", "build_tools", "build-tools", "_tools", "vendor-bin"), "tooling"
+    ),
+    # The editor integrations a tool ships (perl-code-tidyall's `etc/editors/`, dune's); not `editor/`, an editor's
+    # own code.
+    **dict.fromkeys(("editors", "editor-integration"), "tooling"),
     **dict.fromkeys(("bench", "benches", "benchmark", "benchmarks"), "benchmark"),
     # Files rendered before they are read (a Helm chart's manifests, Jinja pages, the projects a blueprint
     # generates): not well formed as they are.
     **dict.fromkeys(("template", "templates", "blueprint", "blueprints"), "template"),
 }
+# Names that tell a role at the top of the project only: the scripts CI runs (`ci/`), cli's `script/` and the .NET
+# Arcade SDK's `eng/`. Deeper, a directory so named is code of its own (graphql-inspector's `packages/ci`, a Helm
+# chart's `ci/` test values).
+_TOP_LEVEL_ROLES = dict.fromkeys(("ci", "script", "eng"), "tooling")
 # The roles a directory's name tells by its first or last word (`tests-build`, `integration_test`, `clap_bench`,
 # `flutter_http_example`, `example_packages`). A last word `test` does not: a library for testing is a product
 # (bloc's `bloc_test`), and Racket's `foo-test` packages are told by what they say.
@@ -108,6 +118,8 @@ def role(path: str, *, directory: bool = False) -> str:
     # A directory that is a unit of its own is told by its own name first (`internal/tools`, a Go tools module).
     if directory and parts and (own := _named_role(parts[-1])):
         return own
+    if parts and parts[0] in _TOP_LEVEL_ROLES:
+        return _TOP_LEVEL_ROLES[parts[0]]
     for index, part in enumerate(parts):
         if part in _SOURCE_ROOTS:
             return "test" if _TESTS_BELOW_SOURCE_ROOTS.intersection(parts[index + 1 :]) else "product"
