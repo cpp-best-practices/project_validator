@@ -152,7 +152,7 @@ def _expanded(text: str, lookup: _Lookup, inside: frozenset[str] = frozenset()) 
         else:
             names.add(part.name)
             parts.append(_within(values, lookup, inside | {part.name}))
-    joined = [("".join(chosen), when) for chosen, when in combined(*parts)]
+    joined = [(_called("".join(chosen)), when) for chosen, when in combined(*parts)]
     # Each pass that substitutes guards more names, so expanding again ends.
     return joined if names == inside else _within(joined, lookup, frozenset(names))
 
@@ -166,6 +166,40 @@ def _within(values: Choices[str], lookup: _Lookup, inside: frozenset[str]) -> Ch
         if (held := both(when, other))
     )
     return list(expanded)[:MOST_CHOICES]
+
+
+# A call of one of make's text functions whose arguments hold no reference left: `$(filter %.c,a.c b.h)`.
+_FUNCTION = re.compile(r"\$\((?P<name>filter|filter-out|findstring|strip) (?P<arguments>[^$()]*)\)")
+
+
+def _called(text: str) -> str:
+    """`text` with each text function whose arguments are known replaced by its result, innermost first."""
+    while (found := _FUNCTION.search(text)) is not None:
+        text = text[: found.start()] + _result(found["name"], found["arguments"]) + text[found.end() :]
+    return text
+
+
+def _result(name: str, arguments: str) -> str:
+    """What `$(name arguments)` gives: `strip` collapses whitespace, `findstring` is its first argument when the
+    second holds it, `filter` and `filter-out` keep the words of the second that match (or do not) a pattern of the
+    first, where `%` matches any text."""
+    if name == "strip":
+        return " ".join(arguments.split())
+    first, _, second = arguments.partition(",")
+    if name == "findstring":
+        return first if first in second else ""
+    patterns = first.split()
+    return " ".join(word for word in second.split() if any(map(_matches(word), patterns)) == (name == "filter"))
+
+
+def _matches(word: str) -> Callable[[str], bool]:
+    def matches(pattern: str) -> bool:
+        prefix, percent, suffix = pattern.partition("%")
+        if not percent:
+            return word == pattern
+        return len(word) >= len(prefix) + len(suffix) and word.startswith(prefix) and word.endswith(suffix)
+
+    return matches
 
 
 def _choices(text: str, lookup: _Lookup) -> Choices[str]:
@@ -449,7 +483,9 @@ def _make_targets(command: Command, context: Context) -> Iterator[Expansion] | N
     goals = [word for word in words if "=" not in word]
     if (path := _makefile(context, directory, options)) is None:
         return _configured_by_cmake(command, context, directory, goals)
-    overrides = {found["name"]: found["value"] for word in words if (found := make_syntax.ASSIGNMENT.match(word))}
+    # The command line's assignments, and MAKECMDGOALS, the goals as written (none when it names none).
+    assigned = {found["name"]: found["value"] for word in words if (found := make_syntax.ASSIGNMENT.match(word))}
+    overrides = {"MAKECMDGOALS": " ".join(goals), **assigned}
     makefile = _read(context, path, overrides)
     goals = goals or ([makefile.default] if makefile.default else [])
     return _goals(makefile, path, goals, command)

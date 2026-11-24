@@ -337,6 +337,43 @@ lint:
         recipes = [fact.subject for fact in facts.of(Unknown) if fact.subject.startswith("the recipe")]
         self.assertEqual(recipes, ["the recipe '$(TOOL) -g'"])
 
+    def test_the_goals_make_is_given_decide_a_conditional_on_them(self) -> None:
+        """uutils/coreutils builds in release only for `make install`: MAKECMDGOALS holds the goals, and `filter` is
+        evaluated once its arguments are known."""
+        makefile = (
+            "ifneq (,$(filter install, $(MAKECMDGOALS)))\n PROFILE?=release\nendif\nPROFILE ?= debug\n"
+            "build:\n\tcargo build --profile=$(PROFILE)\ninstall:\n\tcargo install --profile=$(PROFILE)\n"
+        )
+        for line, expected in (
+            ("make build", [("cargo", "build", "--profile=debug")]),
+            ("make install", [("cargo", "install", "--profile=release")]),
+        ):
+            with self.subTest(line=line):
+                files = {"Makefile": makefile, **github_job("ubuntu-latest", line)}
+                self.assertEqual(_expanded(_facts(files)), expected)
+
+    def test_text_functions_with_known_arguments_are_evaluated(self) -> None:
+        """One whose arguments are not all known (`$U` is set nowhere) stays as written."""
+        recipes = (
+            "$(filter %.c,$(A))",
+            "$(filter-out %.c,$(A))",
+            "$(findstring y,$(A)) [$(findstring q,$(A))]",
+            "[$(strip   a   b  )]",
+            "$(filter %.c,$U)",
+        )
+        makefile = "A = x.c y.h z.c\nall:\n" + "".join(f"\techo {recipe}\n" for recipe in recipes)
+        files = {"Makefile": makefile, **github_job("ubuntu-latest", "make")}
+        self.assertEqual(
+            _expanded(_facts(files)),
+            [
+                ("echo", "x.c", "z.c"),
+                ("echo", "y.h"),
+                ("echo", "y", "[]"),
+                ("echo", "[a", "b]"),
+                ("echo", "$(filter %.c,$U)"),
+            ],
+        )
+
     def test_a_rule_written_in_a_branch_runs_only_where_it_holds(self) -> None:
         makefile = "all: test\nifeq ($(OS),Windows_NT)\nall: package\nendif\ntest:\n\tctest\npackage:\n\tcpack\n"
         for runner, expected in (("ubuntu-latest", [("ctest",)]), ("windows-latest", [("ctest",), ("cpack",)])):
