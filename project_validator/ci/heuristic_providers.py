@@ -5,17 +5,6 @@ from __future__ import annotations
 from project_validator.ci import CiProvider
 from project_validator.text import pattern
 
-AZURE_PIPELINES = CiProvider(
-    name="Azure Pipelines",
-    files=("azure-pipelines.yml", ".azure-pipelines.yml"),
-    badges=(
-        pattern(
-            "Azure Pipelines",
-            r"(?:dev\.azure\.com|\w+\.visualstudio\.com)/\S+/_apis/build/status|img\.shields\.io/azure-devops/build/",
-        ),
-    ),
-    configured_elsewhere=True,
-)
 APPVEYOR = CiProvider(
     name="AppVeyor",
     files=("appveyor.yml", ".appveyor.yml"),
