@@ -1193,6 +1193,20 @@
     },
     {
       "can": {
+        "coverage": {
+          "line": "OpenCppCoverage --export_type cobertura:coverage.xml -- ctest"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "OpenCppCoverage",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "format": {
           "apply": "php-cs-fixer fix",
           "check": "php-cs-fixer check"
@@ -3189,6 +3203,19 @@
         "Erlang"
       ],
       "name": "elvis",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "type-check": {
+          "checks": "emmylua_check . (with LuaCATS annotations)"
+        }
+      },
+      "languages": [
+        "Lua"
+      ],
+      "name": "emmylua_check",
       "reads": [],
       "required": []
     },

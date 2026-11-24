@@ -556,6 +556,13 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "emmylua_check": {
+                "can": {
+                  "checks": "emmylua_check . (with LuaCATS annotations)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "lua-language-server": {
                 "can": {
                   "checks": "lua-language-server --check . (with LuaCATS annotations)"
@@ -834,7 +841,7 @@
     },
     "type-checking": {
       "details": [
-        "consider running a type checker in CI: lua-language-server --check . (with LuaCATS annotations), luau-analyze . or tl check <file.tl> (Teal)"
+        "consider running a type checker in CI: lua-language-server --check . (with LuaCATS annotations), emmylua_check . (with LuaCATS annotations), luau-analyze . or tl check <file.tl> (Teal)"
       ],
       "message": "no type checker runs",
       "status": "FAIL"

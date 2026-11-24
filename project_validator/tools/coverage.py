@@ -12,7 +12,7 @@ from project_validator.facts import Command, Fact, Facts, Setting, resolved
 from project_validator.facts.arguments import has_option, option_values, program, short_flags
 from project_validator.facts.build import CompilerOption
 from project_validator.facts.coverage import Granularity, coverage_tool, measured, reported
-from project_validator.facts.expansion import joined
+from project_validator.facts.expansion import joined, launcher
 from project_validator.facts.settings import SettingsReader, key_value_settings
 from project_validator.facts.tools import Run, Tool
 
@@ -210,4 +210,25 @@ GCC_CONDITION_COVERAGE = _instrumentation("-fcondition-coverage")
 GCC_PATH_COVERAGE = _instrumentation("-fpath-coverage")
 CLANG_MCDC = _instrumentation("-fcoverage-mcdc")
 
-COVERAGE_TOOLS = (GCOVR, LCOV, GCOV, LLVM_COV, GCC_CONDITION_COVERAGE, GCC_PATH_COVERAGE, CLANG_MCDC)
+# OpenCppCoverage measures the lines of the program it runs after `--` (cmake_template's and Catch2's Windows jobs:
+# `OpenCppCoverage.exe --export_type cobertura:coverage.xml -- ctest`), and reports them; it counts no branches.
+_OPENCPPCOVERAGE = ("OpenCppCoverage", "OpenCppCoverage.exe")
+OPENCPPCOVERAGE = coverage_tool(
+    name="OpenCppCoverage",
+    languages=C_AND_CXX,
+    can={LINE: "OpenCppCoverage --export_type cobertura:coverage.xml -- ctest"},
+    measures=lambda command, _facts: reported(LINE) if program(resolved(command)) in _OPENCPPCOVERAGE else None,
+)
+OPENCPPCOVERAGE_LAUNCHER = launcher(
+    "OpenCppCoverage",
+    tuple((name,) for name in _OPENCPPCOVERAGE),
+    with_values=frozenset(
+        {"--export_type", "--sources", "--excluded_sources", "--modules", "--excluded_modules", "--working_dir"}
+        | {"--input_coverage", "--config_file", "--excluded_line_regex", "--substitute_pdb_source_path"}
+    ),
+)
+
+COVERAGE_TOOLS = (
+    *(GCOVR, LCOV, GCOV, LLVM_COV, OPENCPPCOVERAGE),
+    *(GCC_CONDITION_COVERAGE, GCC_PATH_COVERAGE, CLANG_MCDC),
+)

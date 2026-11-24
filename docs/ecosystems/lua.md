@@ -43,7 +43,7 @@ library (`std = "lua54"`).
 ## `type-checking`
 
 The Lua language server checking LuaCATS annotations (`lua-language-server --check .`, with `.luarc.json`), or
-luau-analyze for Luau, or `tl check` (or `tl gen --check`) for Teal.
+emmylua_check (with `.emmyrc.json`), or luau-analyze for Luau, or `tl check` (or `tl gen --check`) for Teal.
 
 ## `security-scanning`
 
