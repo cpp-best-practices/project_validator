@@ -488,7 +488,9 @@ def found_at(context: Context, directory: str | None, names: Iterable[str]) -> s
 
 
 def joined(directory: str | None, path: str) -> str:
-    """`path` in `directory`, relative to the project root."""
+    """`path` in `directory`, relative to the project root (`./tsconfig.json` is `tsconfig.json`)."""
+    while path.startswith("./"):
+        path = path[2:]
     if directory in (None, "", "."):
         return path
     return f"{directory.strip('/').removeprefix('./')}/{path}"

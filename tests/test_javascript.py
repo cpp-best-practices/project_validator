@@ -276,6 +276,8 @@ class TypeCheckingTests(unittest.TestCase):
             ("tsconfig.json", "./tsconfig.base.json", "npx tsc --noEmit"),
             ("tsconfig.json", "./tsconfig.base", "npx tsc --noEmit"),
             ("app/tsconfig.json", "../tsconfig.base.json", "npx tsc -p app"),
+            # SchemaStore's `tsc --project ./jsconfig.json` (upstream #273).
+            ("tsconfig.json", "./tsconfig.base.json", "npx tsc --project ./tsconfig.json"),
         ):
             with self.subTest(config=config, extends=extends):
                 files = {**base, config: f'{{"extends": "{extends}"}}', **_ci(command)}

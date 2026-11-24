@@ -98,7 +98,7 @@ def _shell_script(command: Command, context: Context) -> list[Expansion] | None:
         # Elsewhere (`C:/BuildTools/vcvars64.bat` too), a pattern, or a whole command line quoted as one word
         # (`"bash -x ./ci/test.sh"`).
         return None
-    found = joined(command.directory, path.removeprefix("./"))
+    found = joined(command.directory, path)
     if not context.project.exists(found):
         # A program the build makes (`./build/app`) is not in the repository either; a shell script is written by CI.
         # A batch file or PowerShell script most often is a program (`npm.cmd`) or generated (`vendor/bin/x.bat`).
