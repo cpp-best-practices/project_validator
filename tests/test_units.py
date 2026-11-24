@@ -162,6 +162,19 @@ class UnitTests(unittest.TestCase):
                 result = checks_named(name)[0].run(make_context(root))
                 self.assertEqual([place.unit for place in result.places], ["."], result)
 
+    def test_a_templates_migrations_are_not_the_products(self) -> None:
+        """koyo's blueprints are the projects `raco koyo new` writes, migrations included (upstream #188): the
+        template's migrations are not asked to be checked beside the product's."""
+        files = {
+            "package.json": json.dumps({"name": "app"}),
+            "migrations/0001-init.sql": "create table a (id int);\n",
+            "blueprints/standard/package.json": json.dumps({"name": "app-name-here"}),
+            "blueprints/standard/migrations/0001-users.sql": "create table users (id int);\n",
+        }
+        with temp_project(files) as root:
+            result = checks_named("migration-safety")[0].run(make_context(root))
+            self.assertEqual([place.unit for place in result.places], ["."], result)
+
     def test_a_nested_build_file_that_is_no_project_of_its_own_is_its_parents(self) -> None:
         """A CMake subdirectory, a package.json that only marks its directory's modules (`{"type": "module"}`), and a
         test fixture's manifest belong to the unit above them."""
