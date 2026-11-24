@@ -41,6 +41,11 @@ def _ci(*lines: str) -> dict[str, str]:
     return github_job(CI, *lines)
 
 
+def _facts_of(files: Mapping[str, str]) -> Facts:
+    with temp_project(files) as root:
+        return make_context(root).facts
+
+
 def _workflow(document: dict[str, object]) -> dict[str, str]:
     """A GitHub workflow that is `document` as a whole (its triggers, its jobs' `if:` and `uses:`)."""
     return {GITHUB_WORKFLOW: json.dumps(document)}
@@ -243,11 +248,32 @@ class MoleculeVerifierTests(unittest.TestCase):
 
 
 class AntsibullNoxTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #261: antsibull-nox's reusable workflow is unread
     def test_antsibull_nox_sessions_run_ansible_test(self) -> None:
         """antsibull-nox's sessions run ansible-test (community.general)."""
         result = run_in_layout(self, ANSIBLE_PLAYBOOK, TESTS_RUN, {**COLLECTION, **_workflow(NOX_WORKFLOW)})
         self.assertEqual(result.status, Status.PASS, result)
+
+    def test_antsibull_nox_runs_the_lints_its_lint_session_switches_on_and_the_sessions_named(self) -> None:
+        """community.general's lint session runs ruff, yamllint and mypy (with its configuration); `nox -e` runs the
+        sessions it names; the reusable workflow's call is no longer unknown."""
+        lint = (
+            '[sessions.lint]\nrun_ruff_check = true\nrun_yamllint = true\nrun_mypy = true\nmypy_config = ".mypy.ini"\n'
+        )
+        configured = {**COLLECTION, "antsibull-nox.toml": lint + "[sessions.ansible_test_units]\n"}
+        facts = _facts_of({**configured, **_workflow(NOX_WORKFLOW)})
+        commands = [command.argv for command in facts.of(Command) if command.via]
+        self.assertEqual(
+            commands,
+            [
+                ("ansible-test", "units"),
+                ("ruff", "check", "."),
+                ("yamllint", "."),
+                ("mypy", "--config-file", ".mypy.ini"),
+            ],
+        )
+        self.assertEqual([unknown.subject for unknown in facts.of(Unknown)], [])
+        named = _facts_of({**configured, **_ci("nox -e ansible-test-units")})
+        self.assertEqual([command.argv for command in named.of(Command) if command.via], [("ansible-test", "units")])
 
 
 # --- Docker (#260) ---------------------------------------------------------------------------------------------------

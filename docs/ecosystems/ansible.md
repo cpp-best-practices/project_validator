@@ -16,6 +16,12 @@ targets (`tests/integration/targets/<target>/tasks/main.yml`) that `ansible-test
 units`) runs. A scenario whose verifier is testinfra (`verifier: name: testinfra`) has Python tests
 (`molecule/<scenario>/tests/test_*.py`): `molecule test` runs them, which is the Python profile's tests-run.
 
+antsibull-nox, the ansible-collections organisation's CI driver: `nox` (or antsibull-nox's reusable workflow,
+`ansible-community/antsibull-nox/.github/workflows/reusable-nox-matrix.yml`) runs the sessions `antsibull-nox.toml`
+configures, or those `nox -e` names: `ansible_test_sanity`, `ansible_test_units` and `ansible_test_integration` run
+`ansible-test`, `ansible_lint` runs ansible-lint, and the `lint` session's switches (`run_ruff_check`,
+`run_ruff_format`, `run_black`, `run_isort`, `run_flake8`, `run_pylint`, `run_yamllint`, `run_mypy`) run those tools.
+
 ## `static-analysis`
 
 ansible-lint (`ansible-lint`, or the `ansible/ansible-lint` and `ansible-community/ansible-lint-action` actions),

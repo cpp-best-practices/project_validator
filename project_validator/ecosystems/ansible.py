@@ -12,15 +12,17 @@ toolchain)."""
 from __future__ import annotations
 
 import re
-from collections.abc import Iterator
+import tomllib
+from collections.abc import Iterator, Mapping
 from pathlib import PurePosixPath
 
-from project_validator.core import Project
+from project_validator.core import Context, Project
 from project_validator.ecosystems.model import Ecosystem
 from project_validator.ecosystems.python import PYTHON_ONLY, PYTHON_TEST_FILES
-from project_validator.facts import Command, Fact, Facts
+from project_validator.facts import Command, Fact, Facts, Origin, Unknown, resolved
 from project_validator.facts.analysis import analysed, analyzer
-from project_validator.facts.expansion import Action
+from project_validator.facts.arguments import option_values, program
+from project_validator.facts.expansion import Action, CommandExpander, Expansion, Invocation, found_at
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, yaml_settings
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
@@ -175,3 +177,69 @@ ANSIBLE_LINT_COMMUNITY_ACTION = Action(
 # Of the misconfiguration scanners, checkov and KICS read Ansible; trivy does not.
 CHECKOV = misconfiguration_scanner("checkov", ANSIBLE_ONLY, "checkov -d . --framework ansible", starts(("checkov",)))
 KICS = misconfiguration_scanner("KICS", ANSIBLE_ONLY, "kics scan -p .", starts(("kics", "scan")))
+
+
+# --- antsibull-nox (#261) -------------------------------------------------------------------------------------------
+
+# antsibull-nox, the CI driver of the ansible-collections organisation: `nox` runs the sessions `antsibull-nox.toml`
+# configures (community.general runs them through antsibull-nox's reusable workflow).
+ANTSIBULL_NOX_WORKFLOW = Action(
+    name="ansible-community/antsibull-nox/.github/workflows/reusable-nox-matrix.yml", runs=lambda _inputs: (("nox",),)
+)
+_ANTSIBULL_NOX = ("antsibull-nox.toml",)
+# A session and what it runs.
+_SESSIONS = {
+    "ansible_test_sanity": ("ansible-test", "sanity"),
+    "ansible_test_units": ("ansible-test", "units"),
+    "ansible_test_integration": ("ansible-test", "integration"),
+    "ansible_lint": ("ansible-lint",),
+}
+# The lint session's switches (`run_ruff_check = true`) and what each runs.
+_LINTS = {
+    "run_ruff_check": ("ruff", "check", "."),
+    "run_ruff_format": ("ruff", "format", "--check", "."),
+    "run_black": ("black", "--check", "."),
+    "run_isort": ("isort", "--check", "."),
+    "run_flake8": ("flake8",),
+    "run_pylint": ("pylint",),
+    "run_yamllint": ("yamllint", "."),
+    "run_mypy": ("mypy",),
+}
+
+
+def _lint_commands(path: str, lint: Mapping[str, object]) -> Iterator[Invocation]:
+    for switch, argv in _LINTS.items():
+        if lint.get(switch) is True:
+            configured = lint.get("mypy_config") if switch == "run_mypy" else None
+            words = (*argv, "--config-file", configured) if isinstance(configured, str) else argv
+            line = f"antsibull-nox's lint session ({switch})"
+            yield Invocation(argv=words, line=line, origin=Origin(path=path, at=("sessions", "lint", switch)))
+
+
+def _antsibull_nox_sessions(command: Command, context: Context) -> list[Expansion] | None:
+    """The sessions `nox` runs, as `antsibull-nox.toml` configures them: those `-e`/`-s` names, or all of them."""
+    argv = resolved(command)
+    if program(argv) != "nox" or (path := found_at(context, command.directory, _ANTSIBULL_NOX)) is None:
+        return None
+    try:
+        sessions = tomllib.loads(context.project.read_text(path)).get("sessions", {})
+    except tomllib.TOMLDecodeError as error:
+        subject = f"the antsibull-nox configuration {path}"
+        return [Unknown(origin=Origin(path=path), subject=subject, reason=str(error), hides="commands")]
+    named = {name.replace("-", "_") for name in option_values(argv, "-e", "-s", "--session", "--sessions")}
+    chosen = {name: value for name, value in sessions.items() if not named or any(name in found for found in named)}
+    found: list[Expansion] = [
+        Invocation(
+            argv=_SESSIONS[name],
+            line=f"antsibull-nox's {name} session",
+            origin=Origin(path=path, at=("sessions", name)),
+        )
+        for name in chosen
+        if name in _SESSIONS
+    ]
+    if isinstance(lint := chosen.get("lint"), Mapping):
+        found.extend(_lint_commands(path, lint))
+    return found or None
+
+
+ANTSIBULL_NOX = CommandExpander(name="antsibull-nox sessions", expand=_antsibull_nox_sessions)

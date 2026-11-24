@@ -13,7 +13,7 @@ from project_validator.ci import REPOSITORY, CiProvider, Load, strings
 from project_validator.ci.github_expressions import Known, evaluate, rendered
 from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, Origin, Unknown
 from project_validator.facts.exit_status import ERREXIT, STRICT, Shell, shell_of
-from project_validator.facts.expansion import advised, script_facts
+from project_validator.facts.expansion import advised, known_actions, script_facts
 from project_validator.facts.shell import CMD, POSIX, POWERSHELL, Dialect, ShellSyntaxError, split_words
 from project_validator.includes import Chain, Refused, follow
 from project_validator.limits import COMPOSITE_ACTIONS, REUSABLE_WORKFLOWS
@@ -611,8 +611,13 @@ def _reusable_facts(
     inputs: Mapping[str, str],
     chain: Chain,
 ) -> Iterator[Fact]:
-    """The jobs of the reusable workflow job `job_id` calls, once per call (see `_calls`); unknown when not read."""
-    found = _called(str(job["uses"]).strip(), load, chain)
+    """The jobs of the reusable workflow job `job_id` calls, once per call (see `_calls`); unknown when not read, but
+    for a workflow of another repository that a known action models (antsibull-nox's), whose call is a step."""
+    uses = str(job["uses"]).strip()
+    found = _called(uses, load, chain)
+    if isinstance(found, str) and _modelled(uses):
+        yield from _modelled_call(path, job_id, job, f"{caller}{path}:{job_id}", uses)
+        return
     if isinstance(found, str):
         yield Unknown(
             origin=Origin(path=path, at=("jobs", job_id)), subject=f"job {job_id}", reason=found, hides="jobs"
@@ -622,6 +627,27 @@ def _reusable_facts(
     for label, passed in _calls(job, target, inputs):
         identity = f"{caller}{path}:{job_id}{label} → "
         yield from workflow_facts(reached.paths[-1], target, load, identity, passed, reached)
+
+
+def _modelled_call(path: str, job_id: str, job: Mapping[str, object], identity: str, uses: str) -> Iterator[Fact]:
+    """A job whose call of a modelled reusable workflow is its one step, on the runners the workflow chooses, which
+    are not read."""
+    name = str(job.get("name", job_id))
+    yield CiJob(
+        origin=Origin(path=path, at=("jobs", job_id)),
+        id=identity,
+        provider=GITHUB_ACTIONS.name,
+        name=name,
+        os="unknown",
+    )
+    origin = Origin(path=path, at=("jobs", job_id, "uses"))
+    yield ActionStep(origin=origin, job=identity, uses=uses, inputs=strings(job.get("with")))
+
+
+def _modelled(uses: str) -> bool:
+    """Whether a known action models the reusable workflow `uses` names (`owner/repo/.github/workflows/x.yml@ref`)."""
+    workflow = uses.partition("@")[0].lower()
+    return any(action.name.lower() == workflow for action in known_actions())
 
 
 def _called(uses: str, load: Load | None, chain: Chain) -> tuple[Chain, object] | str:
