@@ -855,6 +855,19 @@ class StringAndSeparateArgumentsTests(unittest.TestCase):
 
 
 class EvaluationEdgeTests(unittest.TestCase):
+    def test_an_argument_a_function_passes_on_comes_from_where_its_value_was_set(self) -> None:
+        """A function's parameter keeps the origin of the value the call passed (upstream #304)."""
+        found = _listed("set(W -Wall)", "function(f x)", "  add_compile_options(${x})", "endfunction()", "f(${W})")
+        origins = [fact.origin for fact in found if isinstance(fact, CompilerOption)]
+        self.assertEqual(origins, [_At("CMakeLists.txt", "set", 1)])
+
+    def test_a_test_generator_expression_as_a_value_is_one_or_zero_per_build(self) -> None:
+        """`$<CONFIG:Debug>` written as a value is 1 in Debug builds and 0 in the others (upstream #304)."""
+        found = _listed("add_compile_options(-DDEBUG=$<CONFIG:Debug>)")
+        by_value = {option: applies.configurations for option, _, applies in _options(found)}
+        self.assertEqual(by_value["-DDEBUG=1"], frozenset({"debug"}))
+        self.assertNotIn("debug", by_value["-DDEBUG=0"] or {"debug"})
+
     def test_a_quoted_first_argument_with_values_per_build_is_one_argument(self) -> None:
         found = _listed(
             "if(MSVC)",
