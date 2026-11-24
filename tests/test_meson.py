@@ -482,3 +482,9 @@ class EvaluationEdgeTests(unittest.TestCase):
 class RunTargetEdgeTests(unittest.TestCase):
     def test_a_run_target_without_a_command_runs_nothing(self) -> None:
         self.assertEqual(_expanded("ninja -C build empty"), [])
+
+    def test_a_run_target_without_a_name_is_no_target(self) -> None:
+        """Meson rejects a run_target() with a command but no name; reading one records no target (upstream
+        #301)."""
+        with temp_project({"meson.build": "project('app')\nrun_target(command: ['clang-tidy'])\n"}) as root:
+            self.assertEqual(dict(meson.meson_project(make_context(root)).targets), {})
