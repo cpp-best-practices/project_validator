@@ -285,6 +285,20 @@ class StructureTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assertEqual(role(path), "product")
 
+    def test_a_vendor_directory_of_a_test_suite_holds_its_tests(self) -> None:
+        """A test suite's directory named for what it tests is its own (upstream #188): typed-racket's tests of
+        external packages, dune's test cases of vendoring, argo-cd's test data; a vendored copy elsewhere stays
+        vendored (testthat's inst/include/testthat/vendor/catch.h)."""
+        for path in (
+            "typed-racket-test/external/historical-counterexamples.rkt",
+            "test/blackbox-tests/test-cases/vendor/alerts.t",
+            "util/helm/testdata/external/external-secret.txt",
+        ):
+            with self.subTest(path=path):
+                self.assertEqual(role(path), "test")
+        self.assertEqual(role("inst/include/testthat/vendor/catch.h"), "vendored")
+        self.assertEqual(role("third_party/googletest/test/gtest_unittest.cc"), "vendored")
+
     def test_vendored_code_is_recorded_but_adds_no_language(self) -> None:
         with temp_project({"main.c": "", "web/sw.min.js": ""}) as root:
             context = make_context(root)

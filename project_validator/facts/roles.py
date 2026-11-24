@@ -100,15 +100,25 @@ def _named_role(part: str) -> str | None:
 
 
 def _vendored(posix: PurePosixPath, parts: list[str], directory: bool) -> bool:
-    return any(_ROLES.get(part) == "vendored" for part in parts) or (
-        not directory and bool(_MINIFIED.search(posix.name))
-    )
+    return _in_vendor_directory(parts) or (not directory and bool(_MINIFIED.search(posix.name)))
+
+
+def _in_vendor_directory(parts: list[str]) -> bool:
+    """Whether a vendor directory holds the path, outside a test suite's directory: there, a directory named
+    `external` or `vendor` holds tests of external packages or of vendoring (typed-racket's, dune's: upstream
+    #188)."""
+    for part in parts:
+        if _ROLES.get(part) == "vendored":
+            return True
+        if _named_role(part) == "test" or not {"test", "tests"}.isdisjoint(_WORD_BREAK.split(part)):
+            return False
+    return False
 
 
 def role(path: str, *, directory: bool = False) -> str:
-    """What the code at `path` is for: `vendored` code of other projects (below a vendor directory anywhere, or a
-    minified bundle), else by the outermost directory that tells, above any source root (`src`, `lib`): the
-    `product`, its `test`s (test fixtures, fuzz and stress tests too), an `example`, `docs`, `tooling`, a
+    """What the code at `path` is for: `vendored` code of other projects (below a vendor directory outside a test
+    suite's, or a minified bundle), else by the outermost directory that tells, above any source root (`src`,
+    `lib`): the `product`, its `test`s (test fixtures, fuzz and stress tests too), an `example`, `docs`, `tooling`, a
     `benchmark` or a `template`; below a source root only a test directory tells (`src/test/resources`). A
     directory's own name tells first, below a source root too (`internal/tools`)."""
     posix = PurePosixPath(path)
@@ -124,7 +134,8 @@ def role(path: str, *, directory: bool = False) -> str:
         if part in _SOURCE_ROOTS:
             return "test" if _TESTS_BELOW_SOURCE_ROOTS.intersection(parts[index + 1 :]) else "product"
         if found := _named_role(part):
-            return found
+            # A vendor directory here is inside a test suite's (see `_in_vendor_directory`).
+            return "test" if found == "vendored" else found
     return "product"
 
 
