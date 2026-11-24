@@ -8,7 +8,7 @@ from project_validator import yaml_support
 from project_validator.ci import CiAnalysis, _matrix_text, find_ci_files
 from project_validator.core import Project
 from project_validator.plugins import discover
-from tests.support import CI_FILES, PROJECT_LAYOUTS, ci_jobs, layout_project, make_context, temp_project
+from tests.support import CI_FILES, PROJECT_LAYOUTS, ci_jobs, github_job, layout_project, make_context, temp_project
 
 
 class FindCiFilesTests(unittest.TestCase):
@@ -48,6 +48,27 @@ class HeuristicJobsTests(unittest.TestCase):
         self.assertEqual([job.os for job in jobs], ["linux", "windows"])
         self.assertTrue(all(job.compilers == {"gcc", "clang"} and job.heuristic for job in jobs))
 
+    def test_the_operating_systems_are_those_the_runners_are_configured_with(self) -> None:
+        """A description, a comment or a command that names an OS (docker-code-server's image label: "VS Code … on
+        your Mac, Windows") names no runner; the keys that configure one do, whatever the provider calls them."""
+        for path, text, expected in (
+            (
+                "Jenkinsfile",
+                "environment {\n  DIST_IMAGE = 'ubuntu'\n}\nsh 'docker build --label \"desc=on Windows\"'\n",
+                ["linux"],
+            ),
+            ("azure-pipelines.yml", "pool:\n  vmImage: 'windows-latest'\nsteps:\n- script: echo linux\n", ["windows"]),
+            (".circleci/config.yml", "jobs:\n  b:\n    macos:\n      xcode: 15.0\n    steps: [run: make]\n", ["macos"]),
+            ("appveyor.yml", "image: Visual Studio 2022  # ported from linux\n# os: linux\n", ["windows"]),
+            ("Jenkinsfile", "pipeline {\n  agent { label 'windows' }\n}\n", ["windows"]),
+            (".travis.yml", "matrix:\n  include:\n    - os: osx\n    - os: linux\n", ["macos", "linux"]),
+            # A sequence written at its key's indentation (scalafmt's AppVeyor), and an image behind an anchor (envoy).
+            ("appveyor.yml", "image:\n- Visual Studio 2017\nbuild: off\n", ["windows"]),
+            (".circleci/config.yml", "build-image: &image\n  envoyproxy/build-ubuntu:f4a8\njobs: {}\n", ["linux"]),
+        ):
+            with self.subTest(path=path, text=text.splitlines()[0]):
+                self.assertEqual(sorted(job.os for job in ci_jobs({path: text})), sorted(expected))
+
     def test_runner_default_when_no_compiler_is_named(self) -> None:
         [job] = ci_jobs({".travis.yml": "os: osx\n"})
         self.assertEqual((job.compilers, job.default_compiler), (frozenset({"appleclang"}), True))
@@ -61,6 +82,21 @@ class HeuristicJobsTests(unittest.TestCase):
             {".travis.yml": "os: linux\nscript:\n  - cmake -S . -DCMAKE_BUILD_TYPE=Debug\n  - 'cargo test --release'\n"}
         )
         self.assertEqual({configuration.build_type for configuration in job.configurations}, {"debug", "release"})
+
+
+class CompilerTests(unittest.TestCase):
+    def test_a_cmake_generator_names_the_compiler_only_when_the_command_names_none(self) -> None:
+        """MinGW Makefiles builds with gcc and Visual Studio with MSVC by default; llama.cpp's SYCL build names its
+        compilers (`cl` and Intel's `icx`) with the MinGW Makefiles generator, and a `-T ClangCL` toolset is clang."""
+        for line, expected in (
+            ('cmake -G "MinGW Makefiles" -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=icx ..', {"msvc", "intel"}),
+            ('cmake -G "MinGW Makefiles" ..', {"gcc"}),
+            ('cmake -G "Visual Studio 17 2022" -T ClangCL ..', {"clang"}),
+            ("cmake -GNinja -DCMAKE_CXX_COMPILER:FILEPATH=icpx ..", {"intel"}),
+        ):
+            with self.subTest(line=line):
+                [job] = ci_jobs(github_job("windows-latest", line))
+                self.assertEqual(set(job.compilers), expected)
 
 
 WORKFLOW = {".github/workflows/ci.yml": "jobs:\n  a:\n    runs-on: ubuntu-latest\n    steps: []\n"}

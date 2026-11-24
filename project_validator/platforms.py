@@ -31,7 +31,8 @@ COMPILERS = (
         r"|\bemsdk\b|\bemcmake\b|\bemcc\b|(?<![\w-])em\+\+",
     ),
     pattern("appleclang", r"\bapple-?clang\b"),
-    pattern("msvc", r"\bmsvc|visual studio|\bvs20\d\d\b|\bcl\.exe\b|\bvcvars"),
+    # MSVC's compiler is `cl` where a build names its compiler (`-DCMAKE_C_COMPILER=cl`, `CC=cl`).
+    pattern("msvc", r"\bmsvc|visual studio|\bvs20\d\d\b|\bcl\.exe\b|\bvcvars|(?:_COMPILER|\bCC|\bCXX)(?::\w+)?=cl\b"),
     # fortran-lang/setup-fortran names Intel's compilers `intel` and `intel-classic`.
     pattern("intel", r"\bicp?x\b|\bicp?c\b|\bifx\b|\bifort\b|intel-oneapi|\bcompiler\W+intel\b"),
     pattern("flang", r"\b(?:llvm-)?flang(?:-new)?\b"),
