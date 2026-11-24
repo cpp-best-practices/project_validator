@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "dbt",
       "kind": "BuildFile",
       "languages": [
@@ -104,6 +99,12 @@
       "language": "SQL",
       "origin": "tests/assert_positive_amounts.sql",
       "role": "test"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

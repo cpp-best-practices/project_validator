@@ -1,17 +1,18 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "CMake",
       "kind": "BuildFile",
       "languages": [
         "C"
       ],
       "origin": "CMakeLists.txt"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

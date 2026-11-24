@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "fpm",
       "kind": "BuildFile",
       "languages": [
@@ -75,6 +70,12 @@
       "language": "Fortran",
       "origin": "test/check.f90",
       "role": "test"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

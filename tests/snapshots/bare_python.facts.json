@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "Python packaging",
       "kind": "BuildFile",
       "languages": [
@@ -26,6 +21,12 @@
       "language": "Python",
       "origin": "src/app/__init__.py",
       "role": "product"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

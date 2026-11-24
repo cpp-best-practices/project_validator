@@ -398,11 +398,11 @@ class OtherProviderFactTests(unittest.TestCase):
         facts = _facts({GITHUB_WORKFLOW: workflow, ".github/workflows/list.yml": "- a\n", ".gitlab-ci.yml": "- a\n"})
         self.assertEqual(_argvs(facts), [("ctest",)])
         # ctest is a test runner, but the project has no language to run it for, so there is no run; the job builds,
-        # on Linux. The structure facts every project has (what --auxiliary named, the three YAML files, the root
+        # on Linux. The structure facts every project has (the three YAML files, what is auxiliary code, the root
         # unit) come first, then the data files.
         found = [type(fact) for fact in facts if not isinstance(fact, CiConfiguration)]
         yaml, data = [SourceFile] * 3, [DataFile] * 3
-        self.assertEqual(found, [AuxiliaryCode, *yaml, Unit, *data, CiJob, Command, Job])
+        self.assertEqual(found, [*yaml, AuxiliaryCode, Unit, *data, CiJob, Command, Job])
 
     def test_invalid_yaml_is_unknown(self) -> None:
         facts = _facts({GITHUB_WORKFLOW: "jobs: [\n"})

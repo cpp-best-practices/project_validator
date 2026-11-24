@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "Mix",
       "kind": "BuildFile",
       "languages": [
@@ -96,6 +91,12 @@
       "language": "Elixir",
       "origin": "test/test_helper.exs",
       "role": "test"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

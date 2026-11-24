@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "Pkg",
       "kind": "BuildFile",
       "languages": [
@@ -32,6 +27,12 @@
       "kind": "UnrecognisedSuffix",
       "origin": ".",
       "suffix": ".cov"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

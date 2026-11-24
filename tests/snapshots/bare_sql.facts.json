@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "dbt",
       "kind": "BuildFile",
       "languages": [
@@ -55,6 +50,12 @@
       "language": "SQL",
       "origin": "models/orders.sql",
       "role": "product"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

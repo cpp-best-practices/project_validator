@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "Eask",
       "kind": "BuildFile",
       "languages": [
@@ -54,6 +49,12 @@
       "language": "Emacs Lisp",
       "origin": "test/shop-test.el",
       "role": "test"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "dune",
       "kind": "BuildFile",
       "languages": [
@@ -27,6 +22,12 @@
       "language": "OCaml",
       "origin": "bin/main.ml",
       "role": "product"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

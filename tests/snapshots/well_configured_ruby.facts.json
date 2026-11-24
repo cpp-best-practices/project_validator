@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "Bundler",
       "kind": "BuildFile",
       "languages": [
@@ -96,6 +91,12 @@
       "kind": "UnrecognisedSuffix",
       "origin": ".",
       "suffix": ".rbs"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

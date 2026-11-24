@@ -14,6 +14,7 @@ from project_validator.components import component_cache
 from project_validator.core import Check, Context, Placed, Result, Status
 from project_validator.ecosystems import Ecosystem, ecosystems_for, registered
 from project_validator.facts import Facts
+from project_validator.facts.auxiliary import as_given
 from project_validator.facts.roles import AUXILIARY
 from project_validator.facts.structure import SourceFile, Unit
 from project_validator.facts.tools import handling
@@ -139,7 +140,7 @@ def _label(place: _Place, places: tuple[_Place, ...], auxiliary: _Auxiliary) -> 
 
 def _advisory(result: Result, language: str, named: tuple[str, ...]) -> Result:
     """A failure of auxiliary code alone is a warning that says so, and what named the code (`--auxiliary ...`)."""
-    by = " ".join(f"--auxiliary {name}" for name in named)
+    by = " ".join(map(as_given, named))
     return _warned(result, _ADVISORY.format(language=language, named=by))
 
 
@@ -193,7 +194,7 @@ def judged[A: UnitAnswer](
     roles = _auxiliary_roles(context.facts)
     for answer, named in found:
         result = _advised(judge(answer, allow_unknown=context.options.allow_unknown), answer)
-        if role := roles.get(answer.unit):
+        if (role := roles.get(answer.unit)) and not named:
             result = _warned(result, _AUXILIARY_UNIT.format(unit=answer.unit, role=role))
         results[(answer.language, answer.unit)] = _advisory(result, answer.language, named) if named else result
     none = "no unit of the project is written in these languages"

@@ -96,7 +96,6 @@ def _job(files: Mapping[str, str]) -> Job:
 
 
 class AuxiliaryLanguageTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #182: a fixture .c or docs .js makes a product language of the unit
     def test_a_language_only_in_auxiliary_files_is_not_the_products(self) -> None:
         """A Rust crate with a test fixture in C and a docs theme script is a Rust product: C and JavaScript are
         auxiliary, and tests-run does not fail for them (ripgrep, glib, fmt, ansible community.general)."""

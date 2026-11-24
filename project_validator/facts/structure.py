@@ -16,7 +16,7 @@ from project_validator.core import Project
 from project_validator.ecosystems import Ecosystem, Kind, build_systems, families, formats, registered
 from project_validator.facts import Fact, Facts, Origin
 from project_validator.facts.auxiliary import AuxiliaryCode, Selectors
-from project_validator.facts.roles import role
+from project_validator.facts.roles import AUXILIARY, role
 from project_validator.facts.tools import owner, within
 
 # Suffixes of files that are not source code of any language: documents, styles, media, archives, binaries and plain
@@ -451,6 +451,33 @@ def _unit_roots(project: Project, builds: tuple[BuildFile, ...]) -> tuple[dict[s
     return roots, workspaces
 
 
+def _languages_by_purpose(facts: Facts) -> tuple[set[str], set[str]]:
+    """The languages of the project's own sources in product code, and those in auxiliary code."""
+    known = formats()
+    product: set[str] = set()
+    auxiliary: set[str] = set()
+    for source in facts.of(SourceFile):
+        if source.language is not None and source.language not in known and not source.vendored:
+            (auxiliary if source.role in AUXILIARY else product).add(source.language)
+    return product, auxiliary
+
+
+def _auxiliary_languages(facts: Facts) -> frozenset[str]:
+    """The languages written only in auxiliary code (upstream #182): a test fixture in C, a docs theme's script, a
+    maintainer's script under `hack/`, that no build file outside auxiliary code builds, and of an ecosystem none of
+    whose languages is the product's (a Java project's tests in Kotlin are its own); none when the project has no
+    product language left (a project of examples alone is judged as it is)."""
+    known = formats()
+    product, auxiliary = _languages_by_purpose(facts)
+    built = (build for build in facts.of(BuildFile) if role(_directory(build), directory=True) not in AUXILIARY)
+    product |= given_way((language for build in built for language in build.languages), product)
+    product |= {name for name in _content_names(facts) if name not in known}
+    product |= {
+        language for ecosystem in registered() if ecosystem.languages & product for language in ecosystem.languages
+    }
+    return frozenset(auxiliary - product) if product else frozenset()
+
+
 def _own(languages: Iterable[str], path: str, named: Selectors, *, directory: bool = False) -> set[str]:
     """The languages of `languages` that the code at `path` (a file, or a `directory`) has as the product's: those
     `--auxiliary` does not name it in."""
@@ -520,8 +547,6 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     ecosystems those show, and the unrecognised suffixes."""
     generated = _generated(project)
     files = _outside(project.files(), generated)
-    named = Selectors.parse(project.auxiliary)
-    yield AuxiliaryCode(origin=Origin(path="."), named=tuple(project.auxiliary))
     found, found_sources = _builds_and_sources(project, files, generated)
     content, located = _content(project)
     plain = Facts((*(fact for fact, _ in found if fact is not None), *found_sources, *content))
@@ -536,7 +561,11 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     recognised |= {suffix for name in names for suffix in BUILT_LANGUAGE_SUFFIXES.get(name, ())}
     accounted = {*(path for _, path in found), *(source.path for source in sources), *located}
     yield from _unrecognised(files, accounted, recognised)
-    yield from _units(project, Facts((*plain, *ambiguous)), named)
+    every = Facts((*plain, *ambiguous))
+    implied = _auxiliary_languages(every)
+    named = Selectors.parse(project.auxiliary, implied)
+    yield AuxiliaryCode(origin=Origin(path="."), named=tuple(project.auxiliary), implied=tuple(sorted(implied)))
+    yield from _units(project, every, named)
 
 
 __all__ = [

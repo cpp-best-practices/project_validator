@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "ExtUtils::MakeMaker",
       "kind": "BuildFile",
       "languages": [
@@ -76,6 +71,12 @@
       "language": "Perl",
       "origin": "t/shop.t",
       "role": "test"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "Maven",
       "kind": "BuildFile",
       "languages": [],
@@ -24,6 +19,12 @@
       "language": "Java",
       "origin": "src/main/java/com/example/App.java",
       "role": "product"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

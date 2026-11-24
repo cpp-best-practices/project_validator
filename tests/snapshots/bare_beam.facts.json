@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "Mix",
       "kind": "BuildFile",
       "languages": [
@@ -45,6 +40,12 @@
       "kind": "UnrecognisedSuffix",
       "origin": ".",
       "suffix": ".dump"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

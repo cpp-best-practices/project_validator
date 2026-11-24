@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "sbt",
       "kind": "BuildFile",
       "languages": [
@@ -89,6 +84,12 @@
       "kind": "UnrecognisedSuffix",
       "origin": ".",
       "suffix": ".properties"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

@@ -190,7 +190,8 @@ class ConsoleTests(unittest.TestCase):
 
     def test_a_result_of_several_places_has_a_line_for_each(self) -> None:
         output = self._render(_analysis())
-        self.assertRegex(output, r"✘ +Python +no static analyzer runs")
+        self.assertRegex(output, r"✘ +C\+\+ +no static analyzer runs")
+        self.assertRegex(output, r"▲ +Python \(auxiliary: only in tooling code\) +no static analyzer runs")
 
     def test_long_details_are_cut_unless_verbose(self) -> None:
         analysis = _analysis(fixture="well_configured_cpp")

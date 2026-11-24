@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "SwiftPM",
       "kind": "BuildFile",
       "languages": [
@@ -103,6 +98,12 @@
       "language": "YAML",
       "origin": "muter.conf.yml",
       "role": "product"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

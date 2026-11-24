@@ -282,14 +282,26 @@ def _ecosystems(result: Result) -> set[str]:
 
 
 class AuxiliaryCodeTests(unittest.TestCase):
-    """Every language is the product's and held to every practice, in whatever directory it is, until `--auxiliary`
-    names code (by role, language or directory) that is not: that code is still judged in full, but a failure is a
+    """A language is the product's and held to every practice, in whatever directory it is, until `--auxiliary`
+    names code (by role, language or directory) that is not, or unless it is written only in auxiliary code (tests,
+    examples, docs, tooling, benchmarks: upstream #182): that code is still judged in full, but a failure is a
     warning, and the report says what named the code."""
 
-    def test_helper_scripts_are_judged_as_the_product_by_default(self) -> None:
+    def test_a_language_only_in_helper_scripts_is_auxiliary_by_default(self) -> None:
+        """A C++ project's release script in Python is tooling: Python is not a language of the product."""
+        advisory = "a warning, not a failure: the Python here is auxiliary code (only in tooling code)"
         for name in (*PRACTICES, "platform-matrix"):
             with self.subTest(name):
                 result = _check(name, HELPER_SCRIPTS)
+                python = _place(result, "Python")
+                self.assertEqual((python.result.status, python.auxiliary), (Status.WARN, ("only in tooling code",)))
+                self.assertIn(advisory, python.result.details)
+                self.assertIn("Python (auxiliary: only in tooling code): ", result.message)
+
+    def test_a_language_with_product_code_is_judged_as_the_products_in_its_helper_scripts_too(self) -> None:
+        for name in (*PRACTICES, "platform-matrix"):
+            with self.subTest(name):
+                result = _check(name, {**HELPER_SCRIPTS, "src/gen.py": ""})
                 python = _place(result, "Python")
                 self.assertEqual((python.result.status, python.auxiliary), (Status.FAIL, ()))
                 self.assertNotIn("auxiliary", result.message + "".join(result.details))
@@ -362,7 +374,8 @@ class AuxiliaryCodeTests(unittest.TestCase):
         files["CMakeLists.txt"] = "project(app CXX)\nenable_testing()\nadd_test(NAME t COMMAND t)\n"
         files |= _workflow(("ctest --test-dir build", None))
         del files["scripts/release.py"]
-        self.assertEqual(_place(_check("static-analysis", files), "Python").result.status, Status.FAIL)
+        python = _place(_check("static-analysis", files), "Python")
+        self.assertEqual((python.result.status, python.auxiliary), (Status.WARN, ("only in test code",)))
         named = _check("tests-run", files, ("test",))
         self.assertEqual(_place(named, "C++").result.status, Status.PASS, named.message)
         python = _place(named, "Python")
@@ -386,7 +399,9 @@ class AuxiliaryCodeTests(unittest.TestCase):
             places = {(place["ecosystem"], place["unit"]): place for place in report["places"]}
             self.assertEqual(set(places), {("C++", "."), ("Python", ".")})
             python = places[("Python", ".")]
-            self.assertEqual((python["status"], python["auxiliary"], python["tools"]), ("FAIL", [], []))
+            self.assertEqual(
+                (python["status"], python["auxiliary"], python["tools"]), ("WARN", ["only in tooling code"], [])
+            )
             self.assertEqual(python["message"], "no static analyzer runs")
             arguments = ("--only", "static-analysis", "--auxiliary", "tooling", str(root))
             code, output, _ = run_cli(*arguments, "--format", "json")
@@ -398,7 +413,9 @@ class AuxiliaryCodeTests(unittest.TestCase):
             code, grid, _ = run_cli(*arguments, "--format", "markdown")
             self.assertIn(f"| {MARKS[Status.WARN]} (auxiliary) |", grid)
             code, facts, _ = run_cli(*arguments, "--facts")
-            self.assertIn({"kind": "AuxiliaryCode", "origin": ".", "named": ["tooling"]}, json.loads(facts))
+            self.assertIn(
+                {"kind": "AuxiliaryCode", "origin": ".", "named": ["tooling"], "implied": ["Python"]}, json.loads(facts)
+            )
 
     def test_the_answers_say_what_named_the_code(self) -> None:
         with temp_project({**HELPER_SCRIPTS, "benchmarks/run.py": ""}) as root:

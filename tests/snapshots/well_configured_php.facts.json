@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "Composer",
       "kind": "BuildFile",
       "languages": [
@@ -80,6 +75,12 @@
       "kind": "UnrecognisedSuffix",
       "origin": ".",
       "suffix": ".json5"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

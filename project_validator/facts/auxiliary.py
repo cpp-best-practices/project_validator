@@ -1,11 +1,13 @@
 """Auxiliary code: what `--auxiliary` names as not the product's, for the judging layer to hold to every practice as
 advisory (its failures are warnings that say so) instead of as the product's.
 
-Every source outside vendored directories is the product's by default, whatever directory it is in: a C++ project's
-`scripts/release.py` makes Python one of its languages, judged in full. `--auxiliary` names the code that is not, by
-its role (`tooling`, `docs`, `example`, `benchmark`, `test`: see `project_validator.facts.roles`), by its language or
-ecosystem (`python`, `c/c++`), or by a directory it is in (`scripts/`). What is named is a fact of the project
-(`AuxiliaryCode`), so the questions can tell the code it names (`selectors`).
+Every source outside vendored directories is the product's by default, whatever directory it is in, but for a
+language written only in auxiliary code (see `implied`): a C++ project's `scripts/release.py` is tooling, and Python
+not a language of its product, while a Python project's `scripts/release.py` is the product's. `--auxiliary` names
+the code that is not the product's, by its role (`tooling`, `docs`, `example`, `benchmark`, `test`: see
+`project_validator.facts.roles`), by its language or ecosystem (`python`, `c/c++`), or by a directory it is in
+(`scripts/`). What is named is a fact of the project (`AuxiliaryCode`), so the questions can tell the code it names
+(`selectors`).
 """
 
 from __future__ import annotations
@@ -21,9 +23,22 @@ from project_validator.facts.tools import within
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class AuxiliaryCode(Fact):
-    """What `--auxiliary` named, as given."""
+    """What `--auxiliary` named, as given, and the languages written only in auxiliary code (see `implied`)."""
 
     named: tuple[str, ...]
+    implied: tuple[str, ...] = ()
+
+
+def implied(role_: str) -> str:
+    """What names the code of a language written only in auxiliary code (`only in test code`), in the place of an
+    option given: the language is auxiliary in code of that role, though `--auxiliary` did not name it."""
+    return f"only in {role_} code"
+
+
+def as_given(name: str) -> str:
+    """How a name of auxiliary code reads in a finding: as the option given (`--auxiliary tooling`), or as it is
+    when the code is auxiliary by its language (`only in tooling code`)."""
+    return name if name.startswith("only in ") else f"--auxiliary {name}"
 
 
 def _languages_named(name: str) -> frozenset[str]:
@@ -40,14 +55,16 @@ def _languages_named(name: str) -> frozenset[str]:
 class Selectors:
     """What `--auxiliary` named, resolved: each role, language (as the ecosystems spell it) and directory (without
     its trailing slash) to the name it was given as. A name is a role or a language before it is a directory
-    (`c++` is the language); a directory is anything else with a slash in it (`scripts/`, `tools/legacy`)."""
+    (`c++` is the language); a directory is anything else with a slash in it (`scripts/`, `tools/legacy`). The
+    languages written only in auxiliary code are `implied`: their code is named by its role (see `implied`)."""
 
     roles: Mapping[str, str]
     languages: Mapping[str, str]
     directories: Mapping[str, str]
+    implied: frozenset[str] = frozenset()
 
     @classmethod
-    def parse(cls, named: Iterable[str]) -> Selectors:
+    def parse(cls, named: Iterable[str], implied_: Iterable[str] = ()) -> Selectors:
         """Resolve what was named; a name that is no role, language, ecosystem or directory is a `ValueError`."""
         roles: dict[str, str] = {}
         languages: dict[str, str] = {}
@@ -65,16 +82,20 @@ class Selectors:
                 raise ValueError(
                     f"--auxiliary {name}: not a role ({roles_}), a language or ecosystem, or a directory (with a /)"
                 )
-        return cls(roles, languages, directories)
+        return cls(roles, languages, directories, frozenset(implied_))
 
     def matching(self, path: str, language: str | None, *, directory: bool = False) -> str:
         """What names the code at `path` (a file, or a `directory`) in `language`, as it was given: its role, its
-        language, or a directory it is at or below; "" when nothing does (the code is the product's)."""
-        if found := self.roles.get(role(path, directory=directory)):
+        language, or a directory it is at or below, else its role when its language is written only in auxiliary
+        code; "" when nothing does (the code is the product's)."""
+        purpose = role(path, directory=directory)
+        if found := self.roles.get(purpose):
             return found
         if language is not None and (found := self.languages.get(language)):
             return found
-        return next((name for parent, name in self.directories.items() if within(path, parent)), "")
+        if found := next((name for parent, name in self.directories.items() if within(path, parent)), ""):
+            return found
+        return implied(purpose) if language in self.implied and purpose in AUXILIARY else ""
 
 
 def selectors(facts: Facts) -> Selectors:
@@ -82,9 +103,9 @@ def selectors(facts: Facts) -> Selectors:
 
     def resolve() -> Selectors:
         named = facts.of(AuxiliaryCode)
-        return Selectors.parse(named[0].named if named else ())
+        return Selectors.parse(named[0].named, named[0].implied) if named else Selectors.parse(())
 
     return facts.shared("auxiliary", resolve)
 
 
-__all__ = ["AuxiliaryCode", "Selectors", "selectors"]
+__all__ = ["AuxiliaryCode", "Selectors", "as_given", "implied", "selectors"]

@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "CMake",
       "kind": "BuildFile",
       "languages": [
@@ -19,6 +14,12 @@
       "language": "C++",
       "origin": "third_party/json/json.hpp",
       "role": "vendored"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

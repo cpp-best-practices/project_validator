@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "MSBuild",
       "kind": "BuildFile",
       "languages": [],
@@ -112,6 +107,12 @@
       "language": "JSON",
       "origin": "tests/App.Tests/packages.lock.json",
       "role": "test"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

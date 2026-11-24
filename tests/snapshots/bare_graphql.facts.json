@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "ecosystem": "GraphQL",
       "kind": "ContentLanguages",
       "languages": [
@@ -19,6 +14,12 @@
       "language": "GraphQL",
       "origin": "schema/schema.graphql",
       "role": "product"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [],

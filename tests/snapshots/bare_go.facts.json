@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "Go modules",
       "kind": "BuildFile",
       "languages": [
@@ -32,6 +27,12 @@
       "kind": "UnrecognisedSuffix",
       "origin": ".",
       "suffix": ".out"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [

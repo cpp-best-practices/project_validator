@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
@@ -18,6 +13,12 @@
       "languages": [
         "Data Package"
       ],
+      "origin": "."
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
       "origin": "."
     },
     {

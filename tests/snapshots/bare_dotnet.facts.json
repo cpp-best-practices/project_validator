@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "MSBuild",
       "kind": "BuildFile",
       "languages": [],
@@ -17,6 +12,12 @@
       "language": "C#",
       "origin": "src/App/Calculator.cs",
       "role": "product"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [],

@@ -1,11 +1,6 @@
 {
   "facts": [
     {
-      "kind": "AuxiliaryCode",
-      "named": [],
-      "origin": "."
-    },
-    {
       "build_system": "ASDF",
       "kind": "BuildFile",
       "languages": [
@@ -32,6 +27,12 @@
       "kind": "UnrecognisedSuffix",
       "origin": ".",
       "suffix": ".fasl"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
     },
     {
       "build_systems": [
