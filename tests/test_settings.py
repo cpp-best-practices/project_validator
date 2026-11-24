@@ -236,6 +236,27 @@ class StructureTests(unittest.TestCase):
         self.assertEqual(role("internal/tools", directory=True), "tooling")
         self.assertEqual(role("internal/tools/gen.go"), "product")
 
+    def test_a_directory_named_for_what_it_holds_tells_its_role(self) -> None:
+        """Names the corpus uses besides the plain ones (upstream #182, #188): Kubernetes' `hack/` and Dart's `tool/`
+        maintainer scripts, phoenix's and Flutter's `integration_test/`, dart-lang/http's `flutter_http_example/`,
+        clap's `clap_bench/` and ruff's `ruff_benchmark/`, rust-lang/book's `listings/`, fpm's `example_packages/`
+        and koyo's `blueprints/` (project templates)."""
+        for path, expected in (
+            ("charts/a/hack/sync.py", "tooling"),
+            ("tool/update_readme.dart", "tooling"),
+            ("integration_test/docker.sh", "test"),
+            ("pkgs/flutter_http_example/lib/main.dart", "example"),
+            ("example_packages/c_includes/fpm.toml", "example"),
+            ("listings/ch01/hello/src/main.rs", "example"),
+            ("clap_bench/benches/a.rs", "benchmark"),
+            ("crates/ruff_benchmark/src/lib.rs", "benchmark"),
+            ("koyo-lib/blueprints/standard/package.json", "template"),
+        ):
+            with self.subTest(path=path):
+                self.assertEqual(role(path), expected)
+        # A library for testing is the product (bloc's bloc_test package).
+        self.assertEqual(role("packages/bloc_test", directory=True), "product")
+
     def test_vendored_code_is_recorded_but_adds_no_language(self) -> None:
         with temp_project({"main.c": "", "web/sw.min.js": ""}) as root:
             context = make_context(root)

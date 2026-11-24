@@ -29,17 +29,30 @@ _ROLES = {
     **dict.fromkeys(
         ("test", "tests", "testing", "testdata", "spec", "specs", "__tests__", "fixtures", "t", "xt"), "test"
     ),
-    **dict.fromkeys(("playground", "playgrounds", "inputs"), "test"),
+    # Flutter's integration tests (phoenix's too).
+    **dict.fromkeys(("playground", "playgrounds", "inputs", "integration_test"), "test"),
     **dict.fromkeys(
         ("fuzz", "fuzzing", "fuzz_test", "fuzz_tests", "fuzztest", "stress", "stress-test", "stress-tests"), "test"
     ),
-    **dict.fromkeys(("example", "examples", "sample", "samples", "demo", "demos"), "example"),
+    # rust-lang/book's `listings/` are the book's example programs.
+    **dict.fromkeys(("example", "examples", "sample", "samples", "demo", "demos", "listings"), "example"),
     **dict.fromkeys(("doc", "docs", "documentation", "website"), "docs"),
-    **dict.fromkeys(("tools", "tooling", "scripts"), "tooling"),
+    # `hack/` is the Kubernetes projects' name for maintainer scripts, `tool/` Dart's.
+    **dict.fromkeys(("tool", "tools", "tooling", "scripts", "hack"), "tooling"),
     **dict.fromkeys(("bench", "benches", "benchmark", "benchmarks"), "benchmark"),
-    # Files rendered before they are read (a Helm chart's manifests, Jinja pages): not well formed as they are.
-    **dict.fromkeys(("template", "templates"), "template"),
+    # Files rendered before they are read (a Helm chart's manifests, Jinja pages, the projects a blueprint
+    # generates): not well formed as they are.
+    **dict.fromkeys(("template", "templates", "blueprint", "blueprints"), "template"),
 }
+# The roles a directory's name tells by its first or last word (`tests-build`, `integration_test`, `clap_bench`,
+# `flutter_http_example`, `example_packages`). A last word `test` does not: a library for testing is a product
+# (bloc's `bloc_test`), and Racket's `foo-test` packages are told by what they say.
+_WORDS = {
+    "tests": "test",
+    **dict.fromkeys(("example", "examples"), "example"),
+    **dict.fromkeys(("bench", "benchmark", "benchmarks"), "benchmark"),
+}
+_WORD_BREAK = re.compile(r"[-_]")
 # The roles `--auxiliary` may name as not the product's (see `project_validator.facts.auxiliary`); vendored code is
 # never judged, named or not.
 AUXILIARY = frozenset({"test", "example", "docs", "tooling", "benchmark"})
@@ -52,11 +65,15 @@ _TESTS_BELOW_SOURCE_ROOTS = frozenset({"test", "tests", "testdata", "test-data",
 
 
 def _named_role(part: str) -> str | None:
-    """The role a directory's name tells (`tests`, `integration-tests`, `tests-build`, `examples`), if any."""
+    """The role a directory's name tells (`tests`, `integration-tests`, `tests-build`, `examples`, `foo_bench`), if
+    any."""
     if part in _ROLES:
         return _ROLES[part]
-    test_named = part.endswith(("-tests", "_tests")) or part.startswith(("tests-", "tests_", "test-", "test_"))
-    return "test" if test_named else None
+    words = _WORD_BREAK.split(part)
+    if len(words) < 2:
+        return None
+    first = "test" if words[0] == "test" else _WORDS.get(words[0])
+    return first or _WORDS.get(words[-1])
 
 
 def _vendored(posix: PurePosixPath, parts: list[str], directory: bool) -> bool:
