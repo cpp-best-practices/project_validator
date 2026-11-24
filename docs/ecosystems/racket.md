@@ -7,7 +7,8 @@ ecosystem with no language of their own. `compiled/` directories are build trees
 ## `tests-run`
 
 rackunit tests, in a `(module+ test …)` submodule or a module that requires rackunit, run by `raco test` (or by
-`raco cover`, which runs them instrumented).
+`raco cover`, which runs them instrumented). `jackfirth/racket-package-ci-action` installs the package and runs
+`raco test --package` on it.
 
 ## `coverage`
 

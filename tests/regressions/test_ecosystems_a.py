@@ -318,6 +318,19 @@ class AnsibleKubernetesTests(unittest.TestCase):
             },
         )
 
+    def test_a_script_of_each_chart_that_chart_testing_runs_is_not_missing(self) -> None:
+        """prometheus helm-charts runs `bash '{{ .Path }}/ci/lint.sh'` where a chart has one: `{{ .Path }}` is each
+        chart chart-testing lints, so the script is no file of the top of the project, and none is missing."""
+        guarded = "sh -ec \"if [ -f '{{ .Path }}/ci/lint.sh' ]; then bash '{{ .Path }}/ci/lint.sh'; fi\""
+        files = {
+            **UNITTESTS,
+            "ct.yaml": f"additional-commands:\n  - {json.dumps(guarded)}\n",
+            **_ci("ct lint --config ct.yaml"),
+        }
+        with temp_project(files) as root:
+            facts = make_context(root).facts
+        self.assertEqual([unknown.subject for unknown in facts.of(Unknown) if "script" in unknown.subject], [])
+
 
 # --- Terraform (#262) ------------------------------------------------------------------------------------------------
 

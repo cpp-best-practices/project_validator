@@ -51,6 +51,9 @@ class Script:
     advisory: str = ""
     # How the text is read: as the shell that runs it reads it (a batch file's is cmd's).
     dialect: Dialect = POSIX
+    # Whether the text is an argument of the command itself (`bash -c '…'`) rather than a definition elsewhere: it is
+    # where the command is, but runs no definition again (a string within it is shorter, so following ends).
+    inline: bool = False
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -380,7 +383,8 @@ def _followed(
         for found in expansions
     ]
     chain = (*command.via, command.origin)
-    if any(isinstance(found, (Script, Invocation)) and found.origin in chain for found, _ in held):
+    definitions = (found for found, _ in held if isinstance(found, (Script, Invocation)))
+    if any(found.origin in chain for found in definitions if not (isinstance(found, Script) and found.inline)):
         return
     for found, when in held:
         if when and (not isinstance(found, Launched) or len(found.argv) < len(command.argv)):

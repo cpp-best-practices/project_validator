@@ -5,40 +5,6 @@ from __future__ import annotations
 from project_validator.ci import CiProvider
 from project_validator.text import pattern
 
-AZURE_PIPELINES = CiProvider(
-    name="Azure Pipelines",
-    files=("azure-pipelines.yml", ".azure-pipelines.yml"),
-    badges=(
-        pattern(
-            "Azure Pipelines",
-            r"(?:dev\.azure\.com|\w+\.visualstudio\.com)/\S+/_apis/build/status|img\.shields\.io/azure-devops/build/",
-        ),
-    ),
-    configured_elsewhere=True,
-)
-APPVEYOR = CiProvider(
-    name="AppVeyor",
-    files=("appveyor.yml", ".appveyor.yml"),
-    badges=(pattern("AppVeyor", r"ci\.appveyor\.com/api/projects/status|img\.shields\.io/appveyor/"),),
-    configured_elsewhere=True,
-)
-CIRCLECI = CiProvider(
-    name="CircleCI",
-    files=(".circleci/config.yml",),
-    linters=(pattern("circleci config validate", r"\bcircleci\s+config\s+validate\b"),),
-    lint_hint="CircleCI: run circleci config validate in CI",
-    badges=(
-        pattern(
-            "CircleCI", r"circleci\.com/(?:gh|bb)/\S+\.svg|dl\.circleci\.com/status-badge/|img\.shields\.io/circleci/"
-        ),
-    ),
-)
-TRAVIS_CI = CiProvider(
-    name="Travis CI",
-    files=(".travis.yml",),
-    badges=(pattern("Travis CI", r"travis-ci\.com/\S+\.svg|img\.shields\.io/travis/"),),
-    retired_badges=(pattern("travis-ci.org, which shut down in June 2021", r"(?<![\w.-])(?:api\.)?travis-ci\.org/"),),
-)
 JENKINS = CiProvider(
     name="Jenkins",
     files=("Jenkinsfile",),

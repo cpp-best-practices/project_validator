@@ -36,7 +36,11 @@ class CiLintTests(unittest.TestCase):
         cases = {
             "GitHub Actions": (github_steps("uses: rhysd/actionlint@v1")[GITHUB_WORKFLOW], "actionlint"),
             "GitLab CI": ("lint:\n  script: glab ci lint\n", "glab ci lint"),
-            "CircleCI": ("steps:\n  - run: circleci config validate\n", "circleci config validate"),
+            "CircleCI": (
+                "jobs:\n  lint:\n    docker: [{image: cimg/base:current}]\n"
+                "    steps:\n      - run: circleci config validate\n",
+                "circleci config validate",
+            ),
         }
         for provider, (text, linter) in cases.items():
             with self.subTest(provider):

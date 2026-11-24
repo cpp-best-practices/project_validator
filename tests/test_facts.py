@@ -386,12 +386,12 @@ class GitLabFactTests(unittest.TestCase):
 
 class OtherProviderFactTests(unittest.TestCase):
     def test_unparsed_configuration_is_a_heuristic_job_with_unknown_commands(self) -> None:
-        facts = _facts({".travis.yml": "script: ctest -C Debug\n"})
+        facts = _facts({".drone.yml": "script: ctest -C Debug\n"})
         [job] = facts.of(CiJob)
         self.assertTrue(job.heuristic)
         # Each line that could be a command is taken for one.
         self.assertEqual(_argvs(facts), [("ctest", "-C", "Debug")])
-        self.assertEqual(facts.of(Unknown)[0].reason, "Travis CI is scanned heuristically")
+        self.assertEqual(facts.of(Unknown)[0].reason, "Drone is scanned heuristically")
 
     def test_malformed_documents_yield_what_they_can(self) -> None:
         workflow = "jobs:\n  odd: text\n  build:\n    runs-on: ubuntu-latest\n    steps: [text, {run: ctest}]\n"

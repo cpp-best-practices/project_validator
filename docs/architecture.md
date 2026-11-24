@@ -58,7 +58,7 @@ language, a build system, a tool or a CI provider means adding extractors, and n
 | Kind | Reads | Examples |
 |---|---|---|
 | CI provider | CI configuration | GitHub Actions, GitLab CI, CircleCI, pre-commit.ci: jobs, their OS, toolchains and environment, and the commands each step runs |
-| Command expansion | what a command runs in turn | npm, Deno and Composer scripts, Rake tasks, Make recipes, just recipes, pixi tasks, CMake targets, tox environments, pre-commit hooks, the project's own shell scripts |
+| Command expansion | what a command runs in turn | npm, Deno and Composer scripts, Rake tasks, Make recipes, just recipes, pixi tasks, CMake targets, tox environments, pre-commit hooks, the project's own shell scripts, the string `sh -c` runs |
 | Build system | build files | CMake, Meson, Bazel, Cargo, Gradle, Maven, MSBuild, SwiftPM, Xcode: the languages built, settings and their scope, build types, build trees and outputs, the test runner |
 | Toolchain | compiler and interpreter settings | GCC, Clang, MSVC, gfortran, rustc, swiftc, CPython: warning, hardening, sanitizer and coverage instrumentation flags |
 | Tool | a tool's invocation and configuration | gcovr, coverage.py, eslint, clang-tidy, lizard, osv-scanner, SwiftLint: what it measures or enforces, and for which files |
@@ -183,9 +183,10 @@ templates are jobs that run the template as a marker command.
 
 **Command expansion** (`project_validator/facts/expansion.py`): a `CommandExpander` says what a command runs in turn
 (package.json scripts and Deno tasks, Composer scripts, Rake tasks, Make and CMake targets, just recipes, pixi tasks, tox
-environments, pre-commit hooks, the project's own shell scripts, workspace-wide script runs), and the commands found are
+environments, pre-commit hooks, the project's own shell scripts, the string `sh -c '…'` runs, workspace-wide script runs), and the commands found are
 expanded again, each with `via`, the chain that led to it. Launchers and wrappers (`bundle exec`, `npx`, `python -m`,
-`uv run`, `go tool`, `sudo`, `env`, `xvfb-run` and the `coactions/setup-xvfb` action, `timeout`;
+`uv run`, `go tool`, `sudo`, `env`, `xvfb-run` and the `coactions/setup-xvfb` action, vmactions' BSD virtual
+machines, `timeout`;
 `project_validator/tools/wrappers.py`) yield the command they run as a `Launched` command of its own. `cd` changes where
 the rest of a script runs; commands in a directory the project does not contain are not expanded and cover none of the
 project's code; a directory a variable names is unknown, and a tool run there covers the whole project, heuristically.

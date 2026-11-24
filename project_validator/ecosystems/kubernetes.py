@@ -137,7 +137,8 @@ HELM_UNITTEST = test_runner(
     tests=tests_of(HELM_UNITTEST_TESTS.name),
 )
 # chart-testing runs its configuration's `additional-commands` on each chart it lints (prometheus-community's
-# `helm unittest … {{ .Path }}`).
+# `helm unittest … {{ .Path }}`); `{{ .Path }}` is that chart, a variable here: a file under it
+# (`{{ .Path }}/ci/lint.sh`) is no file of the top of the project.
 CT_CONFIGURATION = ("ct.yaml", "ct.yml", ".github/ct.yaml", ".github/ct.yml")
 
 
@@ -161,7 +162,7 @@ def _ct_commands(command: Command, context: Context) -> list[Expansion] | None:
             )
         ]
     commands = configuration.get("additional-commands") if isinstance(configuration, Mapping) else None
-    texts = (str(text).replace("{{ .Path }}", ".") for text in commands) if isinstance(commands, list) else ()
+    texts = (str(text).replace("{{ .Path }}", "$CT_CHART") for text in commands) if isinstance(commands, list) else ()
     return [Script(text=text, origin=Origin(path=path, at=("additional-commands",))) for text in texts] or None
 
 

@@ -66,7 +66,19 @@ _PROGRAMS_OF_HOOKS = {"hadolint-docker": "hadolint"}
 
 
 _OPTIONS = frozenset(
-    {"--hook-stage", "--config", "-c", "--files", "--from-ref", "--to-ref", "--source", "-s", "--origin", "-o"}
+    {
+        "--hook-stage",
+        "--config",
+        "-c",
+        "--color",
+        "--files",
+        "--from-ref",
+        "--to-ref",
+        "--source",
+        "-s",
+        "--origin",
+        "-o",
+    }
 )
 
 
@@ -138,6 +150,19 @@ PRE_COMMIT_ACTION = Action(
     name="pre-commit/action",
     runs=lambda inputs: (
         ("pre-commit", "run", "--show-diff-on-failure", *_action_arguments(inputs.get("extra_args", "--all-files"))),
+    ),
+)
+
+# clowdhaus' composite action for Terraform installs the hooks' tools and runs `pre-commit run` with its `args`
+# (terraform-aws-modules' CI).
+TERRAFORM_PRE_COMMIT_ACTION = Action(
+    name="clowdhaus/terraform-composite-actions/pre-commit",
+    runs=lambda inputs: (
+        (
+            "pre-commit",
+            "run",
+            *_action_arguments(inputs.get("args", "--all-files --color always --show-diff-on-failure")),
+        ),
     ),
 )
 
