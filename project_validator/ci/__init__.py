@@ -157,8 +157,16 @@ def _evidence(job: CiJob, facts: Iterable[Command | ActionStep]) -> str:
             lines += [f"{name}: {value}" for name, value in fact.inputs.items() if _enables(value)]
         else:
             assignments = (f"{name}={value}" for name, value in fact.env.items() if job.env.get(name) != value)
-            lines.append(" ".join((*assignments, *resolved(fact))))
+            lines.append(" ".join((*assignments, *_compiler_evidence(resolved(fact)))))
     return "\n".join(lines)
+
+
+def _compiler_evidence(argv: tuple[str, ...]) -> tuple[str, ...]:
+    """The words of a command that show the compiler it builds with, as each build system reads its own commands."""
+    for system in build_systems():
+        if system.compiler_evidence is not None:
+            argv = system.compiler_evidence(argv)
+    return argv
 
 
 def _configurations(commands: Iterable[Command], evidence: str, project: Project) -> set[BuildConfiguration]:

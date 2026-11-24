@@ -8,7 +8,7 @@ from project_validator import yaml_support
 from project_validator.ci import CiAnalysis, _matrix_text, find_ci_files
 from project_validator.core import Project
 from project_validator.plugins import discover
-from tests.support import CI_FILES, PROJECT_LAYOUTS, ci_jobs, layout_project, make_context, temp_project
+from tests.support import CI_FILES, PROJECT_LAYOUTS, ci_jobs, github_job, layout_project, make_context, temp_project
 
 
 class FindCiFilesTests(unittest.TestCase):
@@ -82,6 +82,21 @@ class HeuristicJobsTests(unittest.TestCase):
             {".travis.yml": "os: linux\nscript:\n  - cmake -S . -DCMAKE_BUILD_TYPE=Debug\n  - 'cargo test --release'\n"}
         )
         self.assertEqual({configuration.build_type for configuration in job.configurations}, {"debug", "release"})
+
+
+class CompilerTests(unittest.TestCase):
+    def test_a_cmake_generator_names_the_compiler_only_when_the_command_names_none(self) -> None:
+        """MinGW Makefiles builds with gcc and Visual Studio with MSVC by default; llama.cpp's SYCL build names its
+        compilers (`cl` and Intel's `icx`) with the MinGW Makefiles generator, and a `-T ClangCL` toolset is clang."""
+        for line, expected in (
+            ('cmake -G "MinGW Makefiles" -DCMAKE_C_COMPILER=cl -DCMAKE_CXX_COMPILER=icx ..', {"msvc", "intel"}),
+            ('cmake -G "MinGW Makefiles" ..', {"gcc"}),
+            ('cmake -G "Visual Studio 17 2022" -T ClangCL ..', {"clang"}),
+            ("cmake -GNinja -DCMAKE_CXX_COMPILER:FILEPATH=icpx ..", {"intel"}),
+        ):
+            with self.subTest(line=line):
+                [job] = ci_jobs(github_job("windows-latest", line))
+                self.assertEqual(set(job.compilers), expected)
 
 
 WORKFLOW = {".github/workflows/ci.yml": "jobs:\n  a:\n    runs-on: ubuntu-latest\n    steps: []\n"}

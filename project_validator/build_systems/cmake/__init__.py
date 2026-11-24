@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from pathlib import PurePosixPath
 
 from project_validator.build_systems.cmake.build import CMAKE as CMAKE_BUILD_SYSTEM
-from project_validator.build_systems.cmake.build import CMAKE_PACKAGE_MANAGERS
+from project_validator.build_systems.cmake.build import CMAKE_PACKAGE_MANAGERS, definitions
 from project_validator.build_systems.cmake.commands import Collector, CustomTarget
 from project_validator.build_systems.cmake.ctest import BUILT_TESTS, CTEST
 from project_validator.build_systems.cmake.evaluation import Evaluation
@@ -148,17 +148,12 @@ CUSTOM_TARGETS = CommandExpander(name="CMake custom targets", expand=_custom_tar
 
 
 def _script_arguments(argv: tuple[str, ...]) -> tuple[dict[str, str], str | None]:
-    """`cmake [-D name[:type]=value]... -P script`: the variables it defines, and the script (None: not `-P`)."""
-    defines: dict[str, str] = {}
-    words = iter(argv[1:])
-    for word in words:
-        if word == "-P":
-            return defines, next(words, None)
-        if word.startswith("-D"):
-            definition = word[2:] or next(words, "")
-            name, _, value = definition.partition("=")
-            defines[name.partition(":")[0]] = value
-    return defines, None
+    """`cmake [-D name[:type]=value]... -P script`: the variables it defines before the script, and the script (None:
+    not `-P`)."""
+    if "-P" not in argv[1:]:
+        return definitions(argv), None
+    at = argv.index("-P", 1)
+    return definitions(argv[:at]), argv[at + 1] if at + 1 < len(argv) else None
 
 
 def _scripts_run(command: Command, context: Context) -> list[Expansion] | None:

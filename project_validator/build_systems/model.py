@@ -26,6 +26,7 @@ class BuildSystem:
     `configured_build_types` those its build files decide.
     `members` reads, from a build file, the directories (globs relative to it) of the workspace it declares; each
     member is a unit of the project of its own (see `project_validator.facts.structure.Unit`).
+    `compiler_evidence` gives the words of one of its commands that show the compiler it builds with.
     """
 
     name: str
@@ -38,6 +39,7 @@ class BuildSystem:
     # given a reader of the project's files (None for a file it does not have).
     configured_build_types: Callable[[Command, Callable[[str], str | None]], frozenset[str]] | None = None
     members: Callable[[str], tuple[str, ...]] | None = None
+    compiler_evidence: Callable[[tuple[str, ...]], tuple[str, ...]] | None = None
 
 
 __all__ = ["C_FAMILY", "BuildSystem"]

@@ -32,6 +32,35 @@ def cmake_build_types(command: Command) -> frozenset[str]:
     return build_type_kinds(*defined, *option_values(argv, "--config"))
 
 
+def definitions(argv: tuple[str, ...]) -> dict[str, str]:
+    """The variables a cmake command defines (`-D name[:type]=value`, or `-D` then `name=value`), by name."""
+    found: dict[str, str] = {}
+    words = iter(argv[1:])
+    for word in words:
+        if word.startswith("-D"):
+            name, _, value = (word[2:] or next(words, "")).partition("=")
+            found[name.partition(":")[0]] = value
+    return found
+
+
+def cmake_compiler_evidence(argv: tuple[str, ...]) -> tuple[str, ...]:
+    """The words of a cmake command that show the compiler it builds with. Its generator picks the compiler unless
+    the command names one (MinGW Makefiles builds with gcc, Visual Studio with MSVC); where it names one, by a
+    compiler variable (`-DCMAKE_CXX_COMPILER=icx`) or a toolset (`-T ClangCL`), the generator shows nothing:
+    llama.cpp's MinGW Makefiles build is Intel's `icx`."""
+    names = any(name.endswith("_COMPILER") for name in definitions(argv)) or option_values(argv, "-T", "--toolset")
+    if program(argv) != "cmake" or not names:
+        return argv
+    shown: list[str] = []
+    words = iter(argv)
+    for word in words:
+        if word == "-G":
+            next(words, None)  # `-G "MinGW Makefiles"`
+        elif not word.startswith("-G"):  # `-GNinja`
+            shown.append(word)
+    return tuple(shown)
+
+
 def cmake_configures(argv: tuple[str, ...]) -> bool:
     """Whether a cmake command configures a build tree, and so reads the CMake files."""
     excluded = ("--build", "--install", "-E", "-P", "--open", "--help", "--version")
@@ -99,6 +128,7 @@ CMAKE = BuildSystem(
     declared_languages=cmake_declared_languages,
     is_build_tree=is_cmake_build_tree,
     build_types=cmake_build_types,
+    compiler_evidence=cmake_compiler_evidence,
 )
 
 
