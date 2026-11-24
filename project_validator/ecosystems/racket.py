@@ -4,12 +4,14 @@ commands it runs: `raco test`, `raco cover` and `raco fmt`."""
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
 from pathlib import Path, PurePosixPath
 
 from project_validator.core import Project
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts.axes import ToolchainAxis, toolchain_versions
 from project_validator.facts.coverage import Granularity, coverage_tool, reported
+from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.jobs import Job
 from project_validator.facts.licenses import declared_license_reader
@@ -52,6 +54,19 @@ RACKET_TEST_FILES = TestFiles(
     path=re.compile(r"\.rkt$"),
     contains=re.compile(r"\(module\+\s+test\b|\(require\s+(?:[^()]*\s)?rackunit\b|\(test-case\b|\(check-\w+\b"),
 )
+
+
+def _package_ci(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:
+    """jackfirth/racket-package-ci-action installs the package (`name`, in `directory`) linked and runs its tests."""
+    name, directory = inputs.get("name", ""), inputs.get("directory", ".")
+    source = () if directory == "." else (directory,)
+    return (
+        ("raco", "pkg", "install", "--name", name, "--batch", "--auto", "--link", *source),
+        ("raco", "test", "--package", "--drdr", name),
+    )
+
+
+RACKET_PACKAGE_CI_ACTION = Action(name="jackfirth/racket-package-ci-action", runs=_package_ci)
 
 # `raco cover` runs the tests too, instrumented.
 _RUNS_TESTS = starts(("raco", "test"), ("raco", "cover"))

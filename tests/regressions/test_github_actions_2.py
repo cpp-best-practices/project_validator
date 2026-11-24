@@ -333,6 +333,46 @@ class ToolchainVersionCountingTests(unittest.TestCase):
                 self.assertIn(expected, result.message)
 
 
+_PYTHON_TEST = {"tests/test_x.py": "def test_x():\n    assert True\n"}
+_RACKET_PACKAGE = {"info.rkt": '#lang info\n(define collection "reb")\n', "main.rkt": "#lang racket\n(module+ test)\n"}
+_TERRAFORM_HOOKS = {
+    "main.tf": 'terraform {\n  required_version = ">= 1.0"\n}\n',
+    ".pre-commit-config.yaml": (
+        "repos:\n  - repo: https://github.com/antonbabenko/pre-commit-terraform\n    rev: v1.99.0\n"
+        "    hooks:\n      - id: terraform_fmt\n"
+    ),
+}
+# An action, the check it passes, the project and the step that uses it.
+WRAPPER_ACTIONS: dict[str, tuple[Check, dict[str, str], dict[str, object]]] = {
+    "flake8": (static_analysis, {**PYTHON_PROJECT, ".flake8": "[flake8]\n"}, _setup("py-actions/flake8@v2", {})),
+    "shellcheck": (
+        static_analysis,
+        {"bin/run.sh": "#!/bin/sh\necho hi\n"},
+        _setup("redhat-plumbers-in-action/differential-shellcheck@v5", {}),
+    ),
+    "xvfb": (
+        tests_run,
+        {**PYTHON_PROJECT, **_PYTHON_TEST},
+        _setup("coactions/setup-xvfb@v1", {"run": "python -m pytest tests"}),
+    ),
+    "freebsd-vm": (
+        tests_run,
+        {**PYTHON_PROJECT, **_PYTHON_TEST},
+        _setup("vmactions/freebsd-vm@v1", {"usesh": "true", "run": "pkg install -y python\npytest tests"}),
+    ),
+    "racket-package-ci": (
+        tests_run,
+        _RACKET_PACKAGE,
+        _setup("jackfirth/racket-package-ci-action@v0.1.4", {"name": "reb"}),
+    ),
+    "clowdhaus pre-commit": (
+        code_formatting,
+        _TERRAFORM_HOOKS,
+        _setup("clowdhaus/terraform-composite-actions/pre-commit@v1.14.0", {"terraform-version": "1.9.0"}),
+    ),
+}
+
+
 class WrapperActionTests(unittest.TestCase):
     """Actions that run a tool the validator knows (upstream #224)."""
 
@@ -342,26 +382,11 @@ class WrapperActionTests(unittest.TestCase):
 
     def test_actions_run_the_tools_they_wrap(self) -> None:
         """py-actions/flake8 runs flake8 (llama.cpp), differential-shellcheck runs shellcheck on the changed scripts
-        (rbenv, bash-it), and coactions/setup-xvfb runs its `run` input under a virtual display (tinymist)."""
-        python_test = {"tests/test_x.py": "def test_x():\n    assert True\n"}
-        cases = {
-            "flake8": (
-                static_analysis,
-                {**PYTHON_PROJECT, ".flake8": "[flake8]\n"},
-                _setup("py-actions/flake8@v2", {}),
-            ),
-            "shellcheck": (
-                static_analysis,
-                {"bin/run.sh": "#!/bin/sh\necho hi\n"},
-                _setup("redhat-plumbers-in-action/differential-shellcheck@v5", {}),
-            ),
-            "xvfb": (
-                tests_run,
-                {**PYTHON_PROJECT, **python_test},
-                _setup("coactions/setup-xvfb@v1", {"run": "python -m pytest tests"}),
-            ),
-        }
-        for name, (check, files, step) in cases.items():
+        (rbenv, bash-it), coactions/setup-xvfb runs its `run` input under a virtual display (tinymist), and so do
+        vmactions' BSD virtual machines (tokio's FreeBSD jobs); jackfirth/racket-package-ci-action installs the
+        package and runs `raco test --package` on it (rebellion), and clowdhaus' pre-commit composite runs the hooks
+        (terraform-aws-modules)."""
+        for name, (check, files, step) in WRAPPER_ACTIONS.items():
             with self.subTest(action=name):
                 result = self._result(check, {**files, **_workflow({"lint": _job(step)})})
                 self.assertEqual(result.status, Status.PASS, result)

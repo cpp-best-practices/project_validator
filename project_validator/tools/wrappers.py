@@ -31,9 +31,15 @@ TIMEOUT = launcher(
 )
 
 
-def _xvfb_action(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:
-    """coactions/setup-xvfb runs its `run` input (a command line, or several) under a virtual display."""
+def _run_input(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:
+    """The commands of an action's `run` input (a command line, or several)."""
     return tuple(found.argv for found in split_script(inputs.get("run", "")) if isinstance(found, ShellCommand))
 
 
-XVFB_ACTION = Action(name="coactions/setup-xvfb", runs=_xvfb_action)
+# coactions/setup-xvfb runs its `run` input under a virtual display.
+XVFB_ACTION = Action(name="coactions/setup-xvfb", runs=_run_input)
+# vmactions' virtual machines run their `run` input in the system they boot (tokio's FreeBSD jobs).
+VM_ACTIONS = tuple(
+    Action(name=f"vmactions/{system}-vm", runs=_run_input)
+    for system in ("freebsd", "openbsd", "netbsd", "dragonflybsd", "solaris", "omnios")
+)

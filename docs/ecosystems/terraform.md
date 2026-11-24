@@ -11,7 +11,8 @@ to compile or to cover.
 ## `code-formatting`
 
 `terraform fmt -check` (`-recursive` for the modules), or `tofu fmt -check`, which fails on a file it would change;
-the pre-commit-terraform hook `terraform_fmt` rewrites them. `fmt` has one style, so running it is enough.
+the pre-commit-terraform hook `terraform_fmt` rewrites them. `fmt` has one style, so running it is enough. The
+`clowdhaus/terraform-composite-actions/pre-commit` action runs the hooks, as `pre-commit run` with its `args`.
 
 ## `static-analysis`
 

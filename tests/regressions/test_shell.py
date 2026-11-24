@@ -168,11 +168,12 @@ class UnknownCommandTests(unittest.TestCase):
                 unread = [unknown for unknown in facts.of(Unknown) if unknown.hides == "commands"]
                 self.assertTrue(unread or followed in resolutions, followed)
 
-    @unittest.expectedFailure  # upstream #195: a third-party composite action that is the whole job is not unknown
+    @unittest.expectedFailure  # upstream #324 (from #195): an unknown action that is the whole job is not unknown
     def test_an_unknown_composite_action_that_is_the_whole_job_is_unknown(self) -> None:
-        """terraform-aws-modules' pre-commit job is one composite action the validator does not know; telling it from
-        the many actions that run nothing of the project's (checkout, setup-*) is still open."""
-        facts = _facts_of(github_steps("uses: clowdhaus/terraform-composite-actions/pre-commit@v1.14.0"))
+        """A job that is one composite action the validator does not know (as terraform-aws-modules' pre-commit job
+        was, before clowdhaus' action was known); telling it from the many actions that run nothing of the project's
+        (checkout, setup-*) is still open."""
+        facts = _facts_of(github_steps("uses: some-org/composite-actions/lint@v1"))
         self.assertTrue([unknown for unknown in facts.of(Unknown) if unknown.hides == "commands"])
 
 
