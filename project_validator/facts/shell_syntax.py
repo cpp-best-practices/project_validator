@@ -537,29 +537,32 @@ class _WordReader:
 
     def step(self, quote: str) -> None:
         """Read what starts at the lexer's position, inside `quote` ("", or `"`)."""
-        lexer, position, escape = self.lexer, self.lexer.position, self.source.escape
+        lexer, position = self.lexer, self.lexer.position
         character = self.text[position]
         if position in self.source.opaque:
             self.add(Verbatim(self.text[position : self.source.opaque[position]]))
             lexer.position = self.source.opaque[position]
         elif self.source.dialect.substitutions and self.expansion(position, quote):
             return
-        elif character == escape and (not quote or self.source.dialect.escapes_in_quotes):
+        elif character == self.source.escape and (not quote or self.source.dialect.escapes_in_quotes):
             self.escaped(position, quote)
-        elif character == "'" and not quote and self.source.dialect.single_quotes:
-            self.bounded(self.single_quoted, position)
-        elif (
-            character == "$"
-            and not quote
-            and self.text.startswith("$'", position)
-            and self.source.dialect.posix_quoting
-        ):
-            self.bounded(self.ansi_c_quoted, position)
-        elif character == '"' and not quote:
-            self.bounded(self.double_quoted, position)
+        elif (reader := self.quoting(character, position, quote)) is not None:
+            self.bounded(reader, position)
         else:
             self.literal.append(character)
             lexer.position += 1
+
+    def quoting(self, character: str, position: int, quote: str) -> Callable[[int], None] | None:
+        """The reader of the quoted part that starts at `position`, outside quotes, in the dialect's quoting; None
+        where none starts."""
+        dialect = self.source.dialect
+        if quote:
+            return None
+        if character == "'" and dialect.single_quotes:
+            return self.single_quoted
+        if character == "$" and dialect.posix_quoting and self.text.startswith("$'", position):
+            return self.ansi_c_quoted
+        return self.double_quoted if character == '"' else None
 
     def bounded(self, reader: Callable[[int], None], position: int) -> None:
         """Read a quoted part with `reader`; when it is never closed, report it, and read it again to the end of the

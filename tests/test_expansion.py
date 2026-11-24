@@ -653,6 +653,28 @@ class ShellScriptTests(unittest.TestCase):
         self.assertEqual(placed[("make", "all")], "ci/build.sh:4:3")
         self.assertEqual(placed[("echo", "done")], f"{GITHUB_WORKFLOW}:1:60 (jobs.build.steps[0].run)")
 
+    def test_batch_and_powershell_script_files_are_read_in_their_shells_dialect(self) -> None:
+        files = {
+            "scripts/build.bat": "@echo off\r\ncmake --build build --config %1\r\nif errorlevel 1 exit /b 1\r\n",
+            "ci/test.ps1": "Invoke-Pester -Path tests `\n  -CI\n",
+        }
+        for shell, line, expected in (
+            ("cmd", "call scripts\\build.bat Release", ("cmake", "--build", "build", "--config", "%1")),
+            ("bash", "cmd /c scripts/build.bat", ("cmake", "--build", "build", "--config", "%1")),
+            ("pwsh", "pwsh -File ci/test.ps1", ("Invoke-Pester", "-Path", "tests", "-CI")),
+            ("pwsh", "./ci/test.ps1", ("Invoke-Pester", "-Path", "tests", "-CI")),
+        ):
+            with self.subTest(line=line):
+                job = {"runs-on": "windows-latest", "steps": [{"run": line, "shell": shell}]}
+                facts = _facts({**files, GITHUB_WORKFLOW: json.dumps({"jobs": {"test": job}})})
+                self.assertIn(expected, _expanded(facts))
+
+    def test_a_missing_batch_file_is_unknown_and_one_outside_the_project_is_not_followed(self) -> None:
+        steps = [{"run": "call ci\\setup.bat\ncall C:\\BuildTools\\vcvars64.bat", "shell": "cmd"}]
+        job = {"runs-on": "windows-latest", "steps": steps}
+        facts = _facts({GITHUB_WORKFLOW: json.dumps({"jobs": {"test": job}})})
+        self.assertEqual([fact.subject for fact in facts.of(Unknown)], ["the script ci/setup.bat"])
+
     def test_other_files_and_inline_scripts_are_not_followed(self) -> None:
         files = {**self.SCRIPT, "tools/run.py": "print('x')\n", "ci/notes": "ruff check .\n"}
         for line in (

@@ -49,6 +49,8 @@ class Script:
     shell: Shell | None = None
     # Why none of the text's commands can fail what runs it (make's `-` before a recipe line), when none can.
     advisory: str = ""
+    # How the text is read: as the shell that runs it reads it (a batch file's is cmd's).
+    dialect: Dialect = POSIX
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -330,6 +332,7 @@ def _script_children(command: Command, script: Script, via: tuple[Origin, ...]) 
         via=via,
         whole=script.whole,
         shell=script.shell,
+        dialect=script.dialect,
     )
     yield from advised(commands, command.advisory or script.advisory)
 
