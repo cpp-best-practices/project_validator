@@ -157,7 +157,6 @@ class RubyTests(unittest.TestCase):
         result = run_in_layout(self, BUNDLER, TESTS_RUN, stray)
         self.assertEqual(result.status, Status.FAIL, result)
 
-    @unittest.expectedFailure  # upstream #257: a project's runner script is unread
     def test_a_runner_script_runs_the_tests(self) -> None:
         """`test/runner` (puma), a Ruby script that requires minitest/autorun and the test files, runs Minitest."""
         _all_pass(self, {"test/runner": (BUNDLER, TESTS_RUN, {**RUNNER, **MINITEST, **_ci("test/runner --verbose")})})

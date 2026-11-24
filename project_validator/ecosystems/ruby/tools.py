@@ -24,6 +24,7 @@ from project_validator.facts.tools import Claim, Run, combined, defined_by, eith
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
+from project_validator.tools.shell_scripts import interpreter
 
 RAKEFILES = ("Rakefile", "rakefile", "Rakefile.rb")
 
@@ -175,14 +176,33 @@ RUBY_TEST_FILES = TestFiles(
 _RUBY_RUNNERS = frozenset({"rspec", "m", "turbo_tests", "parallel_rspec"})
 
 
+# A project's own runner (puma's `test/runner`): a Ruby script without a suffix that loads a test framework.
+_RUNNER_SCRIPT = "test runner script"
+_LOADS_TESTS = re.compile(r"""^\s*require\s*\(?\s*["'](?:minitest/autorun|test/unit|rspec/autorun)["']""", re.MULTILINE)
+
+
+def _runner_scripts(context: Context) -> Iterator[Setting]:
+    project = context.project
+    for path in project.files():
+        ruby = not PurePosixPath(path).suffix and interpreter(project.read_head(path, 160)) == "ruby"
+        if ruby and _LOADS_TESTS.search(project.read_text(path)):
+            yield from settings("Ruby", path, ((_RUNNER_SCRIPT, path),))
+
+
+RUNNER_SCRIPTS = SettingsReader(name="Ruby test runner scripts", files=(), read_project=_runner_scripts)
+
+
 def _ruby_tests(command: Command, facts: Facts) -> Run | None:
     """rspec and the like, `rails test`, `ruby -Itest` or ruby running a test file (`ruby test/test_x.rb`), `rake
-    test` or `rake spec`, or the test task of a Rakefile that rake runs."""
+    test` or `rake spec`, the test task of a Rakefile that rake runs, or the project's own runner script."""
     argv = resolved(command)
     name = program(argv)
     ruby_runs_tests = name == "ruby" and ("-Itest" in argv or any(RUBY_TEST_FILES.path.search(word) for word in argv))
     if name in _RUBY_RUNNERS or argv[:2] == ("rails", "test") or ruby_runs_tests:
         return tested()
+    script = joined(command.directory, argv[0]) if argv else ""
+    if runner := [found for found in facts.where(Setting, tool="Ruby", key=_RUNNER_SCRIPT) if found.value == script]:
+        return tested(read=runner)
     if read := _rake_tasks(command, facts, "tests"):
         return tested(read=read)
     return tested(heuristic=True) if name == "rake" and {"test", "spec"} & set(argv[1:]) else None
