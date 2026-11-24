@@ -488,3 +488,11 @@ class RunTargetEdgeTests(unittest.TestCase):
         #301)."""
         with temp_project({"meson.build": "project('app')\nrun_target(command: ['clang-tidy'])\n"}) as root:
             self.assertEqual(dict(meson.meson_project(make_context(root)).targets), {})
+
+    def test_an_executable_the_project_builds_runs_by_its_name(self) -> None:
+        """`run_target('gen', command: [exe, '--all'])` runs the executable `exe = executable('tool', ...)` builds:
+        the command's word is the target's name, as a found program's is (upstream #302)."""
+        build = "project('app')\nexe = executable('tool', 'tool.c')\nrun_target('gen', command: [exe, '--all'])\n"
+        with temp_project({"meson.build": build}) as root:
+            [(argv, _, _)] = meson.meson_project(make_context(root)).targets["gen"]
+        self.assertEqual(argv, ("tool", "--all"))

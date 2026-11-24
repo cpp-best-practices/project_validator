@@ -67,7 +67,7 @@ def text_of(value: Value) -> str:
         return value.text
     if isinstance(value, Array):
         return ",".join(text_of(item) for item, _ in value.items)
-    if isinstance(value, Object) and value.kind == "program":
+    if isinstance(value, Object) and value.kind in ("program", "target"):
         return value.name
     return str(value)
 
