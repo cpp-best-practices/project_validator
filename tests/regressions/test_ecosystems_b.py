@@ -293,7 +293,6 @@ BATS_TEST = {"test/shop.bats": '@test "sums" {\n  true\n}\n'}
 
 
 class ShellTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #275: urchin's suffix-less test scripts under test/ are "no tests"
     def test_urchin_runs_the_suffix_less_tests_under_its_directory(self) -> None:
         """`urchin test/fast` (also through `make test-fast`) runs every script under the directory: those are the
         tests (nvm-sh/nvm)."""
@@ -305,6 +304,9 @@ class ShellTests(unittest.TestCase):
             with self.subTest(case=name):
                 result = _run(tests_run, SHELL, {**URCHIN_TESTS, **files})
                 self.assertEqual(result.status, Status.PASS, result)
+        # Without urchin, a suffix-less script under test/ is a helper, not a test CI fails to run.
+        helpers = _run(tests_run, SHELL, {**URCHIN_TESTS, **github_job(CI, "shellcheck nvm.sh")})
+        self.assertIn("no tests found", helpers.message)
 
     def test_zsh_themes_are_shell_scripts_and_zunit_files_are_tests(self) -> None:
         """`themes/*.zsh-theme` are zsh scripts and `tests/*.zunit` are zunit tests: neither is an unrecognised suffix,

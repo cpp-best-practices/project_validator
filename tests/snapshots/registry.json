@@ -7023,6 +7023,19 @@
     },
     {
       "can": {
+        "test": {
+          "runs": "urchin test"
+        }
+      },
+      "languages": [
+        "Shell"
+      ],
+      "name": "urchin",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "analysis": {
           "checks": "vacuum lint <description>"
         },

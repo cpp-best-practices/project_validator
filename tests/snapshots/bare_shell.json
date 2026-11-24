@@ -945,6 +945,13 @@
                 "needs_definition": true,
                 "required": false
               },
+              "urchin": {
+                "can": {
+                  "runs": "urchin test"
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "zunit": {
                 "can": {
                   "runs": "zunit"
@@ -1291,7 +1298,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "PowerShell: no tests found (Pester tests (*.Tests.ps1)); Shell: no tests found (bats tests (*.bats), zunit tests (*.zunit), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
+      "message": "PowerShell: no tests found (Pester tests (*.Tests.ps1)); Shell: no tests found (bats tests (*.bats), zunit tests (*.zunit), urchin tests (shell scripts without a suffix under test/), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
       "status": "FAIL"
     },
     "top-level-guard": {

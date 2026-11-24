@@ -5,17 +5,19 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterator
+from pathlib import PurePosixPath
 
-from project_validator.ecosystems.shell import POWERSHELL_ONLY, SHELL_ONLY
-from project_validator.facts import Command, Facts, Setting, resolved
+from project_validator.core import Context
+from project_validator.ecosystems.shell import POWERSHELL_ONLY, SHELL, SHELL_ONLY, shebang_scripts
+from project_validator.facts import Command, Facts, Origin, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import has_option, program, starts_with
 from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.settings import SettingsReader, file_reader, settings
-from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import Run, combined, defined_by, starts, when
+from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested, tests_of
+from project_validator.facts.tools import Definition, Run, combined, defined_by, starts, when
 from project_validator.tools.editorconfig import EDITORCONFIG
 from project_validator.tools.kcov import kcov_tool
 from project_validator.tools.shell_scripts import SHELLS
@@ -66,6 +68,35 @@ ZUNIT = test_runner(
     how="zunit",
     runs=when(starts(("zunit",)), tested),
     tests=tests_of(ZUNIT_TESTS.name),
+)
+# urchin runs every script under the directory it is given (`urchin test/fast`): nvm's tests are shell scripts without a
+# suffix under test/, but their setup and teardown hooks. A suffix-less script under test/ is a helper as often, so they
+# are urchin's tests only where something runs urchin.
+URCHIN_TESTS = "urchin tests (shell scripts without a suffix under test/)"
+_URCHIN_HOOKS = frozenset({"setup", "teardown", "setup_dir", "teardown_dir"})
+
+
+def _urchin_test_files(context: Context) -> Iterator[TestFile]:
+    for path, language in shebang_scripts(context.project):
+        parts = PurePosixPath(path).parts
+        if language == SHELL and {"test", "tests"} & set(parts[:-1]) and parts[-1] not in _URCHIN_HOOKS:
+            yield TestFile(origin=Origin(path=path), language=SHELL, kind=URCHIN_TESTS)
+
+
+URCHIN_TEST_FILES = SettingsReader(name="urchin tests", files=(), read_project=_urchin_test_files)
+
+
+def _urchin_tests(facts: Facts) -> Iterator[str]:
+    if any(program(resolved(command)) == "urchin" for command in facts.of(Command)):
+        yield from (test.origin.path for test in facts.of(TestFile) if test.kind == URCHIN_TESTS)
+
+
+URCHIN = test_runner(
+    name="urchin",
+    languages=SHELL_ONLY,
+    how="urchin test",
+    runs=when(starts(("urchin",)), tested),
+    tests=Definition(found=_urchin_tests, default=False, describe=URCHIN_TESTS, kinds=(URCHIN_TESTS,)),
 )
 SHELLSPEC = test_runner(
     name="shellspec",
