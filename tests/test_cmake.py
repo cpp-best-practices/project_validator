@@ -868,6 +868,15 @@ class EvaluationEdgeTests(unittest.TestCase):
         self.assertEqual(by_value["-DDEBUG=1"], frozenset({"debug"}))
         self.assertNotIn("debug", by_value["-DDEBUG=0"] or {"debug"})
 
+    def test_project_names_the_project(self) -> None:
+        """`${PROJECT_NAME}` is the name project() gave (upstream #305)."""
+        found = _listed(
+            "project(app)",
+            "add_executable(${PROJECT_NAME} a.cpp)",
+            "target_compile_options(${PROJECT_NAME} PRIVATE -Wall)",
+        )
+        self.assertEqual([target for _, target, _ in _options(found)], ["app"])
+
     def test_a_quoted_first_argument_with_values_per_build_is_one_argument(self) -> None:
         found = _listed(
             "if(MSVC)",
