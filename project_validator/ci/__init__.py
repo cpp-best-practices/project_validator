@@ -301,10 +301,50 @@ _JOBS = "the jobs and commands"
 _CONFIGURATION_LINE = re.compile(r"^\s*(?:-\s+)?(?:[\w.-]+:\s*)?(?P<value>.*?)\s*$")
 
 
+# A key that configures where a job runs, in some provider's words (`vmImage`, `image`, `os`, `platform`, `agent`,
+# `label`, `machine`, `executor`, `resource_class`, `pool`, `queue`, `runs-on`, CircleCI's `macos`, Cirrus's
+# `windows_container`), at the start of a line: `key:` or `key =` (YAML, a Jenkinsfile's environment), or a
+# Jenkinsfile's `agent { label '…' }` and `node('…')`.
+_RUNNER_KEY = re.compile(
+    r"^\s*(?:-\s*)?(?:[\w.-]*?(?:image|os|platform|agents?|labels?|machine|executor|resource_class|pool|queue|"
+    r"runs-on|node|dist|instance|container|vm|macos|osx|windows|linux|freebsd)[\w.-]*\s*[:=]|agent\b|node\s*\()",
+    re.IGNORECASE,
+)
+
+
+def _runner_lines(text: str) -> str:
+    """The lines of a configuration not parsed that configure where its jobs run (see `_RUNNER_KEY`): an OS a
+    description, a comment or a command names (docker-code-server's image label: "… on your Mac, Windows") names no
+    runner, nor a comment after a key's value (`image: vs2022  # ported from linux`). A key whose value is on the
+    lines under it holds those lines too: indented (`os:`, then `  - linux`), a sequence at the key's own indentation
+    (`image:`, then `- Visual Studio 2017`), or after an anchor (`build-image: &image`, then the image)."""
+    found: list[str] = []
+    under: int | None = None  # the indentation of the runner key whose value is the lines under it
+    for line in text.splitlines():
+        line = _TRAILING_COMMENT.sub("", line)
+        indent = len(line) - len(line.lstrip())
+        if under is not None and line.strip() and (indent > under or (indent == under and line.lstrip()[:2] == "- ")):
+            found.append(line)
+            continue
+        under = None
+        if (key := _RUNNER_KEY.match(line)) is not None:
+            found.append(line)
+            under = indent if _VALUE_BELOW.fullmatch(line[key.end() :]) else None
+    return "\n".join(found)
+
+
+# A key's value that is on the lines below it: none, or only an anchor (`&image`).
+_VALUE_BELOW = re.compile(r"\s*(?:&\S+\s*)?")
+
+
+# A comment after what a line says: YAML's ` # …`, Groovy's ` // …`.
+_TRAILING_COMMENT = re.compile(r"\s(?:#|//).*$")
+
+
 def _heuristic_facts(ci_file: CiFile, text: str, reason: str) -> Iterator[Fact]:
     """Configuration that is not parsed: one job per OS it names, running each line that could be a command."""
     origin = Origin(path=ci_file.path)
-    operating_systems = detect_operating_systems(text) or ["unknown"]
+    operating_systems = detect_operating_systems(_runner_lines(text)) or ["unknown"]
     lines = (match["value"].strip("'\"") for line in text.splitlines() if (match := _CONFIGURATION_LINE.match(line)))
     script = "\n".join(line for line in lines if line and line not in ("|", ">", "|-", ">-"))
     for os in operating_systems:

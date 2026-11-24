@@ -48,6 +48,27 @@ class HeuristicJobsTests(unittest.TestCase):
         self.assertEqual([job.os for job in jobs], ["linux", "windows"])
         self.assertTrue(all(job.compilers == {"gcc", "clang"} and job.heuristic for job in jobs))
 
+    def test_the_operating_systems_are_those_the_runners_are_configured_with(self) -> None:
+        """A description, a comment or a command that names an OS (docker-code-server's image label: "VS Code … on
+        your Mac, Windows") names no runner; the keys that configure one do, whatever the provider calls them."""
+        for path, text, expected in (
+            (
+                "Jenkinsfile",
+                "environment {\n  DIST_IMAGE = 'ubuntu'\n}\nsh 'docker build --label \"desc=on Windows\"'\n",
+                ["linux"],
+            ),
+            ("azure-pipelines.yml", "pool:\n  vmImage: 'windows-latest'\nsteps:\n- script: echo linux\n", ["windows"]),
+            (".circleci/config.yml", "jobs:\n  b:\n    macos:\n      xcode: 15.0\n    steps: [run: make]\n", ["macos"]),
+            ("appveyor.yml", "image: Visual Studio 2022  # ported from linux\n# os: linux\n", ["windows"]),
+            ("Jenkinsfile", "pipeline {\n  agent { label 'windows' }\n}\n", ["windows"]),
+            (".travis.yml", "matrix:\n  include:\n    - os: osx\n    - os: linux\n", ["macos", "linux"]),
+            # A sequence written at its key's indentation (scalafmt's AppVeyor), and an image behind an anchor (envoy).
+            ("appveyor.yml", "image:\n- Visual Studio 2017\nbuild: off\n", ["windows"]),
+            (".circleci/config.yml", "build-image: &image\n  envoyproxy/build-ubuntu:f4a8\njobs: {}\n", ["linux"]),
+        ):
+            with self.subTest(path=path, text=text.splitlines()[0]):
+                self.assertEqual(sorted(job.os for job in ci_jobs({path: text})), sorted(expected))
+
     def test_runner_default_when_no_compiler_is_named(self) -> None:
         [job] = ci_jobs({".travis.yml": "os: osx\n"})
         self.assertEqual((job.compilers, job.default_compiler), (frozenset({"appleclang"}), True))
