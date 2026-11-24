@@ -350,6 +350,8 @@ class EvaluationTests(unittest.TestCase):
         )
         with mock.patch.object(evaluation, "MOST_STATEMENTS", 2):
             [unknown] = (fact for fact in _facts("a = 1", "b = 2", "c = 3") if isinstance(fact, UnknownFact))
+            # At the limit, every statement is evaluated (upstream #303).
+            self.assertEqual([fact for fact in _facts("a = 1", "b = 2") if isinstance(fact, UnknownFact)], [])
         self.assertEqual(unknown.reason, "evaluation stopped after 2 statements")
 
     def test_declared_languages(self) -> None:

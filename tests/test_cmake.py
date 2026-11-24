@@ -469,6 +469,8 @@ class FileTests(unittest.TestCase):
         self.assertEqual(unknowns, [("the CMake file CMakeLists.txt", reason, "CMakeLists.txt:2")])
         with mock.patch.object(evaluation, "MOST_COMMANDS", 3):
             [unknown] = (fact for fact in _listed(*["set(A 1)"] * 5) if isinstance(fact, Unknown))
+            # At the limit, every command is evaluated (upstream #303).
+            self.assertEqual([fact for fact in _listed(*["set(A 1)"] * 3) if isinstance(fact, Unknown)], [])
         self.assertEqual(unknown.reason, "evaluation stopped after 3 commands")
 
 
