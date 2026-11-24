@@ -76,9 +76,9 @@ class _Unit:
 
     def owns(self, path: str) -> bool:
         """Whether a manifest is the unit's own: in its directory, outside the units below it, and neither vendored
-        nor auxiliary code (what `--auxiliary` names) the answer is not about (`concerns`: what named the code it
-        is about)."""
-        by = self.named.matching(path, None)
+        nor auxiliary code (what `--auxiliary` names, a test fixture, an example: see `Selectors.apart`) the answer
+        is not about (`concerns`: what named the code it is about)."""
+        by = self.named.apart(path)
         apart = role(path) == "vendored" or (by != "" and by not in self.concerns)
         return owner(directory_of(path), self.units) == self.unit and not apart
 

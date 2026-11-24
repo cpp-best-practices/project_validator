@@ -466,6 +466,24 @@ class AuxiliaryCodeTests(unittest.TestCase):
         python = _place(named, "Python")
         self.assertEqual((python.result.status, python.auxiliary), (Status.WARN, ("test",)))
 
+    def test_test_fixtures_configure_nothing_of_the_product(self) -> None:
+        """A test fixture's manifest or tool configuration is not the product's (upstream #188: PHP_CodeSniffer's
+        tests/**/Fixtures/phpcs.xml.dist, composer's fixture composer.json files)."""
+        files = {
+            "composer.json": json.dumps({"require": {"php": ">=8.1"}}),
+            "composer.lock": "{}",
+            "src/A.php": "<?php\n",
+            "phpcs.xml.dist": "<ruleset/>\n",
+            "tests/Fixtures/a/composer.json": json.dumps({"require": {"x/y": "1"}}),
+            "tests/Fixtures/a/phpcs.xml.dist": "<ruleset/>\n",
+            **_workflow(("vendor/bin/phpcs", None)),
+        }
+        dependencies = _check("dependency-management", files)
+        self.assertNotIn("Fixtures", dependencies.message)
+        formatting = _check("code-formatting", files)
+        self.assertIn("phpcs.xml.dist is defined", formatting.message)
+        self.assertNotIn("Fixtures", formatting.message)
+
     def test_what_is_named_must_be_a_role_a_language_or_a_directory(self) -> None:
         with temp_project(HELPER_SCRIPTS) as root:
             for named in ("scripts", "vendored", "product", "/"):

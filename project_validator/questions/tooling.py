@@ -141,12 +141,12 @@ class ToolAnswer:
 def _relevant(path: str, unit: str, facts: Facts, auxiliary: tuple[str, ...]) -> bool:
     """Whether a definition file applies to code in `unit`: tools look for theirs in a file's directory and the
     directories above it, so one at or above the unit applies to all of it, and one inside it (not in a unit of its
-    own) to part of it, unless that part is vendored or auxiliary code (an example's own configuration, with
-    `--auxiliary example`) the answer is not about (`auxiliary`: what named the code it is about)."""
+    own) to part of it, unless that part is vendored or auxiliary code (an example's own configuration, a test
+    fixture's: see `Selectors.apart`) the answer is not about (`auxiliary`: what named the code it is about)."""
     directory = str(PurePosixPath(path).parent)
     if within(unit, directory):
         return True
-    named = selectors(facts).matching(path, None)
+    named = selectors(facts).apart(path)
     inside = within(directory, unit) and _owner(path, facts) == unit
     return inside and role(path) != "vendored" and (not named or named in auxiliary)
 

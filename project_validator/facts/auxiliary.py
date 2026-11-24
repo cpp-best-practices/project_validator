@@ -17,7 +17,7 @@ from dataclasses import dataclass
 
 from project_validator.ecosystems import registered
 from project_validator.facts import Fact, Facts
-from project_validator.facts.roles import AUXILIARY, role
+from project_validator.facts.roles import AUXILIARY, fixture_data, role
 from project_validator.facts.tools import within
 
 
@@ -96,6 +96,14 @@ class Selectors:
         if found := next((name for parent, name in self.directories.items() if within(path, parent)), ""):
             return found
         return implied(purpose) if language in self.implied and purpose in AUXILIARY else ""
+
+    def apart(self, path: str) -> str:
+        """What sets a file of no language (a manifest, a tool's configuration) apart from the code around it: what
+        names it (see `matching`), else being a test suite's data (`tests/fixtures/`: upstream #188); "" when it is
+        the code's around it. An example's files are not set apart: a Flutter plugin's tests are its example app's."""
+        if found := self.matching(path, None):
+            return found
+        return implied("test") if fixture_data(path) else ""
 
 
 def selectors(facts: Facts) -> Selectors:
