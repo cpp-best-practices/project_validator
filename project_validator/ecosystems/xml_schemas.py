@@ -50,9 +50,10 @@ XML_SCHEMAS_ECOSYSTEM = Ecosystem(
     kind="format",
     languages=XML_FORMATS,
     # RELAX NG's compact syntax and DTDs are not XML; they belong to the schemas without being formats of their own.
-    # A DTD (with its entity files) is a schema project's, docbook's; alone it describes a program's own configuration
-    # (glib's gschema.dtd, dbus-broker's config.dtd), which makes no schema project.
-    ambiguous_suffixes={".rnc": None, ".dtd": None, ".ent": None},
+    # A DTD (with its entity files and the modules of declarations it includes, docbook's `dbpoolx.mod`) is a schema
+    # project's; alone it describes a program's own configuration (glib's gschema.dtd, dbus-broker's config.dtd),
+    # which makes no schema project. `.mod` is also a compiled Fortran module, or Modula-2, so it is never told alone.
+    ambiguous_suffixes={".rnc": None, ".dtd": None, ".ent": None, ".mod": None},
     locate=xml_schema_files,
     ci_programs=(("xmllint",), ("jing",), ("onvdl",), ("schxslt",), ("xspec",), ("xspec.sh",), ("xspec.bat",)),
 )
