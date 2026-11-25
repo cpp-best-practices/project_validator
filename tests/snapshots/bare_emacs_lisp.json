@@ -675,6 +675,11 @@
       "message": "no automated dependency updates configured",
       "status": "WARN"
     },
+    "file-soundness": {
+      "details": [],
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
     "function-limits": {
       "details": [],
       "message": "not applicable to Emacs Lisp",

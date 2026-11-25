@@ -820,6 +820,11 @@
       "message": "no automated dependency updates configured",
       "status": "WARN"
     },
+    "file-soundness": {
+      "details": [],
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
     "function-limits": {
       "details": [
         "consider running in CI: rubocop or lizard --length 30"

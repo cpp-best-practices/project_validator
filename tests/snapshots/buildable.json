@@ -1046,6 +1046,11 @@
       "message": "no automated dependency updates configured",
       "status": "WARN"
     },
+    "file-soundness": {
+      "details": [],
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
     "function-limits": {
       "details": [
         "consider running in CI: clang-tidy with readability-function-size and a LineThreshold in .clang-tidy or lizard --length 30"

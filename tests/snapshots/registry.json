@@ -66,6 +66,10 @@
       "aliases": [],
       "description": "Automated dependency updates are configured (Dependabot, Renovate or Scala Steward)"
     },
+    "file-soundness": {
+      "aliases": [],
+      "description": "CI checks the project's binary and asset files (e.g. ClamAV, magick, qpdf)"
+    },
     "function-limits": {
       "aliases": [],
       "description": "Function length is limited (lizard, or each language's linter rule)"

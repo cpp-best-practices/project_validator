@@ -391,3 +391,8 @@ def json_output(output: str, kind: str) -> Any:
     if found.get("format") != kind:
         raise AssertionError(f"not a {kind} output: {output[:80]}")
     return found[kind]
+
+
+# Checks of every project that apply only where it holds what they check (binary and asset files): a fixture with
+# none skips them.
+CONTENT_CHECKS = frozenset({"file-soundness"})
