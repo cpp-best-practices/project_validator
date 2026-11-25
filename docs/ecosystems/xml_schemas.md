@@ -1,16 +1,19 @@
 # XML schemas
 
 Two formats recognised by intent, from the files' suffixes. **XML Schema** is the schemas: XSD (`.xsd`), RELAX NG
-(`.rng`, and `.rnc`, the compact syntax, which is not XML) and Schematron (`.sch`). **XSLT** is the stylesheets
+(`.rng`, and `.rnc`, the compact syntax, which is not XML), Schematron (`.sch`), NVDL (`.nvdl`) and DTDs (`.dtd`,
+with their entity files, `.ent`; neither is XML). **XSLT** is the stylesheets
 (`.xsl`, `.xslt`). The files are XML, the Data format's, whose parser never fetches an external DTD or entity, so
 `data-wellformed` already covers one that does not parse; XSpec suites (`.xspec`) are XML too.
 
-A CI job works with the ecosystem when it runs xmllint, jing, SchXslt or XSpec.
+A CI job works with the ecosystem when it runs xmllint, jing, onvdl, SchXslt or XSpec.
 
 ## `schema-validation`
 
 CI validates the documents against the schemas: `xmllint --noout --schema <schema> <documents>` (or `--relaxng`,
-`--schematron`; xmllint alone only parses), `jing <schema> <documents>`, or SchXslt for Schematron.
+`--schematron`, `--dtdvalid`, `--valid`; xmllint alone only parses), `jing <schema> <documents>`, onvdl for an NVDL
+script, SchXslt for Schematron, or the `com.nwalsh.gradle.relaxng.validate` Gradle plugin in a build CI runs
+(docbook's).
 
 ## `tests-run`
 

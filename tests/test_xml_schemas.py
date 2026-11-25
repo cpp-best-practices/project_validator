@@ -24,6 +24,9 @@ XSPEC = {
 }
 
 
+DTD = {"dtd/catalog.dtd": "<!ELEMENT catalog EMPTY>\n", "dtd/names.ent": "<!ENTITY shop 'Shop'>\n"}
+
+
 def _ci(*steps: str) -> dict[str, str]:
     return github_job("ubuntu-latest", *steps)
 
@@ -35,6 +38,12 @@ class RecognitionTests(unittest.TestCase):
             ({"schema/catalog.rng": "<grammar xmlns='http://relaxng.org/ns/structure/1.0'/>\n"}, {"XML Schema", "XML"}),
             ({"schema/catalog.rnc": "start = element catalog { empty }\n"}, {"XML Schema"}),
             ({"rules/catalog.sch": "<schema xmlns='http://purl.oclc.org/dsdl/schematron'/>\n"}, {"XML Schema", "XML"}),
+            # docbook's NVDL scripts, and its DTDs and their entity files beside its RELAX NG (upstream #289).
+            ({"schema/catalog.rnc": "start = element catalog { empty }\n", **DTD}, {"XML Schema"}),
+            (
+                {"nvdl/catalog.nvdl": "<rules xmlns='http://purl.oclc.org/dsdl/nvdl/ns/structure/1.0'/>\n"},
+                {"XML Schema", "XML"},
+            ),
             ({"xslt/total.xsl": XSL}, {"XSLT", "XML"}),
             ({"xslt/total.xslt": XSL, **XSPEC}, {"XSLT", "XML"}),
         )
@@ -45,6 +54,11 @@ class RecognitionTests(unittest.TestCase):
                 self.assertEqual(structure.unrecognised_suffixes, ())
         with temp_project({"data/catalog.xml": "<catalog/>\n"}) as root:
             self.assertEqual(make_context(root).structure.formats, frozenset({"XML"}))
+        # A DTD alone makes no schema project: glib's and dbus-broker's describe their own configuration files.
+        with temp_project(
+            {"src/main.c": "int main(void) { return 0; }\n", "gio/gschema.dtd": DTD["dtd/catalog.dtd"]}
+        ) as root:
+            self.assertEqual(make_context(root).structure.formats, frozenset())
         self.assertEqual((XML_SCHEMAS_ECOSYSTEM.kind, XML_SCHEMAS_ECOSYSTEM.toolchain), ("format", None))
 
     def test_ci_usage(self) -> None:
@@ -65,9 +79,17 @@ class XmlSchemaTests(unittest.TestCase):
             ("xmllint --noout --schematron rules.sch data/catalog.xml", "xmllint"),
             ("jing schema/catalog.rng data/catalog.xml", "jing"),
             ("schxslt -s rules.sch -d data/catalog.xml", "SchXslt"),
+            ("onvdl nvdl/catalog.nvdl data/catalog.xml", "onvdl"),
         ):
             with self.subTest(line=line):
                 self.assertEqual(self._run(schema_validation, _ci(line)), Result.passed(VALIDATED.format(tool)))
+        # docbook validates its RELAX NG schemas with Norm Walsh's Gradle plugin, which the build runs.
+        gradle = {"build.gradle": "plugins {\n  id 'com.nwalsh.gradle.relaxng.validate' version '0.0.8'\n}\n"}
+        self.assertEqual(
+            self._run(schema_validation, {**gradle, **_ci("./gradlew build")}),
+            Result.passed(VALIDATED.format("the RELAX NG validation Gradle plugin")),
+        )
+        self.assertEqual(self._run(schema_validation, {**gradle, **_ci("./gradlew tasks")}).status, Status.FAIL)
         # xmllint without a schema only parses.
         self.assertEqual(self._run(schema_validation, _ci("xmllint --noout data/catalog.xml")).status, Status.FAIL)
         self.assertEqual(self._run(data_wellformed, {}).status, Status.PASS)

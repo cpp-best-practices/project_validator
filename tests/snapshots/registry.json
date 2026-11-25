@@ -5020,6 +5020,19 @@
     },
     {
       "can": {
+        "schema": {
+          "validates": "onvdl <script.nvdl> <documents>"
+        }
+      },
+      "languages": [
+        "XML Schema"
+      ],
+      "name": "onvdl",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "compatibility": {
           "breaking": "openapi-diff <main branch's description> <description> --fail-on-incompatible"
         }
@@ -6715,6 +6728,19 @@
         "Terraform"
       ],
       "name": "tfsec",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "schema": {
+          "validates": "the com.nwalsh.gradle.relaxng.validate Gradle plugin, in a build CI runs"
+        }
+      },
+      "languages": [
+        "XML Schema"
+      ],
+      "name": "the RELAX NG validation Gradle plugin",
       "reads": [],
       "required": []
     },
