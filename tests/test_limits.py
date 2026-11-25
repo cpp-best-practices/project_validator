@@ -13,6 +13,7 @@ from project_validator.ecosystems.javascript.analysis import _strict_settings
 from project_validator.facts import Command, Fact, Facts, Unknown
 from project_validator.facts.build import CompilerOption
 from project_validator.limits import (
+    AZURE_TEMPLATES,
     BAZELRC_IMPORTS,
     CMAKE_NESTING,
     COMPOSITE_ACTIONS,
@@ -111,6 +112,24 @@ class BazelLimitTests(LimitTestCase):
             self._imports,
             lambda files: any("--copt=-Werror" in argv for argv in _commands(_facts(files))),
         )
+
+
+class AzureLimitTests(LimitTestCase):
+    @staticmethod
+    def _templates(levels: int) -> Files:
+        files = {"azure-pipelines.yml": "steps:\n  - template: t1.yml\n"}
+        for level in range(1, levels):
+            files[f"t{level}.yml"] = f"steps:\n  - template: t{level + 1}.yml\n"
+        files[f"t{levels}.yml"] = "steps:\n  - script: ctest\n"
+        return files
+
+    def test_templates_nest_at_most_the_limit_deep(self) -> None:
+        self.assert_limit(AZURE_TEMPLATES, self._templates, lambda files: ("ctest",) in _commands(_facts(files)))
+        self.assertEqual(_reasons(_facts(self._templates(AZURE_TEMPLATES.most + 1))), [AZURE_TEMPLATES.reason])
+
+    def test_a_template_that_includes_itself_is_a_cycle(self) -> None:
+        files = {"azure-pipelines.yml": "steps:\n  - template: t.yml\n", "t.yml": "steps:\n  - template: ./t.yml\n"}
+        self.assertEqual(_reasons(_facts(files)), ["t.yml includes itself, through azure-pipelines.yml → t.yml"])
 
 
 class GithubLimitTests(LimitTestCase):

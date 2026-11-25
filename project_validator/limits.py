@@ -33,6 +33,8 @@ GITLAB_EXTENDS = Limit("the templates it extends", 10)
 GITLAB_REFERENCES = Limit("its !reference tags", 10)
 # The rc files a .bazelrc imports, and those they import in turn.
 BAZELRC_IMPORTS = Limit("its imports", 10)
+# Azure Pipelines nests templates at most this deep (its documented limit).
+AZURE_TEMPLATES = Limit("the templates it includes", 100)
 # The makefiles a makefile includes, and those they include in turn.
 MAKE_INCLUDES = Limit("its includes", 10)
 # GitHub runs at most this many levels of reusable workflows; composite actions are followed as deep.
