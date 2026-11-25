@@ -1,0 +1,779 @@
+{
+  "answers": {
+    "action-pinning": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Gleam",
+            "references": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "ci-lint": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Gleam",
+            "providers": {},
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "committed-artifacts": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "answer": "no",
+            "committed": [
+              "build/"
+            ],
+            "language": "Gleam",
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "compile-commands": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": []
+      }
+    ],
+    "compiler-extensions": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": []
+      }
+    ],
+    "compiler-warnings": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": []
+      }
+    ],
+    "coverage": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "branch": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "language": "Gleam",
+            "line": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "path": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "region": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "statement": {
+              "answer": "impossible",
+              "gated": [],
+              "known": [],
+              "reported": [],
+              "rung": null,
+              "tools": []
+            },
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-audit": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Gleam",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "dependency-management": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "answer": "impossible",
+            "declared": [],
+            "language": "Gleam",
+            "lock_required": false,
+            "locked": [],
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "formatting": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "gleam format": {
+                "can": {
+                  "apply": "gleam format src test",
+                  "check": "gleam format --check src test"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "Gleam",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "function-limits": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Gleam",
+            "level": "limits",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "fuzz-testing": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "answer": "impossible",
+            "language": "Gleam",
+            "other_runs": [],
+            "property_files": [],
+            "tools": {
+              "advisory": {},
+              "answer": "impossible",
+              "defined": {},
+              "known": {},
+              "language": "Gleam",
+              "level": "runs",
+              "runs": {},
+              "unit": ".",
+              "unknown_definitions": [],
+              "unknowns": []
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "hardening": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": []
+      }
+    ],
+    "license": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "answer": "no",
+            "files": {},
+            "language": "Gleam",
+            "mismatches": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "link-check": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Gleam",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "migration-safety": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Gleam",
+            "level": "linted",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "mutation-testing": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Gleam",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "out-of-source-build": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": []
+      }
+    ],
+    "platforms": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": []
+      }
+    ],
+    "sanitizers": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": []
+      }
+    ],
+    "schema-compatibility": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Gleam",
+            "level": "breaking",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "schema-declared": [],
+    "schema-examples": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Gleam",
+            "level": "checked",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "schema-validation": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Gleam",
+            "level": "validates",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "secret-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "answer": "no",
+            "configured": [],
+            "language": "Gleam",
+            "scanners": [],
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "security-scanning": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Gleam",
+            "level": "scans",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "static-analysis": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Gleam",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "gleam test": {
+                "can": {
+                  "runs": "gleam test"
+                },
+                "needs_definition": true,
+                "required": false
+              }
+            },
+            "language": "Gleam",
+            "level": "runs",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "top-level-guard": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": []
+      }
+    ],
+    "type-checking": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "impossible",
+            "defined": {},
+            "known": {},
+            "language": "Gleam",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
+      }
+    ],
+    "vcs-ignore": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "Gleam",
+            "outputs": {
+              "the build directory": {}
+            },
+            "unit": "."
+          }
+        ]
+      }
+    ],
+    "warnings-as-errors": [
+      {
+        "auxiliary": {},
+        "language": "Gleam",
+        "units": []
+      }
+    ],
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "TOML",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "TOML",
+            "parsed": [
+              "gleam.toml"
+            ],
+            "problems": [],
+            "test_data": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
+    ]
+  },
+  "results": {
+    "action-pinning": {
+      "details": [],
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    "ci-build-types": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "ci-current": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-lint": {
+      "details": [],
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    "ci-present": {
+      "details": [],
+      "message": "no CI configuration found (looked for AppVeyor, Azure Pipelines, CircleCI, Google Cloud Build, GitHub Actions, GitLab CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci, Read the Docs, Travis CI)",
+      "status": "FAIL"
+    },
+    "code-formatting": {
+      "details": [
+        "consider a CI job that runs gleam format --check src test"
+      ],
+      "message": "CI never runs gleam format; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    "committed-artifacts": {
+      "details": [
+        "build/",
+        "remove them from version control (git rm -r --cached <path>) and ignore them"
+      ],
+      "message": "1 build output is committed",
+      "status": "FAIL"
+    },
+    "compile-commands": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "compiler-extensions": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "compiler-warnings": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "copy-paste-detection": {
+      "details": [
+        "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian"
+      ],
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    "coverage": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "data-wellformed": {
+      "details": [],
+      "message": "1 TOML file parses",
+      "status": "PASS"
+    },
+    "dependency-audit": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "dependency-management": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "dependency-updates": {
+      "details": [
+        "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)"
+      ],
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    "function-limits": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "fuzz-testing": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "hardening": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "large-files": {
+      "details": [],
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    "license": {
+      "details": [
+        "add a LICENSE file with the text of a license (see https://choosealicense.com)"
+      ],
+      "message": "no license file",
+      "status": "FAIL"
+    },
+    "link-check": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "migration-safety": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "mutation-testing": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "out-of-source-build": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "platform-matrix": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "sanitizers": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "schema-compatibility": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "schema-declared": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "schema-examples": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "schema-validation": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "secret-scanning": {
+      "details": [
+        "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here"
+      ],
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    "security-policy": {
+      "details": [
+        "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)"
+      ],
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    "security-scanning": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "static-analysis": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "status-badges": {
+      "details": [
+        "add a CI status badge, e.g. ![ci](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)",
+        "add a quality badge: coverage (Codecov, Coveralls) or analysis (SonarCloud, Codacy, OpenSSF Scorecard)"
+      ],
+      "message": "no README",
+      "status": "FAIL"
+    },
+    "tests-run": {
+      "details": [],
+      "message": "no tests found (test modules under test/ (gleeunit))",
+      "status": "FAIL"
+    },
+    "top-level-guard": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "type-checking": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    },
+    "vcs-ignore": {
+      "details": [
+        "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs"
+      ],
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    "warnings-as-errors": {
+      "details": [],
+      "message": "not applicable to Gleam",
+      "status": "SKIP"
+    }
+  }
+}

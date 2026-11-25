@@ -1,7 +1,8 @@
 # BEAM
 
 Elixir and Erlang, recognised by `.ex`, `.exs`, `.erl` and `.hrl` sources and by their build tools: Mix (`mix.exs`;
-an umbrella's `apps_path` applications are units of their own) and rebar3 (`rebar.config`). A Mix project compiles
+an umbrella's `apps_path` applications are units of their own), rebar3 (`rebar.config`) and erlang.mk (a committed
+`erlang.mk` that the Makefile includes; the `rebar.config` it writes beside it, for Hex, is its artifact, not rebar3's). A Mix project compiles
 the Erlang modules in its `src/` too, so its tests, coverage, Dialyzer and dependency audit count for both languages.
 
 Both tools run tasks, and a command may run several: `mix do format --check-formatted, credo --strict` (or with `+`),

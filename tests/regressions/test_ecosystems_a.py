@@ -466,7 +466,6 @@ EARTHLY = {
 
 
 class BeamTests(unittest.TestCase):
-    @unittest.expectedFailure  # upstream #264: Gleam, erlang.mk and Earthly targets are unknown to the BEAM profile
     def test_gleam_is_a_language_erlang_mk_a_build_system_and_earthly_targets_are_read(self) -> None:
         """`.gleam` sources with `gleam.toml` are a Gleam project whose `gleam test` runs the tests (gleam-lang/stdlib);
         a Makefile including erlang.mk is the build system, not its generated rebar.config (cowboy); an Earthly target

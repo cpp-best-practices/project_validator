@@ -42,7 +42,7 @@ issues = [198, 264]
 [[project]]
 name = "gleam-lang/stdlib"
 commit = "9816c72d28ac1fad9433e1ae851d1a3d4a17c64d"
-ecosystems = ["BEAM"]
+ecosystems = ["Gleam"]
 issues = [264]
 
 [[project]]

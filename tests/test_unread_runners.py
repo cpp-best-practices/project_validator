@@ -85,9 +85,38 @@ class DockerRunTests(unittest.TestCase):
                 self.assertEqual([argv for argv in _commands(line) if argv[0] != "docker"], [])
 
 
+# ecto's: the integration tests run in a target, which builds another (upstream #264).
+EARTHFILE = (
+    "VERSION 0.8\nFROM elixir:1.17\n\nintegration-test:\n    BUILD +deps\n"
+    "    RUN --privileged mix test && \\\n        mix test.all\n"
+    '    RUN ["mix", "credo"]\n\ndeps:\n    RUN mix deps.get\n'
+)
+
+
 class EarthlyTests(unittest.TestCase):
-    def test_an_earthly_target_is_unknown(self) -> None:
-        """elixir-ecto/ecto's integration tests run under `earthly +integration-test`."""
-        files = {"Earthfile": "test:\n  RUN mix test\n"}
-        [unknown] = _unknowns("run: earthly -P --ci +test", files=files)
-        self.assertEqual(unknown.subject, "the Earthly target +test")
+    def test_an_earthly_target_runs_what_its_earthfile_says(self) -> None:
+        """elixir-ecto/ecto's integration tests run under `earthly +integration-test`: its RUN lines (shell form, over
+        several lines, or exec form) and the targets it BUILDs."""
+        with temp_project({"Earthfile": EARTHFILE, **github_steps("run: earthly -P --ci +integration-test")}) as root:
+            facts = make_context(root).facts
+        found = [command.argv for command in facts.of(Command) if command.via]
+        self.assertEqual(
+            found,
+            [("earthly", "+deps"), ("mix", "deps.get"), ("mix", "test"), ("mix", "test.all"), ("mix", "credo")],
+        )
+
+    def test_a_target_that_is_not_read_is_unknown(self) -> None:
+        for files, line, reason in (
+            ({}, "run: earthly +test", "there is no Earthfile"),
+            ({"Earthfile": "build:\n  RUN make\n"}, "run: earthly +test", "the Earthfile defines no target test"),
+            (
+                {"Earthfile": "build:\n  RUN make\n"},
+                "run: earthly github.com/x/y+test",
+                "Earthfiles of other repositories are not read",
+            ),
+        ):
+            with self.subTest(line=line, files=files):
+                [unknown] = _unknowns(line, files=files)
+                self.assertEqual(
+                    (unknown.subject.split(" ")[:3], unknown.reason), (["the", "Earthly", "target"], reason)
+                )

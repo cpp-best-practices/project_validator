@@ -1,0 +1,655 @@
+{
+  "facts": [
+    {
+      "build_system": "gleam",
+      "kind": "BuildFile",
+      "languages": [
+        "Gleam"
+      ],
+      "origin": "gleam.toml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/dependabot.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci-lint.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/ci.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "YAML",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "TOML",
+      "origin": "gleam.toml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Gleam",
+      "origin": "src/shop.gleam",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Gleam",
+      "origin": "test/shop_test.gleam",
+      "role": "test"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_systems": [
+        "gleam"
+      ],
+      "formats": [
+        "TOML",
+        "YAML"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Gleam"
+      ],
+      "origin": ".",
+      "role": "product",
+      "tests": []
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/dependabot.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci-lint.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/ci.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "YAML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "TOML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "gleam.toml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "kind": "test modules under test/ (gleeunit)",
+      "language": "Gleam",
+      "origin": "test/shop_test.gleam"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci-lint.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/ci.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "kind": "CiConfiguration",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "provider": "GitHub Actions"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci-lint.yml:ci-lint",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:3:3 (jobs.ci-lint)",
+      "os": "linux",
+      "provider": "GitHub Actions",
+      "services": []
+    },
+    {
+      "advisory": "",
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:6:9 (jobs.ci-lint.steps[0])",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "pipx",
+        "run",
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "zizmor",
+        ".github"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "pipx run zizmor .github",
+      "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "via": [
+        ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)"
+      ]
+    },
+    {
+      "advisory": "",
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "actionlint"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
+      "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "gitleaks",
+        "git",
+        "--redact",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Command",
+      "line": "gitleaks git --redact .",
+      "origin": ".github/workflows/ci-lint.yml:9:9 (jobs.ci-lint.steps[3].run)",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci-lint.yml",
+      "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/ci.yml:test",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
+      "os": "linux",
+      "provider": "GitHub Actions",
+      "services": []
+    },
+    {
+      "advisory": "",
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/ci.yml:test",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:6:9 (jobs.test.steps[0])",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "advisory": "",
+      "condition": null,
+      "inputs": {
+        "gleam-version": "1.9.1",
+        "otp-version": "27"
+      },
+      "job": ".github/workflows/ci.yml:test",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/ci.yml:7:9 (jobs.test.steps[1])",
+      "uses": "erlef/setup-beam@5304e04ea2b355f03681464e683d92e3b2f18451"
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "gleam",
+        "format",
+        "--check",
+        "src",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test",
+      "kind": "Command",
+      "line": "gleam format --check src test",
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[2].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "gleam",
+        "test"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:test",
+      "kind": "Command",
+      "line": "gleam test",
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[3].run)",
+      "via": []
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/ci.yml",
+      "reference": "erlef/setup-beam@5304e04ea2b355f03681464e683d92e3b2f18451"
+    },
+    {
+      "builds": true,
+      "env": {},
+      "heuristic": false,
+      "id": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "image": null,
+      "kind": "CiJob",
+      "matrix": {},
+      "name": "copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:2:3 (jobs.copy-paste-detection)",
+      "os": "linux",
+      "provider": "GitHub Actions",
+      "services": []
+    },
+    {
+      "advisory": "",
+      "condition": null,
+      "inputs": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "ActionStep",
+      "origin": ".github/workflows/copy-paste-detection.yml:5:9 (jobs.copy-paste-detection.steps[0])",
+      "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "npx",
+        "--yes",
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "jscpd@4",
+        "--threshold",
+        "0",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Command",
+      "line": "npx --yes jscpd@4 --threshold 0 .",
+      "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
+      "via": [
+        ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)"
+      ]
+    },
+    {
+      "kind": "StepReference",
+      "origin": ".github/workflows/copy-paste-detection.yml",
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
+    },
+    {
+      "compilers": [],
+      "configurations": [],
+      "default_compiler": false,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/ci-lint.yml:ci-lint",
+      "kind": "Job",
+      "name": ".github/workflows/ci-lint.yml: ci-lint",
+      "origin": ".github/workflows/ci-lint.yml:3:3 (jobs.ci-lint)",
+      "os": "linux",
+      "services": [],
+      "toolchains": []
+    },
+    {
+      "compilers": [],
+      "configurations": [],
+      "default_compiler": false,
+      "ecosystems": [
+        "BEAM",
+        "Gleam"
+      ],
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test",
+      "kind": "Job",
+      "name": ".github/workflows/ci.yml: test",
+      "origin": ".github/workflows/ci.yml:3:3 (jobs.test)",
+      "os": "linux",
+      "services": [],
+      "toolchains": [
+        {
+          "language": "BEAM",
+          "version": "OTP 27"
+        },
+        {
+          "language": "Gleam",
+          "version": "1.9.1"
+        }
+      ]
+    },
+    {
+      "compilers": [],
+      "configurations": [],
+      "default_compiler": false,
+      "ecosystems": [],
+      "heuristic": false,
+      "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
+      "kind": "Job",
+      "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+      "origin": ".github/workflows/copy-paste-detection.yml:2:3 (jobs.copy-paste-detection)",
+      "os": "linux",
+      "services": [],
+      "toolchains": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": ".gitignore",
+      "reader": ".gitignore entries"
+    },
+    {
+      "kind": "IgnoreEntry",
+      "origin": ".gitignore",
+      "pattern": "build/",
+      "syntax": "glob",
+      "written": "build/"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "LICENSE",
+      "reader": "license files"
+    },
+    {
+      "kind": "LicenseFile",
+      "licenses": [
+        "MIT"
+      ],
+      "named": [],
+      "note": false,
+      "origin": "LICENSE"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "README.md",
+      "reader": "license links"
+    },
+    {
+      "advisory": "",
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test",
+      "kind": "ToolRun",
+      "languages": [
+        "Gleam"
+      ],
+      "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[2].run)",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gleam format",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test",
+      "kind": "ToolRun",
+      "languages": [
+        "Gleam"
+      ],
+      "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[3].run)",
+      "provides": {
+        "test": [
+          "runs"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gleam test",
+      "via": []
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "gleam"
+    ],
+    "ci": {
+      "files": [
+        ".github/workflows/ci-lint.yml",
+        ".github/workflows/ci.yml",
+        ".github/workflows/copy-paste-detection.yml"
+      ],
+      "jobs": [
+        {
+          "compilers": [],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/ci-lint.yml: ci-lint",
+          "os": "linux",
+          "toolchains": []
+        },
+        {
+          "compilers": [],
+          "configurations": [],
+          "ecosystems": [
+            "BEAM",
+            "Gleam"
+          ],
+          "name": ".github/workflows/ci.yml: test",
+          "os": "linux",
+          "toolchains": [
+            "BEAM OTP 27",
+            "Gleam 1.9.1"
+          ]
+        },
+        {
+          "compilers": [],
+          "configurations": [],
+          "ecosystems": [],
+          "name": ".github/workflows/copy-paste-detection.yml: copy-paste-detection",
+          "os": "linux",
+          "toolchains": []
+        }
+      ],
+      "providers": [
+        "GitHub Actions"
+      ]
+    },
+    "ecosystems": {
+      "Data": [
+        ".toml files",
+        ".yml files"
+      ],
+      "Gleam": [
+        "build file gleam.toml",
+        ".gleam files"
+      ]
+    },
+    "files": [
+      {
+        "files": 4,
+        "language": "YAML",
+        "places": [
+          {
+            "directory": ".github",
+            "files": 4,
+            "role": "product"
+          }
+        ],
+        "share": 0.5714
+      },
+      {
+        "files": 2,
+        "language": "Gleam",
+        "places": [
+          {
+            "directory": "src",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "test",
+            "files": 1,
+            "role": "test"
+          }
+        ],
+        "share": 0.2857
+      },
+      {
+        "files": 1,
+        "language": "TOML",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.1429
+      }
+    ],
+    "formats": [
+      "TOML",
+      "YAML"
+    ],
+    "languages": [
+      "Gleam"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "gleam"
+        ],
+        "directory": ".",
+        "formats": [
+          "TOML",
+          "YAML"
+        ],
+        "languages": [
+          "Gleam"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

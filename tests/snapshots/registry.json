@@ -3494,6 +3494,33 @@
     },
     {
       "can": {
+        "format": {
+          "apply": "gleam format src test",
+          "check": "gleam format --check src test"
+        }
+      },
+      "languages": [
+        "Gleam"
+      ],
+      "name": "gleam format",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "gleam test"
+        }
+      },
+      "languages": [
+        "Gleam"
+      ],
+      "name": "gleam test",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "test": {
           "runs": "go test"
         }

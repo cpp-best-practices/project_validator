@@ -135,7 +135,17 @@ def _build_files(project: Project, files: list[str]) -> Iterator[tuple[BuildFile
     from project_validator.project_map import build_files
 
     known, seen = build_files(), set()
+    # Build files a build system beside them generates (erlang.mk's rebar.config) belong to it, and show no build.
+    generated = {
+        posixpath.join(posixpath.dirname(path), name)
+        for path in files
+        for _, system in known.matches(path)
+        for name in system.generates
+    }
     for path in files:
+        if path in generated:
+            yield None, path
+            continue
         for build_file, system in known.matches(path):
             if (build_file, system.name) in seen:
                 yield None, path

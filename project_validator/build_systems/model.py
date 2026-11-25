@@ -33,6 +33,8 @@ class BuildSystem:
     subdirectory, a Maven module).
     `path_dependencies` reads, from a build file, the directories (relative to it) of the packages it depends on by
     path (Cargo's `path = "../x"`): what a unit of tests tests (see `project_validator.facts.structure.Unit`).
+    `generates` names the build files of other build systems it writes beside its own (erlang.mk's `rebar.config`,
+    for Hex): those are its artifacts, not a build system of the project.
     """
 
     name: str
@@ -48,6 +50,7 @@ class BuildSystem:
     compiler_evidence: Callable[[tuple[str, ...]], tuple[str, ...]] | None = None
     standalone: Callable[[str], bool] | None = None
     path_dependencies: Callable[[str], tuple[str, ...]] | None = None
+    generates: tuple[str, ...] = ()
 
 
 def standalone_package(_text: str) -> bool:
