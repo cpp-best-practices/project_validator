@@ -5,12 +5,14 @@ from __future__ import annotations
 
 import contextlib
 import io
+import json
 import tomllib
 import unittest
 from pathlib import Path
 
 import project_validator
-from project_validator.cli import EXIT_SUCCESS, deprecated_main, main
+from project_validator.cli import EXIT_SUCCESS, JSON_FORMATS, deprecated_main, main
+from tests.support import temp_project
 
 ROOT = Path(__file__).resolve().parent.parent
 PYPROJECT = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
@@ -56,3 +58,35 @@ class MetadataTests(unittest.TestCase):
         urls = project["urls"]
         self.assertEqual(urls["Repository"], "https://github.com/cpp-best-practices/project_validator")
         self.assertEqual(urls["Issues"], "https://github.com/cpp-best-practices/project_validator/issues")
+
+
+class JsonFormatTests(unittest.TestCase):
+    """Every JSON output says which format it is and that format's version: a 0.x release may change a format, but
+    bumps its version and says so in the changelog."""
+
+    def test_every_json_output_names_its_format_and_version(self) -> None:
+        with temp_project({"main.py": "print(1)\n"}) as root:
+            for arguments, kind in (
+                (("--format", "json", str(root)), "results"),
+                (("--facts", str(root)), "facts"),
+                (("--answers", str(root)), "answers"),
+                (("--map", str(root)), "map"),
+                (("--list", "--format", "json"), "checks"),
+                (("--support-matrix", "--format", "json"), "support-matrix"),
+            ):
+                with self.subTest(kind=kind):
+                    output = json.loads(_stdout(*arguments))
+                    self.assertEqual((output["format"], output["version"]), (kind, JSON_FORMATS[kind]))
+                    self.assertIn(kind, output)
+
+    def test_the_score_sits_beside_the_results(self) -> None:
+        with temp_project({"main.py": "print(1)\n"}) as root:
+            output = json.loads(_stdout("--format", "json", "--score", str(root)))
+        self.assertEqual(sorted(output), ["format", "results", "score", "version"])
+
+
+def _stdout(*arguments: str) -> str:
+    stdout = io.StringIO()
+    with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(io.StringIO()):
+        main(list(arguments))
+    return stdout.getvalue()

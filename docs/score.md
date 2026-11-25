@@ -76,8 +76,8 @@ for each language.
 
 ## JSON
 
-With `--format json --score`, the output is `{"results": [...], "score": {...}}`. `results` is exactly what
-`--format json` prints without `--score`. `score` holds:
+With `--format json --score`, the output is `{"format": "results", "version": "1", "results": [...], "score": {...}}`.
+`results` is exactly what `--format json` prints without `--score`. `score` holds:
 - `version`, `percent` (with any extra credit), `base` (the share of slots filled), `extra` and `held`;
 - `level` and `level_name`, `filled` and `slots`, and the `summary` line;
 - `breakdown`: each language's filled slots and slots (`""` for the whole project's own gates);

@@ -22,7 +22,7 @@ from project_validator.plugins import discover
 from project_validator.views import common, html, text, tui
 from project_validator.views import console as console_view
 from project_validator.views.progress import ProgressView
-from tests.support import FIXTURES, make_context, requires_rich, temp_project
+from tests.support import FIXTURES, json_output, make_context, requires_rich, temp_project
 from tests.test_cli import run_cli
 
 requires_textual = unittest.skipUnless(tui.available(), "textual is not installed")
@@ -421,7 +421,7 @@ class CliTests(unittest.TestCase):
             path = Path(directory) / "report.html"
             code, output, _ = run_cli("--html", str(path), "--format", "json", str(FIXTURES / "bare_python"))
             self.assertEqual(code, EXIT_FAILURE)
-            self.assertIsInstance(json.loads(output), list)
+            self.assertIsInstance(json_output(output, "results"), list)
             self.assertTrue(path.read_text(encoding="utf-8").startswith("<!DOCTYPE html>"))
 
     def test_markdown_ends_with_the_score_when_asked(self) -> None:
