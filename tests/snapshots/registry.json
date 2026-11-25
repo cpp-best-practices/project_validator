@@ -2164,10 +2164,66 @@
         }
       },
       "languages": [
-        "C",
-        "C++",
-        "Objective-C",
-        "Objective-C++",
+        "C"
+      ],
+      "name": "bazel test",
+      "reads": [
+        "Bazel"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "bazel test"
+        }
+      },
+      "languages": [
+        "C++"
+      ],
+      "name": "bazel test",
+      "reads": [
+        "Bazel"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "bazel test"
+        }
+      },
+      "languages": [
+        "Objective-C"
+      ],
+      "name": "bazel test",
+      "reads": [
+        "Bazel"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "bazel test"
+        }
+      },
+      "languages": [
+        "Objective-C++"
+      ],
+      "name": "bazel test",
+      "reads": [
+        "Bazel"
+      ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "bazel test"
+        }
+      },
+      "languages": [
         "Swift"
       ],
       "name": "bazel test",
@@ -2300,6 +2356,23 @@
         "Protobuf"
       ],
       "name": "buf lint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "buildifier -lint=warn -mode=check -r ."
+        },
+        "format": {
+          "apply": "buildifier -r .",
+          "check": "buildifier -mode=check -r ."
+        }
+      },
+      "languages": [
+        "Bazel"
+      ],
+      "name": "buildifier",
       "reads": [],
       "required": []
     },

@@ -5,8 +5,10 @@ Recognised by `.cpp`, `.cc`, `.cxx`, `.hpp`, `.hh`, `.hxx`, `.ixx` and `.cppm` s
 using none is judged as a CMake project. The CMake code itself is judged as [CMake](cmake.md), a format: it is
 formatted and linted.
 
-With Bazel (`MODULE.bazel`, `WORKSPACE` or `BUILD.bazel`), the tests are the test rules its BUILD files define
-(`cc_test`), which `bazel test` or `bazel coverage` runs; a command's `--compilation_mode` is its build type (`dbg`
+With Bazel (`MODULE.bazel`, `WORKSPACE` or `BUILD.bazel`), the tests are the C++ test rules its BUILD files define,
+which `bazel test` or `bazel coverage` runs: a rule tests the language of the sources it lists or, when they say none,
+the language of its kind (`cc_test` tests C and C++, `swift_test` Swift), and a macro whose sources are not written
+out tests a language not known; a command's `--compilation_mode` is its build type (`dbg`
 Debug, `opt` Release); and a bazel command runs with the options its `.bazelrc` gives it (those of `common` and the
 commands it inherits, of each `--config` it names, and, with `--enable_platform_specific_config`, of the config for
 its host's OS), so `--copt=-Werror` there counts as the command's own.

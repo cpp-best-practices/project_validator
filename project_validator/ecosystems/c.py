@@ -24,7 +24,7 @@ CI_PROGRAMS = tuple(
     for program in (
         # Not make, which runs whatever a Makefile says (`make lint` in a Python project), nor devenv alone, which is
         # Nix's devenv too: Visual Studio's names a solution (see CI_USAGE).
-        *("cmake", "ctest", "meson", "ninja", "msbuild", "bazel", "conan", "vcpkg"),
+        *("cmake", "ctest", "meson", "ninja", "msbuild", "bazel", "bazelisk", "conan", "vcpkg"),
         *("xmake", "premake", "premake4", "premake5", "scons"),
     )
 )
