@@ -1167,7 +1167,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "@Test methods, JUnit 3 TestCase classes or Kotest specs under src/test (or another test source set): 1 file(s), run by mvn test or gradle test",
+      "message": "@Test methods, JUnit 3 TestCase classes, Kotest specs or Spock specifications under src/test (or another test source set): 1 file(s), run by mvn test or gradle test",
       "status": "PASS"
     },
     "top-level-guard": {

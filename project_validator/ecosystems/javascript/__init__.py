@@ -209,9 +209,7 @@ def workspace_members(context: Context, directory: str | None) -> list[str]:
     )
     if context.project.exists(pnpm := joined(directory, PNPM_WORKSPACE)):
         patterns += _pnpm_packages(context.project.read_text(pnpm))
-    globs = [
-        joined(directory, pattern.removeprefix("./").rstrip("/")) for pattern in patterns if not pattern.startswith("!")
-    ]
+    globs = [joined(directory, pattern.rstrip("/")) for pattern in patterns if not pattern.startswith("!")]
     manifests = (path for path in context.project.files() if path.endswith(f"/{PACKAGE_JSON}"))
     members = (str(PurePosixPath(path).parent) for path in manifests)
     return sorted({member for member in members if any(fnmatchcase(member, glob) for glob in globs)})

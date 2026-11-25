@@ -58,6 +58,9 @@ MIX = BuildSystem(
     name="Mix", files=(MIX_FILE,), languages=ELIXIR_ONLY, members=_umbrella_members, standalone=standalone_package
 )
 REBAR3 = BuildSystem(name="rebar3", files=(REBAR_CONFIG, "rebar.config.script"), languages=ERLANG_ONLY)
+# erlang.mk, the build tool of cowboy, ranch and gun: a Makefile includes the committed `erlang.mk`, which writes a
+# rebar.config for Hex beside it (upstream #264).
+ERLANG_MK = BuildSystem(name="erlang.mk", files=("erlang.mk",), languages=ERLANG_ONLY, generates=(REBAR_CONFIG,))
 
 
 # --- The tasks a command runs ---------------------------------------------------------------------------------------
@@ -518,7 +521,7 @@ _BEAM_VERSIONS = (
 BEAM = Ecosystem(
     label="BEAM",
     languages=BEAM_LANGUAGES,
-    build_systems=(MIX, REBAR3),
+    build_systems=(MIX, REBAR3, ERLANG_MK),
     source_suffixes={".ex": ELIXIR, ".exs": ELIXIR, ".erl": ERLANG, ".hrl": ERLANG},
     # Erlang terms: an application resource file (`ebin/app.app`), relx's or sys's `.config` and a Common Test spec
     # (`test/app.spec`), files of the ecosystem that add no language.

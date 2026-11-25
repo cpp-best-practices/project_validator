@@ -1105,6 +1105,13 @@
                 "needs_definition": true,
                 "required": false
               },
+              "urchin": {
+                "can": {
+                  "runs": "urchin test"
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "zunit": {
                 "can": {
                   "runs": "zunit"

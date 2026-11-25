@@ -186,6 +186,20 @@
                 "needs_definition": false,
                 "required": false
               },
+              "onvdl": {
+                "can": {
+                  "validates": "onvdl <script.nvdl> <documents>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "the RELAX NG validation Gradle plugin": {
+                "can": {
+                  "validates": "the com.nwalsh.gradle.relaxng.validate Gradle plugin, in a build CI runs"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "xmllint": {
                 "can": {
                   "validates": "xmllint --noout --schema <schema> <documents> (or --relaxng, --schematron)"

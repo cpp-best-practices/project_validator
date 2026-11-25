@@ -115,6 +115,7 @@ DATA = Ecosystem(
         ".xslt": XML,
         ".rng": XML,
         ".sch": XML,
+        ".nvdl": XML,
         ".xspec": XML,
     },
 )

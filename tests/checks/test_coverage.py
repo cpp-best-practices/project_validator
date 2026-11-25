@@ -8,6 +8,7 @@ from project_validator.ecosystems import C_FAMILY
 from project_validator.ecosystems.cpp import CXX
 from project_validator.ecosystems.python import PYTHON
 from project_validator.ecosystems.rust import RUST
+from project_validator.facts import Command
 from tests.support import (
     CI_FILES,
     GITHUB_WORKFLOW,
@@ -17,8 +18,10 @@ from tests.support import (
     WELL_CONFIGURED_RUST,
     ci_running,
     github_job,
+    make_context,
     run_as,
     run_in_every_layout,
+    temp_project,
 )
 
 ALLOW_UNKNOWN = Options(allow_unknown=True)
@@ -129,6 +132,17 @@ class CoverageTests(unittest.TestCase):
                 self.assertEqual(self._run(files).message, "branch coverage is measured with lcov")
         unconfigured = self._run(github_job("ubuntu-latest", "lcov --capture -o c.info"), ALLOW_UNKNOWN)
         self.assertEqual(unconfigured.status, Status.FAIL)
+
+    def test_opencppcoverage_reports_lines_of_the_tests_it_runs(self) -> None:
+        """cmake_template's Windows job: `OpenCppCoverage.exe --export_type cobertura:… -- ctest`, line coverage of the
+        tests run after `--` (upstream #282)."""
+        line = "OpenCppCoverage.exe --export_type cobertura:coverage.xml --cover_children -- ctest -C Debug"
+        result = self._run(github_job("windows-latest", line), ALLOW_UNKNOWN)
+        self.assertEqual(result.status, Status.FAIL)
+        self.assertIn("line coverage is reported with OpenCppCoverage", result.details)
+        with temp_project(github_job("windows-latest", line)) as root:
+            commands = [command.argv for command in make_context(root).facts.of(Command)]
+        self.assertIn(("ctest", "-C", "Debug"), commands)
 
     def test_gcov_and_llvm_cov(self) -> None:
         for line, expected in (

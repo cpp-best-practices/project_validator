@@ -159,6 +159,15 @@ LUALS = type_checker(
     checks=when(starts(("lua-language-server",)), lambda: type_checked(strict=False)),
     configuration=defined_by(files=(LUALS_SETTINGS.name,)),
 )
+# EmmyLua's checker reads the same annotations, configured in `.emmyrc.json` (neovim's `emmylua-check` target).
+EMMYLUA_SETTINGS = file_reader("emmylua_check", (".emmyrc.json",))
+EMMYLUA_CHECK = type_checker(
+    name="emmylua_check",
+    languages=LUA,
+    can={Strictness.CHECKS: "emmylua_check . (with LuaCATS annotations)"},
+    checks=when(starts(("emmylua_check",)), lambda: type_checked(strict=False)),
+    configuration=defined_by(files=(EMMYLUA_SETTINGS.name,)),
+)
 LUAU_ANALYZE = type_checker(
     name="luau-analyze",
     languages=LUA,

@@ -1,0 +1,132 @@
+{
+  "facts": [
+    {
+      "build_system": "gleam",
+      "kind": "BuildFile",
+      "languages": [
+        "Gleam"
+      ],
+      "origin": "gleam.toml"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "TOML",
+      "origin": "gleam.toml",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Gleam",
+      "origin": "src/shop.gleam",
+      "role": "product"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_systems": [
+        "gleam"
+      ],
+      "formats": [
+        "TOML"
+      ],
+      "kind": "Unit",
+      "languages": [
+        "Gleam"
+      ],
+      "origin": ".",
+      "role": "product",
+      "tests": []
+    },
+    {
+      "column": null,
+      "format": "TOML",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "gleam.toml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "kind": "CommittedOutput",
+      "languages": [
+        "Gleam"
+      ],
+      "origin": "build/",
+      "output": "the build directory"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "gleam"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Data": [
+        ".toml files"
+      ],
+      "Gleam": [
+        "build file gleam.toml",
+        ".gleam files"
+      ]
+    },
+    "files": [
+      {
+        "files": 1,
+        "language": "Gleam",
+        "places": [
+          {
+            "directory": "src",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      },
+      {
+        "files": 1,
+        "language": "TOML",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      }
+    ],
+    "formats": [
+      "TOML"
+    ],
+    "languages": [
+      "Gleam"
+    ],
+    "units": [
+      {
+        "build_systems": [
+          "gleam"
+        ],
+        "directory": ".",
+        "formats": [
+          "TOML"
+        ],
+        "languages": [
+          "Gleam"
+        ],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

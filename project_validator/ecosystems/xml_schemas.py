@@ -19,13 +19,14 @@ from pathlib import PurePosixPath
 from xml.etree import ElementTree
 
 from project_validator.core import Project
+from project_validator.ecosystems.jvm import Wiring, wired_run
 from project_validator.ecosystems.model import Ecosystem
-from project_validator.facts import Command, resolved
+from project_validator.facts import Command, Facts, resolved
 from project_validator.facts.arguments import has_option, program
 from project_validator.facts.declaration import Declaration, Declares, declaring
 from project_validator.facts.schema import example_checker, examples_checked, names_examples, validated, validator
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import all_of, combined, starts, when
+from project_validator.facts.tools import Run, all_of, combined, starts, when
 from project_validator.tools.prettier import prettier_tool
 
 XML_SCHEMA, XSLT = "XML Schema", "XSLT"
@@ -33,7 +34,8 @@ XML_SCHEMA_ONLY, XSLT_ONLY = frozenset({XML_SCHEMA}), frozenset({XSLT})
 XML_FORMATS = XML_SCHEMA_ONLY | XSLT_ONLY
 XML = frozenset({"XML"})
 
-_SUFFIXES = {XML_SCHEMA: frozenset({".xsd", ".rng", ".rnc", ".sch"}), XSLT: frozenset({".xsl", ".xslt"})}
+# XSD, RELAX NG (and its compact syntax), Schematron and NVDL.
+_SUFFIXES = {XML_SCHEMA: frozenset({".xsd", ".rng", ".rnc", ".sch", ".nvdl"}), XSLT: frozenset({".xsl", ".xslt"})}
 
 
 def xml_schema_files(project: Project) -> Iterator[tuple[str, str]]:
@@ -47,10 +49,12 @@ XML_SCHEMAS_ECOSYSTEM = Ecosystem(
     label="XML schemas",
     kind="format",
     languages=XML_FORMATS,
-    # RELAX NG's compact syntax is not XML; it belongs to the schemas without being a format of its own.
-    ambiguous_suffixes={".rnc": None},
+    # RELAX NG's compact syntax and DTDs are not XML; they belong to the schemas without being formats of their own.
+    # A DTD (with its entity files) is a schema project's, docbook's; alone it describes a program's own configuration
+    # (glib's gschema.dtd, dbus-broker's config.dtd), which makes no schema project.
+    ambiguous_suffixes={".rnc": None, ".dtd": None, ".ent": None},
     locate=xml_schema_files,
-    ci_programs=(("xmllint",), ("jing",), ("schxslt",), ("xspec",), ("xspec.sh",), ("xspec.bat",)),
+    ci_programs=(("xmllint",), ("jing",), ("onvdl",), ("schxslt",), ("xspec",), ("xspec.sh",), ("xspec.bat",)),
 )
 
 
@@ -180,6 +184,33 @@ JING = combined(
         how="jing <schema> examples/valid/*.xml",
         checks=when(all_of(starts(("jing",)), names_examples), examples_checked),
     ),
+)
+# onvdl, jing's NVDL validator: an NVDL script dispatches each part of a document to the schema for its namespace.
+ONVDL = validator(
+    name="onvdl",
+    languages=XML_SCHEMA_ONLY,
+    how="onvdl <script.nvdl> <documents>",
+    validates=when(starts(("onvdl",)), validated),
+)
+# Norm Walsh's RELAX NG validation plugin for Gradle (docbook's build): its validation tasks run in the build.
+_RELAXNG_PLUGIN = Wiring(
+    report=re.compile(r"\w*[Rr]elax[Nn][Gg]\w*"),
+    maven_plugin="relaxng-maven-plugin",
+    bound_goal=None,
+    gradle_plugin="com.nwalsh.gradle.relaxng.validate",
+)
+
+
+def _relaxng_plugin(command: Command, facts: Facts) -> Run | None:
+    read = wired_run(_RELAXNG_PLUGIN, command, facts)
+    return None if read is None else validated(read=read)
+
+
+RELAXNG_GRADLE = validator(
+    name="the RELAX NG validation Gradle plugin",
+    languages=XML_SCHEMA_ONLY,
+    how="the com.nwalsh.gradle.relaxng.validate Gradle plugin, in a build CI runs",
+    validates=_relaxng_plugin,
 )
 SCHXSLT = validator(
     name="SchXslt",

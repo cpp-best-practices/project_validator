@@ -150,6 +150,8 @@ class MkDocsTests(unittest.TestCase):
         sphinx-lint, the reStructuredText linter, checks a Sphinx site (devguide, scikit-learn) (upstream #280)."""
         for files, tool in (
             (_ci("codespell docs README.md"), "codespell"),
+            # rust-lang/book's ci/spellcheck.sh runs aspell over its chapters.
+            (_ci("aspell --lang=en_US --mode=markdown list < src/ch01.md"), "aspell"),
             (_ci("npm exec --yes -- markdownlint-cli README.md docs/"), "markdownlint"),
         ):
             with self.subTest(files=files):
@@ -158,6 +160,26 @@ class MkDocsTests(unittest.TestCase):
         self.assertEqual(sphinx, Result.passed("sphinx-lint runs"))
         # sphinx-lint reads reStructuredText: it checks no MkDocs site.
         self.assertEqual(self._run(static_analysis, _ci("sphinx-lint docs")).status, Status.FAIL)
+
+    def test_read_the_docs_builds_the_site_its_configuration_describes(self) -> None:
+        """bats-core's and flask's sites are built on Read the Docs, set up in `.readthedocs.yaml`: Sphinx (with `-W`
+        when `fail_on_warning` is set), MkDocs (`--strict`), or the configuration's own `build: commands:`
+        (upstream #280)."""
+        sphinx = "version: 2\nsphinx:\n  configuration: docs/conf.py\n  fail_on_warning: true\n"
+        self.assertEqual(_run_on(tests_run, {**SPHINX, ".readthedocs.yaml": sphinx}).status, Status.PASS)
+        self.assertEqual(
+            _run_on(warnings_as_errors, {**SPHINX, ".readthedocs.yaml": sphinx}),
+            Result.passed("warnings are treated as errors with sphinx-build -W"),
+        )
+        lenient = "version: 2\nsphinx:\n  configuration: docs/conf.py\n"
+        self.assertEqual(_run_on(warnings_as_errors, {**SPHINX, ".readthedocs.yml": lenient}).status, Status.FAIL)
+        mkdocs = "version: 2\nmkdocs:\n  configuration: mkdocs.yml\n  fail_on_warning: true\n"
+        self.assertEqual(
+            self._run(warnings_as_errors, {".readthedocs.yaml": mkdocs}),
+            Result.passed("warnings are treated as errors with mkdocs build --strict"),
+        )
+        commands = "version: 2\nbuild:\n  commands:\n    - mkdocs build --site-dir $READTHEDOCS_OUTPUT/html\n"
+        self.assertEqual(self._run(tests_run, {".readthedocs.yaml": commands}).status, Status.PASS)
 
     def test_the_built_site_is_ignored_and_never_committed(self) -> None:
         self.assertEqual(self._run(vcs_ignore, {".gitignore": "site/\n"}).status, Status.PASS)

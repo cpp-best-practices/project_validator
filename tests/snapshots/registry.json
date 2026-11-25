@@ -514,6 +514,7 @@
         }
       },
       "languages": [
+        "Groovy",
         "Java",
         "Kotlin"
       ],
@@ -900,6 +901,7 @@
         }
       },
       "languages": [
+        "Groovy",
         "Java",
         "Kotlin"
       ],
@@ -917,6 +919,7 @@
         }
       },
       "languages": [
+        "Groovy",
         "Java",
         "Kotlin"
       ],
@@ -1054,6 +1057,7 @@
         }
       },
       "languages": [
+        "Groovy",
         "Java",
         "Kotlin"
       ],
@@ -1176,6 +1180,7 @@
         }
       },
       "languages": [
+        "Groovy",
         "Java",
         "Kotlin"
       ],
@@ -1184,6 +1189,20 @@
         "Maven",
         "Gradle"
       ],
+      "required": []
+    },
+    {
+      "can": {
+        "coverage": {
+          "line": "OpenCppCoverage --export_type cobertura:coverage.xml -- ctest"
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "OpenCppCoverage",
+      "reads": [],
       "required": []
     },
     {
@@ -1286,6 +1305,7 @@
         }
       },
       "languages": [
+        "Groovy",
         "Java",
         "Kotlin"
       ],
@@ -1646,6 +1666,7 @@
         }
       },
       "languages": [
+        "Groovy",
         "Java",
         "Kotlin"
       ],
@@ -1664,6 +1685,7 @@
         }
       },
       "languages": [
+        "Groovy",
         "Java",
         "Kotlin"
       ],
@@ -1999,6 +2021,25 @@
         "Common Lisp"
       ],
       "name": "asdf:test-system",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": ""
+        }
+      },
+      "languages": [
+        "Docusaurus",
+        "Hugo",
+        "Jekyll",
+        "MkDocs",
+        "Sphinx",
+        "VitePress",
+        "mdBook"
+      ],
+      "name": "aspell",
       "reads": [],
       "required": []
     },
@@ -3187,6 +3228,19 @@
     {
       "can": {
         "type-check": {
+          "checks": "emmylua_check . (with LuaCATS annotations)"
+        }
+      },
+      "languages": [
+        "Lua"
+      ],
+      "name": "emmylua_check",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "type-check": {
           "checks": "elp eqwalize-all (eqWAlizer)"
         }
       },
@@ -3436,6 +3490,33 @@
       "reads": [
         "gcovr"
       ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "gleam format src test",
+          "check": "gleam format --check src test"
+        }
+      },
+      "languages": [
+        "Gleam"
+      ],
+      "name": "gleam format",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "gleam test"
+        }
+      },
+      "languages": [
+        "Gleam"
+      ],
+      "name": "gleam test",
+      "reads": [],
       "required": []
     },
     {
@@ -4748,6 +4829,7 @@
         }
       },
       "languages": [
+        "Groovy",
         "Java",
         "Kotlin"
       ],
@@ -4933,6 +5015,19 @@
         "OCaml"
       ],
       "name": "ocamlformat",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "schema": {
+          "validates": "onvdl <script.nvdl> <documents>"
+        }
+      },
+      "languages": [
+        "XML Schema"
+      ],
+      "name": "onvdl",
       "reads": [],
       "required": []
     },
@@ -6136,6 +6231,19 @@
     },
     {
       "can": {
+        "test": {
+          "runs": "shelltest tests"
+        }
+      },
+      "languages": [
+        "Haskell"
+      ],
+      "name": "shelltest",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "format": {
           "apply": "shfmt -w .",
           "check": "shfmt -d ."
@@ -6625,6 +6733,19 @@
     },
     {
       "can": {
+        "schema": {
+          "validates": "the com.nwalsh.gradle.relaxng.validate Gradle plugin, in a build CI runs"
+        }
+      },
+      "languages": [
+        "XML Schema"
+      ],
+      "name": "the RELAX NG validation Gradle plugin",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "test": {
           "runs": "a workflow step `uses: ./`, which runs the action from the checkout"
         }
@@ -7010,6 +7131,19 @@
       "reads": [
         "Rust lints"
       ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "urchin test"
+        }
+      },
+      "languages": [
+        "Shell"
+      ],
+      "name": "urchin",
+      "reads": [],
       "required": []
     },
     {

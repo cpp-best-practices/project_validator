@@ -155,6 +155,20 @@
                 "needs_definition": false,
                 "required": false
               },
+              "onvdl": {
+                "can": {
+                  "validates": "onvdl <script.nvdl> <documents>"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "the RELAX NG validation Gradle plugin": {
+                "can": {
+                  "validates": "the com.nwalsh.gradle.relaxng.validate Gradle plugin, in a build CI runs"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "xmllint": {
                 "can": {
                   "validates": "xmllint --noout --schema <schema> <documents> (or --relaxng, --schematron)"
@@ -285,7 +299,7 @@
     },
     "ci-present": {
       "details": [],
-      "message": "no CI configuration found (looked for AppVeyor, Azure Pipelines, CircleCI, Google Cloud Build, GitHub Actions, GitLab CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci, Travis CI)",
+      "message": "no CI configuration found (looked for AppVeyor, Azure Pipelines, CircleCI, Google Cloud Build, GitHub Actions, GitLab CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci, Read the Docs, Travis CI)",
       "status": "FAIL"
     },
     "code-formatting": {
@@ -427,7 +441,7 @@
     },
     "schema-validation": {
       "details": [
-        "consider running in CI: xmllint --noout --schema <schema> <documents> (or --relaxng, --schematron), jing <schema> <documents> (RELAX NG, or an XSD with -c) or schxslt -s <schema.sch> -d <document>"
+        "consider running in CI: xmllint --noout --schema <schema> <documents> (or --relaxng, --schematron), jing <schema> <documents> (RELAX NG, or an XSD with -c), onvdl <script.nvdl> <documents>, the com.nwalsh.gradle.relaxng.validate Gradle plugin, in a build CI runs or schxslt -s <schema.sch> -d <document>"
       ],
       "message": "no schema validation found in CI configuration",
       "status": "FAIL"

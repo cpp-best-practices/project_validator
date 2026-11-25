@@ -31,7 +31,9 @@ fuzz targets.
 
 A coverage tool CI runs, reporting branches: gcovr with any report but the default text one (`--xml`, `--html`,
 `--json`, `--sonarqube`, `--print-summary`, `--txt-metric branch`, also in `gcovr.cfg`), lcov or genhtml with
-`branch_coverage=1` (also in `.lcovrc`), `gcov -b`, or `llvm-cov report`, `export` or `show -show-branches`. Path or
+`branch_coverage=1` (also in `.lcovrc`), `gcov -b`, or `llvm-cov report`, `export` or `show -show-branches`.
+OpenCppCoverage (`--export_type cobertura:… -- ctest`, on Windows) reports lines only, and the tests it runs after
+`--` count as run. Path or
 MC/DC coverage is a bonus: gcov `--conditions` or `--prime-paths`, lcov `--mcdc-coverage`, `llvm-cov show -show-mcdc`,
 or the instrumentation `-fcondition-coverage`, `-fpath-coverage` or `-fcoverage-mcdc` on a command line, in an
 environment variable, or in the CMake files a CI `cmake` configuration reads (matched in their text).

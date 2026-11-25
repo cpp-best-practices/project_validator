@@ -138,6 +138,11 @@ class LuaTests(unittest.TestCase):
         configured = {".luarc.json": '{"runtime.version": "Lua 5.4"}\n', **_ci("lua-language-server --check src")}
         self.assertEqual(self._run(type_checking, configured).message, "lua-language-server (.luarc.json) runs")
         self.assertEqual(self._run(type_checking, _ci("luau-analyze .")).status, Status.PASS)
+
+    def test_emmylua_check_type_checks_annotations(self) -> None:
+        """neovim checks its Lua with emmylua_check, configured in `.emmyrc.json` (upstream #282)."""
+        configured = {".emmyrc.json": '{"runtime": {"version": "LuaJIT"}}\n', **_ci("emmylua_check runtime/lua")}
+        self.assertEqual(self._run(type_checking, configured).message, "emmylua_check (.emmyrc.json) runs")
         self.assertEqual(self._run(type_checking, _ci("luacheck .")).status, Status.FAIL)
 
     def test_semgrep_scans_but_codeql_does_not(self) -> None:

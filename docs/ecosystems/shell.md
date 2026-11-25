@@ -12,7 +12,9 @@ either way: a script CI runs deserves shellcheck.
 
 Shell: bats tests (`*.bats` with `@test`), zunit tests (`*.zunit` with `@test`), shellspec specs (`spec/*_spec.sh` with `Describe` or `It`) or shunit2
 tests (`*_test.sh` sourcing shunit2), and CI runs them: `bats tests`, `zunit`, `shellspec`, or the shunit2 script itself
-(`./tests/shop_test.sh`, `bash tests/shop_test.sh`, `shunit2 tests/shop_test.sh`).
+(`./tests/shop_test.sh`, `bash tests/shop_test.sh`, `shunit2 tests/shop_test.sh`). urchin's tests are the shell
+scripts without a suffix under a `test/` directory (but its `setup` and `teardown` hooks), where CI runs `urchin`
+(nvm's `urchin test/fast`); elsewhere such scripts are helpers.
 
 PowerShell: Pester tests (`*.Tests.ps1` with `Describe` or `It`) that `Invoke-Pester` runs.
 

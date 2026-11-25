@@ -713,6 +713,13 @@
               ]
             },
             "known": {
+              "emmylua_check": {
+                "can": {
+                  "checks": "emmylua_check . (with LuaCATS annotations)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "lua-language-server": {
                 "can": {
                   "checks": "lua-language-server --check . (with LuaCATS annotations)"

@@ -141,9 +141,9 @@ STEP_FROM_MATRIX = {"run": "${{ matrix.runs.test }}"}
 
 class UnknownCommandTests(unittest.TestCase):
     def test_unresolvable_commands_are_recorded_as_unknown(self) -> None:
-        """A program with a variable prefix or directory, an expression program or step, a missing script, `docker run`,
-        and `earthly` each yield an Unknown, as `$CABAL v2-test` does (httpx, SwiftFormat,
-        fpm, docker-library/postgres, ansible-for-devops, Awesome-CV, ecto, terraform-aws-modules)."""
+        """A program with a variable prefix or directory, an expression program or step, a missing script and `docker
+        run` each yield an Unknown, as `$CABAL v2-test` does (httpx, SwiftFormat, fpm, docker-library/postgres,
+        ansible-for-devops, Awesome-CV, terraform-aws-modules). An Earthly target is read (`test_unread_runners`)."""
         cases = {
             "variable prefix": _script_run("scripts/check", '#!/bin/sh -e\nexport PREFIX=""\n${PREFIX}ruff check .\n'),
             "variable directory": _script_run("lint.sh", '#!/bin/bash\n"$DIR/$TOOL" --lint .\n', "./lint.sh"),
@@ -156,7 +156,6 @@ class UnknownCommandTests(unittest.TestCase):
             ),
             "missing script": github_steps("run: curl -o ci/test.sh https://example.com/x", "run: ci/test.sh"),
             "docker run": github_job(CI, 'docker run --rm -v "$PWD:/doc" img make test'),
-            "earthly": {"Earthfile": "test:\n  RUN mix test\n", **github_job(CI, "earthly +test")},
         }
         for name, files in cases.items():
             with self.subTest(case=name):

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import re
 
-from project_validator.ecosystems.jvm import JAVA, JVM_LANGUAGES, KOTLIN, POM
+from project_validator.ecosystems.jvm import JAVA, KOTLIN, POM
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
 from project_validator.text import Pattern
 
@@ -62,9 +62,10 @@ KOTLIN_WARNINGS_PRACTICE = Practice(
 )
 
 
+# javac's and kotlinc's: groovyc has no way to make its warnings errors.
 WARNINGS_AS_ERRORS = Practice(
     name=PracticeName.WARNINGS_AS_ERRORS,
-    languages=JVM_LANGUAGES,
+    languages=frozenset({JAVA, KOTLIN}),
     requirements=always(*_JVM_WARNINGS_AS_ERRORS),
     any_one=True,
     reads=(JVM_WARNING_SETTINGS.name,),

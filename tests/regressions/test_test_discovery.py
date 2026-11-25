@@ -98,7 +98,6 @@ class JvmTestDiscoveryTests(unittest.TestCase):
                 files = {f"{directory}/FooTest.kt": KOTLIN_TEST, **_ci("./gradlew test allTests")}
                 _tests_run_in(self, "Gradle Kotlin", files)
 
-    @unittest.expectedFailure  # upstream #252: Groovy is an unrecognised suffix, so Spock specifications are not tests
     def test_spock_specifications_in_groovy_are_jvm_tests(self) -> None:
         """liquibase's 392 Spock specifications under src/test/groovy are the bulk of its tests: Groovy is a JVM
         language, not an unrecognised suffix, and a `class FooSpec extends Specification` is a test."""

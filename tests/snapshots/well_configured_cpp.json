@@ -251,7 +251,8 @@
                 "gcovr",
                 "lcov",
                 "gcov",
-                "llvm-cov report"
+                "llvm-cov report",
+                "OpenCppCoverage --export_type cobertura:coverage.xml -- ctest"
               ],
               "reported": [
                 "gcovr"

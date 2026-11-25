@@ -13,7 +13,9 @@ GHC's options are read from every place a project sets them: each component's `g
 ## `tests-run`
 
 `cabal test` (or `stack test`, `stack build --test`), and the `test-suite` sections of the `.cabal` files (or
-`tests:` in `package.yaml`).
+`tests:` in `package.yaml`). shelltestrunner's functional tests, `*.test` files of commands and their expected output
+(`$ cmd` … `>= 0`, or the older `$$$`/`>>>` forms), run by `shelltest` (also through `stack exec --`, as hledger's
+are).
 
 ## `coverage`
 

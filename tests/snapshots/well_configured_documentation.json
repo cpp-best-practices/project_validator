@@ -139,6 +139,13 @@
               ]
             },
             "known": {
+              "aspell": {
+                "can": {
+                  "checks": ""
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "codespell": {
                 "can": {
                   "checks": ""

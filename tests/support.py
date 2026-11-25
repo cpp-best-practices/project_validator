@@ -283,6 +283,8 @@ def ci_running(provider: str, *commands: str) -> dict[str, str]:
         return github_job("ubuntu-latest", *commands)
     if provider == "GitLab CI":
         return {CI_FILES[provider]: json.dumps({"test": {"script": list(commands)}})}
+    if provider == "Read the Docs":
+        return {CI_FILES[provider]: json.dumps({"version": 2, "build": {"commands": list(commands)}})}
     if provider == "Google Cloud Build":
         steps = [{"name": "ubuntu", "args": ["bash", "-c", command]} for command in commands]
         return {CI_FILES[provider]: json.dumps({"steps": steps})}
