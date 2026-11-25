@@ -42,6 +42,9 @@ class Result:
     details: tuple[str, ...] = ()
     # The results this one was folded from, one per ecosystem in each unit; not compared, not printed as text or JSON.
     places: tuple[Placed, ...] = field(default=(), compare=False)
+    # How much of what the gate asks about it covers, for a result that passes on part of it (its tools reach only
+    # some of a language's code, upstream #333): what the score fills it by.
+    share: float = 1.0
 
     @classmethod
     def passed(cls, message: str, *details: str) -> Result:
@@ -61,7 +64,13 @@ class Result:
         return cls(status=Status.SKIP, message=message, details=details)
 
     def with_details(self, *details: str) -> Result:
-        return Result(status=self.status, message=self.message, details=self.details + details, places=self.places)
+        return Result(
+            status=self.status,
+            message=self.message,
+            details=self.details + details,
+            places=self.places,
+            share=self.share,
+        )
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

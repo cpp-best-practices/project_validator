@@ -86,6 +86,11 @@ class PercentTests(unittest.TestCase):
         reports = [report("tests-run", PASS, place(PASS)), report("coverage", WARN, place(WARN))]
         self.assertEqual(scored(reports).percent, 75)
 
+    def test_a_gate_whose_tools_reach_part_of_the_code_fills_that_share(self) -> None:
+        partial = Placed(ecosystem="Python", unit=".", result=Result(status=PASS, message="", share=0.5))
+        reports = [report("tests-run", PASS, place(PASS)), report("static-analysis", PASS, partial)]
+        self.assertEqual(scored(reports).percent, 75)
+
     def test_an_error_stays_in_the_slots_and_fills_nothing(self) -> None:
         reports = [report("tests-run", PASS, place(PASS)), report("coverage", ERROR, place(ERROR))]
         self.assertEqual(scored(reports).percent, 50)

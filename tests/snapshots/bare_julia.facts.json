@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "TOML",
+      "lines": 6,
       "origin": "Project.toml",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Julia",
+      "lines": 3,
       "origin": "src/Shop.jl",
       "role": "product"
     },

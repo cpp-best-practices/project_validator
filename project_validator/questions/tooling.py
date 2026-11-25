@@ -20,6 +20,7 @@ from project_validator.facts.structure import Unit, tests_unit
 from project_validator.facts.testing import TEST
 from project_validator.facts.tools import Tool, known_tools, owner, within
 from project_validator.questions import Answer, LanguageAnswers, answer_dict, per_unit, runs_of, unknowns_for
+from project_validator.questions.reach import PATHED, Reach, reach
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -72,6 +73,8 @@ class ToolAnswer:
     # When every file that defines the aspect here is a unit of tests' (tokio's benches have no test of their own;
     # tests-integration's count for them), those units.
     lent_by: tuple[str, ...] = ()
+    # How much of the unit's product code of the language the runs that provide the level reach, when not all of it.
+    reach: Reach | None = None
 
     def providing(self, level: str | None = None) -> tuple[str, ...]:
         """The tools CI runs that provide `level` (by default, the answer's)."""
@@ -237,10 +240,10 @@ def tool_answer(
     if not known:
         return answer
     runs = _runs(aspect, language, unit, facts, auxiliary)
-    unknowns = unknowns_for(known, facts)
     return replace(
         answer,
-        answer=_verdict(level, runs, unknowns),
+        answer=_verdict(level, runs, unknowns := unknowns_for(known, facts)),
+        reach=_reach(aspect, level, language, unit, facts),
         runs=runs,
         defined=(defined := _defined(aspect, known, facts, unit, auxiliary)),
         lent_by=_lent_by(defined, facts, unit),
@@ -249,6 +252,15 @@ def tool_answer(
         unknown_definitions=unknowns_for(known, facts, hiding=("settings",)),
         advisory=_advisory(aspect, language, unit, facts, auxiliary, runs),
     )
+
+
+def _reach(aspect: str, level: str, language: str, unit: str, facts: Facts) -> Reach | None:
+    """What the runs that provide `level` reach of the unit's product code, for an aspect a run provides for the paths
+    it is given (an answer about auxiliary code has no product code to miss)."""
+    if aspect not in PATHED:
+        return None
+    found = runs_of(aspect, language, unit, facts)
+    return reach(language, unit, facts, (run for run in found if level in run.provides[aspect]))
 
 
 type LanguageToolAnswers = LanguageAnswers[ToolAnswer]

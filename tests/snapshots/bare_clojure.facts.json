@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Clojure",
+      "lines": 2,
       "origin": "project.clj",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Clojure",
+      "lines": 3,
       "origin": "src/shop/core.clj",
       "role": "product"
     },

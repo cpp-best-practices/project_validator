@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -26,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 58,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -33,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -40,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 7,
       "origin": ".github/workflows/function-limits.yml",
       "role": "product"
     },
@@ -47,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "R",
+      "lines": 21,
       "origin": "R/shop.R",
       "role": "product"
     },
@@ -54,6 +60,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "R",
+      "lines": 4,
       "origin": "tests/testthat.R",
       "role": "test"
     },
@@ -61,6 +68,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "R",
+      "lines": 8,
       "origin": "tests/testthat/test-shop.R",
       "role": "test"
     },
@@ -1295,6 +1303,7 @@
         "R"
       ],
       "origin": ".github/workflows/ci.yml:23:9 (jobs.R-CMD-check.steps[3])",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1316,6 +1325,7 @@
         "R"
       ],
       "origin": ".github/workflows/ci.yml:23:9 (jobs.R-CMD-check.steps[3])",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1337,6 +1347,7 @@
         "R"
       ],
       "origin": ".github/workflows/ci.yml:23:9 (jobs.R-CMD-check.steps[3])",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1358,6 +1369,7 @@
         "R"
       ],
       "origin": ".github/workflows/ci.yml:23:9 (jobs.R-CMD-check.steps[3])",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1379,6 +1391,7 @@
         "R"
       ],
       "origin": ".github/workflows/ci.yml:23:9 (jobs.R-CMD-check.steps[3])",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1400,6 +1413,7 @@
         "R"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.coverage.steps[3].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "line reported",
@@ -1422,6 +1436,7 @@
         "R"
       ],
       "origin": ".github/workflows/ci.yml:53:9 (jobs.lint.steps[3].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1443,6 +1458,9 @@
         "R"
       ],
       "origin": ".github/workflows/ci.yml:58:9 (jobs.lint.steps[5].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -1464,6 +1482,9 @@
         "R"
       ],
       "origin": ".github/workflows/function-limits.yml:7:9 (jobs.function-limits.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "function-length": [
           "limits",

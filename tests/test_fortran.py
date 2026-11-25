@@ -147,7 +147,7 @@ class FortranTests(unittest.TestCase):
         self.assertIn("2 compiler(s) (gcc, intel)", result.message)
 
     def test_tools(self) -> None:
-        self.assertEqual(self._run(code_formatting, _ci("fprettify --diff -r src")).status, Status.PASS)
+        self.assertEqual(self._run(code_formatting, _ci("fprettify --diff -r src app")).status, Status.PASS)
         self.assertEqual(self._run(code_formatting, _ci("fprettify -r src")).status, Status.FAIL)
         self.assertEqual(self._run(static_analysis, _ci("fortitude check")).status, Status.PASS)
 

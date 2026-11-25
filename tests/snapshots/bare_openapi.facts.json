@@ -4,6 +4,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 5,
       "origin": "openapi.yaml",
       "role": "product"
     },

@@ -20,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "OCaml",
+      "lines": 1,
       "origin": "bin/main.ml",
       "role": "product"
     },

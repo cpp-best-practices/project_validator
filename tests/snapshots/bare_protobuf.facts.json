@@ -4,6 +4,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Protobuf",
+      "lines": 2,
       "origin": "proto/shop.proto",
       "role": "product"
     },

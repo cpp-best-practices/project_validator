@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "TOML",
+      "lines": 7,
       "origin": "Cargo.toml",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Rust",
+      "lines": 3,
       "origin": "src/lib.rs",
       "role": "product"
     },
@@ -26,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Rust",
+      "lines": 1,
       "origin": "src/main.rs",
       "role": "product"
     },

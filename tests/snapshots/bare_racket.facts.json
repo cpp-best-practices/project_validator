@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Racket",
+      "lines": 3,
       "origin": "info.rkt",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Racket",
+      "lines": 3,
       "origin": "main.rkt",
       "role": "product"
     },

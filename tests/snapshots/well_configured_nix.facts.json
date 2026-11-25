@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -26,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 28,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -33,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -40,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Nix",
+      "lines": 14,
       "origin": "flake.nix",
       "role": "product"
     },
@@ -47,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Nix",
+      "lines": 7,
       "origin": "shop.nix",
       "role": "product"
     },
@@ -869,6 +875,7 @@
         "Nix"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.build.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -890,6 +897,7 @@
         "Nix"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.build.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -911,6 +919,7 @@
         "Nix"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.build.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -932,6 +941,7 @@
         "Nix"
       ],
       "origin": ".github/workflows/ci.yml:25:9 (jobs.lint.steps[2].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -953,6 +963,9 @@
         "Nix"
       ],
       "origin": ".github/workflows/ci.yml:26:9 (jobs.lint.steps[3].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -974,6 +987,9 @@
         "Nix"
       ],
       "origin": ".github/workflows/ci.yml:27:9 (jobs.lint.steps[4].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -997,6 +1013,9 @@
         "Nix"
       ],
       "origin": ".github/workflows/ci.yml:28:9 (jobs.lint.steps[5].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"

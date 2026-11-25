@@ -4,6 +4,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 3,
       "origin": "playbooks/site.yml",
       "role": "product"
     },

@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Lua",
+      "lines": 7,
       "origin": "src/shop.lua",
       "role": "product"
     },

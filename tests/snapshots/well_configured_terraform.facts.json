@@ -4,6 +4,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 10,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -11,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -18,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 26,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -25,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -32,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Terraform",
+      "lines": 15,
       "origin": "main.tf",
       "role": "product"
     },
@@ -39,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Terraform",
+      "lines": 4,
       "origin": "outputs.tf",
       "role": "product"
     },
@@ -46,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Terraform",
+      "lines": 5,
       "origin": "variables.tf",
       "role": "product"
     },
@@ -53,6 +60,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "Terraform",
+      "lines": 0,
       "origin": ".terraform.lock.hcl",
       "role": "product"
     },
@@ -60,6 +68,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "Terraform",
+      "lines": 0,
       "origin": ".tflint.hcl",
       "role": "product"
     },
@@ -67,6 +76,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "Terraform",
+      "lines": 0,
       "origin": "tests/name.tftest.hcl",
       "role": "test"
     },
@@ -1362,6 +1372,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:13:9 (jobs.validate.steps[2].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -1383,6 +1394,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.validate.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1404,6 +1416,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.validate.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1425,6 +1438,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:13:9 (jobs.validate.steps[2].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -1446,6 +1460,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.validate.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1467,6 +1482,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.validate.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1488,6 +1504,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:13:9 (jobs.validate.steps[2].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -1509,6 +1526,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.validate.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1530,6 +1548,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.validate.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1551,6 +1570,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:13:9 (jobs.validate.steps[2].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -1572,6 +1592,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.validate.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1593,6 +1614,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.validate.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1614,6 +1636,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:13:9 (jobs.validate.steps[2].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -1635,6 +1658,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.validate.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1656,6 +1680,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.validate.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1677,6 +1702,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:13:9 (jobs.validate.steps[2].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -1698,6 +1724,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.validate.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1719,6 +1746,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.validate.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1740,6 +1768,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:22:9 (jobs.lint.steps[2].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1761,6 +1790,7 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:23:9 (jobs.lint.steps[3].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1782,6 +1812,9 @@
         "Terraform"
       ],
       "origin": ".github/workflows/ci.yml:24:9 (jobs.lint.steps[4])",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"

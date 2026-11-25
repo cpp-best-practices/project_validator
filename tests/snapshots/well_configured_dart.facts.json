@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 10,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -26,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 25,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -33,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -40,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 7,
       "origin": ".github/workflows/function-limits.yml",
       "role": "product"
     },
@@ -47,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 11,
       "origin": "analysis_options.yaml",
       "role": "product"
     },
@@ -54,6 +60,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Dart",
+      "lines": 5,
       "origin": "bin/shop.dart",
       "role": "product"
     },
@@ -61,6 +68,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Dart",
+      "lines": 2,
       "origin": "lib/shop.dart",
       "role": "product"
     },
@@ -68,6 +76,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 14,
       "origin": "pubspec.yaml",
       "role": "product"
     },
@@ -75,6 +84,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Dart",
+      "lines": 8,
       "origin": "test/shop_test.dart",
       "role": "test"
     },
@@ -1521,6 +1531,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -1542,6 +1555,7 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1563,6 +1577,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [
+        "test"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -1584,6 +1601,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [
+        "test"
+      ],
       "provides": {
         "coverage": [
           "branch",
@@ -1606,6 +1626,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -1627,6 +1650,7 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1648,6 +1672,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [
+        "test"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -1669,6 +1696,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [
+        "test"
+      ],
       "provides": {
         "coverage": [
           "branch",
@@ -1691,6 +1721,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -1712,6 +1745,7 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1733,6 +1767,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [
+        "test"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -1754,6 +1791,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [
+        "test"
+      ],
       "provides": {
         "coverage": [
           "branch",
@@ -1776,6 +1816,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -1797,6 +1840,7 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1818,6 +1862,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [
+        "test"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -1839,6 +1886,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [
+        "test"
+      ],
       "provides": {
         "coverage": [
           "branch",
@@ -1861,6 +1911,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -1882,6 +1935,7 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1903,6 +1957,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [
+        "test"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -1924,6 +1981,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [
+        "test"
+      ],
       "provides": {
         "coverage": [
           "branch",
@@ -1946,6 +2006,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -1967,6 +2030,7 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1988,6 +2052,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [
+        "test"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -2009,6 +2076,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [
+        "test"
+      ],
       "provides": {
         "coverage": [
           "branch",
@@ -2031,6 +2101,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:22:9 (jobs.audit.steps[1])",
+      "paths": [
+        "."
+      ],
       "provides": {
         "audit": [
           "runs"
@@ -2052,6 +2125,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/ci.yml:25:9 (jobs.audit.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "security": [
           "scans"
@@ -2075,6 +2151,9 @@
         "Dart"
       ],
       "origin": ".github/workflows/function-limits.yml:7:9 (jobs.function-limits.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "function-length": [
           "limits",

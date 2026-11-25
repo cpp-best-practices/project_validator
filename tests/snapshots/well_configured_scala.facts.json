@@ -20,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -27,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -34,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 24,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -41,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -48,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 7,
       "origin": ".github/workflows/function-limits.yml",
       "role": "product"
     },
@@ -55,6 +60,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Scala",
+      "lines": 4,
       "origin": "src/main/scala/shop/Shop.scala",
       "role": "product"
     },
@@ -62,6 +68,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Scala",
+      "lines": 6,
       "origin": "src/test/scala/shop/ShopSuite.scala",
       "role": "test"
     },
@@ -69,6 +76,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
+      "lines": 0,
       "origin": "build.sbt",
       "role": "product"
     },
@@ -76,6 +84,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
+      "lines": 0,
       "origin": "project/plugins.sbt",
       "role": "product"
     },
@@ -1600,6 +1609,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -1621,6 +1631,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1642,6 +1653,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1663,6 +1675,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -1687,6 +1700,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -1708,6 +1722,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -1729,6 +1744,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1750,6 +1766,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1771,6 +1788,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -1795,6 +1813,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -1816,6 +1835,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -1837,6 +1857,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1858,6 +1879,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1879,6 +1901,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -1903,6 +1926,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -1924,6 +1948,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -1945,6 +1970,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1966,6 +1992,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1987,6 +2014,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2011,6 +2039,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2032,6 +2061,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -2053,6 +2083,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2074,6 +2105,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2095,6 +2127,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2119,6 +2152,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2140,6 +2174,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -2161,6 +2196,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2182,6 +2218,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2203,6 +2240,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2227,6 +2265,7 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2248,6 +2287,9 @@
         "Scala"
       ],
       "origin": ".github/workflows/ci.yml:24:9 (jobs.scan.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "security": [
           "scans"
@@ -2271,6 +2313,9 @@
         "Scala"
       ],
       "origin": ".github/workflows/function-limits.yml:7:9 (jobs.function-limits.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "function-length": [
           "limits",

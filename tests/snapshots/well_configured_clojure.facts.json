@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -26,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 36,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -33,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -40,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Clojure",
+      "lines": 16,
       "origin": "src/shop/core.clj",
       "role": "product"
     },
@@ -47,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Clojure",
+      "lines": 13,
       "origin": "test/shop/core_test.clj",
       "role": "test"
     },
@@ -54,6 +60,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
+      "lines": 0,
       "origin": ".cljfmt.edn",
       "role": "product"
     },
@@ -61,6 +68,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
+      "lines": 0,
       "origin": "deps.edn",
       "role": "product"
     },
@@ -68,6 +76,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
+      "lines": 0,
       "origin": "nvd-config.edn",
       "role": "product"
     },
@@ -75,6 +84,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
+      "lines": 0,
       "origin": "tests.edn",
       "role": "product"
     },
@@ -1302,6 +1312,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1323,6 +1334,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1344,6 +1356,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "statement reported",
@@ -1366,6 +1379,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1387,6 +1401,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1408,6 +1423,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "statement reported",
@@ -1430,6 +1446,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1451,6 +1468,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1472,6 +1490,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "statement reported",
@@ -1494,6 +1513,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1515,6 +1535,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1536,6 +1557,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "statement reported",
@@ -1558,6 +1580,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1579,6 +1602,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1600,6 +1624,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "statement reported",
@@ -1622,6 +1647,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1643,6 +1669,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1664,6 +1691,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "statement reported",
@@ -1686,6 +1714,10 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:33:9 (jobs.lint.steps[3].run)",
+      "paths": [
+        "src",
+        "test"
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -1707,6 +1739,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:34:9 (jobs.lint.steps[4].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -1728,6 +1761,7 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.lint.steps[5].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -1749,6 +1783,9 @@
         "Clojure"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.lint.steps[6].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "security": [
           "scans"

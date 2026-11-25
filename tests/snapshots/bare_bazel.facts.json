@@ -10,6 +10,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Bazel",
+      "lines": 1,
       "origin": "MODULE.bazel",
       "role": "product"
     },

@@ -12,6 +12,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "GraphQL",
+      "lines": 0,
       "origin": "schema/schema.graphql",
       "role": "product"
     },

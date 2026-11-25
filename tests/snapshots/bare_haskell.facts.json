@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Haskell",
+      "lines": 6,
       "origin": "app/Main.hs",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Haskell",
+      "lines": 4,
       "origin": "src/App.hs",
       "role": "product"
     },

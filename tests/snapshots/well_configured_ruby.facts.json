@@ -20,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -27,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -34,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 17,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -41,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -48,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 7,
       "origin": ".github/workflows/function-limits.yml",
       "role": "product"
     },
@@ -55,6 +60,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 1,
       "origin": ".mutant.yml",
       "role": "product"
     },
@@ -62,6 +68,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 2,
       "origin": ".rubocop.yml",
       "role": "product"
     },
@@ -69,6 +76,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Ruby",
+      "lines": 6,
       "origin": "lib/app.rb",
       "role": "product"
     },
@@ -76,6 +84,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Ruby",
+      "lines": 7,
       "origin": "spec/app_spec.rb",
       "role": "test"
     },
@@ -83,6 +92,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Ruby",
+      "lines": 5,
       "origin": "spec/spec_helper.rb",
       "role": "test"
     },
@@ -2013,6 +2023,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2041,6 +2052,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2066,6 +2078,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2094,6 +2107,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -2119,6 +2133,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -2145,6 +2160,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "type-check": [
           "checks",
@@ -2171,6 +2187,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2194,6 +2211,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -2218,6 +2236,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2246,6 +2265,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2271,6 +2291,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2299,6 +2320,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -2324,6 +2346,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -2350,6 +2373,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "type-check": [
           "checks",
@@ -2376,6 +2400,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2399,6 +2424,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -2423,6 +2449,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2451,6 +2478,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2476,6 +2504,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2504,6 +2533,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -2529,6 +2559,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -2555,6 +2586,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "type-check": [
           "checks",
@@ -2581,6 +2613,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2604,6 +2637,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -2628,6 +2662,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2656,6 +2691,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2681,6 +2717,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2709,6 +2746,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -2734,6 +2772,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -2760,6 +2799,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "type-check": [
           "checks",
@@ -2786,6 +2826,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2809,6 +2850,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -2833,6 +2875,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2861,6 +2904,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2886,6 +2930,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2914,6 +2959,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -2939,6 +2985,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -2965,6 +3012,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "type-check": [
           "checks",
@@ -2991,6 +3039,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -3014,6 +3063,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -3038,6 +3088,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -3066,6 +3117,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -3091,6 +3143,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -3119,6 +3172,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -3144,6 +3198,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -3170,6 +3225,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "type-check": [
           "checks",
@@ -3196,6 +3252,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -3219,6 +3276,7 @@
         "Ruby"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -3243,6 +3301,9 @@
         "Ruby"
       ],
       "origin": ".github/workflows/function-limits.yml:7:9 (jobs.function-limits.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "function-length": [
           "limits",

@@ -4,7 +4,8 @@
 check's result there is a *slot*); the gates of the whole project (a licence, CI) are one slot each.
 
 - **Fill.** A passing slot is filled, a warning half filled, anything else empty. A skip is not a slot (the gate does
-  not apply), and an error stays one: hiding something never helps.
+  not apply), and an error stays one: hiding something never helps. A slot whose tools reach only part of the
+  product's code (`Result.share`, upstream #333) is filled by the share of its lines they reach.
 - **Weight.** Auxiliary code (`--auxiliary`) weighs half, and is not asked for the gates of the product alone
   (`NOT_FOR_AUXILIARY`: fuzzing tests, measuring their coverage, ...). Cosmetic checks (`UNSCORED`) are reported, not
   scored.
@@ -96,6 +97,8 @@ class Cell:
     tools: tuple[str, ...]
     message: str = ""
     hint: str = ""
+    # The share of the gate's code its tools reach (see `Result.share`), which fills a passing slot that far.
+    share: float = 1.0
 
     @property
     def weight(self) -> float:
@@ -103,7 +106,7 @@ class Cell:
 
     @property
     def fill(self) -> float:
-        return _FILLS.get(self.status, 0.0)
+        return _FILLS.get(self.status, 0.0) * self.share
 
     @property
     def filled(self) -> float:
@@ -320,6 +323,7 @@ def _cell(check: str, level: int, ecosystem: str, unit: str, tier: str, result: 
         tools=tools,
         message=result.message,
         hint=_hint(result.details),
+        share=result.share,
     )
 
 

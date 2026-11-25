@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "TOML",
+      "lines": 2,
       "origin": "gleam.toml",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Gleam",
+      "lines": 6,
       "origin": "src/shop.gleam",
       "role": "product"
     },

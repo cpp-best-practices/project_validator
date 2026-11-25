@@ -4,6 +4,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Dockerfile",
+      "lines": 3,
       "origin": "Dockerfile",
       "role": "product"
     },

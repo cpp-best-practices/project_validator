@@ -10,6 +10,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -17,6 +18,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -24,6 +26,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 10,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -31,6 +34,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -38,6 +42,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "CMake",
+      "lines": 4,
       "origin": "CMakeLists.txt",
       "role": "product"
     },
@@ -45,6 +50,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "CMake",
+      "lines": 3,
       "origin": "cmake/Shop.cmake",
       "role": "product"
     },
@@ -506,6 +512,9 @@
         "CMake"
       ],
       "origin": ".github/workflows/ci.yml:8:9 (jobs.lint.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -527,6 +536,10 @@
         "CMake"
       ],
       "origin": ".github/workflows/ci.yml:9:9 (jobs.lint.steps[3].run)",
+      "paths": [
+        "CMakeLists.txt",
+        "cmake/Shop.cmake"
+      ],
       "provides": {
         "analysis": [
           "checks"

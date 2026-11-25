@@ -4,6 +4,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -11,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -18,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 10,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -25,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -40,6 +44,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
+      "lines": 0,
       "origin": "refs.bib",
       "role": "product"
     },
@@ -47,6 +52,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "LaTeX",
+      "lines": 0,
       "origin": "main.tex",
       "role": "product"
     },
@@ -551,6 +557,9 @@
         "LaTeX"
       ],
       "origin": ".github/workflows/ci.yml:7:9 (jobs.build.steps[1])",
+      "paths": [
+        "main.tex"
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -572,6 +581,9 @@
         "LaTeX"
       ],
       "origin": ".github/workflows/ci.yml:7:9 (jobs.build.steps[1])",
+      "paths": [
+        "main.tex"
+      ],
       "provides": {
         "format": [
           "check"
@@ -593,6 +605,9 @@
         "LaTeX"
       ],
       "origin": ".github/workflows/ci.yml:7:9 (jobs.build.steps[1])",
+      "paths": [
+        "main.tex"
+      ],
       "provides": {
         "test": [
           "runs"

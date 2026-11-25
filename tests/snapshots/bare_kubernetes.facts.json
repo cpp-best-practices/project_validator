@@ -4,6 +4,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 17,
       "origin": "k8s/deployment.yaml",
       "role": "product"
     },

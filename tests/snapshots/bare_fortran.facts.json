@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Fortran",
+      "lines": 5,
       "origin": "app/main.f90",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "TOML",
+      "lines": 5,
       "origin": "fpm.toml",
       "role": "product"
     },
@@ -26,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Fortran",
+      "lines": 10,
       "origin": "src/app.f90",
       "role": "product"
     },
@@ -33,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Fortran",
+      "lines": 0,
       "origin": "third_party/minpack/enorm.f",
       "role": "vendored"
     },

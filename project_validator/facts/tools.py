@@ -13,11 +13,12 @@ import functools
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
+from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
 
 from project_validator.components import component_cache, known
 from project_validator.facts import NOTHING, Command, ConfigurationFile, Fact, Facts, Origin, Setting, Unknown, resolved
-from project_validator.facts.arguments import has_option, starts_with
+from project_validator.facts.arguments import has_option, program, starts_with
 from project_validator.facts.shell import ShellSyntaxError
 
 type Levels = frozenset[str]
@@ -125,6 +126,8 @@ class ToolRun(Fact):
     heuristic: bool = False
     # Why the run cannot fail the pipeline, when it cannot (see `Command.advisory`): it provides nothing as a gate.
     advisory: str = ""
+    # The project paths (folders, files, globs) its command names, which it alone reaches; none: all of its scope.
+    paths: tuple[str, ...] = ()
 
     def covers(self, unit: str, units: Iterable[str] = (".",)) -> bool:
         """Whether the run covers the code of `unit`, one of the project's `units`: a run covers the units at or below
@@ -232,6 +235,38 @@ def _scope(command: Command) -> tuple[str, ...]:
     return (str(PurePosixPath(directory.removeprefix("./") or ".")),)
 
 
+# Programs whose first word is a subcommand, never a path (`deno fmt` in deno's std, which has a fmt/ folder).
+_SUBCOMMANDS = frozenset(
+    {
+        "bazel",
+        "biome",
+        "buf",
+        "bun",
+        "cargo",
+        "deno",
+        "dotnet",
+        "dprint",
+        "dune",
+        "go",
+        "golangci-lint",
+        "gradle",
+        "hatch",
+        "mix",
+        "npm",
+        "nox",
+        "pdm",
+        "pnpm",
+        "poetry",
+        "ruff",
+        "swift",
+        "uv",
+        "yarn",
+    }
+)
+
+# The characters that make a path a glob.
+_GLOB = re.compile(r"[*?\[]")
+
 # What writes a file in a command line: a redirection, tee or touch.
 _WRITES = re.compile(r"(?:>>?|\btee\s+(?:-a\s+)?|\btouch\s+)\s*([^\s;&|<>]+)")
 
@@ -244,10 +279,34 @@ class _Sources:
 
         found = facts.of(SourceFile)
         self.paths = frozenset(source.path for source in found)
+        self.of_path = {source.path: source.language for source in found}
+        self.directories = frozenset(str(parent) for path in self.paths for parent in PurePosixPath(path).parents)
         self.languages = {PurePosixPath(source.path).suffix: source.language for source in found if source.language}
         self.written: dict[str, set[str]] = {}
         for command in facts.of(Command):
             self.written.setdefault(command.job, set()).update(_WRITES.findall(command.line))
+
+    def named(self, command: Command, languages: frozenset[str]) -> tuple[str, ...]:
+        """The project paths a command names, from where it runs: the folders and files of `languages` it is given
+        that the project's sources are in, and the globs that match some (upstream #333). None when one is still a
+        variable: what it reaches is not known, so it is taken to reach all of its scope; nor when one is its own
+        folder (`.`), nor a file of another language (sblint's `shop.asd` names the system it lints)."""
+        directory = command.directory or "."
+        found: list[str] = []
+        argv = resolved(command)
+        words = argv[2:] if program(argv) in _SUBCOMMANDS else argv[1:]
+        for word in words:
+            if "$" in word:
+                return ()
+            path = _joined(directory, word.rstrip("/"))
+            if path in self.paths and self.of_path.get(path) not in languages:
+                return ()
+            if path in self.paths or path in self.directories or (_GLOB.search(path) and self.matches(path)):
+                found.append(path)
+        return tuple(found)
+
+    def matches(self, pattern: str) -> bool:
+        return any(fnmatchcase(path, pattern) for path in self.paths)
 
     def foreign(self, command: Command, languages: frozenset[str]) -> bool:
         """Whether the command names source files of `languages`, all of them written by the job and none the
@@ -310,6 +369,7 @@ def tool_runs(facts: Facts, tools: Iterable[Tool]) -> Iterator[ToolRun | Unknown
                     via=command.via,
                     heuristic=run.heuristic or (command.directory or "").startswith("$"),
                     advisory=command.advisory,
+                    paths=sources.named(command, tool.languages),
                 )
 
 

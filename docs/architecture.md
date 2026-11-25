@@ -235,6 +235,15 @@ serves. A tool that serves several practices
 (ruff formats and lints) is one tool with several aspects (`combined`); each tool handles only its own languages
 (ktlint formats Kotlin, not Java). `Tool.required` marks an analyzer that must run alongside the others.
 
+A run also records the project paths its command names (`ToolRun.paths`, upstream #333): the folders and files of its
+languages it is given, and the globs that match some; none, when it names none, or a path is still a variable, or it
+names a file of another language (sblint's `shop.asd` names the system it lints); a subcommand (`deno fmt`) is no path.
+For the aspects a run provides for the paths it is given (formatting, analysis, type checking), a passing answer says
+how much of its unit's product lines of the language the runs reach (`questions/reach.py`): auxiliary code, build files
+written in the language (`Package.swift`) and tools' configuration (`vitest.config.ts`) take nothing off. A result that
+passes on part of the code is filled by that share in the score, and names the folders no run reaches. Source files
+record their lines for this (`SourceFile.lines`).
+
 A **settings reader** (`SettingsReader`, `project_validator/facts/settings.py`) reads one tool's settings from the
 files it reads by default and from the configuration files CI commands name; each file read is a
 `ConfigurationFile` fact, each setting a `Setting`, flagged `heuristic` when matched in code. Readers find files by

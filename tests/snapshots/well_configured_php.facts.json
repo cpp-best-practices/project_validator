@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -26,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 17,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -33,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -40,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 7,
       "origin": ".github/workflows/function-limits.yml",
       "role": "product"
     },
@@ -47,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
+      "lines": 30,
       "origin": "composer.json",
       "role": "product"
     },
@@ -54,6 +60,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "PHP",
+      "lines": 13,
       "origin": "src/Calculator.php",
       "role": "product"
     },
@@ -61,6 +68,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "PHP",
+      "lines": 16,
       "origin": "tests/CalculatorTest.php",
       "role": "test"
     },
@@ -2277,6 +2285,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.cs",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -2301,6 +2310,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[0]",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2331,6 +2341,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[1]",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2358,6 +2369,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[1]",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -2382,6 +2394,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2406,6 +2419,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2435,6 +2449,7 @@
         "PHP"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2456,6 +2471,7 @@
         "PHP"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -2478,6 +2494,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.cs",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -2502,6 +2519,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[0]",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2532,6 +2550,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[1]",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2559,6 +2578,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[1]",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -2583,6 +2603,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2607,6 +2628,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2636,6 +2658,7 @@
         "PHP"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2657,6 +2680,7 @@
         "PHP"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -2679,6 +2703,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.cs",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -2703,6 +2728,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[0]",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2733,6 +2759,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[1]",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2760,6 +2787,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[1]",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -2784,6 +2812,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2808,6 +2837,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2837,6 +2867,7 @@
         "PHP"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2858,6 +2889,7 @@
         "PHP"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -2880,6 +2912,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.cs",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -2904,6 +2937,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[0]",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2934,6 +2968,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[1]",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2961,6 +2996,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[1]",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -2985,6 +3021,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -3009,6 +3046,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -3038,6 +3076,7 @@
         "PHP"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -3059,6 +3098,7 @@
         "PHP"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -3081,6 +3121,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.cs",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -3105,6 +3146,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[0]",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -3135,6 +3177,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[1]",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -3162,6 +3205,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[1]",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -3186,6 +3230,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -3210,6 +3255,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -3239,6 +3285,7 @@
         "PHP"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -3260,6 +3307,7 @@
         "PHP"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -3282,6 +3330,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.cs",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -3306,6 +3355,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[0]",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -3336,6 +3386,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[1]",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -3363,6 +3414,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.analyse[1]",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -3387,6 +3439,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -3411,6 +3464,7 @@
         "PHP"
       ],
       "origin": "composer.json:scripts.test",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -3440,6 +3494,7 @@
         "PHP"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -3461,6 +3516,7 @@
         "PHP"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -3483,6 +3539,9 @@
         "PHP"
       ],
       "origin": ".github/workflows/function-limits.yml:7:9 (jobs.function-limits.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "function-length": [
           "limits",

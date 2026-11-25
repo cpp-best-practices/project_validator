@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Elixir",
+      "lines": 3,
       "origin": "lib/shop.ex",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Elixir",
+      "lines": 11,
       "origin": "mix.exs",
       "role": "product"
     },
@@ -26,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Erlang",
+      "lines": 5,
       "origin": "src/shop_legacy.erl",
       "role": "product"
     },
