@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -26,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 33,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -33,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -40,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Racket",
+      "lines": 9,
       "origin": "info.rkt",
       "role": "product"
     },
@@ -47,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Racket",
+      "lines": 22,
       "origin": "main.rkt",
       "role": "product"
     },
@@ -1290,6 +1296,7 @@
         "Racket"
       ],
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1311,6 +1318,7 @@
         "Racket"
       ],
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1332,6 +1340,7 @@
         "Racket"
       ],
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1353,6 +1362,7 @@
         "Racket"
       ],
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1374,6 +1384,7 @@
         "Racket"
       ],
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1395,6 +1406,7 @@
         "Racket"
       ],
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1416,6 +1428,7 @@
         "Racket"
       ],
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1437,6 +1450,9 @@
         "Racket"
       ],
       "origin": ".github/workflows/ci.yml:31:9 (jobs.coverage.steps[3].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "test": [
           "runs"
@@ -1458,6 +1474,9 @@
         "Racket"
       ],
       "origin": ".github/workflows/ci.yml:31:9 (jobs.coverage.steps[3].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "statement reported",
@@ -1480,6 +1499,7 @@
         "Racket"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.coverage.steps[4].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"

@@ -38,8 +38,8 @@ class CMakeFormattingTests(unittest.TestCase):
     def test_gersemi_and_cmake_format_check_the_formatting(self) -> None:
         for line, tool in (
             ("gersemi --check .", "gersemi"),
-            ("gersemi --diff cmake", "gersemi"),
-            ("cmake-format --check CMakeLists.txt", "cmake-format"),
+            ("gersemi --diff CMakeLists.txt cmake", "gersemi"),
+            ("cmake-format --check CMakeLists.txt cmake/Shop.cmake", "cmake-format"),
         ):
             with self.subTest(line=line):
                 self.assertEqual(self._run(code_formatting, _ci(line)), Result.passed(f"CI enforces the {tool} style"))
@@ -60,10 +60,21 @@ class CMakeFormattingTests(unittest.TestCase):
                 self.assertEqual(result.status, Status.PASS, result)
 
     def test_cmake_lint_and_cmakelint_lint_it(self) -> None:
-        for line, tool in (("cmake-lint CMakeLists.txt", "cmake-lint"), ("cmakelint CMakeLists.txt", "cmakelint")):
+        both = "CMakeLists.txt cmake/Shop.cmake"
+        for line, tool in ((f"cmake-lint {both}", "cmake-lint"), (f"cmakelint {both}", "cmakelint")):
             with self.subTest(line=line):
                 self.assertEqual(self._run(static_analysis, _ci(line)), Result.passed(f"{tool} runs"))
         self.assertEqual(self._run(static_analysis, _ci("cmake -B build")).status, Status.FAIL)
+
+    def test_a_linter_given_part_of_the_cmake_code_reaches_that_part(self) -> None:
+        for line, missed in (
+            ("cmake-lint CMakeLists.txt", "cmake/"),
+            ("cmake-lint cmake/Shop.cmake", "CMakeLists.txt"),
+        ):
+            with self.subTest(line=line):
+                result = self._run(static_analysis, _ci(line))
+                self.assertEqual(result.status, Status.PASS)
+                self.assertIn(f"no run reaches {missed}", result.details[0])  # a build file is the format's code
 
     def test_cmake_warnings_are_errors_with_werror_dev(self) -> None:
         """`cmake -Werror=dev` (or a configure preset's `errors: {dev: true}`) makes CMake's warnings for the project

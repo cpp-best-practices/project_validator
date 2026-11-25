@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -26,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 26,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -33,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -40,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 8,
       "origin": "dbt_project.yml",
       "role": "product"
     },
@@ -47,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 19,
       "origin": "models/staging/schema.yml",
       "role": "product"
     },
@@ -54,6 +60,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 4,
       "origin": "package-lock.yml",
       "role": "product"
     },
@@ -61,6 +68,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 3,
       "origin": "packages.yml",
       "role": "product"
     },
@@ -68,6 +76,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 12,
       "origin": "profiles.yml",
       "role": "product"
     },
@@ -83,6 +92,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "SQL",
+      "lines": 0,
       "origin": "migrations/V1__orders.sql",
       "role": "product"
     },
@@ -90,6 +100,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "SQL",
+      "lines": 0,
       "origin": "models/staging/stg_orders.sql",
       "role": "product"
     },
@@ -97,6 +108,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "SQL",
+      "lines": 0,
       "origin": "tests/assert_positive_amounts.sql",
       "role": "test"
     },
@@ -1028,6 +1040,10 @@
         "SQL"
       ],
       "origin": ".github/workflows/ci.yml:23:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "models",
+        "tests"
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -1052,6 +1068,9 @@
         "SQL"
       ],
       "origin": ".github/workflows/ci.yml:24:9 (jobs.test.steps[5].run)",
+      "paths": [
+        "migrations/*.sql"
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -1078,6 +1097,7 @@
         "SQL"
       ],
       "origin": ".github/workflows/ci.yml:25:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1099,6 +1119,9 @@
         "SQL"
       ],
       "origin": ".github/workflows/ci.yml:26:9 (jobs.test.steps[7].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "test": [
           "runs"
@@ -1120,6 +1143,10 @@
         "SQL"
       ],
       "origin": ".github/workflows/ci.yml:23:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "models",
+        "tests"
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -1144,6 +1171,9 @@
         "SQL"
       ],
       "origin": ".github/workflows/ci.yml:24:9 (jobs.test.steps[5].run)",
+      "paths": [
+        "migrations/*.sql"
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -1170,6 +1200,7 @@
         "SQL"
       ],
       "origin": ".github/workflows/ci.yml:25:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1191,6 +1222,9 @@
         "SQL"
       ],
       "origin": ".github/workflows/ci.yml:26:9 (jobs.test.steps[7].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "test": [
           "runs"

@@ -4,6 +4,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 1,
       "origin": "mkdocs.yml",
       "role": "product"
     },

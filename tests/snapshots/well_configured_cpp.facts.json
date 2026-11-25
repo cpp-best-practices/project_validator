@@ -24,6 +24,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -31,6 +32,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -38,6 +40,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 46,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -45,6 +48,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 15,
       "origin": ".github/workflows/codeql-analysis.yml",
       "role": "product"
     },
@@ -52,6 +56,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -59,6 +64,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "CMake",
+      "lines": 48,
       "origin": "CMakeLists.txt",
       "role": "product"
     },
@@ -66,6 +72,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "CMake",
+      "lines": 7,
       "origin": "cmake/Dependencies.cmake",
       "role": "product"
     },
@@ -73,6 +80,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "CMake",
+      "lines": 6,
       "origin": "fuzz_test/CMakeLists.txt",
       "role": "test"
     },
@@ -80,6 +88,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "C++",
+      "lines": 8,
       "origin": "fuzz_test/fuzz_tester.cpp",
       "role": "test"
     },
@@ -87,6 +96,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "CMake",
+      "lines": 2,
       "origin": "test/CMakeLists.txt",
       "role": "test"
     },
@@ -3500,14 +3510,15 @@
       "advisory": "",
       "argv": [
         "cmake-lint",
-        "CMakeLists.txt"
+        "CMakeLists.txt",
+        "cmake/*.cmake"
       ],
       "condition": null,
       "directory": null,
       "env": {},
       "job": ".github/workflows/ci.yml:format",
       "kind": "Command",
-      "line": "cmake-lint CMakeLists.txt",
+      "line": "cmake-lint CMakeLists.txt cmake/*.cmake",
       "origin": ".github/workflows/ci.yml:46:9 (jobs.format.steps[3].run)",
       "requires": "",
       "via": []
@@ -4844,6 +4855,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -4868,6 +4882,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -4895,6 +4910,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -4918,6 +4934,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -4944,6 +4961,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -4966,6 +4984,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -4991,6 +5010,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -5013,6 +5033,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -5037,6 +5060,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -5064,6 +5088,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -5087,6 +5112,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -5113,6 +5139,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -5135,6 +5162,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -5160,6 +5188,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -5182,6 +5211,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -5206,6 +5238,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -5233,6 +5266,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -5256,6 +5290,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -5282,6 +5317,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -5304,6 +5340,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -5329,6 +5366,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -5351,6 +5389,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -5375,6 +5416,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -5402,6 +5444,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -5425,6 +5468,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -5451,6 +5495,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -5473,6 +5518,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -5498,6 +5544,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -5520,6 +5567,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -5544,6 +5594,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -5571,6 +5622,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -5594,6 +5646,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -5620,6 +5673,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -5642,6 +5696,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -5667,6 +5722,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -5689,6 +5745,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -5713,6 +5772,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -5740,6 +5800,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -5763,6 +5824,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -5789,6 +5851,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -5811,6 +5874,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -5836,6 +5900,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -5858,6 +5923,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -5882,6 +5950,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -5909,6 +5978,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -5932,6 +6002,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -5958,6 +6029,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -5980,6 +6052,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -6005,6 +6078,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -6027,6 +6101,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -6051,6 +6128,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -6078,6 +6156,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -6101,6 +6180,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -6127,6 +6207,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -6149,6 +6230,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -6174,6 +6256,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -6196,6 +6279,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -6220,6 +6306,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -6247,6 +6334,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -6270,6 +6358,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -6296,6 +6385,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -6318,6 +6408,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -6343,6 +6434,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -6365,6 +6457,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -6389,6 +6484,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -6416,6 +6512,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -6439,6 +6536,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -6465,6 +6563,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -6487,6 +6586,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -6512,6 +6612,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -6534,6 +6635,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -6558,6 +6662,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -6585,6 +6690,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -6608,6 +6714,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -6634,6 +6741,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -6656,6 +6764,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -6681,6 +6790,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -6703,6 +6813,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -6727,6 +6840,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -6754,6 +6868,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -6777,6 +6892,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -6803,6 +6919,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -6825,6 +6942,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -6850,6 +6968,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -6872,6 +6991,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -6896,6 +7018,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -6923,6 +7046,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -6946,6 +7070,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -6972,6 +7097,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -6994,6 +7120,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -7019,6 +7146,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -7041,6 +7169,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -7065,6 +7196,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -7092,6 +7224,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -7115,6 +7248,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -7141,6 +7275,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -7163,6 +7298,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -7188,6 +7324,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -7210,6 +7347,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -7234,6 +7374,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -7261,6 +7402,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -7284,6 +7426,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -7310,6 +7453,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -7332,6 +7476,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -7357,6 +7502,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -7379,6 +7525,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -7403,6 +7552,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -7430,6 +7580,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -7453,6 +7604,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -7479,6 +7631,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -7501,6 +7654,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -7526,6 +7680,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -7548,6 +7703,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -7572,6 +7730,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -7599,6 +7758,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -7622,6 +7782,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -7648,6 +7809,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -7670,6 +7832,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -7695,6 +7858,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -7717,6 +7881,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -7741,6 +7908,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -7768,6 +7936,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -7791,6 +7960,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -7817,6 +7987,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -7839,6 +8010,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -7864,6 +8036,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -7886,6 +8059,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -7910,6 +8086,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -7937,6 +8114,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -7960,6 +8138,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -7986,6 +8165,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -8008,6 +8188,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -8033,6 +8214,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -8055,6 +8237,9 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -8079,6 +8264,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "runs"
@@ -8106,6 +8292,7 @@
         "Objective-C++"
       ],
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -8129,6 +8316,7 @@
         "Fortran"
       ],
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch gated",
@@ -8155,6 +8343,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -8177,6 +8366,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "function-length": [
           "limits",
@@ -8202,6 +8392,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -8224,6 +8415,7 @@
         "C++"
       ],
       "origin": ".github/workflows/ci.yml:44:9 (jobs.format.steps[1].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -8247,6 +8439,9 @@
         "CMake"
       ],
       "origin": ".github/workflows/ci.yml:45:9 (jobs.format.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -8268,6 +8463,10 @@
         "CMake"
       ],
       "origin": ".github/workflows/ci.yml:46:9 (jobs.format.steps[3].run)",
+      "paths": [
+        "CMakeLists.txt",
+        "cmake/*.cmake"
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -8290,6 +8489,9 @@
         "C++"
       ],
       "origin": ".github/workflows/codeql-analysis.yml:14:9 (jobs.analyze.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "coverage": [
           "path"
@@ -8314,6 +8516,7 @@
         "C++"
       ],
       "origin": ".github/workflows/codeql-analysis.yml:15:9 (jobs.analyze.steps[3])",
+      "paths": [],
       "provides": {
         "security": [
           "scans"

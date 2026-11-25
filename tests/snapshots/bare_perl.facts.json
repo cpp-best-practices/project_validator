@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
+      "lines": 5,
       "origin": "MYMETA.json",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Perl",
+      "lines": 5,
       "origin": "lib/Shop.pm",
       "role": "product"
     },
@@ -26,6 +28,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
+      "lines": 0,
       "origin": "Makefile.PL",
       "role": "product"
     },

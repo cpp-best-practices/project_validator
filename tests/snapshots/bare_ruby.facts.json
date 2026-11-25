@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Ruby",
+      "lines": 6,
       "origin": "app.rb",
       "role": "product"
     },

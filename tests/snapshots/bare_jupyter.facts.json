@@ -4,6 +4,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Jupyter",
+      "lines": 5,
       "origin": "notebooks/prices.ipynb",
       "role": "product"
     },

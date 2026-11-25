@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "CMake",
+      "lines": 4,
       "origin": "CMakeLists.txt",
       "role": "product"
     },

@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Scala",
+      "lines": 4,
       "origin": "src/main/scala/shop/Shop.scala",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
+      "lines": 0,
       "origin": "build.sbt",
       "role": "product"
     },

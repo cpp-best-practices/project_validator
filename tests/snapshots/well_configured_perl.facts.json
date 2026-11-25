@@ -20,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -27,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -34,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 29,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -41,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -48,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 7,
       "origin": ".github/workflows/function-limits.yml",
       "role": "product"
     },
@@ -55,6 +60,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Perl",
+      "lines": 30,
       "origin": "lib/Shop.pm",
       "role": "product"
     },
@@ -62,6 +68,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
+      "lines": 0,
       "origin": "Makefile.PL",
       "role": "product"
     },
@@ -69,6 +76,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "Perl",
+      "lines": 0,
       "origin": "t/shop.t",
       "role": "test"
     },
@@ -1313,6 +1321,7 @@
         "Perl"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1334,6 +1343,7 @@
         "Perl"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -1360,6 +1370,7 @@
         "Perl"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1381,6 +1392,7 @@
         "Perl"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -1407,6 +1419,7 @@
         "Perl"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1428,6 +1441,7 @@
         "Perl"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -1454,6 +1468,7 @@
         "Perl"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1475,6 +1490,7 @@
         "Perl"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -1501,6 +1517,7 @@
         "Perl"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1522,6 +1539,7 @@
         "Perl"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -1548,6 +1566,7 @@
         "Perl"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1569,6 +1588,7 @@
         "Perl"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -1595,6 +1615,10 @@
         "Perl"
       ],
       "origin": ".github/workflows/ci.yml:27:9 (jobs.lint.steps[2].run)",
+      "paths": [
+        "lib",
+        "t"
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -1616,6 +1640,10 @@
         "Perl"
       ],
       "origin": ".github/workflows/ci.yml:28:9 (jobs.lint.steps[3].run)",
+      "paths": [
+        "lib/Shop.pm",
+        "t/shop.t"
+      ],
       "provides": {
         "format": [
           "check"
@@ -1637,6 +1665,9 @@
         "Perl"
       ],
       "origin": ".github/workflows/ci.yml:29:9 (jobs.lint.steps[4].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "audit": [
           "runs"
@@ -1658,6 +1689,9 @@
         "Perl"
       ],
       "origin": ".github/workflows/function-limits.yml:7:9 (jobs.function-limits.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "function-length": [
           "limits",

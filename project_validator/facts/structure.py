@@ -67,6 +67,9 @@ class SourceFile(Fact):
     language: str | None
     ambiguous: bool = False
     role: str = "product"
+    # How many lines it holds, by which a language's share of what a tool reaches is weighed (upstream #333); none
+    # counted for vendored code.
+    lines: int = 0
 
     @property
     def path(self) -> str:
@@ -388,7 +391,15 @@ def _sources(project: Project, generated: frozenset[str]) -> Iterator[SourceFile
         if found is None and (named := _by_name(path)) is not None:
             found = named[1:]
         if found is not None and (found[1] == "format" or not _configuration(path)):
-            yield SourceFile(origin=Origin(path=path), language=found[0], role=role(path))
+            purpose = role(path)
+            lines = 0 if purpose == "vendored" else _lines(project, path)
+            yield SourceFile(origin=Origin(path=path), language=found[0], role=purpose, lines=lines)
+
+
+def _lines(project: Project, path: str) -> int:
+    """The lines of a file: its newlines, and a last line without one."""
+    data = project.read_bytes(path)
+    return data.count(b"\n") + (1 if data and not data.endswith(b"\n") else 0)
 
 
 def _located(ecosystem: Ecosystem, found: Iterable[tuple[str, str]]) -> Iterator[ContentLanguages]:

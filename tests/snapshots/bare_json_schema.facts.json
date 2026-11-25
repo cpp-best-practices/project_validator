@@ -4,6 +4,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
+      "lines": 13,
       "origin": "schema/catalog.schema.json",
       "role": "product"
     },

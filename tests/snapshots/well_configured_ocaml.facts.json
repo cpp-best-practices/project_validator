@@ -36,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -43,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -50,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 27,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -57,6 +60,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -64,6 +68,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "OCaml",
+      "lines": 6,
       "origin": "lib/shop.ml",
       "role": "product"
     },
@@ -71,6 +76,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "OCaml",
+      "lines": 7,
       "origin": "lib/shop.mli",
       "role": "product"
     },
@@ -78,6 +84,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "OCaml",
+      "lines": 15,
       "origin": "test/test_shop.ml",
       "role": "test"
     },
@@ -1796,6 +1803,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1819,6 +1827,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -1843,6 +1852,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -1867,6 +1877,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1890,6 +1901,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -1914,6 +1926,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -1938,6 +1951,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1961,6 +1975,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -1985,6 +2000,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2009,6 +2025,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2032,6 +2049,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2056,6 +2074,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2080,6 +2099,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2103,6 +2123,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2127,6 +2148,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2151,6 +2173,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2174,6 +2197,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2198,6 +2222,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2222,6 +2247,7 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:26:9 (jobs.lint.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -2245,6 +2271,9 @@
         "OCaml"
       ],
       "origin": ".github/workflows/ci.yml:27:9 (jobs.lint.steps[4].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "security": [
           "scans"

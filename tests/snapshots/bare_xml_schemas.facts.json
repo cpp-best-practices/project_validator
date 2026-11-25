@@ -4,6 +4,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "XML",
+      "lines": 15,
       "origin": "schema/catalog.xsd",
       "role": "product"
     },
@@ -11,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "XML",
+      "lines": 7,
       "origin": "xslt/total.xsl",
       "role": "product"
     },

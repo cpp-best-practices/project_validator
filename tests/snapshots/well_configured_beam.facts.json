@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Elixir",
+      "lines": 9,
       "origin": ".credo.exs",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Elixir",
+      "lines": 3,
       "origin": ".formatter.exs",
       "role": "product"
     },
@@ -26,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 10,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -33,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -40,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 35,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -47,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -54,6 +60,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Elixir",
+      "lines": 1,
       "origin": "config/config.exs",
       "role": "product"
     },
@@ -61,6 +68,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Elixir",
+      "lines": 6,
       "origin": "lib/shop.ex",
       "role": "product"
     },
@@ -68,6 +76,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Elixir",
+      "lines": 39,
       "origin": "mix.exs",
       "role": "product"
     },
@@ -75,6 +84,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Erlang",
+      "lines": 6,
       "origin": "src/shop_legacy.erl",
       "role": "product"
     },
@@ -82,6 +92,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Elixir",
+      "lines": 12,
       "origin": "test/shop_test.exs",
       "role": "test"
     },
@@ -89,6 +100,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Elixir",
+      "lines": 1,
       "origin": "test/test_helper.exs",
       "role": "test"
     },
@@ -1539,6 +1551,7 @@
         "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -1560,6 +1573,7 @@
         "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1582,6 +1596,7 @@
         "Erlang"
       ],
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "type-check": [
           "checks",
@@ -1606,6 +1621,7 @@
         "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -1627,6 +1643,7 @@
         "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:22:9 (jobs.test.steps[8].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -1649,6 +1666,7 @@
         "Erlang"
       ],
       "origin": ".github/workflows/ci.yml:23:9 (jobs.test.steps[9].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1671,6 +1689,7 @@
         "Erlang"
       ],
       "origin": ".github/workflows/ci.yml:23:9 (jobs.test.steps[9].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "line reported",
@@ -1693,6 +1712,7 @@
         "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -1714,6 +1734,7 @@
         "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1736,6 +1757,7 @@
         "Erlang"
       ],
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "type-check": [
           "checks",
@@ -1760,6 +1782,7 @@
         "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -1781,6 +1804,7 @@
         "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:22:9 (jobs.test.steps[8].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -1803,6 +1827,7 @@
         "Erlang"
       ],
       "origin": ".github/workflows/ci.yml:23:9 (jobs.test.steps[9].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1825,6 +1850,7 @@
         "Erlang"
       ],
       "origin": ".github/workflows/ci.yml:23:9 (jobs.test.steps[9].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "line reported",
@@ -1847,6 +1873,7 @@
         "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -1868,6 +1895,7 @@
         "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1890,6 +1918,7 @@
         "Erlang"
       ],
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "type-check": [
           "checks",
@@ -1914,6 +1943,7 @@
         "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -1935,6 +1965,7 @@
         "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:22:9 (jobs.test.steps[8].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -1957,6 +1988,7 @@
         "Erlang"
       ],
       "origin": ".github/workflows/ci.yml:23:9 (jobs.test.steps[9].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -1979,6 +2011,7 @@
         "Erlang"
       ],
       "origin": ".github/workflows/ci.yml:23:9 (jobs.test.steps[9].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "line reported",
@@ -2001,6 +2034,7 @@
         "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -2022,6 +2056,7 @@
         "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2044,6 +2079,7 @@
         "Erlang"
       ],
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "type-check": [
           "checks",
@@ -2068,6 +2104,7 @@
         "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -2089,6 +2126,7 @@
         "Elixir"
       ],
       "origin": ".github/workflows/ci.yml:22:9 (jobs.test.steps[8].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2111,6 +2149,7 @@
         "Erlang"
       ],
       "origin": ".github/workflows/ci.yml:23:9 (jobs.test.steps[9].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2133,6 +2172,7 @@
         "Erlang"
       ],
       "origin": ".github/workflows/ci.yml:23:9 (jobs.test.steps[9].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "line reported",
@@ -2155,6 +2195,7 @@
         "Erlang"
       ],
       "origin": ".github/workflows/ci.yml:33:9 (jobs.erlang.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -2176,6 +2217,7 @@
         "Erlang"
       ],
       "origin": ".github/workflows/ci.yml:34:9 (jobs.erlang.steps[4].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2197,6 +2239,9 @@
         "Erlang"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.erlang.steps[5].run)",
+      "paths": [
+        "src"
+      ],
       "provides": {
         "function-length": [
           "limits",

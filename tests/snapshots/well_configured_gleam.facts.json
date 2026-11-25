@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -26,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 12,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -33,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -40,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "TOML",
+      "lines": 6,
       "origin": "gleam.toml",
       "role": "product"
     },
@@ -47,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Gleam",
+      "lines": 6,
       "origin": "src/shop.gleam",
       "role": "product"
     },
@@ -54,6 +60,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Gleam",
+      "lines": 10,
       "origin": "test/shop_test.gleam",
       "role": "test"
     },
@@ -507,6 +514,10 @@
         "Gleam"
       ],
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "src",
+        "test"
+      ],
       "provides": {
         "format": [
           "check"
@@ -528,6 +539,9 @@
         "Gleam"
       ],
       "origin": ".github/workflows/ci.yml:12:9 (jobs.test.steps[3].run)",
+      "paths": [
+        "test"
+      ],
       "provides": {
         "test": [
           "runs"

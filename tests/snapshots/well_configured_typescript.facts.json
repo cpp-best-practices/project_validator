@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -26,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 20,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -33,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -40,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 7,
       "origin": ".github/workflows/function-limits.yml",
       "role": "product"
     },
@@ -47,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": null,
+      "lines": 3,
       "origin": "eslint.config.js",
       "role": "product"
     },
@@ -54,6 +60,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "TypeScript",
+      "lines": 6,
       "origin": "fuzz/add.fuzz.ts",
       "role": "test"
     },
@@ -61,6 +68,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
+      "lines": 13,
       "origin": "package-lock.json",
       "role": "product"
     },
@@ -68,6 +76,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
+      "lines": 22,
       "origin": "package.json",
       "role": "product"
     },
@@ -75,6 +84,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "TypeScript",
+      "lines": 7,
       "origin": "src/add.test.ts",
       "role": "product"
     },
@@ -82,6 +92,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "TypeScript",
+      "lines": 4,
       "origin": "src/add.ts",
       "role": "product"
     },
@@ -89,6 +100,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
+      "lines": 1,
       "origin": "stryker.config.json",
       "role": "product"
     },
@@ -96,6 +108,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
+      "lines": 10,
       "origin": "tsconfig.json",
       "role": "product"
     },
@@ -2632,6 +2645,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.format:check",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -2656,6 +2672,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -2680,6 +2699,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "security": [
           "scans"
@@ -2707,6 +2729,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "function-length": [
           "measures"
@@ -2730,6 +2755,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.typecheck",
+      "paths": [],
       "provides": {
         "type-check": [
           "checks",
@@ -2757,6 +2783,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2781,6 +2808,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -2808,6 +2836,7 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2830,6 +2859,7 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -2855,6 +2885,9 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "paths": [
+        "fuzz/add.fuzz.ts"
+      ],
       "provides": {
         "fuzz": [
           "runs"
@@ -2879,6 +2912,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.format:check",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -2903,6 +2939,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -2927,6 +2966,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "security": [
           "scans"
@@ -2954,6 +2996,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "function-length": [
           "measures"
@@ -2977,6 +3022,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.typecheck",
+      "paths": [],
       "provides": {
         "type-check": [
           "checks",
@@ -3004,6 +3050,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -3028,6 +3075,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -3055,6 +3103,7 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -3077,6 +3126,7 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -3102,6 +3152,9 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "paths": [
+        "fuzz/add.fuzz.ts"
+      ],
       "provides": {
         "fuzz": [
           "runs"
@@ -3126,6 +3179,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.format:check",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -3150,6 +3206,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -3174,6 +3233,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "security": [
           "scans"
@@ -3201,6 +3263,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "function-length": [
           "measures"
@@ -3224,6 +3289,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.typecheck",
+      "paths": [],
       "provides": {
         "type-check": [
           "checks",
@@ -3251,6 +3317,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -3275,6 +3342,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -3302,6 +3370,7 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -3324,6 +3393,7 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -3349,6 +3419,9 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "paths": [
+        "fuzz/add.fuzz.ts"
+      ],
       "provides": {
         "fuzz": [
           "runs"
@@ -3373,6 +3446,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.format:check",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -3397,6 +3473,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -3421,6 +3500,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "security": [
           "scans"
@@ -3448,6 +3530,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "function-length": [
           "measures"
@@ -3471,6 +3556,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.typecheck",
+      "paths": [],
       "provides": {
         "type-check": [
           "checks",
@@ -3498,6 +3584,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -3522,6 +3609,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -3549,6 +3637,7 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -3571,6 +3660,7 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -3596,6 +3686,9 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "paths": [
+        "fuzz/add.fuzz.ts"
+      ],
       "provides": {
         "fuzz": [
           "runs"
@@ -3620,6 +3713,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.format:check",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -3644,6 +3740,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -3668,6 +3767,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "security": [
           "scans"
@@ -3695,6 +3797,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "function-length": [
           "measures"
@@ -3718,6 +3823,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.typecheck",
+      "paths": [],
       "provides": {
         "type-check": [
           "checks",
@@ -3745,6 +3851,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -3769,6 +3876,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -3796,6 +3904,7 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -3818,6 +3927,7 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -3843,6 +3953,9 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "paths": [
+        "fuzz/add.fuzz.ts"
+      ],
       "provides": {
         "fuzz": [
           "runs"
@@ -3867,6 +3980,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.format:check",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -3891,6 +4007,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -3915,6 +4034,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "security": [
           "scans"
@@ -3942,6 +4064,9 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.lint",
+      "paths": [
+        "."
+      ],
       "provides": {
         "function-length": [
           "measures"
@@ -3965,6 +4090,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.typecheck",
+      "paths": [],
       "provides": {
         "type-check": [
           "checks",
@@ -3992,6 +4118,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -4016,6 +4143,7 @@
         "TypeScript"
       ],
       "origin": "package.json:scripts.test",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch reported",
@@ -4043,6 +4171,7 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -4065,6 +4194,7 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -4090,6 +4220,9 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "paths": [
+        "fuzz/add.fuzz.ts"
+      ],
       "provides": {
         "fuzz": [
           "runs"
@@ -4114,6 +4247,9 @@
         "TypeScript"
       ],
       "origin": ".github/workflows/function-limits.yml:7:9 (jobs.function-limits.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "function-length": [
           "limits",

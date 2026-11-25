@@ -135,7 +135,7 @@ class OCamlTests(unittest.TestCase):
 
     def test_ocamlformat_needs_its_file_and_a_check(self) -> None:
         style = {".ocamlformat": "version = 0.27.0\n"}
-        for line in ("dune build @fmt", "dune build @lib/fmt", "ocamlformat --check lib/shop.ml"):
+        for line in ("dune build @fmt", "dune build @lib/fmt", "ocamlformat --check lib/shop.ml bin/main.ml"):
             with self.subTest(line=line):
                 result = self._run(code_formatting, {**style, **_ci(line)})
                 self.assertEqual(result, Result.passed(".ocamlformat is defined and CI runs ocamlformat"))

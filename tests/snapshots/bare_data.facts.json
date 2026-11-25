@@ -4,6 +4,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 1,
       "origin": "config.yaml",
       "role": "product"
     },
@@ -11,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
+      "lines": 1,
       "origin": "data.json",
       "role": "product"
     },
@@ -18,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "TOML",
+      "lines": 1,
       "origin": "settings.toml",
       "role": "product"
     },

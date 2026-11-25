@@ -53,7 +53,7 @@ class BuildifierTests(unittest.TestCase):
         for line in (
             "buildifier -mode=check -r .",
             "buildifier --mode=diff -r .",
-            "buildifier -d MODULE.bazel",
+            "buildifier -d MODULE.bazel shop/defs.bzl",
             "buildifier --mode=fix --mode=check -r .",  # the last wins
         ):
             with self.subTest(line=line):

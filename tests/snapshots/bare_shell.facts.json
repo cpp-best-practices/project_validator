@@ -4,6 +4,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "PowerShell",
+      "lines": 5,
       "origin": "src/Shop.ps1",
       "role": "product"
     },
@@ -11,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Shell",
+      "lines": 5,
       "origin": "src/shop.sh",
       "role": "product"
     },

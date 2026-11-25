@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Swift",
+      "lines": 12,
       "origin": "Package.swift",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Swift",
+      "lines": 3,
       "origin": "Sources/App/main.swift",
       "role": "product"
     },

@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
+      "lines": 8,
       "origin": "package.json",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JavaScript",
+      "lines": 3,
       "origin": "src/index.js",
       "role": "product"
     },

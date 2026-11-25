@@ -4,6 +4,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -11,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -18,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 16,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -25,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -32,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 2,
       "origin": ".graphqlrc.yml",
       "role": "product"
     },
@@ -47,6 +52,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "GraphQL",
+      "lines": 0,
       "origin": "operations/catalog.graphql",
       "role": "product"
     },
@@ -54,6 +60,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "GraphQL",
+      "lines": 0,
       "origin": "schema/schema.graphql",
       "role": "product"
     },
@@ -625,6 +632,9 @@
         "GraphQL"
       ],
       "origin": ".github/workflows/ci.yml:7:9 (jobs.validate.steps[1].run)",
+      "paths": [
+        "schema/schema.graphql"
+      ],
       "provides": {
         "schema": [
           "validates"
@@ -648,6 +658,9 @@
         "GraphQL"
       ],
       "origin": ".github/workflows/ci.yml:8:9 (jobs.validate.steps[2].run)",
+      "paths": [
+        "schema/schema.graphql"
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -671,6 +684,9 @@
         "GraphQL"
       ],
       "origin": ".github/workflows/ci.yml:9:9 (jobs.validate.steps[3].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -694,6 +710,7 @@
         "GraphQL"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.breaking.steps[1])",
+      "paths": [],
       "provides": {
         "compatibility": [
           "breaking"

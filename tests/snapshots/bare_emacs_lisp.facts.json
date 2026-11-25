@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Emacs Lisp",
+      "lines": 7,
       "origin": "shop.el",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
+      "lines": 0,
       "origin": "shop.elc",
       "role": "product"
     },

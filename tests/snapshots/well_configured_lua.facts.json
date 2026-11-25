@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -26,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 29,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -33,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -40,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 7,
       "origin": ".github/workflows/function-limits.yml",
       "role": "product"
     },
@@ -47,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
+      "lines": 5,
       "origin": ".luarc.json",
       "role": "product"
     },
@@ -54,6 +60,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Lua",
+      "lines": 7,
       "origin": "spec/shop_spec.lua",
       "role": "test"
     },
@@ -61,6 +68,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Lua",
+      "lines": 15,
       "origin": "src/shop/init.lua",
       "role": "product"
     },
@@ -68,6 +76,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "TOML",
+      "lines": 3,
       "origin": "stylua.toml",
       "role": "product"
     },
@@ -2151,6 +2160,9 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -2172,6 +2184,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2193,6 +2206,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "line reported",
@@ -2215,6 +2229,9 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -2236,6 +2253,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2257,6 +2275,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "line reported",
@@ -2279,6 +2298,9 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -2300,6 +2322,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2321,6 +2344,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "line reported",
@@ -2343,6 +2367,9 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -2364,6 +2391,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2385,6 +2413,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "line reported",
@@ -2407,6 +2436,9 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -2428,6 +2460,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2449,6 +2482,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "line reported",
@@ -2471,6 +2505,9 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -2492,6 +2529,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2513,6 +2551,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "line reported",
@@ -2535,6 +2574,9 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -2556,6 +2598,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2577,6 +2620,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "line reported",
@@ -2599,6 +2643,9 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -2620,6 +2667,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2641,6 +2689,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "line reported",
@@ -2663,6 +2712,9 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "analysis": [
           "checks"
@@ -2684,6 +2736,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2705,6 +2758,7 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "line reported",
@@ -2727,6 +2781,9 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:22:9 (jobs.lint.steps[1])",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -2748,6 +2805,9 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:26:9 (jobs.lint.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "security": [
           "scans"
@@ -2771,6 +2831,9 @@
         "Lua"
       ],
       "origin": ".github/workflows/ci.yml:27:9 (jobs.lint.steps[3].run)",
+      "paths": [
+        "src"
+      ],
       "provides": {
         "type-check": [
           "checks"
@@ -2792,6 +2855,9 @@
         "Lua"
       ],
       "origin": ".github/workflows/function-limits.yml:7:9 (jobs.function-limits.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "function-length": [
           "limits",

@@ -28,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -35,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -42,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 20,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -49,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -56,6 +60,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 7,
       "origin": ".github/workflows/function-limits.yml",
       "role": "product"
     },
@@ -63,6 +68,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "C#",
+      "lines": 8,
       "origin": "fuzz/App.Fuzz/Program.cs",
       "role": "test"
     },
@@ -70,6 +76,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
+      "lines": 4,
       "origin": "fuzz/App.Fuzz/packages.lock.json",
       "role": "test"
     },
@@ -77,6 +84,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "C#",
+      "lines": 8,
       "origin": "src/App/Calculator.cs",
       "role": "product"
     },
@@ -84,6 +92,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
+      "lines": 4,
       "origin": "src/App/packages.lock.json",
       "role": "product"
     },
@@ -91,6 +100,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
+      "lines": 1,
       "origin": "stryker-config.json",
       "role": "product"
     },
@@ -98,6 +108,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "C#",
+      "lines": 7,
       "origin": "tests/App.Tests/CalculatorTests.cs",
       "role": "test"
     },
@@ -105,6 +116,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
+      "lines": 4,
       "origin": "tests/App.Tests/packages.lock.json",
       "role": "test"
     },
@@ -2207,6 +2219,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2230,6 +2243,7 @@
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -2251,6 +2265,7 @@
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2275,6 +2290,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2299,6 +2315,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -2323,6 +2340,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2345,6 +2363,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch",
@@ -2368,6 +2387,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2392,6 +2412,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -2415,6 +2436,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "paths": [],
       "provides": {
         "fuzz": [
           "runs"
@@ -2437,6 +2459,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2460,6 +2483,7 @@
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -2481,6 +2505,7 @@
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2505,6 +2530,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2529,6 +2555,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -2553,6 +2580,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2575,6 +2603,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch",
@@ -2598,6 +2627,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2622,6 +2652,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -2645,6 +2676,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "paths": [],
       "provides": {
         "fuzz": [
           "runs"
@@ -2667,6 +2699,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2690,6 +2723,7 @@
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -2711,6 +2745,7 @@
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2735,6 +2770,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2759,6 +2795,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -2783,6 +2820,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -2805,6 +2843,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch",
@@ -2828,6 +2867,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2852,6 +2892,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -2875,6 +2916,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "paths": [],
       "provides": {
         "fuzz": [
           "runs"
@@ -2897,6 +2939,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2920,6 +2963,7 @@
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -2941,6 +2985,7 @@
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -2965,6 +3010,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -2989,6 +3035,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -3013,6 +3060,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -3035,6 +3083,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch",
@@ -3058,6 +3107,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -3082,6 +3132,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -3105,6 +3156,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "paths": [],
       "provides": {
         "fuzz": [
           "runs"
@@ -3127,6 +3179,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -3150,6 +3203,7 @@
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -3171,6 +3225,7 @@
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -3195,6 +3250,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -3219,6 +3275,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -3243,6 +3300,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -3265,6 +3323,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch",
@@ -3288,6 +3347,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -3312,6 +3372,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -3335,6 +3396,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "paths": [],
       "provides": {
         "fuzz": [
           "runs"
@@ -3357,6 +3419,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -3380,6 +3443,7 @@
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "paths": [],
       "provides": {
         "format": [
           "check"
@@ -3401,6 +3465,7 @@
         "C#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -3425,6 +3490,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -3449,6 +3515,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "paths": [],
       "provides": {
         "security": [
           "scans"
@@ -3473,6 +3540,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -3495,6 +3563,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "coverage": [
           "branch",
@@ -3518,6 +3587,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "paths": [],
       "provides": {
         "audit": [
           "runs"
@@ -3542,6 +3612,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "paths": [],
       "provides": {
         "mutation": [
           "incremental",
@@ -3565,6 +3636,7 @@
         "F#"
       ],
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "paths": [],
       "provides": {
         "fuzz": [
           "runs"
@@ -3586,6 +3658,9 @@
         "C#"
       ],
       "origin": ".github/workflows/function-limits.yml:7:9 (jobs.function-limits.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "function-length": [
           "limits",

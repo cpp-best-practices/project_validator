@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Zig",
+      "lines": 11,
       "origin": "build.zig",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Zig",
+      "lines": 5,
       "origin": "src/main.zig",
       "role": "product"
     },

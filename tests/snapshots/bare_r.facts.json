@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "R",
+      "lines": 1,
       "origin": "R/shop.R",
       "role": "product"
     },

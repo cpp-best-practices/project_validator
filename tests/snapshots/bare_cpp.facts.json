@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "CMake",
+      "lines": 3,
       "origin": "CMakeLists.txt",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "C++",
+      "lines": 0,
       "origin": "third_party/json/json.hpp",
       "role": "vendored"
     },

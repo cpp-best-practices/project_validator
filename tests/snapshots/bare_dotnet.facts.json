@@ -10,6 +10,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "C#",
+      "lines": 8,
       "origin": "src/App/Calculator.cs",
       "role": "product"
     },

@@ -20,15 +20,17 @@ from project_validator.facts.structure import SourceFile, Unit
 from project_validator.facts.tools import handling
 from project_validator.policy import Judge
 from project_validator.questions import AdvisedTools, LanguageAnswers, RanTools, UnitAnswer
+from project_validator.questions.reach import Reach
 from project_validator.words import folder
 
 
 def labelled(results: Mapping[str, Result]) -> Result:
-    """One result for several subjects, each named by its label: the worst status wins."""
+    """One result for several subjects, each named by its label: the worst status wins, and the least share."""
     return Result(
         status=max((result.status for result in results.values()), key=lambda status: status.severity),
         message="; ".join(f"{label}: {result.message}" for label, result in results.items()),
         details=tuple(f"{label}: {detail}" for label, result in results.items() for detail in result.details),
+        share=min(result.share for result in results.values()),
     )
 
 
@@ -186,6 +188,23 @@ def _advised(result: Result, answer: object) -> Result:
 _ADVISED = "{tool} runs in CI but cannot fail it ({why})"
 
 
+def _reached(result: Result, answer: object) -> Result:
+    """A result that passes while its tools reach only part of the product's code is filled by the share they reach,
+    and says which folders they miss (upstream #333)."""
+    found = getattr(answer, "reach", None)
+    if result.status is not Status.PASS or not isinstance(found, Reach):
+        return result
+    language = getattr(answer, "language", "")
+    missed = (
+        _MISSED.format(place=place, lines=lines, percent=round(100 * lines / found.lines), language=language)
+        for place, lines in found.missed
+    )
+    return replace(result.with_details(*missed), share=found.share)
+
+
+_MISSED = "no run reaches {place} ({lines} lines, {percent}% of the {language} lines)"
+
+
 def _found[A: UnitAnswer](
     languages: frozenset[str], context: Context, answers: Callable[[str, Facts], LanguageAnswers[A]]
 ) -> _Found[A]:
@@ -212,7 +231,7 @@ def judged[A: UnitAnswer](
     results: dict[_Place, Result] = {}
     roles = auxiliary_unit_roles(context.facts)
     for answer, named in found:
-        result = _advised(judge(answer, allow_unknown=context.options.allow_unknown), answer)
+        result = _reached(_advised(judge(answer, allow_unknown=context.options.allow_unknown), answer), answer)
         if (role := roles.get(answer.unit)) and not named:
             result = _warned(result, _AUXILIARY_UNIT.format(unit=answer.unit, role=role))
         results[(answer.language, answer.unit)] = _advisory(result, answer.language, named) if named else result

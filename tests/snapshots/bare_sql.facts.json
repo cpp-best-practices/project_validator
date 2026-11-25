@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 4,
       "origin": "dbt_project.yml",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 3,
       "origin": "packages.yml",
       "role": "product"
     },
@@ -26,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "JSON",
+      "lines": 1,
       "origin": "target/manifest.json",
       "role": "product"
     },
@@ -41,6 +44,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "SQL",
+      "lines": 0,
       "origin": "migrations/V1__orders.sql",
       "role": "product"
     },
@@ -48,6 +52,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "SQL",
+      "lines": 0,
       "origin": "models/orders.sql",
       "role": "product"
     },

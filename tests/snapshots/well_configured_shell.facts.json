@@ -4,6 +4,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -11,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -18,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 30,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -25,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -32,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "PowerShell",
+      "lines": 26,
       "origin": "src/Shop.psm1",
       "role": "product"
     },
@@ -39,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Shell",
+      "lines": 20,
       "origin": "src/shop.sh",
       "role": "product"
     },
@@ -46,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "PowerShell",
+      "lines": 23,
       "origin": "tests/Shop.Tests.ps1",
       "role": "test"
     },
@@ -53,6 +60,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Shell",
+      "lines": 25,
       "origin": "tests/shop.bats",
       "role": "test"
     },
@@ -68,6 +76,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
+      "lines": 0,
       "origin": "PSScriptAnalyzerSettings.psd1",
       "role": "product"
     },
@@ -951,6 +960,9 @@
         "Shell"
       ],
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "tests"
+      ],
       "provides": {
         "coverage": [
           "line reported",
@@ -973,6 +985,9 @@
         "Shell"
       ],
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "tests"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -996,6 +1011,9 @@
         "Shell"
       ],
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "tests"
+      ],
       "provides": {
         "coverage": [
           "line reported",
@@ -1018,6 +1036,9 @@
         "Shell"
       ],
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "tests"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -1041,6 +1062,7 @@
         "Shell"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.lint.steps[1])",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1062,6 +1084,10 @@
         "Shell"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.lint.steps[3].run)",
+      "paths": [
+        "src",
+        "tests"
+      ],
       "provides": {
         "format": [
           "check"
@@ -1083,6 +1109,7 @@
         "PowerShell"
       ],
       "origin": ".github/workflows/ci.yml:27:9 (jobs.powershell.steps[1].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1104,6 +1131,10 @@
         "PowerShell"
       ],
       "origin": ".github/workflows/ci.yml:27:9 (jobs.powershell.steps[1].run)",
+      "paths": [
+        "tests",
+        "src/Shop.psm1"
+      ],
       "provides": {
         "coverage": [
           "statement reported",
@@ -1129,6 +1160,7 @@
         "PowerShell"
       ],
       "origin": ".github/workflows/ci.yml:27:9 (jobs.powershell.steps[1].run)",
+      "paths": [],
       "provides": {
         "analysis": [
           "checks"
@@ -1150,6 +1182,10 @@
         "PowerShell"
       ],
       "origin": ".github/workflows/ci.yml:27:9 (jobs.powershell.steps[1].run)",
+      "paths": [
+        "tests",
+        "src/Shop.psm1"
+      ],
       "provides": {
         "coverage": [
           "statement reported",

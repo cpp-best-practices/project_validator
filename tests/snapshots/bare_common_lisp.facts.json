@@ -12,6 +12,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Common Lisp",
+      "lines": 4,
       "origin": "src/shop.lisp",
       "role": "product"
     },
@@ -19,6 +20,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
+      "lines": 0,
       "origin": "shop.asd",
       "role": "product"
     },

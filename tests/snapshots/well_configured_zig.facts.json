@@ -20,6 +20,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
     },
@@ -27,6 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
     },
@@ -34,6 +36,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 35,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -41,6 +44,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
     },
@@ -48,6 +52,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
+      "lines": 7,
       "origin": ".github/workflows/function-limits.yml",
       "role": "product"
     },
@@ -55,6 +60,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Zig",
+      "lines": 27,
       "origin": "build.zig",
       "role": "product"
     },
@@ -62,6 +68,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Zig",
+      "lines": 6,
       "origin": "src/main.zig",
       "role": "product"
     },
@@ -69,6 +76,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "Zig",
+      "lines": 34,
       "origin": "src/shop.zig",
       "role": "product"
     },
@@ -76,6 +84,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
+      "lines": 0,
       "origin": "build.zig.zon",
       "role": "product"
     },
@@ -3797,6 +3806,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -3818,6 +3830,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -3839,6 +3854,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -3860,6 +3878,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -3881,6 +3902,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -3902,6 +3926,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -3923,6 +3950,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -3944,6 +3974,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -3965,6 +3998,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -3986,6 +4022,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4007,6 +4046,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4028,6 +4070,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4049,6 +4094,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4070,6 +4118,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4091,6 +4142,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4112,6 +4166,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4133,6 +4190,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4154,6 +4214,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4175,6 +4238,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4196,6 +4262,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4217,6 +4286,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4238,6 +4310,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4259,6 +4334,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4280,6 +4358,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4301,6 +4382,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4322,6 +4406,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4343,6 +4430,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4364,6 +4454,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4385,6 +4478,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4406,6 +4502,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4427,6 +4526,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4448,6 +4550,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4469,6 +4574,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4490,6 +4598,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4511,6 +4622,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4532,6 +4646,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4553,6 +4670,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4574,6 +4694,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4595,6 +4718,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4616,6 +4742,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4637,6 +4766,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4658,6 +4790,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4679,6 +4814,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4700,6 +4838,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4721,6 +4862,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4742,6 +4886,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4763,6 +4910,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "format": [
           "check"
@@ -4784,6 +4934,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[4].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4805,6 +4958,7 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:26:9 (jobs.fuzz.steps[2].run)",
+      "paths": [],
       "provides": {
         "test": [
           "runs"
@@ -4828,6 +4982,7 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:26:9 (jobs.fuzz.steps[2].run)",
+      "paths": [],
       "provides": {
         "fuzz": [
           "runs"
@@ -4851,6 +5006,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.coverage.steps[3].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "test": [
           "runs"
@@ -4872,6 +5030,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/ci.yml:35:9 (jobs.coverage.steps[3].run)",
+      "paths": [
+        "src/shop.zig"
+      ],
       "provides": {
         "coverage": [
           "line reported",
@@ -4894,6 +5055,9 @@
         "Zig"
       ],
       "origin": ".github/workflows/function-limits.yml:7:9 (jobs.function-limits.steps[2].run)",
+      "paths": [
+        "."
+      ],
       "provides": {
         "function-length": [
           "limits",
