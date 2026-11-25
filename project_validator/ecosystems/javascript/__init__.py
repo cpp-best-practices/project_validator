@@ -13,6 +13,7 @@ CI runs count as CI configuration wherever a rule reads more than CI configurati
 from __future__ import annotations
 
 import json
+import posixpath
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
@@ -219,10 +220,28 @@ def workspace_members(context: Context, directory: str | None) -> list[str]:
 _WORKSPACE_FLAGS = frozenset({"-r", "--recursive", "--filter", "-F", "--workspaces", "-ws", "--workspace", "-w"})
 
 
+def _selected(command: Command, context: Context, members: list[str]) -> list[str]:
+    """The workspace packages a command's `--filter` or `--workspace` options name, each by its name or directory;
+    every package when one names none exactly (a pattern, `./packages/a...`, or no such option)."""
+    selections = option_values(command.argv, *_SELECTION_OPTIONS)
+    by_selection = {
+        **{posixpath.normpath(member): member for member in members},
+        **{name: member for member in members if isinstance(name := _package_name(context, member), str)},
+    }
+    chosen = [by_selection.get(posixpath.normpath(value) if "/" in value else value) for value in selections]
+    if not chosen or None in chosen:
+        return members
+    return [member for member in members if member in chosen]
+
+
+def _package_name(context: Context, member: str) -> object:
+    return json_value(context, joined(member, PACKAGE_JSON), "name")
+
+
 def _in_workspaces(command: Command, context: Context, name: str) -> list[Expansion]:
-    """The script `name` of each workspace package that has it."""
+    """The script `name` of each workspace package that has it, of those its options select."""
     found: list[Expansion] = []
-    for member in workspace_members(context, command.directory):
+    for member in _selected(command, context, workspace_members(context, command.directory)):
         path = joined(member, PACKAGE_JSON)
         if (script := _json_strings(json_value(context, path, "scripts")).get(name)) is not None:
             origin = Origin(path=path, at=("scripts", name))

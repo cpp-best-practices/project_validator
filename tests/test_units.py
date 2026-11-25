@@ -265,6 +265,31 @@ class WorkspaceScriptTests(unittest.TestCase):
         broken = {"package.json": "{}", "pnpm-workspace.yaml": "packages: [", **MEMBERS}
         self.assertEqual(_scripts({**broken, **_workflow(("pnpm -r test", None))}), [])
 
+    def test_a_filter_naming_packages_runs_only_their_scripts(self) -> None:
+        named = {
+            "package.json": json.dumps({"workspaces": ["packages/*"]}),
+            **{
+                f"packages/{name}/package.json": json.dumps(
+                    {"name": f"@x/{name}", "scripts": {"test": f"vitest {name}"}}
+                )
+                for name in ("a", "b")
+            },
+        }
+        only_a = [(("vitest", "a"), "packages/a")]
+        both = [*only_a, (("vitest", "b"), "packages/b")]
+        for line, expected in (
+            ("pnpm --filter @x/a test", only_a),
+            ("pnpm -F=@x/a run test", only_a),
+            ("npm test -w packages/a", only_a),
+            ("npm test -w ./packages/a", only_a),
+            ("npm run test --workspace=@x/a", only_a),
+            ("pnpm --filter @x/a --filter @x/b test", both),
+            ("pnpm --filter '@x/*' test", both),  # a pattern: every package takes part
+            ("pnpm --filter ./packages/a... test", both),
+        ):
+            with self.subTest(line=line):
+                self.assertEqual(_scripts({**named, **_workflow((line, None))}), expected)
+
 
 class ReusableWorkflowTests(unittest.TestCase):
     def _facts(self, uses: str) -> tuple[list[str], list[str]]:
