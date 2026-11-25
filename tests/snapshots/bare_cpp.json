@@ -279,6 +279,41 @@
             "unknowns": []
           }
         ]
+      },
+      {
+        "auxiliary": {},
+        "language": "CMake",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "cmake-format": {
+                "can": {
+                  "apply": "cmake-format -i CMakeLists.txt",
+                  "check": "cmake-format --check CMakeLists.txt"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "gersemi": {
+                "can": {
+                  "apply": "gersemi -i .",
+                  "check": "gersemi --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "CMake",
+            "level": "check",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
       }
     ],
     "function-limits": [
@@ -702,6 +737,39 @@
             "unknowns": []
           }
         ]
+      },
+      {
+        "auxiliary": {},
+        "language": "CMake",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "no",
+            "defined": {},
+            "known": {
+              "cmake-lint": {
+                "can": {
+                  "checks": "cmake-lint CMakeLists.txt"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "cmakelint": {
+                "can": {
+                  "checks": "cmakelint CMakeLists.txt"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "CMake",
+            "level": "checks",
+            "runs": {},
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
       }
     ],
     "tests": [
@@ -833,7 +901,24 @@
         ]
       }
     ],
-    "wellformed": []
+    "wellformed": [
+      {
+        "auxiliary": {},
+        "language": "CMake",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "CMake",
+            "parsed": [],
+            "problems": [],
+            "test_data": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      }
+    ]
   },
   "results": {
     "action-pinning": {
@@ -863,9 +948,10 @@
     },
     "code-formatting": {
       "details": [
-        "consider a CI job that runs clang-format --dry-run -Werror"
+        "CMake: consider a CI job that runs gersemi --check . (or cmake-format --check CMakeLists.txt)",
+        "C++: consider a CI job that runs clang-format --dry-run -Werror"
       ],
-      "message": "no clang-format configuration found; formatting is not defined",
+      "message": "CMake: CI never runs gersemi or cmake-format; its formatting is not enforced; C++: no clang-format configuration found; formatting is not defined",
       "status": "FAIL"
     },
     "committed-artifacts": {
@@ -1046,9 +1132,10 @@
     },
     "static-analysis": {
       "details": [
-        "consider running clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy), cppcheck (CMAKE_CXX_CPPCHECK) or scan-build --status-bugs (the Clang Static Analyzer) in CI"
+        "CMake: consider running cmake-lint CMakeLists.txt or cmakelint CMakeLists.txt in CI",
+        "C++: consider running clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy), cppcheck (CMAKE_CXX_CPPCHECK) or scan-build --status-bugs (the Clang Static Analyzer) in CI"
       ],
-      "message": "no static analyzer runs",
+      "message": "CMake: no static analyzer runs; C++: no static analyzer runs",
       "status": "FAIL"
     },
     "status-badges": {

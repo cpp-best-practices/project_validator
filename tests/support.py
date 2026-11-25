@@ -12,12 +12,13 @@ from pathlib import Path
 from types import MappingProxyType
 
 from project_validator.core import Check, Context, Options, Project, Result
-from project_validator.ecosystems import BUILT_IN, C_FAMILY, Ecosystem, ecosystems_for
+from project_validator.ecosystems import BUILT_IN, C_FAMILY, Ecosystem, ecosystems_for, registered
 from project_validator.ecosystems.c import C
 from project_validator.ecosystems.cpp import CXX
 from project_validator.facts import Command, Facts, Origin, resolved
 from project_validator.facts.expansion import script_facts
 from project_validator.facts.jobs import Job
+from project_validator.judging import by_ecosystem
 from project_validator.plugins import discover
 from project_validator.views import console as console_view
 from tests import layouts
@@ -147,14 +148,45 @@ def run_in_every_layout(
     if layouts is None:
         layouts = c_family_layouts(selected)
     results: dict[str, Result] = {}
+    # A format some layout's own files bring (a CMake layout's CMake code) is no layout's subject, in any of them.
+    brought = frozenset().union(*(_brought_formats(layout) for layout in layouts))
     for layout in layouts:
         with temp_project({**layout.files, **files}) as root:
-            results[layout.name] = selected.run(make_context(root, options, auxiliary=auxiliary))
+            result = selected.run(make_context(root, options, auxiliary=auxiliary))
+        results[layout.name] = _without_formats(result, brought)
     expected = results[layouts[0].name]
     for name, result in results.items():
         with test.subTest(layout=name):
             test.assertEqual(result, expected)
     return expected
+
+
+_BROUGHT: dict[str, frozenset[str]] = {}
+
+
+def _brought_formats(layout: ProjectLayout) -> frozenset[str]:
+    """The labels of the format ecosystems a layout's own files bring beside what it is about (a CMake layout's
+    CMakeLists.txt is CMake code), which its tests are not about."""
+    if layout.name not in _BROUGHT:
+        with temp_project(layout.files) as root:
+            found = make_context(root).structure.formats - layout.formats
+        _BROUGHT[layout.name] = frozenset(
+            ecosystem.label for ecosystem in registered() if ecosystem.kind == "format" and ecosystem.languages & found
+        )
+    return _BROUGHT[layout.name]
+
+
+def _without_formats(result: Result, labels: frozenset[str]) -> Result:
+    """`result` without the places of the format ecosystems `labels` names, refolded as the check folds its
+    ecosystems; as it is when it has none of them, or a place of another unit."""
+    if not labels or not any(place.ecosystem in labels for place in result.places):
+        return result
+    kept = [place for place in result.places if place.ecosystem not in labels]
+    by_label = {place.ecosystem: place.result for place in kept}
+    if len(by_label) != len(kept):
+        return result
+    ecosystems = {ecosystem.label: ecosystem for ecosystem in registered()}
+    return by_ecosystem({ecosystems[label]: found for label, found in by_label.items()})
 
 
 WELL_CONFIGURED = fixture_files("well_configured_cpp")

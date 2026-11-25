@@ -11,6 +11,13 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "CMake",
+      "origin": "CMakeLists.txt",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "C++",
       "origin": "third_party/json/json.hpp",
       "role": "vendored"
@@ -25,7 +32,9 @@
       "build_systems": [
         "CMake"
       ],
-      "formats": [],
+      "formats": [
+        "CMake"
+      ],
       "kind": "Unit",
       "languages": [
         "C++"
@@ -66,10 +75,28 @@
     "ecosystems": {
       "C++": [
         "build file CMakeLists.txt"
+      ],
+      "CMake": [
+        "CMakeLists.txt files"
       ]
     },
-    "files": [],
-    "formats": [],
+    "files": [
+      {
+        "files": 1,
+        "language": "CMake",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
+    "formats": [
+      "CMake"
+    ],
     "languages": [
       "C++"
     ],
@@ -79,7 +106,9 @@
           "CMake"
         ],
         "directory": ".",
-        "formats": [],
+        "formats": [
+          "CMake"
+        ],
         "languages": [
           "C++"
         ],

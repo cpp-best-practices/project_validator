@@ -385,7 +385,7 @@ class AnswerTests(unittest.TestCase):
         )
 
     def test_a_language_only_auxiliary_code_uses_is_judged_as_advisory(self) -> None:
-        files = {"CMakeLists.txt": "project(app)\n", "src/a.cpp": "", "docs/conf.py": "", **CLANG_FORMAT}
+        files = {"meson.build": "project('app', 'cpp')\n", "src/a.cpp": "", "docs/conf.py": "", **CLANG_FORMAT}
         files |= github_job("ubuntu-latest", "clang-format -n -Werror src/a.cpp")
         with temp_project(files) as root:
             # Python only in the docs is auxiliary by default (upstream #182), as it is when named.

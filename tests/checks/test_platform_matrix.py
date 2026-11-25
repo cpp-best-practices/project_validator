@@ -210,7 +210,8 @@ class JobAttributionTests(unittest.TestCase):
             {**MIXED_PROJECT, **self._jobs(("ubuntu-latest", "pip install gcovr && cmake -B b"))}
         ) as root:
             [job] = make_context(root).structure.as_dict()["ci"]["jobs"]  # type: ignore[index]
-            self.assertEqual(job["ecosystems"], ["C++", "Python"])
+            # The job runs cmake, so it works with the CMake code too.
+            self.assertEqual(job["ecosystems"], ["C++", "CMake", "Python"])
 
 
 class PlatformQuestionTests(unittest.TestCase):

@@ -58,16 +58,37 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "CMake",
+      "origin": "CMakeLists.txt",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "CMake",
+      "origin": "cmake/Dependencies.cmake",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "CMake",
+      "origin": "fuzz_test/CMakeLists.txt",
+      "role": "test"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "C++",
       "origin": "fuzz_test/fuzz_tester.cpp",
       "role": "test"
     },
     {
-      "ambiguous": true,
+      "ambiguous": false,
       "kind": "SourceFile",
-      "language": null,
-      "origin": "cmake/Dependencies.cmake",
-      "role": "product"
+      "language": "CMake",
+      "origin": "test/CMakeLists.txt",
+      "role": "test"
     },
     {
       "implied": [],
@@ -80,6 +101,7 @@
         "CMake"
       ],
       "formats": [
+        "CMake",
         "YAML"
       ],
       "kind": "Unit",
@@ -3268,6 +3290,37 @@
       ]
     },
     {
+      "advisory": "",
+      "argv": [
+        "gersemi",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "Command",
+      "line": "gersemi --check .",
+      "origin": ".github/workflows/ci.yml:45:9 (jobs.format.steps[2].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "cmake-lint",
+        "CMakeLists.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "Command",
+      "line": "cmake-lint CMakeLists.txt",
+      "origin": ".github/workflows/ci.yml:46:9 (jobs.format.steps[3].run)",
+      "via": []
+    },
+    {
       "kind": "StepReference",
       "origin": ".github/workflows/ci.yml",
       "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
@@ -3459,7 +3512,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[0]",
@@ -3482,7 +3536,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[1]",
@@ -3505,7 +3560,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[2]",
@@ -3528,7 +3584,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[3]",
@@ -3551,7 +3608,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[4]",
@@ -3574,7 +3632,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[5]",
@@ -3597,7 +3656,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[6]",
@@ -3620,7 +3680,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[7]",
@@ -3643,7 +3704,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[8]",
@@ -3666,7 +3728,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[9]",
@@ -3689,7 +3752,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[10]",
@@ -3712,7 +3776,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[11]",
@@ -3735,7 +3800,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[12]",
@@ -3758,7 +3824,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[13]",
@@ -3781,7 +3848,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[14]",
@@ -3804,7 +3872,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[15]",
@@ -3827,7 +3896,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[16]",
@@ -3850,7 +3920,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[17]",
@@ -3873,7 +3944,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[18]",
@@ -3896,7 +3968,8 @@
       ],
       "default_compiler": false,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:test[19]",
@@ -3914,7 +3987,8 @@
       "configurations": [],
       "default_compiler": true,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/ci.yml:format",
@@ -3932,7 +4006,8 @@
       "configurations": [],
       "default_compiler": true,
       "ecosystems": [
-        "C++"
+        "C++",
+        "CMake"
       ],
       "heuristic": false,
       "job": ".github/workflows/codeql-analysis.yml:analyze",
@@ -7965,6 +8040,48 @@
     {
       "advisory": "",
       "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "CMake"
+      ],
+      "origin": ".github/workflows/ci.yml:45:9 (jobs.format.steps[2].run)",
+      "provides": {
+        "format": [
+          "check"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "gersemi",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:format",
+      "kind": "ToolRun",
+      "languages": [
+        "CMake"
+      ],
+      "origin": ".github/workflows/ci.yml:46:9 (jobs.format.steps[3].run)",
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "cmake-lint",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "heuristic": false,
       "job": ".github/workflows/codeql-analysis.yml:analyze",
       "kind": "ToolRun",
       "languages": [
@@ -8039,7 +8156,8 @@
             "Release + sanitizers"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Release, ON)",
           "os": "linux",
@@ -8053,7 +8171,8 @@
             "Release"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Release, OFF)",
           "os": "linux",
@@ -8067,7 +8186,8 @@
             "Debug + sanitizers"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Debug, ON)",
           "os": "linux",
@@ -8081,7 +8201,8 @@
             "Debug"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, gcc, Debug, OFF)",
           "os": "linux",
@@ -8095,7 +8216,8 @@
             "Release + sanitizers"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, clang, Release, ON)",
           "os": "linux",
@@ -8109,7 +8231,8 @@
             "Release"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, clang, Release, OFF)",
           "os": "linux",
@@ -8123,7 +8246,8 @@
             "Debug + sanitizers"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, clang, Debug, ON)",
           "os": "linux",
@@ -8137,7 +8261,8 @@
             "Debug"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (ubuntu-latest, clang, Debug, OFF)",
           "os": "linux",
@@ -8151,7 +8276,8 @@
             "Release + sanitizers"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (macos-latest, gcc, Release, ON)",
           "os": "macos",
@@ -8165,7 +8291,8 @@
             "Release"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (macos-latest, gcc, Release, OFF)",
           "os": "macos",
@@ -8179,7 +8306,8 @@
             "Debug + sanitizers"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (macos-latest, gcc, Debug, ON)",
           "os": "macos",
@@ -8193,7 +8321,8 @@
             "Debug"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (macos-latest, gcc, Debug, OFF)",
           "os": "macos",
@@ -8207,7 +8336,8 @@
             "Release + sanitizers"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (macos-latest, clang, Release, ON)",
           "os": "macos",
@@ -8221,7 +8351,8 @@
             "Release"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (macos-latest, clang, Release, OFF)",
           "os": "macos",
@@ -8235,7 +8366,8 @@
             "Debug + sanitizers"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (macos-latest, clang, Debug, ON)",
           "os": "macos",
@@ -8249,7 +8381,8 @@
             "Debug"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (macos-latest, clang, Debug, OFF)",
           "os": "macos",
@@ -8263,7 +8396,8 @@
             "Release + sanitizers"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (windows-latest, msvc, Release, ON)",
           "os": "windows",
@@ -8277,7 +8411,8 @@
             "Release"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (windows-latest, msvc, Release, OFF)",
           "os": "windows",
@@ -8291,7 +8426,8 @@
             "Debug + sanitizers"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (windows-latest, msvc, Debug, ON)",
           "os": "windows",
@@ -8305,7 +8441,8 @@
             "Debug"
           ],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: test (windows-latest, msvc, Debug, OFF)",
           "os": "windows",
@@ -8317,7 +8454,8 @@
           ],
           "configurations": [],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/ci.yml: format",
           "os": "linux",
@@ -8329,7 +8467,8 @@
           ],
           "configurations": [],
           "ecosystems": [
-            "C++"
+            "C++",
+            "CMake"
           ],
           "name": ".github/workflows/codeql-analysis.yml: analyze",
           "os": "linux",
@@ -8355,6 +8494,10 @@
         "build file CMakeLists.txt",
         ".cpp files"
       ],
+      "CMake": [
+        ".cmake files",
+        "CMakeLists.txt files"
+      ],
       "Data": [
         ".yml files"
       ]
@@ -8370,7 +8513,34 @@
             "role": "product"
           }
         ],
-        "share": 0.8333
+        "share": 0.5
+      },
+      {
+        "files": 4,
+        "language": "CMake",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "cmake",
+            "files": 1,
+            "role": "product"
+          },
+          {
+            "directory": "fuzz_test",
+            "files": 1,
+            "role": "test"
+          },
+          {
+            "directory": "test",
+            "files": 1,
+            "role": "test"
+          }
+        ],
+        "share": 0.4
       },
       {
         "files": 1,
@@ -8382,10 +8552,11 @@
             "role": "test"
           }
         ],
-        "share": 0.1667
+        "share": 0.1
       }
     ],
     "formats": [
+      "CMake",
       "YAML"
     ],
     "languages": [
@@ -8398,6 +8569,7 @@
         ],
         "directory": ".",
         "formats": [
+          "CMake",
           "YAML"
         ],
         "languages": [

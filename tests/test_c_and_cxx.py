@@ -66,7 +66,7 @@ class CMakeDefaultLanguageTests(unittest.TestCase):
     def test_the_c_project_is_not_recognised_as_cxx(self) -> None:
         files = {"CMakeLists.txt": CMAKE_DEFAULT.format(sources="main.c"), "main.c": ""}
         with temp_project(files) as root:
-            self.assertEqual(list(make_context(root).structure.recognised_by), ["C"])
+            self.assertEqual(list(make_context(root).structure.recognised_by), ["C", "CMake"])
 
 
 class HeaderTests(unittest.TestCase):

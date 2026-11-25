@@ -88,10 +88,13 @@ class SuffixTests(unittest.TestCase):
             self.assertEqual(structure.unrecognised_suffixes, ())
 
     def test_an_ambiguous_suffix_without_a_language_adds_none(self) -> None:
-        """A CMake module adds no language; a header alone is C (see tests/test_c_and_cxx.py)."""
+        """CMake code is a format, which adds no language; a header alone is C (see tests/test_c_and_cxx.py)."""
         with _structure({"CMakeLists.txt": "", "include/app.h": "", "cmake/Warnings.cmake": ""}) as structure:
             self.assertEqual(structure.languages, frozenset({"C"}))
-            self.assertEqual(structure.recognised_by, {"C": ("build file CMakeLists.txt", ".h files")})
+            self.assertEqual(
+                structure.recognised_by,
+                {"C": ("build file CMakeLists.txt", ".h files"), "CMake": (".cmake files", "CMakeLists.txt files")},
+            )
             self.assertEqual(structure.unrecognised_suffixes, ())
         with _structure({"include/app.h": ""}) as structure:
             self.assertEqual(structure.languages, frozenset())

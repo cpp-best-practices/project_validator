@@ -2776,6 +2776,46 @@
     },
     {
       "can": {
+        "format": {
+          "apply": "cmake-format -i CMakeLists.txt",
+          "check": "cmake-format --check CMakeLists.txt"
+        }
+      },
+      "languages": [
+        "CMake"
+      ],
+      "name": "cmake-format",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "cmake-lint CMakeLists.txt"
+        }
+      },
+      "languages": [
+        "CMake"
+      ],
+      "name": "cmake-lint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "cmakelint CMakeLists.txt"
+        }
+      },
+      "languages": [
+        "CMake"
+      ],
+      "name": "cmakelint",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "analysis": {
           "checks": ""
         }
@@ -3524,6 +3564,20 @@
       "reads": [
         "gcovr"
       ],
+      "required": []
+    },
+    {
+      "can": {
+        "format": {
+          "apply": "gersemi -i .",
+          "check": "gersemi --check ."
+        }
+      },
+      "languages": [
+        "CMake"
+      ],
+      "name": "gersemi",
+      "reads": [],
       "required": []
     },
     {

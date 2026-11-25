@@ -402,6 +402,48 @@
             "unknowns": []
           }
         ]
+      },
+      {
+        "auxiliary": {},
+        "language": "CMake",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "cmake-format": {
+                "can": {
+                  "apply": "cmake-format -i CMakeLists.txt",
+                  "check": "cmake-format --check CMakeLists.txt"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "gersemi": {
+                "can": {
+                  "apply": "gersemi -i .",
+                  "check": "gersemi --check ."
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "CMake",
+            "level": "check",
+            "runs": {
+              "gersemi": {
+                "levels": [
+                  "check"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
       }
     ],
     "function-limits": [
@@ -994,6 +1036,46 @@
             "unknowns": []
           }
         ]
+      },
+      {
+        "auxiliary": {},
+        "language": "CMake",
+        "units": [
+          {
+            "advisory": {},
+            "answer": "yes",
+            "defined": {},
+            "known": {
+              "cmake-lint": {
+                "can": {
+                  "checks": "cmake-lint CMakeLists.txt"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "cmakelint": {
+                "can": {
+                  "checks": "cmakelint CMakeLists.txt"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
+            "language": "CMake",
+            "level": "checks",
+            "runs": {
+              "cmake-lint": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              }
+            },
+            "unit": ".",
+            "unknown_definitions": [],
+            "unknowns": []
+          }
+        ]
       }
     ],
     "tests": [
@@ -1165,6 +1247,22 @@
     "wellformed": [
       {
         "auxiliary": {},
+        "language": "CMake",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "CMake",
+            "parsed": [],
+            "problems": [],
+            "test_data": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
         "language": "YAML",
         "units": [
           {
@@ -1220,7 +1318,7 @@
     },
     "code-formatting": {
       "details": [],
-      "message": ".clang-format is defined and CI runs clang-format",
+      "message": "CMake: CI enforces the gersemi style; C++: .clang-format is defined and CI runs clang-format",
       "status": "PASS"
     },
     "committed-artifacts": {
@@ -1394,7 +1492,7 @@
     },
     "static-analysis": {
       "details": [],
-      "message": "clang-tidy (.clang-tidy) and cppcheck run",
+      "message": "CMake: cmake-lint runs; C++: clang-tidy (.clang-tidy) and cppcheck run",
       "status": "PASS"
     },
     "status-badges": {
