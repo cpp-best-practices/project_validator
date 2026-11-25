@@ -977,7 +977,7 @@
       "details": [
         "build with -Xswiftc -warnings-as-errors (SwiftPM 6.2: treatAllWarnings(as: .error); Xcode: SWIFT_TREAT_WARNINGS_AS_ERRORS = YES)"
       ],
-      "message": "warnings are not treated as errors in CI configuration, Package.swift or the Xcode build settings",
+      "message": "warnings are not treated as errors in CI configuration, Package.swift, the Xcode build settings or Bazel's copts",
       "status": "FAIL"
     }
   }

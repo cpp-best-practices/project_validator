@@ -6,7 +6,7 @@ A Swift build reads its settings from Package.swift or the Xcode project, so tho
 from __future__ import annotations
 
 import re
-from collections.abc import Iterator
+from collections.abc import Iterator, Mapping
 from pathlib import PurePosixPath
 
 from project_validator.build_configurations import build_type_kinds
@@ -237,7 +237,9 @@ COMPLETE_CONCURRENCY = pattern(
 )
 
 
-SWIFT_BUILD_SETTINGS_FILES = (PACKAGE_SWIFT, "*.pbxproj", "*.xcconfig", "*.xcscheme")
+# SwiftPM's manifest, Xcode's settings, and Bazel's: a BUILD file's copts, or a Starlark macro's (SwiftLint's
+# bazel/copts.bzl, upstream #207).
+SWIFT_BUILD_SETTINGS_FILES = (PACKAGE_SWIFT, "*.pbxproj", "*.xcconfig", "*.xcscheme", "BUILD", "BUILD.bazel", "*.bzl")
 _SWIFT_WARNINGS = (required(SWIFTLINT, tools=("SwiftLint",)), required(COMPLETE_CONCURRENCY))
 WARNINGS = Practice(
     name=PracticeName.WARNINGS,
@@ -288,7 +290,7 @@ WARNINGS_AS_ERRORS = Practice(
     reads=(SWIFT_BUILD_SETTINGS.name,),
     words=Wording(
         kind="warnings as errors",
-        searched="CI configuration, Package.swift or the Xcode build settings",
+        searched="CI configuration, Package.swift, the Xcode build settings or Bazel's copts",
         hint="build with -Xswiftc -warnings-as-errors (SwiftPM 6.2: treatAllWarnings(as: .error); Xcode: "
         "SWIFT_TREAT_WARNINGS_AS_ERRORS = YES)",
     ),
@@ -476,6 +478,19 @@ SWIFT_LIBFUZZER = fuzzer(
 
 SWIFT_TOOLCHAINS = versions_axis("Swift toolchain", SWIFT_LANGUAGE, SWIFT_ONLY, compiled=True)
 
+_RELEASE = re.compile(r"(\d+(?:\.\d+)+)")
+
+
+def _setup_swift(inputs: Mapping[str, str]) -> str | None:
+    """compnerd/gha-setup-swift, the Windows Swift setup (upstream #207): the release its `tag` (`6.3-RELEASE`), else
+    its `branch` (`swift-6.3-release`), names; a development branch names none. Its `swift-version`, as any setup's,
+    is read by the toolchain's `inputs`."""
+    for key in ("tag", "branch"):
+        if found := _RELEASE.search(inputs.get(key, "")):
+            return found[1]
+    return None
+
+
 SWIFT = Ecosystem(
     label=SWIFT_LANGUAGE,
     languages=SWIFT_ONLY,
@@ -488,5 +503,6 @@ SWIFT = Ecosystem(
         more=(r"\bxcode-version\W+(\d+(?:\.\d+)*|latest(?:-stable)?)", r"\bXcode_(\d+(?:\.\d+)*)\.app\b"),
         programs=(*subcommands("swift", "build", "test", "run", "package"), "xcodebuild"),
         setup=("swift",),
+        steps=(("compnerd/gha-setup-swift", _setup_swift),),
     ),
 )
