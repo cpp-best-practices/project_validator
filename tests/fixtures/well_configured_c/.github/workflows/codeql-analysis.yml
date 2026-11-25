@@ -11,5 +11,5 @@ jobs:
       - uses: github/codeql-action/init@9418214df1f2c4b8128c770156c409013b07d6b9 # v3
         with:
           languages: cpp
-      - run: cmake -S . -B build && cmake --build build
+      - run: cmake -S . -B build -Werror=dev && cmake --build build
       - uses: github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9 # v3

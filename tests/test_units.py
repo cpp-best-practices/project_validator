@@ -538,7 +538,7 @@ class AuxiliaryCodeTests(unittest.TestCase):
             [report] = json.loads(output)
             self.assertEqual(report["status"], "FAIL")
             places = {(place["ecosystem"], place["unit"]): place for place in report["places"]}
-            self.assertEqual(set(places), {("C++", "."), ("Python", ".")})
+            self.assertEqual(set(places), {("C++", "."), ("CMake", "."), ("Python", ".")})
             python = places[("Python", ".")]
             self.assertEqual(
                 (python["status"], python["auxiliary"], python["tools"]), ("WARN", ["only in tooling code"], [])

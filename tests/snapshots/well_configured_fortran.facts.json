@@ -46,6 +46,13 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "CMakePresets.json",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "Fortran",
       "origin": "app/main.f90",
       "role": "product"
@@ -82,6 +89,7 @@
         "fpm"
       ],
       "formats": [
+        "JSON",
         "TOML",
         "YAML"
       ],
@@ -139,6 +147,16 @@
       "kind": "DataFile",
       "line": null,
       "origin": ".github/workflows/function-limits.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "CMakePresets.json",
       "problem": null,
       "role": "product",
       "unread": null
@@ -409,6 +427,54 @@
     {
       "advisory": "",
       "argv": [
+        "pipx",
+        "install",
+        "gersemi",
+        "cmakelang"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "Command",
+      "line": "pipx install gersemi cmakelang",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "gersemi",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "Command",
+      "line": "gersemi --check .",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "cmake-lint",
+        "CMakeLists.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[0]",
+      "kind": "Command",
+      "line": "cmake-lint CMakeLists.txt",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.gfortran.steps[8].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
         "fpm",
         "test",
         "--compiler",
@@ -424,7 +490,7 @@
       "job": ".github/workflows/ci.yml:gfortran[0]",
       "kind": "Command",
       "line": "fpm test --compiler gfortran --profile debug --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage \"",
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "via": []
     },
     {
@@ -444,7 +510,7 @@
       "job": ".github/workflows/ci.yml:gfortran[0]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": []
     },
     {
@@ -462,9 +528,9 @@
       "job": ".github/workflows/ci.yml:gfortran[0]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -591,6 +657,54 @@
     {
       "advisory": "",
       "argv": [
+        "pipx",
+        "install",
+        "gersemi",
+        "cmakelang"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "Command",
+      "line": "pipx install gersemi cmakelang",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "gersemi",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "Command",
+      "line": "gersemi --check .",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "cmake-lint",
+        "CMakeLists.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[1]",
+      "kind": "Command",
+      "line": "cmake-lint CMakeLists.txt",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.gfortran.steps[8].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
         "fpm",
         "test",
         "--compiler",
@@ -606,7 +720,7 @@
       "job": ".github/workflows/ci.yml:gfortran[1]",
       "kind": "Command",
       "line": "fpm test --compiler gfortran --profile debug --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined\"",
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "via": []
     },
     {
@@ -626,7 +740,7 @@
       "job": ".github/workflows/ci.yml:gfortran[1]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": []
     },
     {
@@ -644,9 +758,9 @@
       "job": ".github/workflows/ci.yml:gfortran[1]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -773,6 +887,54 @@
     {
       "advisory": "",
       "argv": [
+        "pipx",
+        "install",
+        "gersemi",
+        "cmakelang"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "Command",
+      "line": "pipx install gersemi cmakelang",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "gersemi",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "Command",
+      "line": "gersemi --check .",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "cmake-lint",
+        "CMakeLists.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[2]",
+      "kind": "Command",
+      "line": "cmake-lint CMakeLists.txt",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.gfortran.steps[8].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
         "fpm",
         "test",
         "--compiler",
@@ -788,7 +950,7 @@
       "job": ".github/workflows/ci.yml:gfortran[2]",
       "kind": "Command",
       "line": "fpm test --compiler gfortran --profile release --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage \"",
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "via": []
     },
     {
@@ -808,7 +970,7 @@
       "job": ".github/workflows/ci.yml:gfortran[2]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": []
     },
     {
@@ -826,9 +988,9 @@
       "job": ".github/workflows/ci.yml:gfortran[2]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -955,6 +1117,54 @@
     {
       "advisory": "",
       "argv": [
+        "pipx",
+        "install",
+        "gersemi",
+        "cmakelang"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "Command",
+      "line": "pipx install gersemi cmakelang",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "gersemi",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "Command",
+      "line": "gersemi --check .",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "cmake-lint",
+        "CMakeLists.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[3]",
+      "kind": "Command",
+      "line": "cmake-lint CMakeLists.txt",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.gfortran.steps[8].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
         "fpm",
         "test",
         "--compiler",
@@ -970,7 +1180,7 @@
       "job": ".github/workflows/ci.yml:gfortran[3]",
       "kind": "Command",
       "line": "fpm test --compiler gfortran --profile release --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined\"",
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "via": []
     },
     {
@@ -990,7 +1200,7 @@
       "job": ".github/workflows/ci.yml:gfortran[3]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": []
     },
     {
@@ -1008,9 +1218,9 @@
       "job": ".github/workflows/ci.yml:gfortran[3]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -1137,6 +1347,54 @@
     {
       "advisory": "",
       "argv": [
+        "pipx",
+        "install",
+        "gersemi",
+        "cmakelang"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "Command",
+      "line": "pipx install gersemi cmakelang",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "gersemi",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "Command",
+      "line": "gersemi --check .",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "cmake-lint",
+        "CMakeLists.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[4]",
+      "kind": "Command",
+      "line": "cmake-lint CMakeLists.txt",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.gfortran.steps[8].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
         "fpm",
         "test",
         "--compiler",
@@ -1152,7 +1410,7 @@
       "job": ".github/workflows/ci.yml:gfortran[4]",
       "kind": "Command",
       "line": "fpm test --compiler gfortran --profile debug --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage \"",
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "via": []
     },
     {
@@ -1172,7 +1430,7 @@
       "job": ".github/workflows/ci.yml:gfortran[4]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": []
     },
     {
@@ -1190,9 +1448,9 @@
       "job": ".github/workflows/ci.yml:gfortran[4]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -1319,6 +1577,54 @@
     {
       "advisory": "",
       "argv": [
+        "pipx",
+        "install",
+        "gersemi",
+        "cmakelang"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "Command",
+      "line": "pipx install gersemi cmakelang",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "gersemi",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "Command",
+      "line": "gersemi --check .",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "cmake-lint",
+        "CMakeLists.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[5]",
+      "kind": "Command",
+      "line": "cmake-lint CMakeLists.txt",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.gfortran.steps[8].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
         "fpm",
         "test",
         "--compiler",
@@ -1334,7 +1640,7 @@
       "job": ".github/workflows/ci.yml:gfortran[5]",
       "kind": "Command",
       "line": "fpm test --compiler gfortran --profile debug --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined\"",
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "via": []
     },
     {
@@ -1354,7 +1660,7 @@
       "job": ".github/workflows/ci.yml:gfortran[5]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": []
     },
     {
@@ -1372,9 +1678,9 @@
       "job": ".github/workflows/ci.yml:gfortran[5]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -1501,6 +1807,54 @@
     {
       "advisory": "",
       "argv": [
+        "pipx",
+        "install",
+        "gersemi",
+        "cmakelang"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "Command",
+      "line": "pipx install gersemi cmakelang",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "gersemi",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "Command",
+      "line": "gersemi --check .",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "cmake-lint",
+        "CMakeLists.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[6]",
+      "kind": "Command",
+      "line": "cmake-lint CMakeLists.txt",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.gfortran.steps[8].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
         "fpm",
         "test",
         "--compiler",
@@ -1516,7 +1870,7 @@
       "job": ".github/workflows/ci.yml:gfortran[6]",
       "kind": "Command",
       "line": "fpm test --compiler gfortran --profile release --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage \"",
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "via": []
     },
     {
@@ -1536,7 +1890,7 @@
       "job": ".github/workflows/ci.yml:gfortran[6]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": []
     },
     {
@@ -1554,9 +1908,9 @@
       "job": ".github/workflows/ci.yml:gfortran[6]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -1683,6 +2037,54 @@
     {
       "advisory": "",
       "argv": [
+        "pipx",
+        "install",
+        "gersemi",
+        "cmakelang"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "Command",
+      "line": "pipx install gersemi cmakelang",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "gersemi",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "Command",
+      "line": "gersemi --check .",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "cmake-lint",
+        "CMakeLists.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[7]",
+      "kind": "Command",
+      "line": "cmake-lint CMakeLists.txt",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.gfortran.steps[8].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
         "fpm",
         "test",
         "--compiler",
@@ -1698,7 +2100,7 @@
       "job": ".github/workflows/ci.yml:gfortran[7]",
       "kind": "Command",
       "line": "fpm test --compiler gfortran --profile release --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined\"",
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "via": []
     },
     {
@@ -1718,7 +2120,7 @@
       "job": ".github/workflows/ci.yml:gfortran[7]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": []
     },
     {
@@ -1736,9 +2138,9 @@
       "job": ".github/workflows/ci.yml:gfortran[7]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -1865,6 +2267,54 @@
     {
       "advisory": "",
       "argv": [
+        "pipx",
+        "install",
+        "gersemi",
+        "cmakelang"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "Command",
+      "line": "pipx install gersemi cmakelang",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "gersemi",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "Command",
+      "line": "gersemi --check .",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "cmake-lint",
+        "CMakeLists.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[8]",
+      "kind": "Command",
+      "line": "cmake-lint CMakeLists.txt",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.gfortran.steps[8].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
         "fpm",
         "test",
         "--compiler",
@@ -1880,7 +2330,7 @@
       "job": ".github/workflows/ci.yml:gfortran[8]",
       "kind": "Command",
       "line": "fpm test --compiler gfortran --profile debug --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage \"",
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "via": []
     },
     {
@@ -1900,7 +2350,7 @@
       "job": ".github/workflows/ci.yml:gfortran[8]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": []
     },
     {
@@ -1918,9 +2368,9 @@
       "job": ".github/workflows/ci.yml:gfortran[8]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -2047,6 +2497,54 @@
     {
       "advisory": "",
       "argv": [
+        "pipx",
+        "install",
+        "gersemi",
+        "cmakelang"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "Command",
+      "line": "pipx install gersemi cmakelang",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "gersemi",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "Command",
+      "line": "gersemi --check .",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "cmake-lint",
+        "CMakeLists.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[9]",
+      "kind": "Command",
+      "line": "cmake-lint CMakeLists.txt",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.gfortran.steps[8].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
         "fpm",
         "test",
         "--compiler",
@@ -2062,7 +2560,7 @@
       "job": ".github/workflows/ci.yml:gfortran[9]",
       "kind": "Command",
       "line": "fpm test --compiler gfortran --profile debug --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined\"",
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "via": []
     },
     {
@@ -2082,7 +2580,7 @@
       "job": ".github/workflows/ci.yml:gfortran[9]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": []
     },
     {
@@ -2100,9 +2598,9 @@
       "job": ".github/workflows/ci.yml:gfortran[9]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -2229,6 +2727,54 @@
     {
       "advisory": "",
       "argv": [
+        "pipx",
+        "install",
+        "gersemi",
+        "cmakelang"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "Command",
+      "line": "pipx install gersemi cmakelang",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "gersemi",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "Command",
+      "line": "gersemi --check .",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "cmake-lint",
+        "CMakeLists.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[10]",
+      "kind": "Command",
+      "line": "cmake-lint CMakeLists.txt",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.gfortran.steps[8].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
         "fpm",
         "test",
         "--compiler",
@@ -2244,7 +2790,7 @@
       "job": ".github/workflows/ci.yml:gfortran[10]",
       "kind": "Command",
       "line": "fpm test --compiler gfortran --profile release --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage \"",
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "via": []
     },
     {
@@ -2264,7 +2810,7 @@
       "job": ".github/workflows/ci.yml:gfortran[10]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": []
     },
     {
@@ -2282,9 +2828,9 @@
       "job": ".github/workflows/ci.yml:gfortran[10]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -2411,6 +2957,54 @@
     {
       "advisory": "",
       "argv": [
+        "pipx",
+        "install",
+        "gersemi",
+        "cmakelang"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "Command",
+      "line": "pipx install gersemi cmakelang",
+      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "gersemi",
+        "--check",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "Command",
+      "line": "gersemi --check .",
+      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "cmake-lint",
+        "CMakeLists.txt"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:gfortran[11]",
+      "kind": "Command",
+      "line": "cmake-lint CMakeLists.txt",
+      "origin": ".github/workflows/ci.yml:21:9 (jobs.gfortran.steps[8].run)",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
         "fpm",
         "test",
         "--compiler",
@@ -2426,7 +3020,7 @@
       "job": ".github/workflows/ci.yml:gfortran[11]",
       "kind": "Command",
       "line": "fpm test --compiler gfortran --profile release --flag \"-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage -fsanitize=address,undefined\"",
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "via": []
     },
     {
@@ -2446,7 +3040,7 @@
       "job": ".github/workflows/ci.yml:gfortran[11]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": []
     },
     {
@@ -2464,9 +3058,9 @@
       "job": ".github/workflows/ci.yml:gfortran[11]",
       "kind": "Command",
       "line": "pipx run gcovr --fail-under-branch 80 --xml coverage.xml",
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -2482,7 +3076,7 @@
         "sanitizers": ""
       },
       "name": "ifx (ubuntu-latest, debug, )",
-      "origin": ".github/workflows/ci.yml:21:3 (jobs.ifx)",
+      "origin": ".github/workflows/ci.yml:24:3 (jobs.ifx)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -2493,7 +3087,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[0]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:29:9 (jobs.ifx.steps[0])",
+      "origin": ".github/workflows/ci.yml:32:9 (jobs.ifx.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2505,7 +3099,7 @@
       },
       "job": ".github/workflows/ci.yml:ifx[0]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:30:9 (jobs.ifx.steps[1])",
+      "origin": ".github/workflows/ci.yml:33:9 (jobs.ifx.steps[1])",
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
@@ -2514,7 +3108,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[0]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:34:9 (jobs.ifx.steps[2])",
+      "origin": ".github/workflows/ci.yml:37:9 (jobs.ifx.steps[2])",
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
@@ -2535,7 +3129,7 @@
       "job": ".github/workflows/ci.yml:ifx[0]",
       "kind": "Command",
       "line": "fpm test --compiler ifx --profile debug --flag \"-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection \"",
-      "origin": ".github/workflows/ci.yml:35:9 (jobs.ifx.steps[3].run)",
+      "origin": ".github/workflows/ci.yml:38:9 (jobs.ifx.steps[3].run)",
       "via": []
     },
     {
@@ -2551,7 +3145,7 @@
         "sanitizers": "-fsanitize=address"
       },
       "name": "ifx (ubuntu-latest, debug, -fsanitize=address)",
-      "origin": ".github/workflows/ci.yml:21:3 (jobs.ifx)",
+      "origin": ".github/workflows/ci.yml:24:3 (jobs.ifx)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -2562,7 +3156,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[1]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:29:9 (jobs.ifx.steps[0])",
+      "origin": ".github/workflows/ci.yml:32:9 (jobs.ifx.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2574,7 +3168,7 @@
       },
       "job": ".github/workflows/ci.yml:ifx[1]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:30:9 (jobs.ifx.steps[1])",
+      "origin": ".github/workflows/ci.yml:33:9 (jobs.ifx.steps[1])",
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
@@ -2583,7 +3177,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[1]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:34:9 (jobs.ifx.steps[2])",
+      "origin": ".github/workflows/ci.yml:37:9 (jobs.ifx.steps[2])",
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
@@ -2604,7 +3198,7 @@
       "job": ".github/workflows/ci.yml:ifx[1]",
       "kind": "Command",
       "line": "fpm test --compiler ifx --profile debug --flag \"-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection -fsanitize=address\"",
-      "origin": ".github/workflows/ci.yml:35:9 (jobs.ifx.steps[3].run)",
+      "origin": ".github/workflows/ci.yml:38:9 (jobs.ifx.steps[3].run)",
       "via": []
     },
     {
@@ -2620,7 +3214,7 @@
         "sanitizers": ""
       },
       "name": "ifx (ubuntu-latest, release, )",
-      "origin": ".github/workflows/ci.yml:21:3 (jobs.ifx)",
+      "origin": ".github/workflows/ci.yml:24:3 (jobs.ifx)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -2631,7 +3225,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[2]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:29:9 (jobs.ifx.steps[0])",
+      "origin": ".github/workflows/ci.yml:32:9 (jobs.ifx.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2643,7 +3237,7 @@
       },
       "job": ".github/workflows/ci.yml:ifx[2]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:30:9 (jobs.ifx.steps[1])",
+      "origin": ".github/workflows/ci.yml:33:9 (jobs.ifx.steps[1])",
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
@@ -2652,7 +3246,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[2]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:34:9 (jobs.ifx.steps[2])",
+      "origin": ".github/workflows/ci.yml:37:9 (jobs.ifx.steps[2])",
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
@@ -2673,7 +3267,7 @@
       "job": ".github/workflows/ci.yml:ifx[2]",
       "kind": "Command",
       "line": "fpm test --compiler ifx --profile release --flag \"-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection \"",
-      "origin": ".github/workflows/ci.yml:35:9 (jobs.ifx.steps[3].run)",
+      "origin": ".github/workflows/ci.yml:38:9 (jobs.ifx.steps[3].run)",
       "via": []
     },
     {
@@ -2689,7 +3283,7 @@
         "sanitizers": "-fsanitize=address"
       },
       "name": "ifx (ubuntu-latest, release, -fsanitize=address)",
-      "origin": ".github/workflows/ci.yml:21:3 (jobs.ifx)",
+      "origin": ".github/workflows/ci.yml:24:3 (jobs.ifx)",
       "os": "linux",
       "provider": "GitHub Actions",
       "services": []
@@ -2700,7 +3294,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[3]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:29:9 (jobs.ifx.steps[0])",
+      "origin": ".github/workflows/ci.yml:32:9 (jobs.ifx.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2712,7 +3306,7 @@
       },
       "job": ".github/workflows/ci.yml:ifx[3]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:30:9 (jobs.ifx.steps[1])",
+      "origin": ".github/workflows/ci.yml:33:9 (jobs.ifx.steps[1])",
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
@@ -2721,7 +3315,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[3]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:34:9 (jobs.ifx.steps[2])",
+      "origin": ".github/workflows/ci.yml:37:9 (jobs.ifx.steps[2])",
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
@@ -2742,7 +3336,7 @@
       "job": ".github/workflows/ci.yml:ifx[3]",
       "kind": "Command",
       "line": "fpm test --compiler ifx --profile release --flag \"-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection -fsanitize=address\"",
-      "origin": ".github/workflows/ci.yml:35:9 (jobs.ifx.steps[3].run)",
+      "origin": ".github/workflows/ci.yml:38:9 (jobs.ifx.steps[3].run)",
       "via": []
     },
     {
@@ -2758,7 +3352,7 @@
         "sanitizers": ""
       },
       "name": "ifx (windows-latest, debug, )",
-      "origin": ".github/workflows/ci.yml:21:3 (jobs.ifx)",
+      "origin": ".github/workflows/ci.yml:24:3 (jobs.ifx)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -2769,7 +3363,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[4]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:29:9 (jobs.ifx.steps[0])",
+      "origin": ".github/workflows/ci.yml:32:9 (jobs.ifx.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2781,7 +3375,7 @@
       },
       "job": ".github/workflows/ci.yml:ifx[4]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:30:9 (jobs.ifx.steps[1])",
+      "origin": ".github/workflows/ci.yml:33:9 (jobs.ifx.steps[1])",
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
@@ -2790,7 +3384,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[4]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:34:9 (jobs.ifx.steps[2])",
+      "origin": ".github/workflows/ci.yml:37:9 (jobs.ifx.steps[2])",
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
@@ -2811,7 +3405,7 @@
       "job": ".github/workflows/ci.yml:ifx[4]",
       "kind": "Command",
       "line": "fpm test --compiler ifx --profile debug --flag \"-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection \"",
-      "origin": ".github/workflows/ci.yml:35:9 (jobs.ifx.steps[3].run)",
+      "origin": ".github/workflows/ci.yml:38:9 (jobs.ifx.steps[3].run)",
       "via": []
     },
     {
@@ -2827,7 +3421,7 @@
         "sanitizers": "-fsanitize=address"
       },
       "name": "ifx (windows-latest, debug, -fsanitize=address)",
-      "origin": ".github/workflows/ci.yml:21:3 (jobs.ifx)",
+      "origin": ".github/workflows/ci.yml:24:3 (jobs.ifx)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -2838,7 +3432,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[5]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:29:9 (jobs.ifx.steps[0])",
+      "origin": ".github/workflows/ci.yml:32:9 (jobs.ifx.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2850,7 +3444,7 @@
       },
       "job": ".github/workflows/ci.yml:ifx[5]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:30:9 (jobs.ifx.steps[1])",
+      "origin": ".github/workflows/ci.yml:33:9 (jobs.ifx.steps[1])",
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
@@ -2859,7 +3453,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[5]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:34:9 (jobs.ifx.steps[2])",
+      "origin": ".github/workflows/ci.yml:37:9 (jobs.ifx.steps[2])",
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
@@ -2880,7 +3474,7 @@
       "job": ".github/workflows/ci.yml:ifx[5]",
       "kind": "Command",
       "line": "fpm test --compiler ifx --profile debug --flag \"-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection -fsanitize=address\"",
-      "origin": ".github/workflows/ci.yml:35:9 (jobs.ifx.steps[3].run)",
+      "origin": ".github/workflows/ci.yml:38:9 (jobs.ifx.steps[3].run)",
       "via": []
     },
     {
@@ -2896,7 +3490,7 @@
         "sanitizers": ""
       },
       "name": "ifx (windows-latest, release, )",
-      "origin": ".github/workflows/ci.yml:21:3 (jobs.ifx)",
+      "origin": ".github/workflows/ci.yml:24:3 (jobs.ifx)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -2907,7 +3501,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[6]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:29:9 (jobs.ifx.steps[0])",
+      "origin": ".github/workflows/ci.yml:32:9 (jobs.ifx.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2919,7 +3513,7 @@
       },
       "job": ".github/workflows/ci.yml:ifx[6]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:30:9 (jobs.ifx.steps[1])",
+      "origin": ".github/workflows/ci.yml:33:9 (jobs.ifx.steps[1])",
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
@@ -2928,7 +3522,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[6]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:34:9 (jobs.ifx.steps[2])",
+      "origin": ".github/workflows/ci.yml:37:9 (jobs.ifx.steps[2])",
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
@@ -2949,7 +3543,7 @@
       "job": ".github/workflows/ci.yml:ifx[6]",
       "kind": "Command",
       "line": "fpm test --compiler ifx --profile release --flag \"-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection \"",
-      "origin": ".github/workflows/ci.yml:35:9 (jobs.ifx.steps[3].run)",
+      "origin": ".github/workflows/ci.yml:38:9 (jobs.ifx.steps[3].run)",
       "via": []
     },
     {
@@ -2965,7 +3559,7 @@
         "sanitizers": "-fsanitize=address"
       },
       "name": "ifx (windows-latest, release, -fsanitize=address)",
-      "origin": ".github/workflows/ci.yml:21:3 (jobs.ifx)",
+      "origin": ".github/workflows/ci.yml:24:3 (jobs.ifx)",
       "os": "windows",
       "provider": "GitHub Actions",
       "services": []
@@ -2976,7 +3570,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[7]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:29:9 (jobs.ifx.steps[0])",
+      "origin": ".github/workflows/ci.yml:32:9 (jobs.ifx.steps[0])",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2988,7 +3582,7 @@
       },
       "job": ".github/workflows/ci.yml:ifx[7]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:30:9 (jobs.ifx.steps[1])",
+      "origin": ".github/workflows/ci.yml:33:9 (jobs.ifx.steps[1])",
       "uses": "fortran-lang/setup-fortran@d2ba6ea44297a50407664a1b3f2b0f8a4b1e3a3b"
     },
     {
@@ -2997,7 +3591,7 @@
       "inputs": {},
       "job": ".github/workflows/ci.yml:ifx[7]",
       "kind": "ActionStep",
-      "origin": ".github/workflows/ci.yml:34:9 (jobs.ifx.steps[2])",
+      "origin": ".github/workflows/ci.yml:37:9 (jobs.ifx.steps[2])",
       "uses": "fortran-lang/setup-fpm@d0b3d3d6d5d5a9a1e6b8c5d2f6a7b8c9d0e1f2a3"
     },
     {
@@ -3018,7 +3612,7 @@
       "job": ".github/workflows/ci.yml:ifx[7]",
       "kind": "Command",
       "line": "fpm test --compiler ifx --profile release --flag \"-warn all -warn errors -stand f18 -fstack-protector-strong -fcf-protection -fsanitize=address\"",
-      "origin": ".github/workflows/ci.yml:35:9 (jobs.ifx.steps[3].run)",
+      "origin": ".github/workflows/ci.yml:38:9 (jobs.ifx.steps[3].run)",
       "via": []
     },
     {
@@ -3214,6 +3808,7 @@
       "ecosystems": [
         "C",
         "C++",
+        "CMake",
         "Fortran",
         "Python"
       ],
@@ -3245,6 +3840,7 @@
       "ecosystems": [
         "C",
         "C++",
+        "CMake",
         "Fortran",
         "Python"
       ],
@@ -3276,6 +3872,7 @@
       "ecosystems": [
         "C",
         "C++",
+        "CMake",
         "Fortran",
         "Python"
       ],
@@ -3307,6 +3904,7 @@
       "ecosystems": [
         "C",
         "C++",
+        "CMake",
         "Fortran",
         "Python"
       ],
@@ -3338,6 +3936,7 @@
       "ecosystems": [
         "C",
         "C++",
+        "CMake",
         "Fortran",
         "Python"
       ],
@@ -3369,6 +3968,7 @@
       "ecosystems": [
         "C",
         "C++",
+        "CMake",
         "Fortran",
         "Python"
       ],
@@ -3400,6 +4000,7 @@
       "ecosystems": [
         "C",
         "C++",
+        "CMake",
         "Fortran",
         "Python"
       ],
@@ -3431,6 +4032,7 @@
       "ecosystems": [
         "C",
         "C++",
+        "CMake",
         "Fortran",
         "Python"
       ],
@@ -3462,6 +4064,7 @@
       "ecosystems": [
         "C",
         "C++",
+        "CMake",
         "Fortran",
         "Python"
       ],
@@ -3493,6 +4096,7 @@
       "ecosystems": [
         "C",
         "C++",
+        "CMake",
         "Fortran",
         "Python"
       ],
@@ -3524,6 +4128,7 @@
       "ecosystems": [
         "C",
         "C++",
+        "CMake",
         "Fortran",
         "Python"
       ],
@@ -3555,6 +4160,7 @@
       "ecosystems": [
         "C",
         "C++",
+        "CMake",
         "Fortran",
         "Python"
       ],
@@ -3590,7 +4196,7 @@
       "job": ".github/workflows/ci.yml:ifx[0]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: ifx (ubuntu-latest, debug, )",
-      "origin": ".github/workflows/ci.yml:21:3 (jobs.ifx)",
+      "origin": ".github/workflows/ci.yml:24:3 (jobs.ifx)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -3613,7 +4219,7 @@
       "job": ".github/workflows/ci.yml:ifx[1]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: ifx (ubuntu-latest, debug, -fsanitize=address)",
-      "origin": ".github/workflows/ci.yml:21:3 (jobs.ifx)",
+      "origin": ".github/workflows/ci.yml:24:3 (jobs.ifx)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -3636,7 +4242,7 @@
       "job": ".github/workflows/ci.yml:ifx[2]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: ifx (ubuntu-latest, release, )",
-      "origin": ".github/workflows/ci.yml:21:3 (jobs.ifx)",
+      "origin": ".github/workflows/ci.yml:24:3 (jobs.ifx)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -3659,7 +4265,7 @@
       "job": ".github/workflows/ci.yml:ifx[3]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: ifx (ubuntu-latest, release, -fsanitize=address)",
-      "origin": ".github/workflows/ci.yml:21:3 (jobs.ifx)",
+      "origin": ".github/workflows/ci.yml:24:3 (jobs.ifx)",
       "os": "linux",
       "services": [],
       "toolchains": []
@@ -3682,7 +4288,7 @@
       "job": ".github/workflows/ci.yml:ifx[4]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: ifx (windows-latest, debug, )",
-      "origin": ".github/workflows/ci.yml:21:3 (jobs.ifx)",
+      "origin": ".github/workflows/ci.yml:24:3 (jobs.ifx)",
       "os": "windows",
       "services": [],
       "toolchains": []
@@ -3705,7 +4311,7 @@
       "job": ".github/workflows/ci.yml:ifx[5]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: ifx (windows-latest, debug, -fsanitize=address)",
-      "origin": ".github/workflows/ci.yml:21:3 (jobs.ifx)",
+      "origin": ".github/workflows/ci.yml:24:3 (jobs.ifx)",
       "os": "windows",
       "services": [],
       "toolchains": []
@@ -3728,7 +4334,7 @@
       "job": ".github/workflows/ci.yml:ifx[6]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: ifx (windows-latest, release, )",
-      "origin": ".github/workflows/ci.yml:21:3 (jobs.ifx)",
+      "origin": ".github/workflows/ci.yml:24:3 (jobs.ifx)",
       "os": "windows",
       "services": [],
       "toolchains": []
@@ -3751,7 +4357,7 @@
       "job": ".github/workflows/ci.yml:ifx[7]",
       "kind": "Job",
       "name": ".github/workflows/ci.yml: ifx (windows-latest, release, -fsanitize=address)",
-      "origin": ".github/workflows/ci.yml:21:3 (jobs.ifx)",
+      "origin": ".github/workflows/ci.yml:24:3 (jobs.ifx)",
       "os": "windows",
       "services": [],
       "toolchains": []
@@ -3818,6 +4424,24 @@
       "pattern": "*.gcov",
       "syntax": "glob",
       "written": "*.gcov"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "CMakePresets.json",
+      "reader": "CMake"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "CMakePresets.json",
+      "reader": "CMake preset errors"
+    },
+    {
+      "heuristic": true,
+      "key": "cmake -Werror=dev",
+      "kind": "Setting",
+      "origin": "CMakePresets.json",
+      "tool": "CMake preset errors",
+      "value": true
     },
     {
       "kind": "ConfigurationFile",
@@ -3987,7 +4611,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "provides": {
         "test": [
           "runs"
@@ -4010,7 +4634,7 @@
         "C++",
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "provides": {
         "coverage": [
           "branch gated",
@@ -4026,7 +4650,7 @@
       ],
       "tool": "gcovr",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -4081,7 +4705,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "provides": {
         "test": [
           "runs"
@@ -4104,7 +4728,7 @@
         "C++",
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "provides": {
         "coverage": [
           "branch gated",
@@ -4120,7 +4744,7 @@
       ],
       "tool": "gcovr",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -4175,7 +4799,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "provides": {
         "test": [
           "runs"
@@ -4198,7 +4822,7 @@
         "C++",
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "provides": {
         "coverage": [
           "branch gated",
@@ -4214,7 +4838,7 @@
       ],
       "tool": "gcovr",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -4269,7 +4893,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "provides": {
         "test": [
           "runs"
@@ -4292,7 +4916,7 @@
         "C++",
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "provides": {
         "coverage": [
           "branch gated",
@@ -4308,7 +4932,7 @@
       ],
       "tool": "gcovr",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -4363,7 +4987,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "provides": {
         "test": [
           "runs"
@@ -4386,7 +5010,7 @@
         "C++",
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "provides": {
         "coverage": [
           "branch gated",
@@ -4402,7 +5026,7 @@
       ],
       "tool": "gcovr",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -4457,7 +5081,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "provides": {
         "test": [
           "runs"
@@ -4480,7 +5104,7 @@
         "C++",
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "provides": {
         "coverage": [
           "branch gated",
@@ -4496,7 +5120,7 @@
       ],
       "tool": "gcovr",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -4551,7 +5175,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "provides": {
         "test": [
           "runs"
@@ -4574,7 +5198,7 @@
         "C++",
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "provides": {
         "coverage": [
           "branch gated",
@@ -4590,7 +5214,7 @@
       ],
       "tool": "gcovr",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -4645,7 +5269,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "provides": {
         "test": [
           "runs"
@@ -4668,7 +5292,7 @@
         "C++",
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "provides": {
         "coverage": [
           "branch gated",
@@ -4684,7 +5308,7 @@
       ],
       "tool": "gcovr",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -4739,7 +5363,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "provides": {
         "test": [
           "runs"
@@ -4762,7 +5386,7 @@
         "C++",
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "provides": {
         "coverage": [
           "branch gated",
@@ -4778,7 +5402,7 @@
       ],
       "tool": "gcovr",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -4833,7 +5457,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "provides": {
         "test": [
           "runs"
@@ -4856,7 +5480,7 @@
         "C++",
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "provides": {
         "coverage": [
           "branch gated",
@@ -4872,7 +5496,7 @@
       ],
       "tool": "gcovr",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -4927,7 +5551,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "provides": {
         "test": [
           "runs"
@@ -4950,7 +5574,7 @@
         "C++",
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "provides": {
         "coverage": [
           "branch gated",
@@ -4966,7 +5590,7 @@
       ],
       "tool": "gcovr",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -5021,7 +5645,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:19:9 (jobs.gfortran.steps[6].run)",
+      "origin": ".github/workflows/ci.yml:22:9 (jobs.gfortran.steps[9].run)",
       "provides": {
         "test": [
           "runs"
@@ -5044,7 +5668,7 @@
         "C++",
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)",
+      "origin": ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)",
       "provides": {
         "coverage": [
           "branch gated",
@@ -5060,7 +5684,7 @@
       ],
       "tool": "gcovr",
       "via": [
-        ".github/workflows/ci.yml:20:9 (jobs.gfortran.steps[7].run)"
+        ".github/workflows/ci.yml:23:9 (jobs.gfortran.steps[10].run)"
       ]
     },
     {
@@ -5071,7 +5695,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:35:9 (jobs.ifx.steps[3].run)",
+      "origin": ".github/workflows/ci.yml:38:9 (jobs.ifx.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -5092,7 +5716,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:35:9 (jobs.ifx.steps[3].run)",
+      "origin": ".github/workflows/ci.yml:38:9 (jobs.ifx.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -5113,7 +5737,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:35:9 (jobs.ifx.steps[3].run)",
+      "origin": ".github/workflows/ci.yml:38:9 (jobs.ifx.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -5134,7 +5758,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:35:9 (jobs.ifx.steps[3].run)",
+      "origin": ".github/workflows/ci.yml:38:9 (jobs.ifx.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -5155,7 +5779,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:35:9 (jobs.ifx.steps[3].run)",
+      "origin": ".github/workflows/ci.yml:38:9 (jobs.ifx.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -5176,7 +5800,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:35:9 (jobs.ifx.steps[3].run)",
+      "origin": ".github/workflows/ci.yml:38:9 (jobs.ifx.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -5197,7 +5821,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:35:9 (jobs.ifx.steps[3].run)",
+      "origin": ".github/workflows/ci.yml:38:9 (jobs.ifx.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -5218,7 +5842,7 @@
       "languages": [
         "Fortran"
       ],
-      "origin": ".github/workflows/ci.yml:35:9 (jobs.ifx.steps[3].run)",
+      "origin": ".github/workflows/ci.yml:38:9 (jobs.ifx.steps[3].run)",
       "provides": {
         "test": [
           "runs"
@@ -5286,6 +5910,7 @@
           "ecosystems": [
             "C",
             "C++",
+            "CMake",
             "Fortran",
             "Python"
           ],
@@ -5305,6 +5930,7 @@
           "ecosystems": [
             "C",
             "C++",
+            "CMake",
             "Fortran",
             "Python"
           ],
@@ -5324,6 +5950,7 @@
           "ecosystems": [
             "C",
             "C++",
+            "CMake",
             "Fortran",
             "Python"
           ],
@@ -5343,6 +5970,7 @@
           "ecosystems": [
             "C",
             "C++",
+            "CMake",
             "Fortran",
             "Python"
           ],
@@ -5362,6 +5990,7 @@
           "ecosystems": [
             "C",
             "C++",
+            "CMake",
             "Fortran",
             "Python"
           ],
@@ -5381,6 +6010,7 @@
           "ecosystems": [
             "C",
             "C++",
+            "CMake",
             "Fortran",
             "Python"
           ],
@@ -5400,6 +6030,7 @@
           "ecosystems": [
             "C",
             "C++",
+            "CMake",
             "Fortran",
             "Python"
           ],
@@ -5419,6 +6050,7 @@
           "ecosystems": [
             "C",
             "C++",
+            "CMake",
             "Fortran",
             "Python"
           ],
@@ -5438,6 +6070,7 @@
           "ecosystems": [
             "C",
             "C++",
+            "CMake",
             "Fortran",
             "Python"
           ],
@@ -5457,6 +6090,7 @@
           "ecosystems": [
             "C",
             "C++",
+            "CMake",
             "Fortran",
             "Python"
           ],
@@ -5476,6 +6110,7 @@
           "ecosystems": [
             "C",
             "C++",
+            "CMake",
             "Fortran",
             "Python"
           ],
@@ -5495,6 +6130,7 @@
           "ecosystems": [
             "C",
             "C++",
+            "CMake",
             "Fortran",
             "Python"
           ],
@@ -5645,6 +6281,7 @@
     },
     "ecosystems": {
       "Data": [
+        ".json files",
         ".toml files",
         ".yml files"
       ],
@@ -5664,7 +6301,7 @@
             "role": "product"
           }
         ],
-        "share": 0.5556
+        "share": 0.5
       },
       {
         "files": 3,
@@ -5686,7 +6323,19 @@
             "role": "test"
           }
         ],
-        "share": 0.3333
+        "share": 0.3
+      },
+      {
+        "files": 1,
+        "language": "JSON",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.1
       },
       {
         "files": 1,
@@ -5698,10 +6347,11 @@
             "role": "product"
           }
         ],
-        "share": 0.1111
+        "share": 0.1
       }
     ],
     "formats": [
+      "JSON",
       "TOML",
       "YAML"
     ],
@@ -5715,6 +6365,7 @@
         ],
         "directory": ".",
         "formats": [
+          "JSON",
           "TOML",
           "YAML"
         ],

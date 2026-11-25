@@ -66,7 +66,7 @@ class CMakeDefaultLanguageTests(unittest.TestCase):
     def test_the_c_project_is_not_recognised_as_cxx(self) -> None:
         files = {"CMakeLists.txt": CMAKE_DEFAULT.format(sources="main.c"), "main.c": ""}
         with temp_project(files) as root:
-            self.assertEqual(list(make_context(root).structure.recognised_by), ["C"])
+            self.assertEqual(list(make_context(root).structure.recognised_by), ["C", "CMake"])
 
 
 class HeaderTests(unittest.TestCase):
@@ -125,7 +125,8 @@ class PerLanguageFlagsTests(unittest.TestCase):
         files = {"CMakeLists.txt": cmake, "src/main.cpp": "", "src/legacy.c": ""}
         with temp_project(files) as root:
             result = warnings_as_errors.run(make_context(root))
-        return {place.ecosystem: place.result.status for place in result.places}
+        # The CMake code's own warnings-as-errors is the CMake format's, not a language's.
+        return {place.ecosystem: place.result.status for place in result.places if place.ecosystem != "CMake"}
 
     def test_cxx_flags_count_for_cxx_alone(self) -> None:
         found = self._warnings_as_errors('project(app C CXX)\nset(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")\n')

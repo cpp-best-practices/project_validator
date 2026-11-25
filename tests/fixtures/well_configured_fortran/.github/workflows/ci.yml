@@ -16,6 +16,9 @@ jobs:
       - run: pipx run fprettify --diff --recursive src app test
       - run: pip install fortitude-lint
       - run: fortitude check
+      - run: pipx install gersemi cmakelang
+      - run: gersemi --check .
+      - run: cmake-lint CMakeLists.txt
       - run: fpm test --compiler gfortran --profile ${{ matrix.profile }} --flag "-Wall -Wextra -Wpedantic -Wimplicit-interface -Werror -std=f2018 -fhardened --coverage ${{ matrix.sanitizers }}"
       - run: pipx run gcovr --fail-under-branch 80 --xml coverage.xml
   ifx:

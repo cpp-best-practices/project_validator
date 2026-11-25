@@ -57,7 +57,7 @@ def c_family_ecosystem(
         ci_programs=CI_PROGRAMS,
         ci_usage=CI_USAGE,
         source_suffixes=dict(sources),
-        ambiguous_suffixes={**dict.fromkeys(SHARED_HEADERS, language), ".cmake": None, **ambiguous},
+        ambiguous_suffixes={**dict.fromkeys(SHARED_HEADERS, language), **ambiguous},
         family="C family",
     )
 

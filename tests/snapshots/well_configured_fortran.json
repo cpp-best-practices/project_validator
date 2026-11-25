@@ -869,6 +869,24 @@
     "wellformed": [
       {
         "auxiliary": {},
+        "language": "JSON",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "JSON",
+            "parsed": [
+              "CMakePresets.json"
+            ],
+            "problems": [],
+            "test_data": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
         "language": "TOML",
         "units": [
           {
@@ -979,7 +997,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "TOML: 1 TOML file parses; YAML: 5 YAML files parse",
+      "message": "JSON: 1 JSON file parses; TOML: 1 TOML file parses; YAML: 5 YAML files parse",
       "status": "PASS"
     },
     "dependency-audit": {

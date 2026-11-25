@@ -1,0 +1,4 @@
+cmake_minimum_required(VERSION 3.25)
+project(shop_modules LANGUAGES NONE)
+
+include(cmake/Shop.cmake)

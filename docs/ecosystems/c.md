@@ -1,7 +1,8 @@
 # C
 
 Recognised by `.c` sources, and by CMake (`CMakeLists.txt`), Meson (`meson.build`) or Bazel. A project is judged by
-the rules of the build system it uses; one using none is judged as a CMake project.
+the rules of the build system it uses; one using none is judged as a CMake project. The CMake code itself is judged as
+[CMake](cmake.md), a format: it is formatted and linted.
 
 With Bazel (`MODULE.bazel`, `WORKSPACE` or `BUILD.bazel`), the tests are the test rules its BUILD files define
 (`cc_test`), which `bazel test` or `bazel coverage` runs; a command's `--compilation_mode` is its build type (`dbg`

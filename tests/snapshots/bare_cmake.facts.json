@@ -1,0 +1,93 @@
+{
+  "facts": [
+    {
+      "build_system": "CMake",
+      "kind": "BuildFile",
+      "languages": [],
+      "origin": "CMakeLists.txt"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "CMake",
+      "origin": "CMakeLists.txt",
+      "role": "product"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_systems": [
+        "CMake"
+      ],
+      "formats": [
+        "CMake"
+      ],
+      "kind": "Unit",
+      "languages": [],
+      "origin": ".",
+      "role": "product",
+      "tests": []
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "CMakeLists.txt",
+      "reader": "CMake"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "CMakeLists.txt",
+      "reader": "Fortran programs"
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "CMake"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "CMake": [
+        "CMakeLists.txt files"
+      ]
+    },
+    "files": [
+      {
+        "files": 1,
+        "language": "CMake",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
+    "formats": [
+      "CMake"
+    ],
+    "languages": [],
+    "units": [
+      {
+        "build_systems": [
+          "CMake"
+        ],
+        "directory": ".",
+        "formats": [
+          "CMake"
+        ],
+        "languages": [],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}
