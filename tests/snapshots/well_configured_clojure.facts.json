@@ -60,7 +60,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
-      "lines": 0,
+      "lines": 1,
       "origin": ".cljfmt.edn",
       "role": "product"
     },
@@ -68,7 +68,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
-      "lines": 0,
+      "lines": 11,
       "origin": "deps.edn",
       "role": "product"
     },
@@ -76,7 +76,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
-      "lines": 0,
+      "lines": 1,
       "origin": "nvd-config.edn",
       "role": "product"
     },
@@ -84,7 +84,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
-      "lines": 0,
+      "lines": 2,
       "origin": "tests.edn",
       "role": "product"
     },
@@ -93,7 +93,8 @@
       "kind": "AuxiliaryCode",
       "named": [],
       "origin": ".",
-      "primary": []
+      "primary": [],
+      "stray": []
     },
     {
       "build_systems": [

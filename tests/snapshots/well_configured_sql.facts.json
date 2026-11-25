@@ -92,7 +92,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "SQL",
-      "lines": 0,
+      "lines": 4,
       "origin": "migrations/V1__orders.sql",
       "role": "product"
     },
@@ -100,7 +100,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "SQL",
-      "lines": 0,
+      "lines": 5,
       "origin": "models/staging/stg_orders.sql",
       "role": "product"
     },
@@ -108,7 +108,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "SQL",
-      "lines": 0,
+      "lines": 3,
       "origin": "tests/assert_positive_amounts.sql",
       "role": "test"
     },
@@ -117,7 +117,8 @@
       "kind": "AuxiliaryCode",
       "named": [],
       "origin": ".",
-      "primary": []
+      "primary": [],
+      "stray": []
     },
     {
       "build_systems": [

@@ -68,7 +68,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
-      "lines": 0,
+      "lines": 18,
       "origin": "Makefile.PL",
       "role": "product"
     },
@@ -76,7 +76,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "Perl",
-      "lines": 0,
+      "lines": 13,
       "origin": "t/shop.t",
       "role": "test"
     },
@@ -85,7 +85,8 @@
       "kind": "AuxiliaryCode",
       "named": [],
       "origin": ".",
-      "primary": []
+      "primary": [],
+      "stray": []
     },
     {
       "build_systems": [

@@ -76,7 +76,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
-      "lines": 0,
+      "lines": 8,
       "origin": "PSScriptAnalyzerSettings.psd1",
       "role": "product"
     },
@@ -85,7 +85,8 @@
       "kind": "AuxiliaryCode",
       "named": [],
       "origin": ".",
-      "primary": []
+      "primary": [],
+      "stray": []
     },
     {
       "build_systems": [],

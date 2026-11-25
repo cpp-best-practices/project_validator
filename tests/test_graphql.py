@@ -109,18 +109,16 @@ class GraphQLTests(unittest.TestCase):
         self.assertEqual(self._run(schema_compatibility, annotating).status, Status.WARN)
 
     def test_the_schema_is_linted(self) -> None:
-        self.assertEqual(
-            self._run(static_analysis, _ci("graphql-schema-linter 'schema/**/*.graphql'")),
-            Result.passed("graphql-schema-linter runs"),
-        )
+        linted = self._run(static_analysis, _ci("graphql-schema-linter 'schema/**/*.graphql'"))
+        self.assertEqual(linted, Result.passed("graphql-schema-linter runs"))
         with_rules = {
             ".graphql-schema-linterrc": '{ "rules": ["types-have-descriptions"] }',
             **_ci("graphql-schema-linter schema"),
         }
-        self.assertEqual(
-            self._run(static_analysis, with_rules),
-            Result.passed("graphql-schema-linter (.graphql-schema-linterrc) runs"),
-        )
+        configured = self._run(static_analysis, with_rules)
+        self.assertEqual(configured.message, "graphql-schema-linter (.graphql-schema-linterrc) runs")
+        # It reads the schema, not the operations beside it: the gate is in place for part of the code (#333).
+        self.assertEqual(configured.details, ("no run reaches operations/ (7 lines, 32% of the GraphQL lines)",))
         self.assertEqual(self._run(static_analysis, _ci("prettier --check .")).status, Status.FAIL)
 
     def test_eslint_lints_graphql_with_its_plugin(self) -> None:

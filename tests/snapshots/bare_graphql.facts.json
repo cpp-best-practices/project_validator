@@ -12,7 +12,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "GraphQL",
-      "lines": 0,
+      "lines": 3,
       "origin": "schema/schema.graphql",
       "role": "product"
     },
@@ -21,7 +21,8 @@
       "kind": "AuxiliaryCode",
       "named": [],
       "origin": ".",
-      "primary": []
+      "primary": [],
+      "stray": []
     },
     {
       "build_systems": [],

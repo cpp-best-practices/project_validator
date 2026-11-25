@@ -804,7 +804,9 @@
       "status": "PASS"
     },
     "code-formatting": {
-      "details": [],
+      "details": [
+        "no run reaches migrations/ (4 lines, 44% of the SQL lines)"
+      ],
       "message": ".sqlfluff is defined and CI runs sqlfluff",
       "status": "PASS"
     },
