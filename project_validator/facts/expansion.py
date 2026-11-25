@@ -76,9 +76,10 @@ class Launched:
 
 @dataclass(frozen=True, slots=True)
 class Only:
-    """An expansion that holds in only the builds `when` names (a recipe in a makefile's conditional)."""
+    """An expansion that holds in only the builds `when` names (a recipe in a makefile's conditional, a bazel command
+    with the options of the config for its host's OS)."""
 
-    expansion: Script | Unknown
+    expansion: Script | Invocation | Unknown
     when: Condition
 
 

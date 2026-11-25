@@ -1,6 +1,7 @@
 """C: built with CMake or Meson, judged by its compilers. C and C++ are separate languages and separate ecosystems,
 which share their build systems, CI programs and tools (`project_validator.c_family`); C is judged on its own, with
-C's flags (`CMAKE_C_FLAGS`, `c_std`), never C++'s. A project with neither build system is judged as a CMake project.
+C's flags (`CMAKE_C_FLAGS`, `c_std`), never C++'s. A project with none of its build systems (CMake, Meson, Bazel) is
+judged as a CMake project.
 
 The shape of a C-family ecosystem (`c_family_ecosystem`) is here, and the C++ profile builds its ecosystem with it.
 """
@@ -11,6 +12,7 @@ import re
 from collections.abc import Mapping
 from types import MappingProxyType
 
+from project_validator.build_systems.bazel.build import BAZEL
 from project_validator.build_systems.cmake.build import CMAKE
 from project_validator.build_systems.meson.build import MESON
 from project_validator.ecosystems.model import Ecosystem
@@ -50,7 +52,7 @@ def c_family_ecosystem(
     return Ecosystem(
         label=language,
         languages=frozenset({language}),
-        build_systems=(CMAKE, MESON),
+        build_systems=(CMAKE, MESON, BAZEL),
         default_build_system=CMAKE,
         ci_programs=CI_PROGRAMS,
         ci_usage=CI_USAGE,

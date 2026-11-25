@@ -840,6 +840,13 @@
               ]
             },
             "known": {
+              "bazel test": {
+                "can": {
+                  "runs": "bazel test"
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "swift test or xcodebuild test": {
                 "can": {
                   "runs": "swift test or xcodebuild test"

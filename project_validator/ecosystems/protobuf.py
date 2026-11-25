@@ -1,9 +1,10 @@
 """Protobuf: `.proto` schemas (and the gRPC services they define), a format judged by buf, or protoc: the schemas
-compile (`schema-validation`: `buf build`, `protoc`), lint (`static-analysis`: `buf lint`, with the rules `buf.yaml`
-sets) and are formatted (`code-formatting`: `buf format --diff --exit-code`). `bufbuild/buf-action` builds, lints,
-formats and checks breaking changes unless told otherwise. Each file declares its `syntax` (or `edition`) and its
-`package` (`schema-declared`), and CI checks them for breaking changes (`schema-compatibility`: `buf breaking`, which
-the action runs unless told otherwise). `buf.lock` beside a `buf.yaml` with `deps` is a dependency rule (#24)."""
+compile (`schema-validation`: `buf build`, `protoc`, or a Bazel build of `proto_library` rules), lint
+(`static-analysis`: `buf lint`, with the rules `buf.yaml` sets) and are formatted (`code-formatting`: `buf format
+--diff --exit-code`). `bufbuild/buf-action` builds, lints, formats and checks breaking changes unless told otherwise.
+Each file declares its `syntax` (or `edition`) and its `package` (`schema-declared`), and CI checks them for breaking
+changes (`schema-compatibility`: `buf breaking`, which the action runs unless told otherwise). `buf.lock` beside a
+`buf.yaml` with `deps` is a dependency rule (#24)."""
 
 from __future__ import annotations
 
@@ -12,16 +13,17 @@ from collections.abc import Iterator, Mapping
 from pathlib import PurePosixPath
 
 from project_validator import yaml_support
+from project_validator.build_systems.bazel.build import BAZEL_NAME, bazel_command
 from project_validator.core import Project
 from project_validator.ecosystems.model import Ecosystem
-from project_validator.facts import Facts, Setting
+from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.declaration import Declaration, Declares, declaring
 from project_validator.facts.expansion import Action
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.schema import compatibility_checked, compatibility_checker, validated, validator
 from project_validator.facts.settings import SettingsReader, yaml_settings
-from project_validator.facts.tools import Definition, defined_by, starts, when
+from project_validator.facts.tools import Definition, Run, defined_by, starts, when
 
 PROTOBUF = "Protobuf"
 PROTOBUF_ONLY = frozenset({PROTOBUF})
@@ -137,6 +139,25 @@ PROTOC = validator(
     languages=PROTOBUF_ONLY,
     how="protoc --proto_path=proto proto/**/*.proto",
     validates=when(starts(("protoc",), ("grpc_tools.protoc",)), validated),
+)
+
+
+def _bazel_proto(command: Command, facts: Facts) -> Run | None:
+    """`bazel build` (or test) where the BUILD files define proto_library rules, whose schemas protoc compiles."""
+    found = bazel_command(resolved(command))
+    if found is None or found[0] not in ("build", "test", "coverage"):
+        return None
+    rules = (setting.value for setting in facts.where(Setting, tool=BAZEL_NAME, key="rules"))
+    return validated() if any(isinstance(kinds, tuple) and "proto_library" in kinds for kinds in rules) else None
+
+
+# Bazel's proto_library compiles its schemas with protoc as the build does (grpc-proto, envoy's data-plane-api).
+BAZEL_PROTO_LIBRARY = validator(
+    name="Bazel proto_library",
+    languages=PROTOBUF_ONLY,
+    how="bazel build //... over proto_library rules",
+    validates=_bazel_proto,
+    reads=(BAZEL_NAME,),
 )
 # `buf breaking` compares the module with what it is told (`--against .git#branch=main`, or the registry).
 BUF_BREAKING = compatibility_checker(

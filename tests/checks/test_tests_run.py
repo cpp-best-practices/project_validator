@@ -35,7 +35,8 @@ from tests.support import (
 )
 
 NO_C_TESTS = (
-    "no tests found (tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call) or "
+    "no tests found (tests defined by Bazel test rules (cc_test, swift_test, sh_test, …) in BUILD files, "
+    "tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call) or "
     "tests registered with Meson's test() in meson.build)"
 )
 
@@ -74,7 +75,8 @@ class CtestRunsTests(unittest.TestCase):
         cmake = {"CMakeLists.txt": "include(CTest)\ncatch_discover_tests(tests)\n"}
         result = self._run({**cmake, **github_job("ubuntu-latest", "cmake --build build")})
         self.assertEqual(
-            result, Result.warned(f"{CTEST_TESTS}: 1 file(s), but no CI configuration runs ctest or meson test")
+            result,
+            Result.warned(f"{CTEST_TESTS}: 1 file(s), but no CI configuration runs bazel test, ctest or meson test"),
         )
 
     def test_passes_when_any_ci_provider_runs_ctest(self) -> None:
@@ -88,7 +90,8 @@ class CtestRunsTests(unittest.TestCase):
     def test_build_mode_counts_the_tests_ctest_finds(self) -> None:
         result = tests_run.run(make_context(FIXTURES / "buildable", Options(build=True)))
         self.assertEqual(
-            result, Result.warned(f"{CTEST_TESTS}: 1 file(s), but no CI configuration runs ctest or meson test")
+            result,
+            Result.warned(f"{CTEST_TESTS}: 1 file(s), but no CI configuration runs bazel test, ctest or meson test"),
         )
 
     @unittest.skipUnless(shutil.which("cmake") and shutil.which("ninja"), "cmake or ninja is not installed")
@@ -138,7 +141,9 @@ class MesonTestsTests(unittest.TestCase):
     def test_warns_when_ci_never_runs_meson_test(self) -> None:
         result = self._run({"tests/meson.build": "test('unit', executable('t', 't.cpp'))\n"})
         meson = "tests registered with Meson's test() in meson.build"
-        self.assertEqual(result, Result.warned(f"{meson}: 1 file(s), but no CI configuration runs ctest or meson test"))
+        self.assertEqual(
+            result, Result.warned(f"{meson}: 1 file(s), but no CI configuration runs bazel test, ctest or meson test")
+        )
 
     def test_passes_when_ci_runs_meson_test(self) -> None:
         for command in ("meson test -C build", "ninja -C build test"):

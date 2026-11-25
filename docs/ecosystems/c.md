@@ -1,7 +1,13 @@
 # C
 
-Recognised by `.c` sources, and by CMake (`CMakeLists.txt`) or Meson (`meson.build`). A project is judged by the rules
-of the build system it uses; one using neither is judged as a CMake project.
+Recognised by `.c` sources, and by CMake (`CMakeLists.txt`), Meson (`meson.build`) or Bazel. A project is judged by
+the rules of the build system it uses; one using none is judged as a CMake project.
+
+With Bazel (`MODULE.bazel`, `WORKSPACE` or `BUILD.bazel`), the tests are the test rules its BUILD files define
+(`cc_test`), which `bazel test` or `bazel coverage` runs; a command's `--compilation_mode` is its build type (`dbg`
+Debug, `opt` Release); and a bazel command runs with the options its `.bazelrc` gives it (those of `common` and the
+commands it inherits, of each `--config` it names, and, with `--enable_platform_specific_config`, of the config for
+its host's OS), so `--copt=-Werror` there counts as the command's own.
 
 C and [C++](cpp.md) are separate languages, judged separately: a project with sources in both is judged once for each,
 each by its own flags (`CMAKE_C_FLAGS` and `$<COMPILE_LANGUAGE:C>` for C; flags for every language count for both). A

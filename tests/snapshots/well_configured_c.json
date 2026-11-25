@@ -1005,6 +1005,13 @@
               ]
             },
             "known": {
+              "bazel test": {
+                "can": {
+                  "runs": "bazel test"
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "ctest": {
                 "can": {
                   "runs": "ctest"

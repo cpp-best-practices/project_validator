@@ -6,7 +6,9 @@ format's, and holds buf's settings. A CI job works with the ecosystem when it ru
 
 ## `schema-validation`
 
-The schemas compile: `buf build` (or `bufbuild/buf-action`, which builds first), or `protoc` on the files.
+The schemas compile: `buf build` (or `bufbuild/buf-action`, which builds first), `protoc` on the files, or a
+`bazel build` (or `bazel test`) where the BUILD files define `proto_library` rules, which protoc compiles as the build
+does (grpc-proto).
 
 ## `static-analysis`
 

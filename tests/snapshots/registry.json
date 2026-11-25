@@ -203,6 +203,21 @@
     },
     {
       "can": {
+        "schema": {
+          "validates": "bazel build //... over proto_library rules"
+        }
+      },
+      "languages": [
+        "Protobuf"
+      ],
+      "name": "Bazel proto_library",
+      "reads": [
+        "Bazel"
+      ],
+      "required": []
+    },
+    {
+      "can": {
         "format": {
           "apply": "csharpier format .",
           "check": "csharpier check ."
@@ -2140,6 +2155,25 @@
       ],
       "name": "bats",
       "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "bazel test"
+        }
+      },
+      "languages": [
+        "C",
+        "C++",
+        "Objective-C",
+        "Objective-C++",
+        "Swift"
+      ],
+      "name": "bazel test",
+      "reads": [
+        "Bazel"
+      ],
       "required": []
     },
     {

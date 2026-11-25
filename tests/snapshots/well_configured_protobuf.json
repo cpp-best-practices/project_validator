@@ -121,6 +121,13 @@
             "answer": "yes",
             "defined": {},
             "known": {
+              "Bazel proto_library": {
+                "can": {
+                  "validates": "bazel build //... over proto_library rules"
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "buf build": {
                 "can": {
                   "validates": "buf build (or bufbuild/buf-action)"
