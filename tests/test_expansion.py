@@ -359,9 +359,13 @@ lint:
             "$(filter-out %.c,$(A))",
             "$(findstring y,$(A)) [$(findstring q,$(A))]",
             "[$(strip   a   b  )]",
+            "$(addprefix test-,$(B))",
+            "$(addsuffix .o,$(B))",
+            "$(subst sh,SH,$(B))",
+            "$(patsubst %.c,%.o,$(A))",
             "$(filter %.c,$U)",
         )
-        makefile = "A = x.c y.h z.c\nall:\n" + "".join(f"\techo {recipe}\n" for recipe in recipes)
+        makefile = "A = x.c y.h z.c\nB = sh bash\nall:\n" + "".join(f"\techo {recipe}\n" for recipe in recipes)
         files = {"Makefile": makefile, **github_job("ubuntu-latest", "make")}
         self.assertEqual(
             _expanded(_facts(files)),
@@ -370,9 +374,29 @@ lint:
                 ("echo", "y.h"),
                 ("echo", "y", "[]"),
                 ("echo", "[a", "b]"),
+                ("echo", "test-sh", "test-bash"),
+                ("echo", "sh.o", "bash.o"),
+                ("echo", "SH", "baSH"),
+                ("echo", "x.o", "y.h", "z.o"),
                 ("echo", "$(filter %.c,$U)"),
             ],
         )
+
+    def test_rules_named_by_a_text_function_are_rules(self) -> None:
+        """nvm's `SHELL_TARGETS := $(addprefix test-,$(SHELLS))` names a rule for each shell, which `make test-bash`
+        runs (upstream #376's corpus run: those targets read as "no rule builds it")."""
+        makefile = (
+            "SHELLS := sh bash\nSHELL_TARGETS := $(addprefix test-,$(SHELLS))\n"
+            "$(SHELL_TARGETS):\n\turchin -f test/fast\n"
+        )
+        facts = _facts({"Makefile": makefile, **github_job("ubuntu-latest", "make test-bash")})
+        self.assertEqual(_expanded(facts), [("urchin", "-f", "test/fast")])
+
+    def test_prerequisites_named_by_a_variable_are_expanded_as_the_targets_are(self) -> None:
+        """pyenv's `test-docker: $(TEST_UNIT_DOCKER_PREFIX)` and `$(TEST_UNIT_DOCKER_PREFIX):`."""
+        makefile = "PREFIX = test-unit\ntest-docker: $(PREFIX)\n$(PREFIX):\n\tbats test\n"
+        facts = _facts({"Makefile": makefile, **github_job("ubuntu-latest", "make test-docker")})
+        self.assertEqual(_expanded(facts), [("bats", "test")])
 
     def test_a_rule_written_in_a_branch_runs_only_where_it_holds(self) -> None:
         makefile = "all: test\nifeq ($(OS),Windows_NT)\nall: package\nendif\ntest:\n\tctest\npackage:\n\tcpack\n"

@@ -701,7 +701,7 @@
     },
     "ci-present": {
       "details": [],
-      "message": "no CI configuration found (looked for AppVeyor, Azure Pipelines, CircleCI, Google Cloud Build, GitHub Actions, GitLab CI, Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines, Woodpecker, pre-commit.ci, Read the Docs, Travis CI)",
+      "message": "no CI configuration found (looked for AppVeyor, Azure Pipelines, CircleCI, Cirrus CI, Google Cloud Build, GitHub Actions, GitLab CI, Jenkins, Buildkite, Drone, Bitbucket Pipelines, Woodpecker, pre-commit.ci, Read the Docs, Travis CI)",
       "status": "FAIL"
     },
     "code-formatting": {

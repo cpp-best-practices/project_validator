@@ -22,11 +22,6 @@ DRONE = CiProvider(
     files=(".drone.yml",),
     badges=(pattern("Drone", r"/api/badges/[^/\s]+/[^/\s]+/status\.svg|img\.shields\.io/drone/build/"),),
 )
-CIRRUS_CI = CiProvider(
-    name="Cirrus CI",
-    files=(".cirrus.yml",),
-    badges=(pattern("Cirrus CI", r"api\.cirrus-ci\.com/github/\S+\.svg|img\.shields\.io/cirrus/"),),
-)
 BITBUCKET_PIPELINES = CiProvider(name="Bitbucket Pipelines", files=("bitbucket-pipelines.yml",))
 WOODPECKER = CiProvider(
     name="Woodpecker",

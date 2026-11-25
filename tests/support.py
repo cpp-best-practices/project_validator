@@ -329,6 +329,8 @@ def ci_running(provider: str, *commands: str) -> dict[str, str]:
         return {CI_FILES[provider]: json.dumps({"jobs": {"test": {"docker": [{"image": "x"}], "steps": steps}}})}
     if provider == "Travis CI":
         return {CI_FILES[provider]: json.dumps({"script": list(commands)})}
+    if provider == "Cirrus CI":
+        return {CI_FILES[provider]: json.dumps({"task": {"container": {"image": "x"}, "script": list(commands)}})}
     return {CI_FILES[provider]: "".join(f"script: {command}\n" for command in commands)}
 
 

@@ -8,22 +8,29 @@ the leg's variables give. A `script:` step runs in bash (in cmd on Windows); `ba
 their shell; the known tasks run their commands (`CmdLine`, `Bash`, `PowerShell`, `DotNetCoreCLI`, `Maven`,
 `Gradle`, `CMake`, `Npm`, `MSBuild`, `VSBuild`) or set up their toolchain (`UseDotNet`, `UsePythonVersion`, `NodeTool`,
 `JavaToolInstaller`, `GoTool`); other tasks run nothing of the project's. A step that continues on error cannot fail
-the job. Templates are not read, nor is a matrix an expression computes: both are unknown. Deployment jobs, which
-deploy rather than build, are not jobs of the project's.
+the job. A template of the repository's own (`template: eng/build.yml`, relative to the file that names it, or to
+the root after `/`) is read where it is named: its parameters take the values passed, over their defaults, and its
+template expressions are evaluated (`project_validator.ci.azure_expressions`); one of another repository, or whose
+expressions cannot be evaluated, is unknown, as is a matrix an expression computes. Deployment jobs, which deploy
+rather than build, are not jobs of the project's.
 """
 
 from __future__ import annotations
 
+import posixpath
 import re
 from collections.abc import Iterator, Mapping
 from dataclasses import dataclass, replace
 
 from project_validator.ci import CiProvider, Load, strings
+from project_validator.ci.azure_expressions import Unevaluated, expand
 from project_validator.facts import CiJob, Fact, Origin, Unknown
 from project_validator.facts.exit_status import POSIX as POSIX_SHELL
 from project_validator.facts.exit_status import Shell
 from project_validator.facts.expansion import advised, script_facts
 from project_validator.facts.shell import CMD, POSIX, POWERSHELL, Dialect, ShellSyntaxError, command_line, split_words
+from project_validator.includes import Chain, Refused, follow
+from project_validator.limits import AZURE_TEMPLATES
 from project_validator.platforms import detect_operating_systems
 from project_validator.text import pattern
 
@@ -53,14 +60,36 @@ def _variables(value: object) -> dict[str, str]:
     return {str(entry["name"]): str(entry.get("value", "")) for entry in entries}
 
 
+@dataclass(frozen=True, slots=True)
+class _Reader:
+    """How templates are read: the loader of the project's files, and the templates followed to reach this one, the
+    pipeline first (its jobs are named after it)."""
+
+    load: Load
+    chain: Chain
+
+    @property
+    def path(self) -> str:
+        return self.chain.paths[-1]
+
+    @property
+    def pipeline(self) -> str:
+        return self.chain.paths[0]
+
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class _Job:
-    """One leg of a job: where its facts go, its variables, and the OS its steps run on."""
+    """One leg of a job: where its facts go (the file its steps are written in), its variables, and the OS its steps
+    run on."""
 
-    path: str
+    reader: _Reader
     identity: str
     variables: Mapping[str, str]
     windows: bool
+
+    @property
+    def path(self) -> str:
+        return self.reader.path
 
     def substituted(self, text: str) -> str:
         return _MACRO.sub(lambda match: self.variables.get(match[1] or match[2], match[0]), text)
@@ -174,9 +203,12 @@ def _steps_facts(job: _Job, steps: object, at: _Path) -> Iterator[Fact]:
             continue
         place = (*at, index)
         if isinstance(step.get("template"), str):
-            subject = f"the template {step['template']}"
-            origin = Origin(path=job.path, at=place)
-            yield Unknown(origin=origin, subject=subject, reason="templates are not read", hides="commands")
+            read = _template(job.reader, step, place, "commands", job.variables)
+            if isinstance(read, Unknown):
+                yield read
+            else:
+                reader, document = read
+                yield from _steps_facts(replace(job, reader=reader), document.get("steps"), ("steps",))
         elif isinstance(step.get("task"), str):
             yield from _task_facts(job, step, place)
         elif (script := _script(step, job.windows)) is not None:
@@ -202,9 +234,10 @@ def _toolchains(steps: object, variables: Mapping[str, str]) -> dict[str, str]:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class _Context:
-    """Where a job is: the pipeline's file, the variables and pool of the levels above it."""
+    """Where a job is: the file it is written in (with how templates are read), the variables and pool of the levels
+    above it."""
 
-    path: str
+    reader: _Reader
     variables: Mapping[str, str]
     pool: object
     prefix: str
@@ -225,7 +258,7 @@ def _job_facts(context: _Context, job: Mapping[str, object], at: _Path) -> Itera
     name = str(job.get("job") or "job")
     shown = str(job.get("displayName") or name)
     legs = _legs(job)
-    origin = Origin(path=context.path, at=at)
+    origin = Origin(path=context.reader.path, at=at)
     if legs is None:
         reason = "it is computed by an expression"
         yield Unknown(origin=origin, subject=f"the matrix of job {shown}", reason=reason, hides="jobs")
@@ -233,7 +266,7 @@ def _job_facts(context: _Context, job: Mapping[str, object], at: _Path) -> Itera
     for leg, values in legs.items():
         variables = {**context.variables, **_variables(job.get("variables")), **values}
         os = _os(job.get("pool", context.pool), variables)
-        identity = f"{context.path}:{context.prefix}{name}" + (f"[{leg}]" if leg else "")
+        identity = f"{context.reader.pipeline}:{context.prefix}{name}" + (f"[{leg}]" if leg else "")
         yield CiJob(
             origin=origin,
             id=identity,
@@ -245,15 +278,56 @@ def _job_facts(context: _Context, job: Mapping[str, object], at: _Path) -> Itera
             services=tuple(image for found in strings(job.get("services")).values() if (image := _image(found))),
             env=variables,
         )
-        state = _Job(path=context.path, identity=identity, variables=variables, windows=os == "windows")
+        state = _Job(reader=context.reader, identity=identity, variables=variables, windows=os == "windows")
         yield from _steps_facts(state, job.get("steps"), (*at, "steps"))
 
 
-def _template(context: _Context, entry: Mapping[str, object], at: _Path, hides: str) -> Unknown:
-    subject = f"the template {entry['template']}"
-    return Unknown(
-        origin=Origin(path=context.path, at=at), subject=subject, reason="templates are not read", hides=hides
+def _template(
+    reader: _Reader, entry: Mapping[str, object], at: _Path, hides: str, variables: Mapping[str, str]
+) -> tuple[_Reader, Mapping[str, object]] | Unknown:
+    """The template an entry names, read with the parameters it passes, and the reader within it; unknown, with why,
+    when it is not read."""
+    named = str(entry["template"])
+    found = _template_document(reader, named, entry.get("parameters"), variables)
+    if isinstance(found, str):
+        origin = Origin(path=reader.path, at=at)
+        return Unknown(origin=origin, subject=f"the template {named}", reason=found, hides=hides)
+    return found
+
+
+def _template_document(
+    reader: _Reader, named: str, passed: object, variables: Mapping[str, str]
+) -> tuple[_Reader, Mapping[str, object]] | str:
+    path, _, repository = named.partition("@")
+    if repository not in ("", "self"):
+        return "it is in another repository"
+    within = path.lstrip("/") if path.startswith("/") else posixpath.join(posixpath.dirname(reader.path), path)
+    reached = follow(
+        reader.chain, posixpath.normpath(within), AZURE_TEMPLATES, lambda held: reader.load(held) is not None
     )
+    if isinstance(reached, Refused):
+        return reached.reason
+    document = reader.load(reached.paths[-1])
+    if not isinstance(document, Mapping):
+        return "it is not a template"
+    body = {key: value for key, value in document.items() if key != "parameters"}
+    try:
+        # The parameters passed are expanded where they are passed (a template's were already, with it).
+        given = expand(passed, {"variables": variables})
+        parameters = {**_defaults(document.get("parameters")), **(given if isinstance(given, Mapping) else {})}
+        expanded = expand(body, {"parameters": parameters, "variables": variables})
+    except Unevaluated as error:
+        return str(error)
+    return (replace(reader, chain=reached), expanded) if isinstance(expanded, Mapping) else "it is not a template"
+
+
+def _defaults(declared: object) -> dict[str, object]:
+    """A template's parameters with their defaults: a list of `name:`/`default:` entries, or a mapping of name to
+    default."""
+    if isinstance(declared, Mapping):
+        return {str(name): default for name, default in declared.items()}
+    entries = (entry for entry in _list(declared) if isinstance(entry, Mapping) and "name" in entry)
+    return {str(entry["name"]): entry.get("default") for entry in entries}
 
 
 def _jobs_facts(context: _Context, jobs: object, at: _Path) -> Iterator[Fact]:
@@ -261,7 +335,7 @@ def _jobs_facts(context: _Context, jobs: object, at: _Path) -> Iterator[Fact]:
         if not isinstance(job, Mapping):
             continue
         if isinstance(job.get("template"), str):
-            yield _template(context, job, (*at, index), "jobs")
+            yield from _templated(context, job, (*at, index), "jobs")
         elif "job" in job or "steps" in job:
             yield from _job_facts(context, job, (*at, index))
 
@@ -271,7 +345,7 @@ def _stages_facts(context: _Context, stages: object) -> Iterator[Fact]:
         if not isinstance(stage, Mapping):
             continue
         if isinstance(stage.get("template"), str):
-            yield _template(context, stage, ("stages", index), "jobs")
+            yield from _templated(context, stage, ("stages", index), "stages")
             continue
         within = replace(
             context,
@@ -282,13 +356,36 @@ def _stages_facts(context: _Context, stages: object) -> Iterator[Fact]:
         yield from _jobs_facts(within, stage.get("jobs"), ("stages", index, "jobs"))
 
 
-def pipeline_facts(path: str, document: object, _load: Load) -> Iterator[Fact]:
+def _templated(context: _Context, entry: Mapping[str, object], at: _Path, kind: str) -> Iterator[Fact]:
+    """The jobs of the template an entry names: of its `jobs:`, its `stages:`, or, for `extends`, the pipeline it is."""
+    read = _template(context.reader, entry, at, "jobs", context.variables)
+    if isinstance(read, Unknown):
+        yield read
+        return
+    reader, document = read
+    within = replace(context, reader=reader)
+    if kind == "jobs":
+        yield from _jobs_facts(within, document.get("jobs"), ("jobs",))
+    elif kind == "stages":
+        yield from _stages_facts(within, document.get("stages"))
+    else:
+        yield from _document_facts(within, document)
+
+
+def pipeline_facts(path: str, document: object, load: Load) -> Iterator[Fact]:
     """The jobs of a pipeline, one per matrix leg, with the commands each one runs."""
     if not isinstance(document, Mapping):
         return
-    context = _Context(path=path, variables=_variables(document.get("variables")), pool=document.get("pool"), prefix="")
-    if isinstance(document.get("extends"), Mapping) and "template" in document["extends"]:
-        yield _template(context, document["extends"], ("extends",), "jobs")
+    context = _Context(reader=_Reader(load, Chain.start(path)), variables={}, pool=None, prefix="")
+    yield from _document_facts(context, document)
+
+
+def _document_facts(outer: _Context, document: Mapping[str, object]) -> Iterator[Fact]:
+    """A pipeline's jobs, or those of the template it extends, under its variables and pool."""
+    variables = {**outer.variables, **_variables(document.get("variables"))}
+    context = replace(outer, variables=variables, pool=document.get("pool", outer.pool))
+    if isinstance(extends := document.get("extends"), Mapping) and "template" in extends:
+        yield from _templated(context, extends, ("extends",), "extends")
     if "stages" in document:
         yield from _stages_facts(context, document["stages"])
     elif "jobs" in document:

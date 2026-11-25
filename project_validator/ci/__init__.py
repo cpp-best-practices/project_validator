@@ -65,6 +65,9 @@ class CiProvider:
     # The reusable steps (`owner/repo@ref`) a parsed configuration document uses, for providers that have them.
     step_references: Callable[[object], list[str]] | None = None
     facts: FactExtractor | None = None
+    # How a configuration file's text is parsed for `facts`: YAML, or YAML whose top level keeps a key written twice
+    # (`yaml_support.load_pairs`).
+    parse: Callable[[str], object] = yaml_support.load
     # Whether a configuration file's text shows the provider is used, for a file that may exist without it (a
     # `.pre-commit-config.yaml` is pre-commit.ci's with a `ci:` section, or when the README shows its badge).
     recognises: Callable[[str], bool] | None = None
@@ -375,7 +378,7 @@ def _file_facts(project: Project, ci_file: CiFile) -> Iterator[Fact]:
         yield from _heuristic_facts(ci_file, text, f"{provider.name} is scanned heuristically")
         return
     try:
-        document = yaml_support.load(text)
+        document = provider.parse(text)
     except yaml_support.YamlError as error:
         yield from _heuristic_facts(ci_file, text, f"invalid YAML ({error}), scanned heuristically")
         return
