@@ -203,6 +203,21 @@
     },
     {
       "can": {
+        "schema": {
+          "validates": "bazel build //... over proto_library rules"
+        }
+      },
+      "languages": [
+        "Protobuf"
+      ],
+      "name": "Bazel proto_library",
+      "reads": [
+        "Bazel"
+      ],
+      "required": []
+    },
+    {
+      "can": {
         "format": {
           "apply": "csharpier format .",
           "check": "csharpier check ."

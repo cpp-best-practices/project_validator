@@ -50,6 +50,19 @@ class ProtobufTests(unittest.TestCase):
                 self.assertEqual(self._run(schema_validation, _ci(line)), Result.passed(VALIDATED.format(tool)))
         self.assertEqual(self._run(schema_validation, _ci("buf lint")).status, Status.FAIL)
 
+    def test_bazel_compiles_the_schemas_its_proto_library_rules_name(self) -> None:
+        """grpc-proto's only CI job is `bazelisk build //...` over BUILD files of proto_library rules, each of which
+        protoc compiles (upstream #207)."""
+        build = {"MODULE.bazel": "", "BUILD.bazel": 'proto_library(name = "shop_proto", srcs = ["api/shop.proto"])\n'}
+        for line in ("bazelisk build //...", "bazel --batch test //api/..."):
+            with self.subTest(line=line):
+                result = self._run(schema_validation, {**build, **_ci(line)})
+                self.assertEqual(result, Result.passed(VALIDATED.format("Bazel proto_library")))
+        # Building without proto_library rules compiles no schema, nor does querying them.
+        no_rules = {"MODULE.bazel": "", "BUILD.bazel": 'cc_library(name = "app")\n'}
+        self.assertEqual(self._run(schema_validation, {**no_rules, **_ci("bazel build //...")}).status, Status.FAIL)
+        self.assertEqual(self._run(schema_validation, {**build, **_ci("bazel query //...")}).status, Status.FAIL)
+
     def test_buf_lints_with_the_rules_buf_yaml_sets_and_formats_with_exit_code(self) -> None:
         self.assertEqual(self._run(static_analysis, _ci("buf lint")), Result.passed("buf lint (buf.yaml) runs"))
         # buf.yaml configures buf lint, so a CI that never runs it warns.
