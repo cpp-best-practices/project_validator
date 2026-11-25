@@ -136,7 +136,27 @@ FactBrowser.prototype.start = function () {
   this.render();
 };
 
+// Trees open and close with the arrow keys, as they do elsewhere: on a focused summary, Right opens its details
+// and Left closes them, or, already closed, moves to the summary of the details around it.
+function walkTreesWithArrows() {
+  document.addEventListener("keydown", function (event) {
+    var summary = event.target;
+    if (!summary || summary.tagName !== "SUMMARY") return;
+    var details = summary.parentElement;
+    if (event.key === "ArrowRight" && !details.open) {
+      details.open = true;
+      event.preventDefault();
+    } else if (event.key === "ArrowLeft") {
+      var outer = details.parentElement && details.parentElement.closest("details");
+      if (details.open) details.open = false;
+      else if (outer) outer.querySelector("summary").focus();
+      event.preventDefault();
+    }
+  });
+}
+
 followSections();
+walkTreesWithArrows();
 setUpFilters();
 window.addEventListener("hashchange", openLinkedResult);
 openLinkedResult();

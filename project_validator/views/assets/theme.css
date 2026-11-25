@@ -181,3 +181,6 @@ footer { color: var(--muted); font-size: .85rem; padding: 2.5rem 0 3rem; text-al
   details.check { break-inside: avoid; }
   body { background: #fff; }
 }
+/* A language's own view, shown when its link is followed (#language-python). */
+.language-view { display: none; margin-top: 1rem; }
+.language-view:target { display: block; }

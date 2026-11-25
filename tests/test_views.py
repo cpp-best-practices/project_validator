@@ -4,15 +4,17 @@ Each says what was detected and how the project was read, every result, and the 
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import dataclasses
 import io
 import json
 import re
 import tempfile
 import unittest
+from collections.abc import AsyncIterator
 from html.parser import HTMLParser
 from pathlib import Path
-from typing import ClassVar
+from typing import Any, ClassVar
 from unittest import mock
 
 from project_validator.analysis import Analysis, analyse
@@ -21,6 +23,7 @@ from project_validator.core import ExtractionError, Progress, Result, Status
 from project_validator.plugins import discover
 from project_validator.views import common, html, text, tui
 from project_validator.views import console as console_view
+from project_validator.views.common import LanguageView, language_views
 from project_validator.views.progress import ProgressView
 from tests.support import FIXTURES, make_context, requires_rich, temp_project
 from tests.test_cli import run_cli
@@ -128,6 +131,40 @@ class CommonTests(unittest.TestCase):
 
         found = RoleSummary(role="test", directories=("tests",), files=1, languages=("C++",), auxiliary=True)
         self.assertEqual(common.role_judgement(found), "judged as auxiliary code (--auxiliary)")
+
+
+class LanguageViewTests(unittest.TestCase):
+    """One language's own view (upstream #388): where its files are, and what each check says of it."""
+
+    def test_each_language_has_its_files_and_its_results(self) -> None:
+        views = {view.language: view for view in language_views(_analysis())}
+        python = views["Python"]
+        self.assertEqual(python.anchor, "language-python")
+        self.assertEqual([place.directory for place in python.places], ["scripts"])
+        checks = {result.check: result for result in python.results}
+        self.assertIn("static-analysis", checks)
+        self.assertNotIn("compile-commands", checks)  # a C and C++ check says nothing of Python
+        self.assertIn("C++", views)
+
+    def test_a_formats_results_come_through_its_ecosystem(self) -> None:
+        """YAML's checks speak of it as Data."""
+        workflow = "on: push\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run: cmake .\n"
+        views = {
+            view.language: view for view in language_views(_analysis({**MIXED, ".github/workflows/ci.yml": workflow}))
+        }
+        self.assertIn("data-wellformed", {result.check for result in views["YAML"].results})
+
+    def test_a_language_without_files_or_checks_says_so(self) -> None:
+        self.assertEqual(tui.language_page(_analysis(), "Rust"), "No Rust files were found.")
+        lonely = LanguageView(language="Typst", files="1 file (10%)", places=(), results=())
+        with mock.patch.object(tui, "language_views", return_value=[lonely]):
+            self.assertIn("no check judges it", tui.language_page(_analysis(), "Typst"))
+
+    def test_the_terminal_page_shows_the_view(self) -> None:
+        page = tui.language_page(_analysis(), "Python")
+        self.assertIn("Python", page)
+        self.assertIn("scripts/", page)
+        self.assertIn("static-analysis", page)
 
 
 class TextTests(unittest.TestCase):
@@ -255,6 +292,15 @@ class HtmlTests(unittest.TestCase):
         for report in self.analysis.reports:
             self.assertIn(html._anchor(report.check.name), self.tags.ids)
 
+    def test_each_language_links_to_its_own_view(self) -> None:
+        self.assertIn("language-python", self.tags.ids)
+        self.assertIn('href="#language-python"', self.document)
+        self.assertIn(".language-view:target", self.document)  # shown when its link is followed
+
+    def test_arrow_keys_open_and_close_the_trees(self) -> None:
+        self.assertIn("ArrowRight", self.document)
+        self.assertIn("ArrowLeft", self.document)
+
     def test_what_the_project_supplies_is_escaped(self) -> None:
         # A job's name, not a file's: Windows forbids "<" in a file name.
         workflow = "on: push\njobs:\n  evil:\n    name: evil<script>alert(1)</script>\n    runs-on: ubuntu-latest\n"
@@ -372,8 +418,9 @@ class TuiPageTests(unittest.TestCase):
         self.assertIn("pip install project_validator[tui]", errors)
 
 
-async def _drive_tui() -> list[str]:
-    """Run the TUI on MIXED: wait for the analysis, search the facts, open what was detected, then three pages."""
+@contextlib.asynccontextmanager
+async def _analysed_tui() -> AsyncIterator[tuple[Any, Any]]:
+    """The TUI on MIXED, and its pilot, once the analysis is read."""
     with temp_project(MIXED) as root:
         app = tui.build_app(make_context(root), discover().checks, [c.name for c in discover().checks])
         async with app.run_test() as pilot:
@@ -381,24 +428,76 @@ async def _drive_tui() -> list[str]:
                 await pilot.pause(0.05)
                 if app.analysis is not None:  # type: ignore[attr-defined]
                     break
-            seen = [str(app.sub_title)]
-            await pilot.press("slash", *"release")
-            await pilot.pause(0.1)
+            yield app, pilot
+
+
+async def _drive_tui() -> list[str]:
+    """Run the TUI on MIXED: wait for the analysis, search the facts, open what was detected, then three pages."""
+    async with _analysed_tui() as (app, pilot):
+        seen = [str(app.sub_title)]
+        await pilot.press("slash", *"release")
+        await pilot.pause(0.1)
+        seen.append(str(app.query_one("#pane").render()))
+        await pilot.press("escape", "down", "down", "enter")
+        await pilot.pause(0.1)
+        seen.append(str(app.query_one("#pane").render()))
+        analysis = app.analysis
+        report = next(report for report in analysis.reports if report.check.name == "static-analysis")
+        for page, value in (("facts", "SourceFile"), ("next", None), ("report", report)):
+            app._page(page, value)
             seen.append(str(app.query_one("#pane").render()))
-            await pilot.press("escape", "down", "down", "enter")
-            await pilot.pause(0.1)
-            seen.append(str(app.query_one("#pane").render()))
-            analysis = app.analysis  # type: ignore[attr-defined]
-            report = next(report for report in analysis.reports if report.check.name == "static-analysis")
-            for page, value in (("facts", "SourceFile"), ("next", None), ("report", report)):
-                app._page(page, value)  # type: ignore[attr-defined]
-                seen.append(str(app.query_one("#pane").render()))
-            await pilot.press("q")
+        await pilot.press("q")
         return seen
+
+
+async def _arrow_keys() -> list[bool]:
+    """Run the TUI on MIXED and walk its tree with the arrow keys: Left collapses a node, Right expands it, and Right
+    again moves to its first child; Left on a leaf moves to its parent."""
+    async with _analysed_tui() as (app, pilot):
+        tree = app.query_one("#nav")
+        seen = [tree.root.is_expanded]
+        await pilot.press("left")
+        seen.append(tree.root.is_expanded)
+        await pilot.press("right")
+        seen.append(tree.root.is_expanded)
+        await pilot.press("right")
+        seen.append(tree.cursor_node is tree.root.children[0])
+        await pilot.press("right")  # a leaf: nowhere further to go
+        seen.append(tree.cursor_node is tree.root.children[0])
+        await pilot.press("left")
+        seen.append(tree.cursor_node is tree.root)
+        await pilot.press("q")
+        return seen
+
+
+async def _empty_branch() -> bool:
+    """Right on an expanded branch with no children stays where it is."""
+    from textual.app import App, ComposeResult
+
+    from project_validator.views.tui_app import NavTree
+
+    class _One(App[None]):
+        def compose(self) -> ComposeResult:
+            tree: NavTree = NavTree("root", id="nav")
+            tree.root.expand()
+            yield tree
+
+    app = _One()
+    async with app.run_test() as pilot:
+        tree = app.query_one("#nav", NavTree)
+        tree.focus()
+        await pilot.press("right")
+        return tree.cursor_node is tree.root
 
 
 @requires_textual
 class TuiAppTests(unittest.TestCase):
+    def test_right_on_an_empty_branch_stays(self) -> None:
+        self.assertTrue(asyncio.run(_empty_branch()))
+
+    def test_arrow_keys_collapse_expand_and_move(self) -> None:
+        self.assertEqual(asyncio.run(_arrow_keys()), [True, False, True, True, True, True])
+
     def test_it_reads_the_project_then_browses_it(self) -> None:
         title, facts, detected, kind, steps, report = asyncio.run(_drive_tui())
         self.assertRegex(title, r"\d+% · Level")

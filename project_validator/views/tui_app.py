@@ -9,20 +9,65 @@ from textual.app import App, ComposeResult
 from textual.binding import Binding, BindingType
 from textual.containers import Horizontal, VerticalScroll
 from textual.widgets import Footer, Header, Input, RichLog, Static, Tree
+from textual.widgets.tree import TreeNode
 
 from project_validator.analysis import Analysis, analyse
 from project_validator.core import Check, Context, Progress, Status
-from project_validator.views.common import fact_kinds, grouped, is_skipped
+from project_validator.views.common import fact_kinds, grouped, is_skipped, language_views
 from project_validator.views.progress import STAGE_NAMES
 from project_validator.views.tui import (
     detected,
     facts_page,
+    language_page,
     markup,
     next_steps,
     overview,
     report_page,
     status_markup,
 )
+
+
+class NavTree(Tree[Any]):
+    """The navigation tree, walked with the arrow keys as trees are elsewhere (upstream #389): Right expands a node,
+    or moves to its first child once it is expanded; Left collapses it, or moves to its parent."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [
+        Binding("right", "expand_or_enter", "Expand", show=False),
+        Binding("left", "collapse_or_leave", "Collapse", show=False),
+    ]
+
+    def action_expand_or_enter(self) -> None:
+        node = self.cursor_node
+        if node is None:
+            return
+        if node.is_expanded and node.children:
+            self.move_cursor(node.children[0])
+        elif node.allow_expand:
+            node.expand()
+
+    def action_collapse_or_leave(self) -> None:
+        node = self.cursor_node
+        if node is None:
+            return
+        if node.is_expanded:
+            node.collapse()
+        elif node.parent is not None:
+            self.move_cursor(node.parent)
+
+
+def _add_results(results: TreeNode[Any], analysis: Analysis) -> None:
+    """The results, a branch per category, and the checks that do not apply."""
+    for group in grouped(analysis.reports):
+        branch = results.add(f"{group.category} [dim]{len(group.reports)}[/]", data=("overview", None))
+        for report in group.reports:
+            branch.add_leaf(
+                f"{status_markup(report.result.status)} {markup(report.check.name)}", data=("report", report)
+            )
+    skipped = [report for report in analysis.reports if is_skipped(report)]
+    if skipped:
+        branch = results.add(f"Not applicable [dim]{len(skipped)}[/]", data=("overview", None))
+        for report in skipped:
+            branch.add_leaf(f"{status_markup(Status.SKIP)} {markup(report.check.name)}", data=("report", report))
 
 
 class Validator(App[int]):
@@ -53,7 +98,7 @@ class Validator(App[int]):
         yield Header()
         yield RichLog(id="loading", markup=True, wrap=True)
         with Horizontal(id="main"):
-            yield Tree("project", id="nav")
+            yield NavTree("project", id="nav")
             with VerticalScroll():
                 yield Input(placeholder="Search the facts…", id="search")
                 yield Static("", id="pane")
@@ -90,18 +135,12 @@ class Validator(App[int]):
         tree.root.data = ("overview", None)
         tree.root.add_leaf("Overview", data=("overview", None))
         tree.root.add_leaf("What was detected", data=("detected", None))
-        results = tree.root.add("Results", data=("overview", None), expand=True)
-        for group in grouped(analysis.reports):
-            branch = results.add(f"{group.category} [dim]{len(group.reports)}[/]", data=("overview", None))
-            for report in group.reports:
-                branch.add_leaf(
-                    f"{status_markup(report.result.status)} {markup(report.check.name)}", data=("report", report)
-                )
-        skipped = [report for report in analysis.reports if is_skipped(report)]
-        if skipped:
-            branch = results.add(f"Not applicable [dim]{len(skipped)}[/]", data=("overview", None))
-            for report in skipped:
-                branch.add_leaf(f"{status_markup(Status.SKIP)} {markup(report.check.name)}", data=("report", report))
+        _add_results(tree.root.add("Results", data=("overview", None), expand=True), analysis)
+        languages = tree.root.add("Languages", data=("detected", None))
+        for view in language_views(analysis):
+            languages.add_leaf(
+                f"{markup(view.language)} [dim]{markup(view.files)}[/]", data=("language", view.language)
+            )
         tree.root.add_leaf("Next steps", data=("next", None))
         facts = tree.root.add(f"Facts [dim]{len(analysis.facts.all):,}[/]", data=("facts", None))
         for kind, count in fact_kinds(analysis):
@@ -118,6 +157,9 @@ class Validator(App[int]):
         if page == "facts":
             self.kind = value
             pane.update(facts_page(self.analysis, value, search.value))
+            return
+        if page == "language":
+            pane.update(language_page(self.analysis, value))
             return
         text = {
             "overview": overview,
