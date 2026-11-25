@@ -290,7 +290,8 @@ class PythonCodeFormattingTests(unittest.TestCase):
         files = {".pre-commit-config.yaml": hooks, **github_job("ubuntu-latest", "uvx pre-commit run -a")}
         self.assertEqual(self._run(files), Result.passed("CI enforces the ruff format style"))
         # Hooks that CI never runs enforce nothing.
-        self.assertEqual(self._run({".pre-commit-config.yaml": hooks}).status, Status.FAIL)
+        never = {".pre-commit-config.yaml": hooks, **github_job("ubuntu-latest", "echo built")}
+        self.assertEqual(self._run(never).status, Status.FAIL)
 
     def test_clang_format_does_not_count_but_python_formatting_does(self) -> None:
         statuses = {"C++": self._run(WELL_CONFIGURED).status, "Python": self._run(dict(WELL_CONFIGURED_PYTHON)).status}

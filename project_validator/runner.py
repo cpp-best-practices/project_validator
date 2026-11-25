@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import time
 from collections.abc import Iterable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
+from project_validator.ci.local_checks import ENTRY_LEVEL
 from project_validator.core import Check, Context, ExtractionError, Progress, Result, Status
 
 
@@ -44,6 +45,14 @@ def _skipped(selected: Check, context: Context) -> Result | None:
     return Result.skipped(f"not applicable to {found}")
 
 
+def _entry_level(result: Result) -> Result:
+    """A CI-only check's result when the pipeline is the local checks: a failure warns, saying why (upstream #384)."""
+    if result.status is not Status.FAIL:
+        return result
+    places = tuple(replace(place, result=_entry_level(place.result)) for place in result.places)
+    return replace(result, status=Status.WARN, details=(*result.details, ENTRY_LEVEL), places=places)
+
+
 def run_check(selected: Check, context: Context) -> Result:
     """The check's result; an error when the check raises, or when the facts it needs could not be extracted (said
     the same way by every check that needs them: the one cause is `Context.extraction_error`)."""
@@ -57,7 +66,7 @@ def run_check(selected: Check, context: Context) -> Result:
         return Result(status=Status.ERROR, message=f"check raised {type(error).__name__}: {error}")
     if not isinstance(result, Result):
         return Result(status=Status.ERROR, message=f"check returned {type(result).__name__} instead of a Result")
-    return result
+    return _entry_level(result) if selected.ci_only and context.local_pipeline else result
 
 
 def run_checks(selected: Iterable[Check], context: Context) -> list[Report]:

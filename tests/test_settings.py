@@ -327,5 +327,5 @@ class PreCommitHookTests(unittest.TestCase):
             [("pre-commit", "hook", "local lint lizard -L 30")],
         )
         with temp_project({".pre-commit-config.yaml": "repos: [\n"}) as root:
-            [unknown] = make_context(root).facts.of(Unknown)
-        self.assertEqual(unknown.subject, "the pre-commit hooks")
+            subjects = {unknown.subject for unknown in make_context(root).facts.of(Unknown)}
+        self.assertIn("the pre-commit hooks", subjects)
