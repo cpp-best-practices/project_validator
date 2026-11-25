@@ -135,6 +135,10 @@ class EngineTests(unittest.TestCase):
         )
 
 
+# A GitLab job running make: the project's settings may set variables its environment does not show.
+GITLAB_MAKE = {".gitlab-ci.yml": "build:\n  script:\n    - make\n"}
+
+
 class MakeTests(unittest.TestCase):
     MAKEFILE = """\
 CC := gcc
@@ -267,15 +271,17 @@ lint:
                 self.assertEqual(_expanded(_facts(files)), expected)
 
     def test_ifdef_on_a_variable_set_in_some_builds_is_decided_only_there(self) -> None:
-        """Where the makefile leaves DEBUG unset, the environment may set it: both branches may run."""
+        """Where the makefile leaves DEBUG unset, a GitHub job that does not set it leaves it empty (its environment is
+        all it sets); a service whose settings may set it may run both branches (upstream #361)."""
         makefile = "ifeq ($(OS),Windows_NT)\nDEBUG = 1\nendif\nall:\nifdef DEBUG\n\tcc -g\nelse\n\tcc -O2\nendif\n"
         for runner, expected in (
             ("windows-latest", [("cc", "-g")]),
-            ("ubuntu-latest", [("cc", "-g"), ("cc", "-O2")]),
+            ("ubuntu-latest", [("cc", "-O2")]),
         ):
             with self.subTest(runner=runner):
                 files = {"Makefile": makefile, **github_job(runner, "make")}
                 self.assertEqual(_expanded(_facts(files)), expected)
+        self.assertEqual(_expanded(_facts({"Makefile": makefile, **GITLAB_MAKE})), [("cc", "-g"), ("cc", "-O2")])
 
     def test_other_ways_of_naming_the_platform(self) -> None:
         """`$(OS)` is empty off Windows; MSYS2's, MinGW's and Cygwin's `uname -s` name Windows."""
@@ -333,7 +339,7 @@ lint:
 
     def test_a_recipe_whose_program_is_unknown_is_reported_once_whatever_its_arguments(self) -> None:
         makefile = "ifdef DEBUG\nFLAGS = -g\nelse\nFLAGS = -O2\nendif\nall:\n\t$(TOOL) $(FLAGS)\n"
-        facts = _facts({"Makefile": makefile, **github_job("ubuntu-latest", "make")})
+        facts = _facts({"Makefile": makefile, **GITLAB_MAKE})
         recipes = [fact.subject for fact in facts.of(Unknown) if fact.subject.startswith("the recipe")]
         self.assertEqual(recipes, ["the recipe '$(TOOL) -g'"])
 
@@ -406,16 +412,19 @@ lint:
                 self.assertEqual(_expanded(_facts(files)), expected)
 
     def test_what_the_environment_may_override_decides_no_conditional(self) -> None:
-        """make's own defaults (CC is cc) and `?=` give way to the environment, which CI often sets (CC=clang): a
-        conditional on them reads every branch, as does one on a variable appended to before it is set."""
+        """make's own defaults (CC is cc) and `?=` give way to the environment: where the settings of a service may set
+        it (CC=clang), a conditional on them reads every branch, as does one on a variable appended to before it is
+        set. A GitHub job's environment is all it sets: make's default holds there (upstream #361)."""
         for makefile in (
             "all:\nifeq ($(CC),clang)\n\tclang-tidy a.c\nelse\n\tcppcheck a.c\nendif\n",
             "CC ?= gcc\nall:\nifeq ($(CC),clang)\n\tclang-tidy a.c\nelse\n\tcppcheck a.c\nendif\n",
             "CC += -m64\nall:\nifeq ($(CC),clang -m64)\n\tclang-tidy a.c\nelse\n\tcppcheck a.c\nendif\n",
         ):
             with self.subTest(makefile=makefile.splitlines()[0]):
-                files = {"Makefile": makefile, **github_job("x", "make")}
+                files = {"Makefile": makefile, **GITLAB_MAKE}
                 self.assertEqual(_expanded(_facts(files)), [("clang-tidy", "a.c"), ("cppcheck", "a.c")])
+                github = {"Makefile": makefile, **github_job("ubuntu-latest", "make")}
+                self.assertEqual(_expanded(_facts(github)), [("cppcheck", "a.c")])
 
     def test_a_branch_not_taken_defines_nothing(self) -> None:
         makefile = parse_makefile("CC = gcc\nifeq ($(CC),clang)\nFLAGS = -Weverything\nfirst:\nendif\nall:\n")

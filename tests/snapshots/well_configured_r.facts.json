@@ -186,6 +186,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci-lint.yml:6:9 (jobs.ci-lint.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -203,6 +204,7 @@
       "kind": "Command",
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -218,6 +220,7 @@
       "kind": "Command",
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)"
       ]
@@ -229,6 +232,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "requires": "",
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
@@ -243,6 +247,7 @@
       "kind": "Command",
       "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
       "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "requires": "",
       "via": []
     },
     {
@@ -260,6 +265,7 @@
       "kind": "Command",
       "line": "gitleaks git --redact .",
       "origin": ".github/workflows/ci-lint.yml:9:9 (jobs.ci-lint.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -295,6 +301,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[0]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.R-CMD-check.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -307,6 +314,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[0]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.R-CMD-check.steps[1])",
+      "requires": "",
       "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -319,6 +327,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[0]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:19:9 (jobs.R-CMD-check.steps[2])",
+      "requires": "",
       "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -330,6 +339,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[0]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:23:9 (jobs.R-CMD-check.steps[3])",
+      "requires": "",
       "uses": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -346,6 +356,7 @@
       "kind": "Command",
       "line": "uses: r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93",
       "origin": ".github/workflows/ci.yml:23:9 (jobs.R-CMD-check.steps[3])",
+      "requires": "",
       "via": []
     },
     {
@@ -371,6 +382,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[1]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.R-CMD-check.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -383,6 +395,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[1]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.R-CMD-check.steps[1])",
+      "requires": "",
       "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -395,6 +408,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[1]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:19:9 (jobs.R-CMD-check.steps[2])",
+      "requires": "",
       "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -406,6 +420,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[1]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:23:9 (jobs.R-CMD-check.steps[3])",
+      "requires": "",
       "uses": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -422,6 +437,7 @@
       "kind": "Command",
       "line": "uses: r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93",
       "origin": ".github/workflows/ci.yml:23:9 (jobs.R-CMD-check.steps[3])",
+      "requires": "",
       "via": []
     },
     {
@@ -447,6 +463,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[2]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.R-CMD-check.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -459,6 +476,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[2]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.R-CMD-check.steps[1])",
+      "requires": "",
       "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -471,6 +489,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[2]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:19:9 (jobs.R-CMD-check.steps[2])",
+      "requires": "",
       "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -482,6 +501,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[2]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:23:9 (jobs.R-CMD-check.steps[3])",
+      "requires": "",
       "uses": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -498,6 +518,7 @@
       "kind": "Command",
       "line": "uses: r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93",
       "origin": ".github/workflows/ci.yml:23:9 (jobs.R-CMD-check.steps[3])",
+      "requires": "",
       "via": []
     },
     {
@@ -523,6 +544,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[3]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.R-CMD-check.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -535,6 +557,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[3]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.R-CMD-check.steps[1])",
+      "requires": "",
       "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -547,6 +570,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[3]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:19:9 (jobs.R-CMD-check.steps[2])",
+      "requires": "",
       "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -558,6 +582,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[3]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:23:9 (jobs.R-CMD-check.steps[3])",
+      "requires": "",
       "uses": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -574,6 +599,7 @@
       "kind": "Command",
       "line": "uses: r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93",
       "origin": ".github/workflows/ci.yml:23:9 (jobs.R-CMD-check.steps[3])",
+      "requires": "",
       "via": []
     },
     {
@@ -599,6 +625,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[4]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.R-CMD-check.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -611,6 +638,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[4]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.R-CMD-check.steps[1])",
+      "requires": "",
       "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -623,6 +651,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[4]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:19:9 (jobs.R-CMD-check.steps[2])",
+      "requires": "",
       "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -634,6 +663,7 @@
       "job": ".github/workflows/ci.yml:R-CMD-check[4]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:23:9 (jobs.R-CMD-check.steps[3])",
+      "requires": "",
       "uses": "r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -650,6 +680,7 @@
       "kind": "Command",
       "line": "uses: r-lib/actions/check-r-package@bd49c52ffe281809afa6f0fecbf37483c5dd0b93",
       "origin": ".github/workflows/ci.yml:23:9 (jobs.R-CMD-check.steps[3])",
+      "requires": "",
       "via": []
     },
     {
@@ -673,6 +704,7 @@
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:29:9 (jobs.coverage.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -684,6 +716,7 @@
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:30:9 (jobs.coverage.steps[1])",
+      "requires": "",
       "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -696,6 +729,7 @@
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:33:9 (jobs.coverage.steps[2])",
+      "requires": "",
       "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -711,6 +745,7 @@
       "kind": "Command",
       "line": "cov <- covr::package_coverage(quiet = FALSE)\nprint(cov)\ncovr::codecov(coverage = cov)\n",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.coverage.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -734,6 +769,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:45:9 (jobs.lint.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -745,6 +781,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:46:9 (jobs.lint.steps[1])",
+      "requires": "",
       "uses": "r-lib/actions/setup-r@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -757,6 +794,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:49:9 (jobs.lint.steps[2])",
+      "requires": "",
       "uses": "r-lib/actions/setup-r-dependencies@bd49c52ffe281809afa6f0fecbf37483c5dd0b93"
     },
     {
@@ -774,6 +812,7 @@
       "kind": "Command",
       "line": "lintr::lint_package()",
       "origin": ".github/workflows/ci.yml:53:9 (jobs.lint.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -783,6 +822,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:57:9 (jobs.lint.steps[4])",
+      "requires": "",
       "uses": "posit-dev/setup-air@482cb5912394878ab5a63b75db0f9d19cc6df5ba"
     },
     {
@@ -800,6 +840,7 @@
       "kind": "Command",
       "line": "air format --check .",
       "origin": ".github/workflows/ci.yml:58:9 (jobs.lint.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -848,6 +889,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
       "origin": ".github/workflows/copy-paste-detection.yml:5:9 (jobs.copy-paste-detection.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -867,6 +909,7 @@
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
       "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -884,6 +927,7 @@
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
       "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)"
       ]
@@ -914,6 +958,7 @@
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "ActionStep",
       "origin": ".github/workflows/function-limits.yml:5:9 (jobs.function-limits.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -932,6 +977,7 @@
       "kind": "Command",
       "line": "python -m pip install lizard",
       "origin": ".github/workflows/function-limits.yml:6:9 (jobs.function-limits.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -948,6 +994,7 @@
       "kind": "Command",
       "line": "python -m pip install lizard",
       "origin": ".github/workflows/function-limits.yml:6:9 (jobs.function-limits.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/function-limits.yml:6:9 (jobs.function-limits.steps[1].run)"
       ]
@@ -968,6 +1015,7 @@
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/function-limits.yml:7:9 (jobs.function-limits.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {

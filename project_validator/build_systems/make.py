@@ -23,7 +23,7 @@ from dataclasses import dataclass, field
 
 from project_validator.build_systems import make_syntax
 from project_validator.core import Context
-from project_validator.facts import Command, Origin, Unknown
+from project_validator.facts import Command, Origin, Unknown, whole_environment
 from project_validator.facts.arguments import positional
 from project_validator.facts.conditions import (
     ALWAYS,
@@ -102,6 +102,20 @@ def _built_in() -> Variables:
     return {name: [(Setting(value, settled=False), ALWAYS)] for name, value in _DEFAULTS.items()}
 
 
+# The variables a CI runner sets that a job does not (upstream #361): where a makefile tests one, what it runs is
+# required of the run. Every CI service sets CI, to true.
+_RUNNER_VARIABLES = re.compile(
+    r"(?:GITHUB|RUNNER|GITLAB|CI|TRAVIS|CIRCLE|APPVEYOR|CIRRUS|BUILDKITE|DRONE|BITBUCKET|AGENT|BUILD|SYSTEM)_\w*"
+    r"|OS|HOME|PATH|USER|PWD|TMPDIR|LANG|TERM|HOSTNAME"
+)
+_CI = {"CI": "true"}
+
+
+def _environment(environment: Mapping[str, str]) -> Variables:
+    """What a job's `environment` settles: its variables, CI, and make's own defaults it does not change."""
+    return {name: [(Setting(value), ALWAYS)] for name, value in {**_DEFAULTS, **_CI, **environment}.items()}
+
+
 @dataclass(slots=True)
 class Makefile:
     rules: dict[str, Rule] = field(default_factory=dict)
@@ -170,8 +184,29 @@ def _within(values: Choices[str], lookup: _Lookup, inside: frozenset[str]) -> Ch
 
 # A call of one of make's text functions whose arguments hold no reference left: `$(filter %.c,a.c b.h)`.
 _FUNCTION = re.compile(
-    r"\$\((?P<name>filter|filter-out|findstring|strip|addprefix|addsuffix|subst|patsubst) (?P<arguments>[^$()]*)\)"
+    r"\$\((?P<name>filter|filter-out|findstring|strip|addprefix|addsuffix|subst|patsubst|if|or|and)"
+    r" (?P<arguments>[^$()]*)\)"
 )
+
+
+def _if(arguments: list[str]) -> str:
+    """`$(if condition,then[,else])`: `then` where the condition is not empty (once stripped), else `else`."""
+    condition, then, otherwise = (*arguments, "", "")[:3]
+    return then if condition.strip() else otherwise
+
+
+def _and(arguments: list[str]) -> str:
+    """`$(and a,b,...)`: the last argument when none is empty (once stripped), else empty."""
+    return arguments[-1] if all(argument.strip() for argument in arguments) else ""
+
+
+# make's conditional functions (upstream #361: argo-cd's `$(if $(GOFLAGS),,ALL)`): `or` is its first argument that is
+# not empty.
+_CONDITIONALS: dict[str, Callable[[list[str]], str]] = {
+    "if": _if,
+    "or": lambda arguments: next((argument for argument in arguments if argument.strip()), ""),
+    "and": _and,
+}
 
 
 def _called(text: str) -> str:
@@ -185,9 +220,12 @@ def _result(name: str, arguments: str) -> str:
     """What `$(name arguments)` gives: `strip` collapses whitespace, `findstring` is its first argument when the
     second holds it, `filter` and `filter-out` keep the words of the second that match (or do not) a pattern of the
     first, where `%` matches any text; `addprefix` and `addsuffix` put the first before or after each word of the
-    second (nvm's `$(addprefix test-,$(SHELLS))`), `subst` replaces text and `patsubst` the words a pattern matches."""
+    second (nvm's `$(addprefix test-,$(SHELLS))`), `subst` replaces text and `patsubst` the words a pattern matches;
+    `if`, `or` and `and` as `_CONDITIONALS` says."""
     if name == "strip":
         return " ".join(arguments.split())
+    if name in _CONDITIONALS:
+        return _CONDITIONALS[name](arguments.split(","))
     if name in ("subst", "patsubst"):
         found, _, rest = arguments.partition(",")
         replacement, _, text = rest.partition(",")
@@ -250,9 +288,13 @@ class _Evaluation:
     recipe lines go to the rules written before them, and each branch of a conditional is read where it holds (see
     `_Test`)."""
 
-    def __init__(self, overrides: Mapping[str, str]) -> None:
+    def __init__(self, overrides: Mapping[str, str], environment: Mapping[str, str] | None = None) -> None:
         self.makefile = Makefile()
+        if environment is not None:
+            self.makefile.variables.update(_environment(environment))
         self.makefile.variables.update({name: [(Setting(value), ALWAYS)] for name, value in overrides.items()})
+        # Whether the job's environment is known: a variable nothing sets is then empty (see `_Test`).
+        self.settles = environment is not None
         self.overrides = frozenset(overrides)
         self.current: list[Rule] = []
         self.when = ALWAYS
@@ -285,13 +327,14 @@ class _Evaluation:
             return
         old = variables.get(node.name, [])
         unset = both(self.when, negated(either(*(when for _, when in old))))
+        # With the job's environment known, a variable it does not set is not set: `?=` and `+=` settle it.
         if node.how == "?=":
-            variables[node.name] = [*old, *([(Setting(node.value, settled=False), unset)] if unset else [])]
+            variables[node.name] = [*old, *([(Setting(node.value, settled=self.settles), unset)] if unset else [])]
         elif node.how == "+=":
             appended = [(Setting(f"{setting.text} {node.value}", setting.settled), when) for setting, when in old]
             variables[node.name] = assigned(old, appended, self.when)
             if unset:
-                variables[node.name].append((Setting(node.value, settled=False), unset))
+                variables[node.name].append((Setting(node.value, settled=self.settles), unset))
         else:
             variables[node.name] = assigned(old, [(Setting(node.value), ALWAYS)], self.when)
 
@@ -322,7 +365,7 @@ class _Evaluation:
         """Each branch, read in the builds where it holds and no branch before it does; what none holds in, after."""
         remaining = self.when
         for branch in node.branches:
-            holds = _Test(self.makefile.variables).holds(branch)
+            holds = _Test(self.makefile.variables, settles=self.settles).holds(branch)
             self.within(both(remaining, holds), branch.body)
             remaining = both(remaining, negated(holds))
         self.within(remaining, node.otherwise or ())
@@ -340,9 +383,18 @@ class _Test:
     line cannot say (a variable they do not settle, a reference left unexpanded, `$(shell uname)`) holds behind a
     requirement, or, where it names the platform, on the platforms it holds on (see `_platform`)."""
 
-    def __init__(self, variables: Variables) -> None:
+    def __init__(self, variables: Variables, *, settles: bool = False) -> None:
         self.variables = variables
-        self.lookup = _lookup(variables, settled=True)
+        self.settled = _lookup(variables, settled=True)
+        self.settles = settles
+
+    def empty(self, name: str) -> bool:
+        """Whether a variable nothing sets is empty: with the job's environment known, all but a runner's own."""
+        return self.settles and not _RUNNER_VARIABLES.fullmatch(name)
+
+    def lookup(self, reference: Reference) -> Choices[str] | None:
+        found = self.settled(reference)
+        return [("", ALWAYS)] if found is None and self.empty(reference.name) else found
 
     def holds(self, branch: make_syntax.Branch) -> Condition:
         positive = branch.test in ("ifdef", "ifeq")
@@ -356,7 +408,7 @@ class _Test:
             settled = [(setting, held) for setting, held in self.variables.get(name, ()) if setting.settled]
             decided = either(*(held for _, held in settled))
             nonempty = either(*(held for setting, held in settled if setting.text.strip()))
-            unknown = both(negated(decided), requiring(f"defined {name}"))
+            unknown = NEVER if self.empty(name) else both(negated(decided), requiring(f"defined {name}"))
             found.append(both(when, either(nonempty, unknown)))
         return either(*found)
 
@@ -420,10 +472,12 @@ def _compared(arguments: str) -> tuple[str, str] | None:
     return None
 
 
-def parse_makefile(text: str, overrides: Mapping[str, str] | None = None) -> Makefile:
+def parse_makefile(
+    text: str, overrides: Mapping[str, str] | None = None, environment: Mapping[str, str] | None = None
+) -> Makefile:
     """The rules of a makefile, its variables and includes, and its default goal (the first target that is not
-    special), as make reads it with the command line's `overrides`."""
-    evaluation = _Evaluation(overrides or {})
+    special), as make reads it with the command line's `overrides`, in a job's `environment` when it is known."""
+    evaluation = _Evaluation(overrides or {}, environment)
     evaluation.nodes(make_syntax.parse(text).nodes)
     return evaluation.makefile
 
@@ -524,20 +578,28 @@ def _make_targets(command: Command, context: Context) -> Iterator[Expansion] | N
     # The command line's assignments, and MAKECMDGOALS, the goals as written (none when it names none).
     assigned = {found["name"]: found["value"] for word in words if (found := make_syntax.ASSIGNMENT.match(word))}
     overrides = {"MAKECMDGOALS": " ".join(goals), **assigned}
-    makefile = _read(context, path, overrides)
+    makefile = _read(context, path, overrides, command.env if whole_environment(command) else None)
     goals = goals or ([makefile.default] if makefile.default else [])
     return _goals(makefile, path, goals, command)
 
 
-def _read(context: Context, path: str, overrides: Mapping[str, str]) -> Makefile:
+def _read(context: Context, path: str, overrides: Mapping[str, str], environment: Mapping[str, str] | None) -> Makefile:
     """The makefile at `path`, with the rules and variables of the makefiles it includes that the project holds, and
-    of those they include in turn (see `project_validator.includes`); its own win over theirs."""
-    makefile = parse_makefile(context.project.read_text(path), overrides)
-    _include(context, makefile, posixpath.dirname(path), Chain.start(path), overrides)
+    of those they include in turn (see `project_validator.includes`); its own win over theirs. It is read in the
+    job's `environment`, when it is all the job sets (see `whole_environment`)."""
+    makefile = parse_makefile(context.project.read_text(path), overrides, environment)
+    _include(context, makefile, posixpath.dirname(path), Chain.start(path), overrides, environment)
     return makefile
 
 
-def _include(context: Context, makefile: Makefile, directory: str, chain: Chain, overrides: Mapping[str, str]) -> None:
+def _include(
+    context: Context,
+    makefile: Makefile,
+    directory: str,
+    chain: Chain,
+    overrides: Mapping[str, str],
+    environment: Mapping[str, str] | None,
+) -> None:
     """Merge into `makefile` what its includes define; make finds an included file from where it runs (`directory`).
     One the project does not hold is passed over silently: a generated `-include deps.d` is usual."""
     for name in makefile.includes:
@@ -546,8 +608,8 @@ def _include(context: Context, makefile: Makefile, directory: str, chain: Chain,
             if not found.missing:
                 makefile.problems.append(found.reason)
             continue
-        other = parse_makefile(context.project.read_text(found.paths[-1]), overrides)
-        _include(context, other, directory, found, overrides)
+        other = parse_makefile(context.project.read_text(found.paths[-1]), overrides, environment)
+        _include(context, other, directory, found, overrides, environment)
         makefile.rules = {**other.rules, **makefile.rules}
         makefile.variables = {**other.variables, **makefile.variables}
         makefile.problems += other.problems

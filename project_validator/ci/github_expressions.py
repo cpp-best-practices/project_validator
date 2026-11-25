@@ -1,15 +1,21 @@
 """Evaluating the GitHub Actions expressions of `if:` conditions, as far as a checkout shows their values.
 
-`runner.os`, `matrix.*` and the workflow's and job's `env.*` are known; everything else (`github.*`, `secrets.*`,
-`steps.*`, `needs.*`, unknown functions) is not, and makes the result unknown (None) unless the rest decides it:
+`runner.os`, `matrix.*` and the workflow's and job's `env.*` are known (a variable they do not set is empty, as
+GitHub's is); everything else (`github.*`, `secrets.*`, `steps.*`, `needs.*`, unknown functions) is not, and makes
+the result unknown (None) unless the rest decides it:
 `false && x` is false and `true || x` is true whatever `x` is. `&&` and `||` yield the operand that decides them, as
 GitHub's do, so `${{ matrix.asan && '-fsanitize=address' || '' }}` renders its branch. Comparisons ignore case, as
 GitHub's do. A step's status functions are judged for a run in which every step succeeds.
+
+A condition left unknown either rests on the run alone (the event, the branch, what changed, earlier steps' and
+jobs' outputs, a computed matrix), and CI makes the runs it holds in, or on configuration the checkout does not show
+(a secret, a repository variable, `hashFiles()`), which it then requires (`requirement`, upstream #361).
 """
 
 from __future__ import annotations
 
 import json
+import re
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from functools import reduce
@@ -18,6 +24,7 @@ from project_validator.ci.github_expression_syntax import (
     Call,
     Comparison,
     ExpressionSyntaxError,
+    Index,
     Literal,
     Logical,
     Node,
@@ -35,6 +42,8 @@ _UNSEEN = (_UNKNOWN, _SOME_TRUTHY, _SOME_FALSY)
 type Maybe = Value | object  # a Value, _UNKNOWN, _SOME_TRUTHY or _SOME_FALSY
 
 _RUNNER_OS = {"linux": "Linux", "windows": "Windows", "macos": "macOS"}
+# The expressions in a value a caller passed: what is inside each `${{ }}`.
+_PASSED = re.compile(r"\$\{\{(.*?)\}\}")
 _STATUS = {"success": True, "always": True, "failure": False, "cancelled": False}
 
 
@@ -49,6 +58,10 @@ class Known:
     matrix_known: bool = True
     # A called workflow's inputs: what its caller passes in `with:`, or the declared defaults.
     inputs: Mapping[str, str] = field(default_factory=dict)
+    # The variables earlier steps set only sometimes, or to a value not known; and whether an earlier step may have
+    # set any (an action that is not GitHub's own): a variable `env` does not hold is then not known to be unset.
+    set_by_steps: frozenset[str] = frozenset()
+    open_env: bool = False
 
 
 def _text(value: Maybe) -> str:
@@ -73,6 +86,10 @@ class _Evaluator:
 
     def __init__(self, known: Known) -> None:
         self.known = known
+        # What left a value unknown: a context's name (`github`, `secrets`), or an operation not evaluated.
+        self.unseen: set[str] = set()
+        # Whether what is evaluated is an expression an input's caller passed.
+        self.inside = False
 
     def value(self, node: Node) -> Maybe:
         if isinstance(node, Literal):
@@ -83,30 +100,75 @@ class _Evaluator:
             truth = _truthy(self.value(node.operand))
             return _UNKNOWN if truth is _UNKNOWN else not truth
         if isinstance(node, Comparison):
+            left, right = self.value(node.left), self.value(node.right)
             if node.operator not in ("==", "!="):
-                return _UNKNOWN  # ordering is not evaluated
-            return _compare(node.operator, self.value(node.left), self.value(node.right))
+                return self.unread("ordering", left, right)  # ordering is not evaluated
+            return _compare(node.operator, left, right)
         if isinstance(node, Logical):
-            combine = _either if node.operator == "||" else _both
-            return reduce(
-                lambda left, right: combine(node.operator, left, self.value(right)),
-                node.operands[1:],
-                self.value(node.operands[0]),
-            )
+            return self.logical(node)
         if isinstance(node, Call):
-            return _function(node.name.lower(), [self.value(argument) for argument in node.arguments])
-        return _UNKNOWN  # an index is not evaluated
+            arguments = [self.value(argument) for argument in node.arguments]
+            found = _function(node.name.lower(), arguments)
+            return self.unread(f"{node.name}()", *arguments) if found is _UNKNOWN else found
+        if isinstance(node, Index):
+            # An index is not evaluated: unknown, for what what it indexes rests on (`github.event.commits[0]`).
+            return self.unread("an index", self.value(node.target))
+        return self.unread("an expression")
+
+    def logical(self, node: Logical) -> Maybe:
+        """`&&` or `||`, with what each operand left unknown rests on: a disjunct that rests on the run alone holds in
+        some runs, whatever the others rest on."""
+        values: list[Maybe] = []
+        sources: list[set[str]] = []
+        for operand in node.operands:
+            outer, self.unseen = self.unseen, set()
+            values.append(self.value(operand))
+            sources.append(self.unseen)
+            self.unseen = outer
+        combine = _either if node.operator == "||" else _both
+        found = reduce(lambda left, right: combine(node.operator, left, right), values[1:], values[0])
+        unknown = [source for value, source in zip(values, sources, strict=True) if _truthy(value) is _UNKNOWN]
+        run = [source for source in unknown if source <= _RUNS]
+        self.unseen.update(*(run if node.operator == "||" and run else unknown))
+        return found
+
+    def unread(self, operation: str, *operands: Maybe) -> Maybe:
+        """An operation not evaluated: unknown, for what its unknown operands rest on, or for itself."""
+        if not any(operand in _UNSEEN for operand in operands):
+            self.unseen.add(operation)
+        return _UNKNOWN
 
     def reference(self, name: str) -> Maybe:
         head, _, rest = name.partition(".")
-        if name == "runner.os":
-            return _RUNNER_OS.get(self.known.os, _UNKNOWN)
-        if head == "matrix":
-            return _lookup(self.known.matrix, rest) if self.known.matrix_known else _UNKNOWN
-        if head == "env" and rest in self.known.env:
-            return self.known.env[rest]
-        if head == "inputs" and rest in self.known.inputs:
-            return self.known.inputs[rest]
+        if name == "runner.os" and self.known.os in _RUNNER_OS:
+            return _RUNNER_OS[self.known.os]
+        if head == "matrix" and self.known.matrix_known:
+            return _lookup(self.known.matrix, rest)
+        if head == "env" and not self.inside:
+            if rest in self.known.env:
+                return self.written(self.known.env[rest])
+            if self.known.open_env or rest in self.known.set_by_steps:
+                self.unseen.add("steps")
+                return _UNKNOWN
+            return ""
+        if head == "inputs" and rest in self.known.inputs and not self.inside:
+            return self.written(self.known.inputs[rest])
+        self.unseen.add(head)
+        return _UNKNOWN
+
+    def written(self, value: str) -> Maybe:
+        """An environment variable's or an input's value; unknown when it holds an expression that could not be
+        evaluated where it was written (`${{ startsWith(github.ref, 'refs/tags/') }}`), for what that rests on."""
+        if "${{" not in value:
+            return value
+        # The `env` and `inputs` it names are those where it was written, which are not known here.
+        self.inside = True
+        for inner in _PASSED.findall(value):
+            try:
+                self.value(parse(inner))
+            except ExpressionSyntaxError:
+                self.unseen.add("an input")
+        self.inside = False
         return _UNKNOWN
 
 
@@ -183,6 +245,22 @@ def _function(name: str, arguments: list[Maybe]) -> Maybe:
         return _UNKNOWN
     text, part = (_text(argument).lower() for argument in arguments)
     return tests[name](text, part)
+
+
+# The contexts that differ from one run of a workflow to the next (the inputs a dispatch is given, empty in a push's
+# run), and a matrix an expression computes: a condition on them holds in the runs CI makes it hold in.
+_RUNS = frozenset({"github", "steps", "needs", "job", "strategy", "matrix", "inputs"})
+
+
+def requirement(condition: str, known: Known) -> str | None:
+    """What a job or step with `condition` requires that the checkout does not settle: the condition, when it is left
+    unknown by configuration the checkout does not show; None when it is decided, or rests on the run alone."""
+    evaluator = _Evaluator(known)
+    try:
+        value = _truthy(evaluator.value(parse(condition)))
+    except ExpressionSyntaxError:
+        return condition
+    return condition if value is _UNKNOWN and not evaluator.unseen <= _RUNS else None
 
 
 def _parsed(expression: str, known: Known) -> Maybe:

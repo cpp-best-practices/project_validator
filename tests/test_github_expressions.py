@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import unittest
 
-from project_validator.ci.github_expressions import Known, evaluate, rendered
+from project_validator.ci.github_expressions import Known, evaluate, rendered, requirement
 
 KNOWN = Known(
     os="linux",
@@ -65,6 +65,67 @@ class EvaluateTests(unittest.TestCase):
         self.assertIsNone(evaluate("matrix.coverage == 'true'", known))
         self.assertIsNone(evaluate("matrix.lint", known))
         self.assertTrue(evaluate("runner.os == 'Linux'", known))
+
+
+class RequirementTests(unittest.TestCase):
+    """What a condition the checkout does not decide requires (upstream #361): nothing, when it rests on the run (the
+    event, the branch, what changed, an earlier step), which CI makes in some runs; itself, when it rests on
+    configuration the checkout does not show (a secret, a repository variable, a hashFiles() test)."""
+
+    def test_a_condition_on_the_run_holds_in_some_runs(self) -> None:
+        computed = Known(os="linux", matrix={}, env={}, matrix_known=False)
+        for condition, known in (
+            ("github.event_name == 'push'", KNOWN),
+            ("!github.event.pull_request", KNOWN),
+            ("contains(github.ref, 'tags') || github.ref_name == 'main'", KNOWN),
+            ("steps.changes.outputs.cpp == 'true' && runner.os == 'Linux'", KNOWN),
+            ("needs.plan.outputs.coverage", KNOWN),
+            ("github.run_attempt > 1", KNOWN),
+            ("matrix.coverage == 'true'", computed),
+            ("github.repository == 'argoproj/argo-cd' || vars.enable_codeql", KNOWN),  # argo-cd's CodeQL
+            ("startsWith(github.event.commits[0].message, 'fix:')", KNOWN),  # asyncapi's release
+            ("github.event.pull_request.labels[0] == 'x'", KNOWN),
+            ("inputs.rollback_run_id == ''", KNOWN),  # Humanizer's: a dispatch's input, empty in a push's run
+        ):
+            with self.subTest(condition=condition):
+                self.assertIsNone(requirement(condition, known))
+
+    def test_a_condition_on_configuration_is_required(self) -> None:
+        for condition in (
+            "secrets.CODECOV_TOKEN != ''",
+            "vars.RUN_COVERAGE == 'true'",
+            "github.event_name == 'push' && secrets.TOKEN != ''",
+            "vars.A || secrets.B",
+            "hashFiles('**/go.sum') != ''",
+            "1 < 2",
+            "runner.os == ",
+        ):
+            with self.subTest(condition=condition):
+                self.assertEqual(requirement(condition, KNOWN), condition)
+
+    def test_a_variable_set_to_an_expression_rests_on_what_it_tests(self) -> None:
+        """tinymist's: `isRelease: ${{ startsWith(github.ref, 'refs/tags/') }}`, tested as `fromJson(env.isRelease)`."""
+        env = {"isRelease": "${{ startsWith(github.ref, 'refs/tags/') }}", "token": "${{ secrets.T }}"}
+        known = Known(os="linux", matrix={}, env=env)
+        self.assertIsNone(requirement("fromJson(env.isRelease)", known))
+        self.assertEqual(requirement("env.token != ''", known), "env.token != ''")
+
+    def test_what_a_value_names_where_it_was_written_is_not_known_here(self) -> None:
+        for known, condition in (
+            (Known(os="linux", matrix={}, env={"A": "${{ env.A }}"}), "env.A"),  # names itself
+            (Known(os="linux", matrix={}, env={}, inputs={"x": "${{ == }}"}), "inputs.x"),  # does not parse
+        ):
+            with self.subTest(condition=condition):
+                self.assertEqual(requirement(condition, known), condition)
+
+    def test_a_decided_condition_requires_nothing(self) -> None:
+        self.assertIsNone(requirement("runner.os == 'Linux'", KNOWN))
+        self.assertIsNone(requirement("secrets.X != '' && runner.os == 'Windows'", KNOWN))
+
+    def test_an_environment_variable_the_job_does_not_set_is_empty(self) -> None:
+        self.assertIs(evaluate("env.COVERAGE == 'true'", KNOWN), False)
+        self.assertIs(evaluate("env.COVERAGE == ''", KNOWN), True)
+        self.assertEqual(rendered("env.COVERAGE", KNOWN), "")
 
 
 class UnreadOperatorTests(unittest.TestCase):

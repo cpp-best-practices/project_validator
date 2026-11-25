@@ -179,6 +179,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci-lint.yml:6:9 (jobs.ci-lint.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -196,6 +197,7 @@
       "kind": "Command",
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -211,6 +213,7 @@
       "kind": "Command",
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)"
       ]
@@ -222,6 +225,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "requires": "",
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
@@ -236,6 +240,7 @@
       "kind": "Command",
       "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
       "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "requires": "",
       "via": []
     },
     {
@@ -253,6 +258,7 @@
       "kind": "Command",
       "line": "gitleaks git --redact .",
       "origin": ".github/workflows/ci-lint.yml:9:9 (jobs.ci-lint.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -289,6 +295,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -300,6 +307,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
     },
     {
@@ -318,6 +326,7 @@
       "kind": "Command",
       "line": "opam install . --deps-only --with-test",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -336,6 +345,7 @@
       "kind": "Command",
       "line": "opam exec -- dune build",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -351,6 +361,7 @@
       "kind": "Command",
       "line": "opam exec -- dune build",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)"
       ]
@@ -374,6 +385,7 @@
       "kind": "Command",
       "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -392,6 +404,7 @@
       "kind": "Command",
       "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)"
       ]
@@ -412,6 +425,7 @@
       "kind": "Command",
       "line": "opam exec -- bisect-ppx-report summary",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -427,6 +441,7 @@
       "kind": "Command",
       "line": "opam exec -- bisect-ppx-report summary",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)"
       ]
@@ -455,6 +470,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -466,6 +482,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
     },
     {
@@ -484,6 +501,7 @@
       "kind": "Command",
       "line": "opam install . --deps-only --with-test",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -502,6 +520,7 @@
       "kind": "Command",
       "line": "opam exec -- dune build",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -517,6 +536,7 @@
       "kind": "Command",
       "line": "opam exec -- dune build",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)"
       ]
@@ -540,6 +560,7 @@
       "kind": "Command",
       "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -558,6 +579,7 @@
       "kind": "Command",
       "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)"
       ]
@@ -578,6 +600,7 @@
       "kind": "Command",
       "line": "opam exec -- bisect-ppx-report summary",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -593,6 +616,7 @@
       "kind": "Command",
       "line": "opam exec -- bisect-ppx-report summary",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)"
       ]
@@ -621,6 +645,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -632,6 +657,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
     },
     {
@@ -650,6 +676,7 @@
       "kind": "Command",
       "line": "opam install . --deps-only --with-test",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -668,6 +695,7 @@
       "kind": "Command",
       "line": "opam exec -- dune build",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -683,6 +711,7 @@
       "kind": "Command",
       "line": "opam exec -- dune build",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)"
       ]
@@ -706,6 +735,7 @@
       "kind": "Command",
       "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -724,6 +754,7 @@
       "kind": "Command",
       "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)"
       ]
@@ -744,6 +775,7 @@
       "kind": "Command",
       "line": "opam exec -- bisect-ppx-report summary",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -759,6 +791,7 @@
       "kind": "Command",
       "line": "opam exec -- bisect-ppx-report summary",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)"
       ]
@@ -787,6 +820,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -798,6 +832,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
     },
     {
@@ -816,6 +851,7 @@
       "kind": "Command",
       "line": "opam install . --deps-only --with-test",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -834,6 +870,7 @@
       "kind": "Command",
       "line": "opam exec -- dune build",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -849,6 +886,7 @@
       "kind": "Command",
       "line": "opam exec -- dune build",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)"
       ]
@@ -872,6 +910,7 @@
       "kind": "Command",
       "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -890,6 +929,7 @@
       "kind": "Command",
       "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)"
       ]
@@ -910,6 +950,7 @@
       "kind": "Command",
       "line": "opam exec -- bisect-ppx-report summary",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -925,6 +966,7 @@
       "kind": "Command",
       "line": "opam exec -- bisect-ppx-report summary",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)"
       ]
@@ -953,6 +995,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -964,6 +1007,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
     },
     {
@@ -982,6 +1026,7 @@
       "kind": "Command",
       "line": "opam install . --deps-only --with-test",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1000,6 +1045,7 @@
       "kind": "Command",
       "line": "opam exec -- dune build",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1015,6 +1061,7 @@
       "kind": "Command",
       "line": "opam exec -- dune build",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)"
       ]
@@ -1038,6 +1085,7 @@
       "kind": "Command",
       "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1056,6 +1104,7 @@
       "kind": "Command",
       "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)"
       ]
@@ -1076,6 +1125,7 @@
       "kind": "Command",
       "line": "opam exec -- bisect-ppx-report summary",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1091,6 +1141,7 @@
       "kind": "Command",
       "line": "opam exec -- bisect-ppx-report summary",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)"
       ]
@@ -1119,6 +1170,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1130,6 +1182,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
     },
     {
@@ -1148,6 +1201,7 @@
       "kind": "Command",
       "line": "opam install . --deps-only --with-test",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1166,6 +1220,7 @@
       "kind": "Command",
       "line": "opam exec -- dune build",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1181,6 +1236,7 @@
       "kind": "Command",
       "line": "opam exec -- dune build",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)"
       ]
@@ -1204,6 +1260,7 @@
       "kind": "Command",
       "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1222,6 +1279,7 @@
       "kind": "Command",
       "line": "opam exec -- dune test --instrument-with bisect_ppx --force",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)"
       ]
@@ -1242,6 +1300,7 @@
       "kind": "Command",
       "line": "opam exec -- bisect-ppx-report summary",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1257,6 +1316,7 @@
       "kind": "Command",
       "line": "opam exec -- bisect-ppx-report summary",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)"
       ]
@@ -1282,6 +1342,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:21:9 (jobs.lint.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1293,6 +1354,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:22:9 (jobs.lint.steps[1])",
+      "requires": "",
       "uses": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
     },
     {
@@ -1309,6 +1371,7 @@
       "kind": "Command",
       "line": "opam install ocamlformat",
       "origin": ".github/workflows/ci.yml:25:9 (jobs.lint.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1328,6 +1391,7 @@
       "kind": "Command",
       "line": "opam exec -- dune build @fmt",
       "origin": ".github/workflows/ci.yml:26:9 (jobs.lint.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1344,6 +1408,7 @@
       "kind": "Command",
       "line": "opam exec -- dune build @fmt",
       "origin": ".github/workflows/ci.yml:26:9 (jobs.lint.steps[3].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:26:9 (jobs.lint.steps[3].run)"
       ]
@@ -1367,6 +1432,7 @@
       "kind": "Command",
       "line": "pipx run semgrep scan --config auto --error .",
       "origin": ".github/workflows/ci.yml:27:9 (jobs.lint.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1386,6 +1452,7 @@
       "kind": "Command",
       "line": "pipx run semgrep scan --config auto --error .",
       "origin": ".github/workflows/ci.yml:27:9 (jobs.lint.steps[4].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:27:9 (jobs.lint.steps[4].run)"
       ]
@@ -1421,6 +1488,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
       "origin": ".github/workflows/copy-paste-detection.yml:5:9 (jobs.copy-paste-detection.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1440,6 +1508,7 @@
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
       "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1457,6 +1526,7 @@
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
       "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)"
       ]

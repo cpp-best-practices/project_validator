@@ -249,6 +249,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci-lint.yml:6:9 (jobs.ci-lint.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -266,6 +267,7 @@
       "kind": "Command",
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -281,6 +283,7 @@
       "kind": "Command",
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)"
       ]
@@ -292,6 +295,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "requires": "",
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
@@ -306,6 +310,7 @@
       "kind": "Command",
       "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
       "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "requires": "",
       "via": []
     },
     {
@@ -323,6 +328,7 @@
       "kind": "Command",
       "line": "gitleaks git --redact .",
       "origin": ".github/workflows/ci-lint.yml:9:9 (jobs.ci-lint.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -356,6 +362,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:6:9 (jobs.lint.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -365,6 +372,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:7:9 (jobs.lint.steps[1])",
+      "requires": "",
       "uses": "azure/setup-helm@2f5e7bc67f1f9972ab16657bb795f36d8f04de0e"
     },
     {
@@ -381,6 +389,7 @@
       "kind": "Command",
       "line": "helm lint charts/shop",
       "origin": ".github/workflows/ci.yml:8:9 (jobs.lint.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -397,6 +406,7 @@
       "kind": "Command",
       "line": "helm template charts/shop | kubeconform -strict -summary",
       "origin": ".github/workflows/ci.yml:9:9 (jobs.lint.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -413,6 +423,7 @@
       "kind": "Command",
       "line": "helm template charts/shop | kubeconform -strict -summary",
       "origin": ".github/workflows/ci.yml:9:9 (jobs.lint.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -430,6 +441,7 @@
       "kind": "Command",
       "line": "helm plugin install https://github.com/helm-unittest/helm-unittest.git",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.lint.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -446,6 +458,7 @@
       "kind": "Command",
       "line": "helm unittest charts/shop",
       "origin": ".github/workflows/ci.yml:11:9 (jobs.lint.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -458,6 +471,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:12:9 (jobs.lint.steps[6])",
+      "requires": "",
       "uses": "stackrox/kube-linter-action@87802a2f4e01abebb3ee3c67a3002fea71f6eae5"
     },
     {
@@ -476,6 +490,7 @@
       "kind": "Command",
       "line": "uses: stackrox/kube-linter-action@87802a2f4e01abebb3ee3c67a3002fea71f6eae5",
       "origin": ".github/workflows/ci.yml:12:9 (jobs.lint.steps[6])",
+      "requires": "",
       "via": []
     },
     {
@@ -501,6 +516,7 @@
       "job": ".github/workflows/ci.yml:install",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:19:9 (jobs.install.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -510,6 +526,7 @@
       "job": ".github/workflows/ci.yml:install",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:22:9 (jobs.install.steps[1])",
+      "requires": "",
       "uses": "helm/chart-testing-action@720270857a28afd41e2426521a7801db09e9b510"
     },
     {
@@ -519,6 +536,7 @@
       "job": ".github/workflows/ci.yml:install",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:23:9 (jobs.install.steps[2])",
+      "requires": "",
       "uses": "helm/kind-action@ea822c7bf1874f08e5a491df991c228edffc3376"
     },
     {
@@ -538,6 +556,7 @@
       "kind": "Command",
       "line": "ct install --charts charts/shop --target-branch main",
       "origin": ".github/workflows/ci.yml:24:9 (jobs.install.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -586,6 +605,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
       "origin": ".github/workflows/copy-paste-detection.yml:5:9 (jobs.copy-paste-detection.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -605,6 +625,7 @@
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
       "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -622,6 +643,7 @@
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
       "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)"
       ]
