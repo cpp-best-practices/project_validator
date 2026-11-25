@@ -161,6 +161,11 @@ Every source file and unit has a **role** (`project_validator/facts/roles.py`), 
 below one, `src/test/resources`): `product`, `test`,
 `example`, `docs`, `tooling`, `benchmark`, `template` (below a `templates` directory: rendered before it is read, so a
 data file there is noted, not parsed), or `vendored` (below a vendor directory anywhere, or a minified bundle).
+A unit's build files can say it is a unit of tests (`Ecosystem.test_units`: a Racket `-test` package), and so can
+what CI does with it, once its commands are read (`Ecosystem.ci_test_units`, a stage after the CI jobs): a private
+npm workspace package that no other package depends on and that CI runs only by its test scripts (`test`,
+`test:*`, `test-*`) exists to test the others (zod's `packages/integration`). A `--filter` or `--workspace` that
+names packages exactly runs only their scripts; a pattern runs every package's.
 A role names code; it judges none: every source outside vendored directories is the product's, whatever its role,
 and adds its language to its unit. `--auxiliary` dials that back (`project_validator/facts/auxiliary.py`): what it
 names, by role (`tooling`), by language or ecosystem (`python`, `c++`) or by directory (`scripts/`), is recorded as

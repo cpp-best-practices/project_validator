@@ -14,6 +14,7 @@ from typing import Literal
 
 from project_validator.build_systems.model import C_FAMILY, BuildSystem
 from project_validator.core import Project
+from project_validator.facts import Facts
 from project_validator.facts.arguments import starts_with
 
 __all__ = [
@@ -215,6 +216,10 @@ class Ecosystem:
     # The units of tests, by what their build files say rather than their directories' names (Racket's X-test
     # package, in the `tests` collection): a unit of tests (see `project_validator.facts.roles`).
     test_units: Callable[[Project], frozenset[str]] | None = None
+    # The units of tests by what CI does with them, once its commands are read (a private workspace package that no
+    # other depends on and that CI runs only by its test scripts): a unit of tests too, with the units it tests (the
+    # packages it depends on; none: every unit).
+    ci_test_units: Callable[[Project, Facts], Mapping[str, tuple[str, ...]]] | None = None
 
     def __post_init__(self) -> None:
         if self.kind == "format" and self.toolchain is not None:

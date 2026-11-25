@@ -99,6 +99,7 @@ def extract_facts(context: Context) -> Facts:
         context, "the CI commands", lambda: found + expansion.expanded(jobs, context, expanders, actions), before=found
     )
     found = _stage(context, "the CI jobs", lambda: found + ci.job_facts(found, project), before=found)
+    found = _stage(context, "the units CI tests", lambda: structure.ci_test_units(project, found), before=found)
     found = _stage(
         context,
         "the settings",

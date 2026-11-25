@@ -291,6 +291,90 @@ class WorkspaceScriptTests(unittest.TestCase):
                 self.assertEqual(_scripts({**named, **_workflow((line, None))}), expected)
 
 
+def _roles(files: dict[str, str]) -> dict[str, str]:
+    with temp_project(files) as root:
+        return {unit.directory: unit.role for unit in make_context(root).facts.of(Unit)}
+
+
+def _member(name: str, scripts: dict[str, str], **fields: object) -> dict[str, str]:
+    manifest = {"name": f"@zod/{name}", "scripts": scripts, **fields}
+    return {f"packages/{name}/package.json": json.dumps(manifest), f"packages/{name}/src/index.ts": ""}
+
+
+# zod's: the library, and private packages that exist only to test it, which CI runs by their test scripts alone.
+ZOD = {
+    "package.json": json.dumps({"private": True, "workspaces": ["packages/*"]}),
+    **_member("zod", {"build": "tsc", "test": "vitest"}),
+    **_member(
+        "integration",
+        {"test:all": "pnpm test:node", "test:node": "vitest"},
+        private=True,
+        dependencies={"@zod/zod": "workspace:*", "vitest": "^3"},
+    ),
+}
+
+
+class CiTestPackageTests(unittest.TestCase):
+    """A private workspace package that no other package depends on, and that CI runs only by its test scripts, is a
+    unit of tests (upstream #374)."""
+
+    def test_a_private_package_ci_only_tests_is_a_unit_of_tests(self) -> None:
+        ci = _workflow(("pnpm --filter @zod/zod build", None), ("pnpm --filter @zod/integration test:all", None))
+        self.assertEqual(
+            _roles({**ZOD, **ci}), {".": "product", "packages/integration": "test", "packages/zod": "product"}
+        )
+
+    def test_a_unit_of_tests_tests_the_packages_it_depends_on(self) -> None:
+        ci = _workflow(("pnpm --filter @zod/integration test:all", None))
+        files = {**ZOD, **_member("docs", {"build": "next build"}, private=True), **ci}
+        with temp_project(files) as root:
+            units = {unit.directory: unit for unit in make_context(root).facts.of(Unit)}
+        self.assertEqual(units["packages/integration"].tests, ("packages/zod",))
+
+    def test_a_test_script_is_test_or_named_after_it(self) -> None:
+        for script in ("test", "test:unit", "test-e2e"):
+            files = {**ZOD, **_member("integration", {script: "vitest"}, private=True)}
+            with self.subTest(script=script):
+                ci = _workflow((f"pnpm --filter @zod/integration {script}", None))
+                self.assertEqual(_roles({**files, **ci})["packages/integration"], "test")
+
+    def test_a_test_script_another_script_runs_counts_as_that_one(self) -> None:
+        files = {**ZOD, **_member("integration", {"ci": "pnpm test:node", "test:node": "vitest"}, private=True)}
+        ci = _workflow(("pnpm --filter @zod/integration ci", None))
+        self.assertEqual(_roles({**files, **ci})["packages/integration"], "product")
+
+    def test_the_root_and_auxiliary_units_keep_their_roles(self) -> None:
+        root = json.dumps({"private": True, "workspaces": ["packages/*", "examples/*"], "scripts": {"test": "vitest"}})
+        demo = {"examples/demo/package.json": json.dumps({"name": "demo", "private": True, "scripts": {"test": "x"}})}
+        ci = _workflow(("pnpm test", None), ("pnpm --filter demo test", None))
+        roles = _roles({**ZOD, "package.json": root, **demo, "examples/demo/index.ts": "", **ci})
+        self.assertEqual((roles["."], roles["examples/demo"]), ("product", "example"))
+
+    def test_a_manifest_that_is_no_object_is_passed_over(self) -> None:
+        for text in ("[]", "{"):
+            files = {**ZOD, "packages/broken/package.json": text, "packages/broken/index.ts": ""}
+            with self.subTest(text=text):
+                self.assertEqual(
+                    _roles({**files, **_workflow(("pnpm -r test", None))}).get("packages/broken"), "product"
+                )
+
+    def test_a_package_ci_also_builds_or_never_runs_stays_the_products(self) -> None:
+        for steps in (
+            (("pnpm --filter @zod/integration test:all", None), ("pnpm --filter @zod/integration build", None)),
+            (("pnpm --filter @zod/zod build", None),),
+        ):
+            files = {**ZOD, **_member("integration", {"test:all": "vitest", "build": "tsc"}, private=True)}
+            with self.subTest(steps=steps):
+                self.assertEqual(_roles({**files, **_workflow(*steps)})["packages/integration"], "product")
+
+    def test_a_published_package_or_one_another_depends_on_stays_the_products(self) -> None:
+        ci = _workflow(("pnpm --filter @zod/integration test:all", None))
+        published = {**ZOD, **_member("integration", {"test:all": "vitest"})}
+        self.assertEqual(_roles({**published, **ci})["packages/integration"], "product")
+        depended = {**ZOD, **_member("app", {"build": "tsc"}, private=True, devDependencies={"@zod/integration": "*"})}
+        self.assertEqual(_roles({**depended, **ci})["packages/integration"], "product")
+
+
 class ReusableWorkflowTests(unittest.TestCase):
     def _facts(self, uses: str) -> tuple[list[str], list[str]]:
         caller = {
