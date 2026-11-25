@@ -29,8 +29,9 @@ _ROLES = {
     **dict.fromkeys(
         ("test", "tests", "testing", "testdata", "spec", "specs", "__tests__", "fixtures", "t", "xt"), "test"
     ),
-    # Flutter's integration tests (phoenix's too).
-    **dict.fromkeys(("playground", "playgrounds", "inputs", "integration_test"), "test"),
+    # Flutter's integration tests (phoenix's too); a corpus is the code a tool is tested on (clj-kondo's, Dist-Zilla's:
+    # upstream #235).
+    **dict.fromkeys(("playground", "playgrounds", "inputs", "integration_test", "corpus"), "test"),
     **dict.fromkeys(
         ("fuzz", "fuzzing", "fuzz_test", "fuzz_tests", "fuzztest", "stress", "stress-test", "stress-tests"), "test"
     ),
@@ -84,7 +85,7 @@ _TESTS_BELOW_SOURCE_ROOTS = frozenset(
 
 
 # Directories of a test suite's data: the projects in them are inputs to the tests, not projects of the repository.
-_FIXTURE_DIRECTORIES = frozenset({"fixtures", "testdata", "test-data", "test_data", "inputs"})
+_FIXTURE_DIRECTORIES = frozenset({"fixtures", "testdata", "test-data", "test_data", "inputs", "corpus"})
 
 
 def fixture_data(path: str) -> bool:
