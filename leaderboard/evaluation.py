@@ -20,7 +20,7 @@ from project_validator.analysis import from_reports
 from project_validator.core import Context, Options, Project, Status
 from project_validator.plugins import discover
 from project_validator.runner import Report, run_checks
-from project_validator.score import score
+from project_validator.score import score, sizes
 from project_validator.views.html import render as html_report
 
 # The key of a result that holds its HTML report, which `write` puts beside the JSON rather than in it.
@@ -96,7 +96,8 @@ def evaluate(
     }
     if (failure := context.extraction_error) is not None:
         result["error"] = str(failure).replace(str(directory.resolve()), "<checkout>")
-    result["score"] = score(judged, every_check).as_dict()
+    shares = sizes(context.facts) if context.extraction_error is None else {}
+    result["score"] = score(judged, every_check, shares).as_dict()
     result[REPORT] = html_report(from_reports(context, judged, every_check))
     return result
 

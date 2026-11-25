@@ -6,7 +6,9 @@ check's result there is a *slot*); the gates of the whole project (a licence, CI
 - **Fill.** A passing slot is filled, a warning half filled, anything else empty. A skip is not a slot (the gate does
   not apply), and an error stays one: hiding something never helps. A slot whose tools reach only part of the
   product's code (`Result.share`, upstream #333) is filled by the share of its lines they reach.
-- **Weight.** Auxiliary code (`--auxiliary`) weighs half, and is not asked for the gates of the product alone
+- **Weight.** A language's core slots weigh its share of its unit's product lines (`sizes`), at least `FLOOR`
+  (upstream #331); the levels still ask every language for every gate. Auxiliary code (`--auxiliary`) weighs half,
+  and is not asked for the gates of the product alone
   (`NOT_FOR_AUXILIARY`: fuzzing tests, measuring their coverage, ...). Cosmetic checks (`UNSCORED`) are reported, not
   scored.
 - **Pooled.** `percent = 100 * filled / slots`: a folder of data files with one gate weighs one slot.
@@ -24,13 +26,16 @@ from __future__ import annotations
 
 import math
 from collections.abc import Iterable, Iterator, Mapping, Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
+from pathlib import PurePosixPath
 
 from project_validator.core import Result, Status
+from project_validator.facts import Facts
 from project_validator.judging import NOT_FOR_AUXILIARY
 from project_validator.runner import Report
 
-SCORE_VERSION = "1"
+# 2: each language's slots weigh its share of its unit's code (upstream #331).
+SCORE_VERSION = "2"
 
 # The checks each level's core and project slots must pass, in order; every other check belongs to the top level.
 LEVELS: Mapping[int, tuple[str, ...]] = {
@@ -70,6 +75,11 @@ FAMILIES: Mapping[str, str] = {"flake8": "ruff", "pylint": "pylint", "ruff": "ru
 
 CORE, AUXILIARY, PROJECT = "core", "auxiliary", "project"
 _WEIGHT = {CORE: 1.0, AUXILIARY: 0.5, PROJECT: 1.0}
+# The least a language's core slots weigh, whatever its share of the code: a gap in a small language still costs.
+FLOOR = 0.1
+
+# Each language's (an ecosystem's, by its label) share of its unit's product lines: (label, unit) -> share.
+type Sizes = Mapping[tuple[str, str], float]
 _FILLS = {Status.PASS: 1.0, Status.WARN: 0.5}
 
 
@@ -99,10 +109,12 @@ class Cell:
     hint: str = ""
     # The share of the gate's code its tools reach (see `Result.share`), which fills a passing slot that far.
     share: float = 1.0
+    # The language's share of its unit's product lines (see `sizes`), which a core slot weighs, at least `FLOOR`.
+    size: float = 1.0
 
     @property
     def weight(self) -> float:
-        return _WEIGHT[self.tier]
+        return _WEIGHT[self.tier] * (max(FLOOR, self.size) if self.tier == CORE else 1.0)
 
     @property
     def fill(self) -> float:
@@ -294,7 +306,28 @@ def _hint(details: Sequence[str]) -> str:
     return ""
 
 
-def _report_cells(report: Report) -> Iterator[Cell]:
+def sizes(facts: Facts) -> dict[tuple[str, str], float]:
+    """Each ecosystem's share of the product lines of each unit it is in (its languages' and formats' together), by
+    the source files' lines; test, tooling, example and vendored code count for none."""
+    from project_validator.ecosystems import registered
+    from project_validator.facts.structure import SourceFile, Unit
+    from project_validator.facts.tools import owner
+
+    units = tuple(found.directory for found in facts.of(Unit)) or (".",)
+    labels = {language: ecosystem.label for ecosystem in registered() for language in ecosystem.languages}
+    lines: dict[tuple[str, str], int] = {}
+    totals: dict[str, int] = {}
+    for source in facts.of(SourceFile):
+        if source.role != "product" or source.language not in labels:
+            continue
+        unit = owner(str(PurePosixPath(source.path).parent), units)
+        key = (labels[source.language], unit)
+        lines[key] = lines.get(key, 0) + source.lines
+        totals[unit] = totals.get(unit, 0) + source.lines
+    return {key: count / totals[key[1]] for key, count in lines.items() if totals[key[1]]}
+
+
+def _report_cells(report: Report, sizes_: Sizes) -> Iterator[Cell]:
     """The report's slots: one per place that does not skip, or one for a check of the whole project; auxiliary
     places of the product's own gates, and unscored checks, are left out."""
     name, level = report.check.name, level_of(report.check.name)
@@ -309,7 +342,8 @@ def _report_cells(report: Report) -> Iterator[Cell]:
         tier = AUXILIARY if place.auxiliary else CORE
         if place.result.status is Status.SKIP or (tier == AUXILIARY and name in NOT_FOR_AUXILIARY):
             continue
-        yield _cell(name, level, place.ecosystem, place.unit, tier, place.result, place.tools)
+        cell = _cell(name, level, place.ecosystem, place.unit, tier, place.result, place.tools)
+        yield replace(cell, size=sizes_.get((place.ecosystem, place.unit), 1.0))
 
 
 def _cell(check: str, level: int, ecosystem: str, unit: str, tier: str, result: Result, tools: tuple[str, ...]) -> Cell:
@@ -377,12 +411,13 @@ def _next_steps(cells: Sequence[Cell], slots: float, level: int, *, complete_run
     return tuple(sorted(steps, key=_rank))
 
 
-def score(reports: Iterable[Report], every_check: Iterable[str] = ()) -> Score:
+def score(reports: Iterable[Report], every_check: Iterable[str] = (), sizes: Sizes | None = None) -> Score:
     """The score of a run, from its reports. A level is reached only when each of its checks ran, and the top level
     only when `every_check` (the names of every check there is) ran too: a run narrowed by `--only` or `--skip`
-    reaches no level past the checks it left out."""
+    reaches no level past the checks it left out. Each language's core slots weigh its `sizes` share (see `sizes`),
+    at least `FLOOR`; a language with no share given weighs in full."""
     reports = list(reports)
-    cells = tuple(cell for report in reports for cell in _report_cells(report))
+    cells = tuple(cell for report in reports for cell in _report_cells(report, sizes or {}))
     ran = frozenset(report.check.name for report in reports)
     everything = frozenset(every_check)
     level = _level(cells, ran, everything)
@@ -400,6 +435,7 @@ def score(reports: Iterable[Report], every_check: Iterable[str] = ()) -> Score:
 
 __all__ = [
     "EXTRA_CREDIT",
+    "FLOOR",
     "LEVELS",
     "LEVEL_NAMES",
     "NOT_FOR_AUXILIARY",
@@ -412,4 +448,5 @@ __all__ = [
     "family",
     "level_of",
     "score",
+    "sizes",
 ]

@@ -13,6 +13,7 @@ from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, main
 from project_validator.core import Check, Placed, Result, Status
 from project_validator.runner import Report
 from project_validator.score import (
+    FLOOR,
     LEVEL_NAMES,
     LEVELS,
     NOT_FOR_AUXILIARY,
@@ -21,8 +22,10 @@ from project_validator.score import (
     Score,
     family,
     score,
+    sizes,
 )
-from tests.support import FIXTURES
+from tests.support import FIXTURES, make_context, temp_project
+from tests.test_cli import run_cli
 
 PASS, WARN, FAIL, ERROR, SKIP = Status.PASS, Status.WARN, Status.FAIL, Status.ERROR, Status.SKIP
 
@@ -292,7 +295,7 @@ class SummaryTests(unittest.TestCase):
     def test_as_json(self) -> None:
         data = scored(foundations()).as_dict()
         self.assertEqual(data["version"], SCORE_VERSION)
-        self.assertEqual(SCORE_VERSION, "1")
+        self.assertEqual(SCORE_VERSION, "2")  # 2: weighted by size (upstream #331)
         self.assertEqual(data["percent"], 100)
         self.assertEqual((data["level"], data["level_name"]), (1, "Foundations"))
         self.assertEqual((data["filled"], data["slots"], data["extra"], data["held"]), (7, 7, 0, 0))
@@ -328,3 +331,60 @@ class CliTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+SIZES = {("Rust", "."): 0.95, ("Shell", "."): 0.05}
+
+
+class SizeTests(unittest.TestCase):
+    """Each language's slots weigh its share of its unit's product lines, at least 10% (upstream #331): a few helper
+    scripts don't count as much as the main language. Levels, auxiliary and project slots are unchanged."""
+
+    def test_a_small_languages_gap_costs_less_than_the_main_ones(self) -> None:
+        rust_gap = [report("static-analysis", FAIL, place(FAIL, ecosystem="Rust"), place(PASS, ecosystem="Shell"))]
+        shell_gap = [report("static-analysis", FAIL, place(PASS, ecosystem="Rust"), place(FAIL, ecosystem="Shell"))]
+        self.assertEqual(round(score(rust_gap, sizes=SIZES).percent), 10)  # 0.1 of 1.05
+        self.assertEqual(round(score(shell_gap, sizes=SIZES).percent), 90)
+        [step] = score(shell_gap, sizes=SIZES).next_steps
+        [bigger] = score(rust_gap, sizes=SIZES).next_steps
+        self.assertLess(step.points, bigger.points)
+
+    def test_a_tiny_share_still_weighs_the_floor(self) -> None:
+        cells = score([report("tests-run", PASS, place(PASS, ecosystem="Shell"))], sizes={("Shell", "."): 0.001}).cells
+        self.assertEqual(cells[0].weight, 0.1)
+
+    def test_project_and_auxiliary_slots_and_a_single_language_score_as_before(self) -> None:
+        reports = [project_wide("license", PASS), report("tests-run", FAIL, place(FAIL, auxiliary=("tooling",)))]
+        weights = [cell.weight for cell in score(reports, sizes={("C++", "."): 0.2}).cells]
+        self.assertEqual(weights, [1.0, 0.5])
+        alone = [report("tests-run", PASS, place(PASS)), report("coverage", FAIL, place(FAIL))]
+        self.assertEqual(scored(alone).percent, score(alone, sizes={("C++", "."): 1.0}).percent)
+
+    def test_every_slot_must_still_be_filled_for_100_percent(self) -> None:
+        reports = [report("tests-run", PASS, place(PASS, ecosystem="Rust"), place(WARN, ecosystem="Shell"))]
+        self.assertLess(score(reports, sizes=SIZES).percent, 100)
+
+    def test_a_languages_share_is_of_its_units_product_lines(self) -> None:
+        files = {
+            "Cargo.toml": "[package]\nname = 'app'\n",
+            "src/main.rs": "fn main() {}\n" * 18,
+            "build.sh": "echo hi\n",
+            "tests/check.sh": "echo test\n" * 100,  # test code: not the product's
+        }
+        with temp_project(files) as root:
+            shares = sizes(make_context(root).facts)
+        # 18 lines of Rust, 1 of Shell and Cargo.toml's 2 of TOML (the Data format): a format's lines count too.
+        found = {key: round(share, 3) for key, share in shares.items()}
+        self.assertEqual(found, {("Rust", "."): 0.857, ("Shell", "."): 0.048, ("Data", "."): 0.095})
+
+    def test_a_unit_whose_files_hold_no_lines_has_no_sizes(self) -> None:
+        with temp_project({"src/main.rs": "", "Cargo.toml": ""}) as root:
+            self.assertEqual(sizes(make_context(root).facts), {})
+
+    def test_the_run_weighs_each_languages_slots_by_its_size(self) -> None:
+        files = {"CMakeLists.txt": "project(app CXX)\n", "src/main.cpp": "int x;\n" * 98, "build.sh": "echo hi\n"}
+        with temp_project(files) as root:
+            _, output, _ = run_cli("--score", "--format", "json", str(root))
+        weights = {cell["ecosystem"]: cell["weight"] for cell in json.loads(output)["score"]["cells"]}
+        self.assertEqual(weights["Shell"], FLOOR)  # 1 of 100 lines
+        self.assertGreater(weights["C++"], 0.9)
