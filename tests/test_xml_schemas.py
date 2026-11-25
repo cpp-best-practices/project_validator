@@ -24,7 +24,12 @@ XSPEC = {
 }
 
 
-DTD = {"dtd/catalog.dtd": "<!ELEMENT catalog EMPTY>\n", "dtd/names.ent": "<!ENTITY shop 'Shop'>\n"}
+# A DTD with its entity file and a module of declarations it includes (docbook's `dbpoolx.mod`).
+DTD = {
+    "dtd/catalog.dtd": "<!ELEMENT catalog EMPTY>\n",
+    "dtd/names.ent": "<!ENTITY shop 'Shop'>\n",
+    "dtd/pool.mod": "<!ELEMENT para (#PCDATA)>\n",
+}
 
 
 def _ci(*steps: str) -> dict[str, str]:
@@ -60,6 +65,11 @@ class RecognitionTests(unittest.TestCase):
         ) as root:
             self.assertEqual(make_context(root).structure.formats, frozenset())
         self.assertEqual((XML_SCHEMAS_ECOSYSTEM.kind, XML_SCHEMAS_ECOSYSTEM.toolchain), ("format", None))
+
+    def test_a_mod_file_beside_fortran_makes_no_schema_project(self) -> None:
+        """A `.mod` is also a compiled Fortran module."""
+        with temp_project({"src/m.f90": "module m\nend module m\n", "build/m.mod": "\x00"}) as root:
+            self.assertEqual(make_context(root).structure.formats, frozenset())
 
     def test_ci_usage(self) -> None:
         for text in ("xmllint --noout --schema s.xsd d.xml", "jing s.rng d.xml", "xspec.sh -t tests/total.xspec"):
