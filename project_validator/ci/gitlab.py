@@ -14,9 +14,10 @@ import re
 from collections.abc import Iterator, Mapping
 
 from project_validator.ci import CiProvider, Load, strings
+from project_validator.ci.gitlab_rules import job_requirement
 from project_validator.facts import CiJob, Command, Fact, Origin, Unknown
 from project_validator.facts.exit_status import STRICT, after
-from project_validator.facts.expansion import advised, script_facts
+from project_validator.facts.expansion import advised, required, script_facts
 from project_validator.facts.shell import POSIX, POWERSHELL, ShellCommand, split_script
 from project_validator.includes import Chain, Refused, follow
 from project_validator.limits import GITLAB_EXTENDS, GITLAB_INCLUDES, GITLAB_REFERENCES
@@ -97,6 +98,10 @@ def _scripts(
             yield key, line, Origin(path=path, at=(name, key, number) if key in job else ("default", key, number))
 
 
+def _substituted(lines: Iterator[tuple[str, str, Origin]], variables: Variables) -> list[tuple[str, str, Origin]]:
+    return [(key, substitute_variables(line, variables), origin) for key, line, origin in lines]
+
+
 def _job_facts(path: str, name: str, job: Mapping[str, object], defaults: Mapping[str, object]) -> Iterator[Fact]:
     image_name = _image(job, defaults)
     tags = json.dumps(job.get("tags", defaults.get("tags", [])), default=str)
@@ -107,6 +112,8 @@ def _job_facts(path: str, name: str, job: Mapping[str, object], defaults: Mappin
     for index, variables in enumerate(combinations):
         identity = f"{path}:{name}" if len(combinations) == 1 else f"{path}:{name}[{index}]"
         env = {**strings(defaults.get("variables")), **strings(job.get("variables")), **variables}
+        if (runs := job_requirement(job, env)) is False:
+            continue
         os = _runner_os(substitute_variables(tags, variables))
         yield CiJob(
             origin=Origin(path=path, at=(name,)),
@@ -121,11 +128,9 @@ def _job_facts(path: str, name: str, job: Mapping[str, object], defaults: Mappin
             services=tuple(substitute_variables(name, variables) for name in _services(job, defaults)),
             env=env,
         )
-        lines = [
-            (key, substitute_variables(line, variables), origin)
-            for key, line, origin in _scripts(path, name, job, defaults)
-        ]
-        yield from advised(_lines_facts(lines, identity, env, windows=os == "windows"), advisory)
+        lines = _substituted(_scripts(path, name, job, defaults), variables)
+        facts = advised(_lines_facts(lines, identity, env, windows=os == "windows"), advisory)
+        yield from required(facts, runs if isinstance(runs, str) else "")
 
 
 _AFTER_SCRIPT = "in after_script, whose failure GitLab ignores"

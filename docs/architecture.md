@@ -186,6 +186,23 @@ calling job; a known action that runs a known command (`psf/black`) is expanded 
 tools only ever claim commands. pre-commit.ci is a provider whose job never builds; GitLab's known security
 templates are jobs that run the template as a marker command.
 
+**Conditional commands** (upstream #361): a command records what it needs, to run, that the checkout does not settle
+(`Command.requires`). A GitHub condition left unknown either rests on the run alone (the event, the branch, a dispatch's
+inputs, earlier steps' and jobs' outputs, a computed matrix: `requirement` in `ci/github_expressions.py`), and holds in
+the runs CI makes, or on configuration the checkout does not show (a secret, a repository variable, `hashFiles()`),
+which the command requires. A disjunct that rests on the run alone holds in some runs, whatever the others rest on; an
+input a caller computes, or a variable set to an expression, rests on what that expression tests. An `env.X` the
+workflow does not set is empty, as GitHub's is, unless an earlier step may have set it: one whose script writes it to
+`$GITHUB_ENV` only sometimes, or an action that is not GitHub's own (which may write any). GitLab's `rules:` and
+`only:`/`except:` (`ci/gitlab_rules.py`) are settled the same way: its predefined `CI_*` variables, `changes:` and
+`exists:` say which run it is, a variable the pipeline sets decides, and any other may be set by the project's settings,
+so a condition on it is required. A makefile is read in a GitHub job's environment, which is all the job sets
+(`whole_environment`): a variable neither it nor the makefile sets is empty, `?=` and make's defaults hold, CI is true,
+and only the runner's own variables (`GITHUB_*`, `RUNNER_*`, `HOME`, `OS`) still decide nothing; under a service whose
+settings may add variables, a conditional on one is required. What a command runs in turn requires what it does, and
+what the conditionals it is read under still require. A tool run by a command that requires something is unknown
+(`hides="settings"` for that tool), never a run.
+
 **Command expansion** (`project_validator/facts/expansion.py`): a `CommandExpander` says what a command runs in turn
 (package.json scripts and Deno tasks, Composer scripts, Rake tasks, Make and CMake targets, just recipes, pixi tasks, tox
 environments, pre-commit hooks, the project's own shell scripts, the string `sh -c '…'` runs, workspace-wide script runs), and the commands found are

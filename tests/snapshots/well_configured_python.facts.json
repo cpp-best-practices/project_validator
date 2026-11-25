@@ -197,6 +197,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci-lint.yml:6:9 (jobs.ci-lint.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -214,6 +215,7 @@
       "kind": "Command",
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -229,6 +231,7 @@
       "kind": "Command",
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)"
       ]
@@ -240,6 +243,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "requires": "",
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
@@ -254,6 +258,7 @@
       "kind": "Command",
       "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
       "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "requires": "",
       "via": []
     },
     {
@@ -271,6 +276,7 @@
       "kind": "Command",
       "line": "gitleaks git --redact .",
       "origin": ".github/workflows/ci-lint.yml:9:9 (jobs.ci-lint.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -307,6 +313,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:9:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -318,6 +325,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
     },
     {
@@ -338,6 +346,7 @@
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -356,6 +365,7 @@
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)"
       ]
@@ -376,6 +386,7 @@
       "kind": "Command",
       "line": "bandit -c pyproject.toml -r src",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -392,6 +403,7 @@
       "kind": "Command",
       "line": "pip-audit -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -408,6 +420,7 @@
       "kind": "Command",
       "line": "ruff format --check",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -423,6 +436,7 @@
       "kind": "Command",
       "line": "ruff check",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -438,6 +452,7 @@
       "kind": "Command",
       "line": "mypy src",
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -456,6 +471,7 @@
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -477,6 +493,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -494,6 +511,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)"
       ]
@@ -510,6 +528,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)"
@@ -528,6 +547,7 @@
       "kind": "Command",
       "line": "mutmut run",
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[10].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -544,6 +564,7 @@
       "kind": "Command",
       "line": "python tests/fuzz/fuzz_app.py -max_total_time=30",
       "origin": ".github/workflows/ci.yml:22:9 (jobs.test.steps[11].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -570,6 +591,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:9:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -581,6 +603,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
     },
     {
@@ -601,6 +624,7 @@
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -619,6 +643,7 @@
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)"
       ]
@@ -639,6 +664,7 @@
       "kind": "Command",
       "line": "bandit -c pyproject.toml -r src",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -655,6 +681,7 @@
       "kind": "Command",
       "line": "pip-audit -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -671,6 +698,7 @@
       "kind": "Command",
       "line": "ruff format --check",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -686,6 +714,7 @@
       "kind": "Command",
       "line": "ruff check",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -701,6 +730,7 @@
       "kind": "Command",
       "line": "mypy src",
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -719,6 +749,7 @@
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -740,6 +771,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -757,6 +789,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)"
       ]
@@ -773,6 +806,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)"
@@ -791,6 +825,7 @@
       "kind": "Command",
       "line": "mutmut run",
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[10].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -807,6 +842,7 @@
       "kind": "Command",
       "line": "python tests/fuzz/fuzz_app.py -max_total_time=30",
       "origin": ".github/workflows/ci.yml:22:9 (jobs.test.steps[11].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -833,6 +869,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:9:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -844,6 +881,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
     },
     {
@@ -864,6 +902,7 @@
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -882,6 +921,7 @@
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)"
       ]
@@ -902,6 +942,7 @@
       "kind": "Command",
       "line": "bandit -c pyproject.toml -r src",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -918,6 +959,7 @@
       "kind": "Command",
       "line": "pip-audit -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -934,6 +976,7 @@
       "kind": "Command",
       "line": "ruff format --check",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -949,6 +992,7 @@
       "kind": "Command",
       "line": "ruff check",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -964,6 +1008,7 @@
       "kind": "Command",
       "line": "mypy src",
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -982,6 +1027,7 @@
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1003,6 +1049,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1020,6 +1067,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)"
       ]
@@ -1036,6 +1084,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)"
@@ -1054,6 +1103,7 @@
       "kind": "Command",
       "line": "mutmut run",
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[10].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1070,6 +1120,7 @@
       "kind": "Command",
       "line": "python tests/fuzz/fuzz_app.py -max_total_time=30",
       "origin": ".github/workflows/ci.yml:22:9 (jobs.test.steps[11].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1096,6 +1147,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:9:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1107,6 +1159,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
     },
     {
@@ -1127,6 +1180,7 @@
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1145,6 +1199,7 @@
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)"
       ]
@@ -1165,6 +1220,7 @@
       "kind": "Command",
       "line": "bandit -c pyproject.toml -r src",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1181,6 +1237,7 @@
       "kind": "Command",
       "line": "pip-audit -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1197,6 +1254,7 @@
       "kind": "Command",
       "line": "ruff format --check",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1212,6 +1270,7 @@
       "kind": "Command",
       "line": "ruff check",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1227,6 +1286,7 @@
       "kind": "Command",
       "line": "mypy src",
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1245,6 +1305,7 @@
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1266,6 +1327,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1283,6 +1345,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)"
       ]
@@ -1299,6 +1362,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)"
@@ -1317,6 +1381,7 @@
       "kind": "Command",
       "line": "mutmut run",
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[10].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1333,6 +1398,7 @@
       "kind": "Command",
       "line": "python tests/fuzz/fuzz_app.py -max_total_time=30",
       "origin": ".github/workflows/ci.yml:22:9 (jobs.test.steps[11].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1359,6 +1425,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:9:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1370,6 +1437,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
     },
     {
@@ -1390,6 +1458,7 @@
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1408,6 +1477,7 @@
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)"
       ]
@@ -1428,6 +1498,7 @@
       "kind": "Command",
       "line": "bandit -c pyproject.toml -r src",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1444,6 +1515,7 @@
       "kind": "Command",
       "line": "pip-audit -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1460,6 +1532,7 @@
       "kind": "Command",
       "line": "ruff format --check",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1475,6 +1548,7 @@
       "kind": "Command",
       "line": "ruff check",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1490,6 +1564,7 @@
       "kind": "Command",
       "line": "mypy src",
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1508,6 +1583,7 @@
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1529,6 +1605,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1546,6 +1623,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)"
       ]
@@ -1562,6 +1640,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)"
@@ -1580,6 +1659,7 @@
       "kind": "Command",
       "line": "mutmut run",
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[10].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1596,6 +1676,7 @@
       "kind": "Command",
       "line": "python tests/fuzz/fuzz_app.py -max_total_time=30",
       "origin": ".github/workflows/ci.yml:22:9 (jobs.test.steps[11].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1622,6 +1703,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:9:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1633,6 +1715,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065"
     },
     {
@@ -1653,6 +1736,7 @@
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1671,6 +1755,7 @@
       "kind": "Command",
       "line": "python -m pip install --require-hashes -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:13:9 (jobs.test.steps[2].run)"
       ]
@@ -1691,6 +1776,7 @@
       "kind": "Command",
       "line": "bandit -c pyproject.toml -r src",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1707,6 +1793,7 @@
       "kind": "Command",
       "line": "pip-audit -r requirements-dev.txt",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1723,6 +1810,7 @@
       "kind": "Command",
       "line": "ruff format --check",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1738,6 +1826,7 @@
       "kind": "Command",
       "line": "ruff check",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1753,6 +1842,7 @@
       "kind": "Command",
       "line": "mypy src",
       "origin": ".github/workflows/ci.yml:18:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1771,6 +1861,7 @@
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/ci.yml:19:9 (jobs.test.steps[8].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1792,6 +1883,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1809,6 +1901,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)"
       ]
@@ -1825,6 +1918,7 @@
       "kind": "Command",
       "line": "python -W error -m coverage run -m pytest",
       "origin": ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)",
         ".github/workflows/ci.yml:20:9 (jobs.test.steps[9].run)"
@@ -1843,6 +1937,7 @@
       "kind": "Command",
       "line": "mutmut run",
       "origin": ".github/workflows/ci.yml:21:9 (jobs.test.steps[10].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1859,6 +1954,7 @@
       "kind": "Command",
       "line": "python tests/fuzz/fuzz_app.py -max_total_time=30",
       "origin": ".github/workflows/ci.yml:22:9 (jobs.test.steps[11].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1892,6 +1988,7 @@
       "job": ".github/workflows/codeql.yml:analyze",
       "kind": "ActionStep",
       "origin": ".github/workflows/codeql.yml:5:9 (jobs.analyze.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1903,6 +2000,7 @@
       "job": ".github/workflows/codeql.yml:analyze",
       "kind": "ActionStep",
       "origin": ".github/workflows/codeql.yml:6:9 (jobs.analyze.steps[1])",
+      "requires": "",
       "uses": "github/codeql-action/init@9418214df1f2c4b8128c770156c409013b07d6b9"
     },
     {
@@ -1912,6 +2010,7 @@
       "job": ".github/workflows/codeql.yml:analyze",
       "kind": "ActionStep",
       "origin": ".github/workflows/codeql.yml:9:9 (jobs.analyze.steps[2])",
+      "requires": "",
       "uses": "github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9"
     },
     {
@@ -1928,6 +2027,7 @@
       "kind": "Command",
       "line": "uses: github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9",
       "origin": ".github/workflows/codeql.yml:9:9 (jobs.analyze.steps[2])",
+      "requires": "",
       "via": []
     },
     {
@@ -1966,6 +2066,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
       "origin": ".github/workflows/copy-paste-detection.yml:5:9 (jobs.copy-paste-detection.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1985,6 +2086,7 @@
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
       "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2002,6 +2104,7 @@
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
       "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)"
       ]

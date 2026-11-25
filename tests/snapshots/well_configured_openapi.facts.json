@@ -177,6 +177,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci-lint.yml:6:9 (jobs.ci-lint.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -194,6 +195,7 @@
       "kind": "Command",
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -209,6 +211,7 @@
       "kind": "Command",
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)"
       ]
@@ -220,6 +223,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "requires": "",
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
@@ -234,6 +238,7 @@
       "kind": "Command",
       "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
       "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "requires": "",
       "via": []
     },
     {
@@ -251,6 +256,7 @@
       "kind": "Command",
       "line": "gitleaks git --redact .",
       "origin": ".github/workflows/ci-lint.yml:9:9 (jobs.ci-lint.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -284,6 +290,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:6:9 (jobs.lint.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -295,6 +302,7 @@
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:7:9 (jobs.lint.steps[1])",
+      "requires": "",
       "uses": "stoplightio/spectral-action@6416fd018ae38e60136775066eb3e98172143141"
     },
     {
@@ -311,6 +319,7 @@
       "kind": "Command",
       "line": "uses: stoplightio/spectral-action@6416fd018ae38e60136775066eb3e98172143141",
       "origin": ".github/workflows/ci.yml:7:9 (jobs.lint.steps[1])",
+      "requires": "",
       "via": []
     },
     {
@@ -329,6 +338,7 @@
       "kind": "Command",
       "line": "npx --yes @redocly/cli lint openapi.yaml",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.lint.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -345,6 +355,7 @@
       "kind": "Command",
       "line": "npx --yes @redocly/cli lint openapi.yaml",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.lint.steps[2].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:10:9 (jobs.lint.steps[2].run)"
       ]
@@ -372,6 +383,7 @@
       "job": ".github/workflows/ci.yml:breaking",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.breaking.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -385,6 +397,7 @@
       "job": ".github/workflows/ci.yml:breaking",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.breaking.steps[1])",
+      "requires": "",
       "uses": "oasdiff/oasdiff-action/breaking@8a211b41745fcecdfa4a86531ffbf08934fb14f6"
     },
     {
@@ -402,6 +415,7 @@
       "kind": "Command",
       "line": "uses: oasdiff/oasdiff-action/breaking@8a211b41745fcecdfa4a86531ffbf08934fb14f6",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.breaking.steps[1])",
+      "requires": "",
       "via": []
     },
     {
@@ -440,6 +454,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
       "origin": ".github/workflows/copy-paste-detection.yml:5:9 (jobs.copy-paste-detection.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -459,6 +474,7 @@
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
       "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -476,6 +492,7 @@
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
       "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)"
       ]

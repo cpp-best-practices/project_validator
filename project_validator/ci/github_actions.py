@@ -10,10 +10,10 @@ from dataclasses import dataclass, replace
 from functools import partial
 
 from project_validator.ci import REPOSITORY, CiProvider, Load, strings
-from project_validator.ci.github_expressions import Known, evaluate, rendered
+from project_validator.ci.github_expressions import Known, evaluate, rendered, requirement
 from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, Origin, Unknown
 from project_validator.facts.exit_status import ERREXIT, STRICT, Shell, shell_of
-from project_validator.facts.expansion import advised, known_actions, script_facts
+from project_validator.facts.expansion import advised, known_actions, required, script_facts
 from project_validator.facts.shell import CMD, POSIX, POWERSHELL, Dialect, ShellSyntaxError, split_words
 from project_validator.includes import Chain, Refused, follow
 from project_validator.limits import COMPOSITE_ACTIONS, REUSABLE_WORKFLOWS
@@ -170,6 +170,25 @@ _EXPORT = re.compile(
 _ASSIGNMENT = re.compile(r"(?:^|[;&]\s*)\s*(?:export\s+)?(?P<name>[A-Za-z_]\w*)=(?P<value>[^\s;&|]*)", re.MULTILINE)
 
 
+# A variable a script writes to $GITHUB_ENV, however it does.
+_WRITTEN = re.compile(r"""\b([A-Za-z_]\w*)=[^\n>]*>>\s*["']?\$\{?GITHUB_ENV\b""")
+
+
+def _after(step: Mapping[str, object], context: _Combination, known: Known) -> Known:
+    """What the steps after `step` know of the job's environment: what its script writes to $GITHUB_ENV, the names it
+    writes only sometimes, and, after an action that may write any (one that is not GitHub's own), that a variable
+    not set is not known to be unset."""
+    if isinstance(run := step.get("run"), str):
+        script = context.substitute(run)
+        exported = _exported(script)
+        sometimes = set(_WRITTEN.findall(script))
+        known = replace(known, env={**known.env, **exported}, set_by_steps=known.set_by_steps | sometimes)
+    uses = str(step.get("uses", "")).lower()
+    if uses and (not uses.startswith("actions/") or uses.startswith("actions/github-script")):
+        known = replace(known, open_env=True)
+    return known
+
+
 def _exported(script: str) -> dict[str, str]:
     """The variables a step's script sets for the later steps (`echo "NAME=value" >> "$GITHUB_ENV"`), with the
     variables the script assigns before in place (`HC=/opt/ghc/bin/ghc` then `echo "HC=$HC" >> "$GITHUB_ENV"`)."""
@@ -269,6 +288,8 @@ class _Combination:
     inputs: Mapping[str, str] = NOTHING
     # The ids of the job's steps whose failure a later step fails the job on (see `_rechecked`).
     rechecked: frozenset[str] = frozenset()
+    # What the job's condition requires that the checkout does not settle (see `requirement`).
+    requires: str = ""
 
     def substitute(self, text: str) -> str:
         """`text` as GitHub runs it: matrix values in place, and every expression whose value is known evaluated."""
@@ -320,8 +341,10 @@ class _Combination:
         env = {**self.substituted(workflow.get("env")), **self.substituted(job.get("env"))}
         os = _runner_os(job, self.combination, self.inputs)
         known = Known(os=os, matrix=self.combination, env=env, matrix_known=self.matrix_known, inputs=self.inputs)
-        if self.runs(job.get("if"), known) is False:
+        runs = self.runs(job.get("if"), known)
+        if runs is False:
             return
+        requires = "" if runs else requirement(str(job["if"]), known) or ""
         # `defaults: run:` of the workflow, then of the job.
         run = {**_run_defaults(workflow), **_run_defaults(job)}
         shell, directory = run.get("shell"), run.get("working-directory")
@@ -331,7 +354,7 @@ class _Combination:
                 yield found
             else:
                 advisory = found
-        context = replace(self, known=known, shell=str(shell) if shell else None, advisory=advisory)
+        context = replace(self, known=known, shell=str(shell) if shell else None, advisory=advisory, requires=requires)
         yield from replace(context, working_directory=self.optional(directory)).job_facts(job, known)
 
     def job_facts(self, job: Mapping[str, object], known: Known) -> Iterator[Fact]:
@@ -360,8 +383,7 @@ class _Combination:
                 yield from here.step_facts(
                     Origin(path=self.origin.path, at=(*self.origin.at, "steps", number)), step, known
                 )
-                if isinstance(run := step.get("run"), str) and (exported := _exported(here.substitute(run))):
-                    known = replace(known, env={**known.env, **exported})
+                known = _after(step, here, known)
 
     def step_facts(
         self, origin: Origin, step: Mapping[str, object], known: Known, via: tuple[Origin, ...] = ()
@@ -372,14 +394,15 @@ class _Combination:
         if runs is False:
             return
         condition = None if runs else self.optional(step.get("if"))
-        context = self
+        needed = requirement(condition, known) if condition is not None else None
+        context = replace(self, requires=" and ".join(filter(None, (self.requires, needed))))
         holder = {} if step.get("id") in self.rechecked else step
         for found in self.continues(holder, known, f"whether a step of job {self.origin.at[-1]} can fail it"):
             if isinstance(found, Unknown):
                 yield replace(found, origin=origin)
             else:
-                context = replace(self, advisory=found)
-        yield from context.step_runs(origin, step, known, condition, via)
+                context = replace(context, advisory=found)
+        yield from required(context.step_runs(origin, step, known, condition, via), context.requires)
 
     def step_runs(
         self, origin: Origin, step: Mapping[str, object], known: Known, condition: str | None, via: tuple[Origin, ...]
@@ -679,9 +702,8 @@ def _calls(
         label = "" if len(combinations) == 1 else f"[{index}]"
         passed = context.substituted(job.get("with"))
         # A value that is not known (`github.event_name == 'workflow_dispatch' && inputs.x || '24'`) is not the
-        # default either: that input is not known.
-        known = {name: value for name, value in {**defaults, **passed}.items() if "${{" not in passed.get(name, "")}
-        yield label, known
+        # default either: it is kept as passed, for what it rests on (see `Known.inputs`).
+        yield label, {**defaults, **passed}
 
 
 def _own(uses: object, load: Load | None) -> str | None:

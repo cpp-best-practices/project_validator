@@ -22,6 +22,7 @@ from project_validator.components import known
 from project_validator.evidence import DEVENV, DEVENV_HOOKS, PRE_COMMIT_CONFIGURATION
 from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, Origin, PartlyRead, Unknown, resolved
 from project_validator.facts.arguments import starts_with
+from project_validator.facts.build import disjuncts
 from project_validator.facts.conditions import ALWAYS, DIMENSIONS, Condition, both, only
 from project_validator.facts.exit_status import Shell, masked
 from project_validator.facts.placed import Placed
@@ -124,6 +125,7 @@ def action_commands(step: ActionStep, actions: Iterable[Action]) -> Iterator[Com
                     line=f"uses: {step.uses}",
                     directory=step.inputs.get("working-directory") or None,
                     condition=step.condition,
+                    requires=step.requires,
                     advisory=step.advisory,
                 )
 
@@ -303,7 +305,32 @@ def _changed(directory: str | None, argv: tuple[str, ...]) -> str | None:
 OUTSIDE = "/"
 
 
-def _children(command: Command, expansion: Script | Invocation | Launched | Unknown) -> Iterator[Fact]:
+def requirements(condition: Condition) -> str:
+    """What `condition` requires that no build dimension settles, as written (`$(X) == true`): nothing when it holds in
+    some build without a requirement; the ways it may hold, joined, else."""
+    ways = disjuncts(condition)
+    if any(way.unconditional for way in ways):
+        return ""
+    return " or ".join(" and ".join(sorted(way.requires)) for way in ways)
+
+
+def _joined(*requirements: str) -> str:
+    return " and ".join(found for found in requirements if found)
+
+
+def required(facts: Iterable[Fact], requires: str) -> Iterator[Fact]:
+    """`facts`, each command and action step requiring `requires` too (see `Command.requires`)."""
+    for fact in facts:
+        yield (
+            replace(fact, requires=_joined(fact.requires, requires))
+            if isinstance(fact, (Command, ActionStep))
+            else fact
+        )
+
+
+def _children(
+    command: Command, expansion: Script | Invocation | Launched | Unknown, requires: str = ""
+) -> Iterator[Fact]:
     via = (*command.via, command.origin)
     if isinstance(expansion, Unknown):
         yield expansion
@@ -317,14 +344,15 @@ def _children(command: Command, expansion: Script | Invocation | Launched | Unkn
             env={**command.env, **expansion.env} if isinstance(expansion, Launched) else command.env,
             directory=command.directory,
             condition=command.condition,
+            requires=requires,
             advisory=command.advisory,
             via=via,
         )
     else:
-        yield from _script_children(command, expansion, via)
+        yield from _script_children(command, expansion, via, requires)
 
 
-def _script_children(command: Command, script: Script, via: tuple[Origin, ...]) -> Iterator[Fact]:
+def _script_children(command: Command, script: Script, via: tuple[Origin, ...], requires: str) -> Iterator[Fact]:
     commands = script_facts(
         script.text,
         job=command.job,
@@ -338,7 +366,7 @@ def _script_children(command: Command, script: Script, via: tuple[Origin, ...]) 
         shell=script.shell,
         dialect=script.dialect,
     )
-    yield from advised(commands, command.advisory or script.advisory)
+    yield from required(advised(commands, command.advisory or script.advisory), requires)
 
 
 def inside(context: Context, directory: str | None) -> bool:
@@ -352,12 +380,18 @@ def inside(context: Context, directory: str | None) -> bool:
 
 
 def expand_command(
-    command: Command, context: Context, expanders: Iterable[CommandExpander], where: Condition = ALWAYS
+    command: Command,
+    context: Context,
+    expanders: Iterable[CommandExpander],
+    where: Condition = ALWAYS,
+    required: str | None = None,
 ) -> Iterator[Fact]:
     """What `command`, run in the builds `where` names, runs in turn, through every expander that recognises it, depth
-    first. A command run outside the project's own directories is not expanded."""
+    first, each command requiring what CI's command `required` and what the builds it is followed in require (a
+    makefile's conditional). A command run outside the project's own directories is not expanded."""
     if not inside(context, command.directory):
         return
+    required = command.requires if required is None else required
     expanders = tuple(expanders)
     for expander in expanders:
         try:
@@ -367,10 +401,10 @@ def expand_command(
             yield Unknown(origin=command.origin, subject=f"the command {command.line!r}", reason=reason)
             continue
         for expansion, held in _followed(command, expansions, where):
-            for child in _children(command, expansion):
+            for child in _children(command, expansion, _joined(required, requirements(held))):
                 yield child
                 if isinstance(child, Command):
-                    yield from expand_command(child, context, expanders, held)
+                    yield from expand_command(child, context, expanders, held, required)
 
 
 def _followed(
@@ -515,5 +549,6 @@ __all__ = [
     "known_actions",
     "known_expanders",
     "launcher",
+    "required",
     "script_facts",
 ]

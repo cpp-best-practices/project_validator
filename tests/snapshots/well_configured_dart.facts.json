@@ -215,6 +215,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci-lint.yml:6:9 (jobs.ci-lint.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -232,6 +233,7 @@
       "kind": "Command",
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -247,6 +249,7 @@
       "kind": "Command",
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)"
       ]
@@ -258,6 +261,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "requires": "",
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
@@ -272,6 +276,7 @@
       "kind": "Command",
       "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
       "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "requires": "",
       "via": []
     },
     {
@@ -289,6 +294,7 @@
       "kind": "Command",
       "line": "gitleaks git --redact .",
       "origin": ".github/workflows/ci-lint.yml:9:9 (jobs.ci-lint.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -325,6 +331,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -336,6 +343,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d"
     },
     {
@@ -353,6 +361,7 @@
       "kind": "Command",
       "line": "dart pub get --enforce-lockfile",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -371,6 +380,7 @@
       "kind": "Command",
       "line": "dart format --output=none --set-exit-if-changed .",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -387,6 +397,7 @@
       "kind": "Command",
       "line": "dart analyze --fatal-infos",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -404,6 +415,7 @@
       "kind": "Command",
       "line": "dart test --coverage=coverage --branch-coverage",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -430,6 +442,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -441,6 +454,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d"
     },
     {
@@ -458,6 +472,7 @@
       "kind": "Command",
       "line": "dart pub get --enforce-lockfile",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -476,6 +491,7 @@
       "kind": "Command",
       "line": "dart format --output=none --set-exit-if-changed .",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -492,6 +508,7 @@
       "kind": "Command",
       "line": "dart analyze --fatal-infos",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -509,6 +526,7 @@
       "kind": "Command",
       "line": "dart test --coverage=coverage --branch-coverage",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -535,6 +553,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -546,6 +565,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d"
     },
     {
@@ -563,6 +583,7 @@
       "kind": "Command",
       "line": "dart pub get --enforce-lockfile",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -581,6 +602,7 @@
       "kind": "Command",
       "line": "dart format --output=none --set-exit-if-changed .",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -597,6 +619,7 @@
       "kind": "Command",
       "line": "dart analyze --fatal-infos",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -614,6 +637,7 @@
       "kind": "Command",
       "line": "dart test --coverage=coverage --branch-coverage",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -640,6 +664,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -651,6 +676,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d"
     },
     {
@@ -668,6 +694,7 @@
       "kind": "Command",
       "line": "dart pub get --enforce-lockfile",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -686,6 +713,7 @@
       "kind": "Command",
       "line": "dart format --output=none --set-exit-if-changed .",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -702,6 +730,7 @@
       "kind": "Command",
       "line": "dart analyze --fatal-infos",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -719,6 +748,7 @@
       "kind": "Command",
       "line": "dart test --coverage=coverage --branch-coverage",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -745,6 +775,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -756,6 +787,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d"
     },
     {
@@ -773,6 +805,7 @@
       "kind": "Command",
       "line": "dart pub get --enforce-lockfile",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -791,6 +824,7 @@
       "kind": "Command",
       "line": "dart format --output=none --set-exit-if-changed .",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -807,6 +841,7 @@
       "kind": "Command",
       "line": "dart analyze --fatal-infos",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -824,6 +859,7 @@
       "kind": "Command",
       "line": "dart test --coverage=coverage --branch-coverage",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -850,6 +886,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -861,6 +898,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:11:9 (jobs.test.steps[1])",
+      "requires": "",
       "uses": "dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d"
     },
     {
@@ -878,6 +916,7 @@
       "kind": "Command",
       "line": "dart pub get --enforce-lockfile",
       "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -896,6 +935,7 @@
       "kind": "Command",
       "line": "dart format --output=none --set-exit-if-changed .",
       "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -912,6 +952,7 @@
       "kind": "Command",
       "line": "dart analyze --fatal-infos",
       "origin": ".github/workflows/ci.yml:16:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -929,6 +970,7 @@
       "kind": "Command",
       "line": "dart test --coverage=coverage --branch-coverage",
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -952,6 +994,7 @@
       "job": ".github/workflows/ci.yml:audit",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:21:9 (jobs.audit.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -963,6 +1006,7 @@
       "job": ".github/workflows/ci.yml:audit",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:22:9 (jobs.audit.steps[1])",
+      "requires": "",
       "uses": "google/osv-scanner-action/osv-scanner-action@b1d267aea5211fa648d9d442fa64b90dbdcbdd36"
     },
     {
@@ -979,6 +1023,7 @@
       "kind": "Command",
       "line": "uses: google/osv-scanner-action/osv-scanner-action@b1d267aea5211fa648d9d442fa64b90dbdcbdd36",
       "origin": ".github/workflows/ci.yml:22:9 (jobs.audit.steps[1])",
+      "requires": "",
       "via": []
     },
     {
@@ -1000,6 +1045,7 @@
       "kind": "Command",
       "line": "pipx run semgrep scan --config p/dart --error .",
       "origin": ".github/workflows/ci.yml:25:9 (jobs.audit.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1019,6 +1065,7 @@
       "kind": "Command",
       "line": "pipx run semgrep scan --config p/dart --error .",
       "origin": ".github/workflows/ci.yml:25:9 (jobs.audit.steps[2].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:25:9 (jobs.audit.steps[2].run)"
       ]
@@ -1059,6 +1106,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
       "origin": ".github/workflows/copy-paste-detection.yml:5:9 (jobs.copy-paste-detection.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1078,6 +1126,7 @@
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
       "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1095,6 +1144,7 @@
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
       "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)"
       ]
@@ -1125,6 +1175,7 @@
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "ActionStep",
       "origin": ".github/workflows/function-limits.yml:5:9 (jobs.function-limits.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1143,6 +1194,7 @@
       "kind": "Command",
       "line": "python -m pip install lizard",
       "origin": ".github/workflows/function-limits.yml:6:9 (jobs.function-limits.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1159,6 +1211,7 @@
       "kind": "Command",
       "line": "python -m pip install lizard",
       "origin": ".github/workflows/function-limits.yml:6:9 (jobs.function-limits.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/function-limits.yml:6:9 (jobs.function-limits.steps[1].run)"
       ]
@@ -1179,6 +1232,7 @@
       "kind": "Command",
       "line": "lizard --length 30 --warnings_only .",
       "origin": ".github/workflows/function-limits.yml:7:9 (jobs.function-limits.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {

@@ -91,6 +91,10 @@ class Command(Fact):
     directory: str | None = None
     # The condition the step runs under (GitHub's `if:`), as written after matrix values are substituted.
     condition: str | None = None
+    # What the command needs, to run, that the checkout does not settle (a secret a step's `if:` tests, a variable a
+    # makefile's conditional tests that is neither the job's nor its runner's), as written; empty when it runs in the
+    # runs CI makes (upstream #361).
+    requires: str = ""
     # Why the command cannot fail the pipeline, when it cannot (`continue-on-error`, `allow_failure`): it runs, but
     # only advises, so it is no gate. Empty for a command whose failure fails its job.
     advisory: str = ""
@@ -101,6 +105,17 @@ class Command(Fact):
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "words", _resolve(self.argv, self.env))
+
+
+# Where GitHub Actions workflows are: a GitHub job's identity starts with its workflow's path, or its caller's.
+GITHUB_WORKFLOWS = ".github/workflows/"
+
+
+def whole_environment(command: Command) -> bool:
+    """Whether a command's environment is all its job sets (upstream #361): GitHub Actions passes a job no variable
+    its workflow does not name (secrets and repository variables only through expressions); other services add those
+    their settings define, which the checkout does not show."""
+    return command.job.startswith(GITHUB_WORKFLOWS)
 
 
 def resolved(command: Command) -> tuple[str, ...]:
@@ -135,6 +150,8 @@ class ActionStep(Fact):
     uses: str
     inputs: Mapping[str, str] = NOTHING
     condition: str | None = None
+    # What the step needs, to run, that the checkout does not settle (see `Command.requires`).
+    requires: str = ""
     # Why the step cannot fail the pipeline, when it cannot (see `Command.advisory`).
     advisory: str = ""
 
@@ -297,6 +314,7 @@ def collected(groups: Iterable[Iterable[Fact]]) -> Facts:
 
 __all__ = [
     "DERIVED",
+    "GITHUB_WORKFLOWS",
     "NOTHING",
     "ActionStep",
     "CiConfiguration",
@@ -313,4 +331,5 @@ __all__ = [
     "as_dict",
     "collected",
     "resolved",
+    "whole_environment",
 ]

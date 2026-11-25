@@ -208,6 +208,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci-lint.yml:6:9 (jobs.ci-lint.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -225,6 +226,7 @@
       "kind": "Command",
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -240,6 +242,7 @@
       "kind": "Command",
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)"
       ]
@@ -251,6 +254,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "requires": "",
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
@@ -265,6 +269,7 @@
       "kind": "Command",
       "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
       "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "requires": "",
       "via": []
     },
     {
@@ -282,6 +287,7 @@
       "kind": "Command",
       "line": "gitleaks git --redact .",
       "origin": ".github/workflows/ci-lint.yml:9:9 (jobs.ci-lint.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -320,6 +326,7 @@
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -343,6 +350,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=gcc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=ON",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -359,6 +367,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -374,6 +383,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -391,6 +401,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -407,6 +418,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -423,6 +435,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -439,6 +452,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -467,6 +481,7 @@
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -490,6 +505,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=gcc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=OFF",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -506,6 +522,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -521,6 +538,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -538,6 +556,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -554,6 +573,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -570,6 +590,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -586,6 +607,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -614,6 +636,7 @@
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -637,6 +660,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=gcc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -653,6 +677,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -668,6 +693,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -685,6 +711,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -701,6 +728,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -717,6 +745,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -733,6 +762,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -761,6 +791,7 @@
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -784,6 +815,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=gcc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=OFF",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -800,6 +832,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -815,6 +848,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -832,6 +866,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -848,6 +883,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -864,6 +900,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -880,6 +917,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -908,6 +946,7 @@
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -931,6 +970,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=clang -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=ON",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -947,6 +987,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -962,6 +1003,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -979,6 +1021,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -995,6 +1038,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1011,6 +1055,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1027,6 +1072,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1055,6 +1101,7 @@
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1078,6 +1125,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=clang -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=OFF",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1094,6 +1142,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1109,6 +1158,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1126,6 +1176,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1142,6 +1193,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1158,6 +1210,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1174,6 +1227,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1202,6 +1256,7 @@
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1225,6 +1280,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=clang -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1241,6 +1297,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1256,6 +1313,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1273,6 +1331,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1289,6 +1348,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1305,6 +1365,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1321,6 +1382,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1349,6 +1411,7 @@
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1372,6 +1435,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=clang -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=OFF",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1388,6 +1452,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1403,6 +1468,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1420,6 +1486,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1436,6 +1503,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1452,6 +1520,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1468,6 +1537,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1496,6 +1566,7 @@
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1519,6 +1590,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=gcc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=ON",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1535,6 +1607,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1550,6 +1623,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1567,6 +1641,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1583,6 +1658,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1599,6 +1675,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1615,6 +1692,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1643,6 +1721,7 @@
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1666,6 +1745,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=gcc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=OFF",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1682,6 +1762,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1697,6 +1778,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1714,6 +1796,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1730,6 +1813,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1746,6 +1830,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1762,6 +1847,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1790,6 +1876,7 @@
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1813,6 +1900,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=gcc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1829,6 +1917,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1844,6 +1933,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1861,6 +1951,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1877,6 +1968,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1893,6 +1985,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1909,6 +2002,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1937,6 +2031,7 @@
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -1960,6 +2055,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=gcc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=OFF",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1976,6 +2072,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -1991,6 +2088,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2008,6 +2106,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2024,6 +2123,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2040,6 +2140,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2056,6 +2157,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2084,6 +2186,7 @@
       "job": ".github/workflows/ci.yml:test[12]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2107,6 +2210,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=clang -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=ON",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2123,6 +2227,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2138,6 +2243,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2155,6 +2261,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2171,6 +2278,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2187,6 +2295,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2203,6 +2312,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2231,6 +2341,7 @@
       "job": ".github/workflows/ci.yml:test[13]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2254,6 +2365,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=clang -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=OFF",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2270,6 +2382,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2285,6 +2398,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2302,6 +2416,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2318,6 +2433,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2334,6 +2450,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2350,6 +2467,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2378,6 +2496,7 @@
       "job": ".github/workflows/ci.yml:test[14]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2401,6 +2520,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=clang -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2417,6 +2537,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2432,6 +2553,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2449,6 +2571,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2465,6 +2588,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2481,6 +2605,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2497,6 +2622,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2525,6 +2651,7 @@
       "job": ".github/workflows/ci.yml:test[15]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2548,6 +2675,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=clang -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=OFF",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2564,6 +2692,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2579,6 +2708,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2596,6 +2726,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2612,6 +2743,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2628,6 +2760,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2644,6 +2777,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2672,6 +2806,7 @@
       "job": ".github/workflows/ci.yml:test[16]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2695,6 +2830,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=msvc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=ON",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2711,6 +2847,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2726,6 +2863,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2743,6 +2881,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2759,6 +2898,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2775,6 +2915,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2791,6 +2932,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2819,6 +2961,7 @@
       "job": ".github/workflows/ci.yml:test[17]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2842,6 +2985,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=msvc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=OFF",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2858,6 +3002,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2873,6 +3018,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2890,6 +3036,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2906,6 +3053,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2922,6 +3070,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2938,6 +3087,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -2966,6 +3116,7 @@
       "job": ".github/workflows/ci.yml:test[18]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -2989,6 +3140,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=msvc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3005,6 +3157,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3020,6 +3173,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3037,6 +3191,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3053,6 +3208,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3069,6 +3225,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3085,6 +3242,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3113,6 +3271,7 @@
       "job": ".github/workflows/ci.yml:test[19]",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:31:9 (jobs.test.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -3136,6 +3295,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev -DCMAKE_C_COMPILER=msvc -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=OFF",
       "origin": ".github/workflows/ci.yml:32:9 (jobs.test.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3152,6 +3312,7 @@
       "kind": "Command",
       "line": "cmake --build build",
       "origin": ".github/workflows/ci.yml:34:9 (jobs.test.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3167,6 +3328,7 @@
       "kind": "Command",
       "line": "mull-runner build/tests",
       "origin": ".github/workflows/ci.yml:35:9 (jobs.test.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3184,6 +3346,7 @@
       "kind": "Command",
       "line": "ctest --test-dir build --output-on-failure",
       "origin": ".github/workflows/ci.yml:36:9 (jobs.test.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3200,6 +3363,7 @@
       "kind": "Command",
       "line": "gcovr --fail-under-branch 80",
       "origin": ".github/workflows/ci.yml:37:9 (jobs.test.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3216,6 +3380,7 @@
       "kind": "Command",
       "line": "run-clang-tidy -p build",
       "origin": ".github/workflows/ci.yml:38:9 (jobs.test.steps[6].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3232,6 +3397,7 @@
       "kind": "Command",
       "line": "cppcheck --project=build/compile_commands.json --error-exitcode=1",
       "origin": ".github/workflows/ci.yml:39:9 (jobs.test.steps[7].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3255,6 +3421,7 @@
       "job": ".github/workflows/ci.yml:format",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:43:9 (jobs.format.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -3272,6 +3439,7 @@
       "kind": "Command",
       "line": "find . -name '*.c' | xargs clang-format --dry-run -Werror",
       "origin": ".github/workflows/ci.yml:44:9 (jobs.format.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3289,6 +3457,7 @@
       "kind": "Command",
       "line": "find . -name '*.c' | xargs clang-format --dry-run -Werror",
       "origin": ".github/workflows/ci.yml:44:9 (jobs.format.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3305,6 +3474,7 @@
       "kind": "Command",
       "line": "find . -name '*.c' | xargs clang-format --dry-run -Werror",
       "origin": ".github/workflows/ci.yml:44:9 (jobs.format.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci.yml:44:9 (jobs.format.steps[1].run)"
       ]
@@ -3323,6 +3493,7 @@
       "kind": "Command",
       "line": "gersemi --check .",
       "origin": ".github/workflows/ci.yml:45:9 (jobs.format.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3338,6 +3509,7 @@
       "kind": "Command",
       "line": "cmake-lint CMakeLists.txt",
       "origin": ".github/workflows/ci.yml:46:9 (jobs.format.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3366,6 +3538,7 @@
       "job": ".github/workflows/codeql-analysis.yml:analyze",
       "kind": "ActionStep",
       "origin": ".github/workflows/codeql-analysis.yml:10:9 (jobs.analyze.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -3377,6 +3550,7 @@
       "job": ".github/workflows/codeql-analysis.yml:analyze",
       "kind": "ActionStep",
       "origin": ".github/workflows/codeql-analysis.yml:11:9 (jobs.analyze.steps[1])",
+      "requires": "",
       "uses": "github/codeql-action/init@9418214df1f2c4b8128c770156c409013b07d6b9"
     },
     {
@@ -3396,6 +3570,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev && cmake --build build",
       "origin": ".github/workflows/codeql-analysis.yml:14:9 (jobs.analyze.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3412,6 +3587,7 @@
       "kind": "Command",
       "line": "cmake -S . -B build -Werror=dev && cmake --build build",
       "origin": ".github/workflows/codeql-analysis.yml:14:9 (jobs.analyze.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -3421,6 +3597,7 @@
       "job": ".github/workflows/codeql-analysis.yml:analyze",
       "kind": "ActionStep",
       "origin": ".github/workflows/codeql-analysis.yml:15:9 (jobs.analyze.steps[3])",
+      "requires": "",
       "uses": "github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9"
     },
     {
@@ -3437,6 +3614,7 @@
       "kind": "Command",
       "line": "uses: github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9",
       "origin": ".github/workflows/codeql-analysis.yml:15:9 (jobs.analyze.steps[3])",
+      "requires": "",
       "via": []
     },
     {
@@ -3475,6 +3653,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:cpd",
       "kind": "ActionStep",
       "origin": ".github/workflows/copy-paste-detection.yml:8:9 (jobs.cpd.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -3498,6 +3677,7 @@
       "kind": "Command",
       "line": "pmd cpd --language c --minimum-tokens 100 --dir src --dir include",
       "origin": ".github/workflows/copy-paste-detection.yml:9:9 (jobs.cpd.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {

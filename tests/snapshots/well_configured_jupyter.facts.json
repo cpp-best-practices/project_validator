@@ -162,6 +162,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci-lint.yml:6:9 (jobs.ci-lint.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -179,6 +180,7 @@
       "kind": "Command",
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -194,6 +196,7 @@
       "kind": "Command",
       "line": "pipx run zizmor .github",
       "origin": ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/ci-lint.yml:7:9 (jobs.ci-lint.steps[1].run)"
       ]
@@ -205,6 +208,7 @@
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "requires": "",
       "uses": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
@@ -219,6 +223,7 @@
       "kind": "Command",
       "line": "uses: rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca",
       "origin": ".github/workflows/ci-lint.yml:8:9 (jobs.ci-lint.steps[2])",
+      "requires": "",
       "via": []
     },
     {
@@ -236,6 +241,7 @@
       "kind": "Command",
       "line": "gitleaks git --redact .",
       "origin": ".github/workflows/ci-lint.yml:9:9 (jobs.ci-lint.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -269,6 +275,7 @@
       "job": ".github/workflows/ci.yml:notebooks",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:6:9 (jobs.notebooks.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -280,6 +287,7 @@
       "job": ".github/workflows/ci.yml:notebooks",
       "kind": "ActionStep",
       "origin": ".github/workflows/ci.yml:7:9 (jobs.notebooks.steps[1])",
+      "requires": "",
       "uses": "actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0"
     },
     {
@@ -299,6 +307,7 @@
       "kind": "Command",
       "line": "pip install nbmake pytest ruff ipykernel",
       "origin": ".github/workflows/ci.yml:10:9 (jobs.notebooks.steps[2].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -316,6 +325,7 @@
       "kind": "Command",
       "line": "ruff format --check notebooks",
       "origin": ".github/workflows/ci.yml:11:9 (jobs.notebooks.steps[3].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -332,6 +342,7 @@
       "kind": "Command",
       "line": "ruff check notebooks",
       "origin": ".github/workflows/ci.yml:12:9 (jobs.notebooks.steps[4].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -348,6 +359,7 @@
       "kind": "Command",
       "line": "pytest --nbmake notebooks",
       "origin": ".github/workflows/ci.yml:13:9 (jobs.notebooks.steps[5].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -381,6 +393,7 @@
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
       "origin": ".github/workflows/copy-paste-detection.yml:5:9 (jobs.copy-paste-detection.steps[0])",
+      "requires": "",
       "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
@@ -400,6 +413,7 @@
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
       "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
+      "requires": "",
       "via": []
     },
     {
@@ -417,6 +431,7 @@
       "kind": "Command",
       "line": "npx --yes jscpd@4 --threshold 0 .",
       "origin": ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)",
+      "requires": "",
       "via": [
         ".github/workflows/copy-paste-detection.yml:6:9 (jobs.copy-paste-detection.steps[1].run)"
       ]

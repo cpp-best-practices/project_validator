@@ -278,6 +278,14 @@ def _claimed(tool: Tool, command: Command, facts: Facts) -> Run | Unknown | None
         )
 
 
+def _required(tool: Tool, command: Command) -> Unknown:
+    """Whether a command runs `tool`, when it runs only under a requirement the checkout does not settle."""
+    reason = f"{command.line!r} runs only if {command.requires}"
+    return Unknown(
+        origin=command.origin, subject=f"the {tool.name} run", reason=reason, hides="settings", tools=(tool.name,)
+    )
+
+
 def tool_runs(facts: Facts, tools: Iterable[Tool]) -> Iterator[ToolRun | Unknown]:
     """The run of each tool among `tools` that each command of `facts` is; unknown when a command line the tool reads
     (in its settings) does not split into words."""
@@ -288,6 +296,8 @@ def tool_runs(facts: Facts, tools: Iterable[Tool]) -> Iterator[ToolRun | Unknown
             run = _claimed(tool, command, facts)
             if isinstance(run, Unknown):
                 yield run
+            elif run is not None and any(run.provides.values()) and command.requires:
+                yield _required(tool, command)
             elif run is not None and any(run.provides.values()):
                 yield ToolRun(
                     origin=command.origin,
