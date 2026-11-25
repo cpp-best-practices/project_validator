@@ -169,7 +169,9 @@ def _within(values: Choices[str], lookup: _Lookup, inside: frozenset[str]) -> Ch
 
 
 # A call of one of make's text functions whose arguments hold no reference left: `$(filter %.c,a.c b.h)`.
-_FUNCTION = re.compile(r"\$\((?P<name>filter|filter-out|findstring|strip) (?P<arguments>[^$()]*)\)")
+_FUNCTION = re.compile(
+    r"\$\((?P<name>filter|filter-out|findstring|strip|addprefix|addsuffix|subst|patsubst) (?P<arguments>[^$()]*)\)"
+)
 
 
 def _called(text: str) -> str:
@@ -182,14 +184,37 @@ def _called(text: str) -> str:
 def _result(name: str, arguments: str) -> str:
     """What `$(name arguments)` gives: `strip` collapses whitespace, `findstring` is its first argument when the
     second holds it, `filter` and `filter-out` keep the words of the second that match (or do not) a pattern of the
-    first, where `%` matches any text."""
+    first, where `%` matches any text; `addprefix` and `addsuffix` put the first before or after each word of the
+    second (nvm's `$(addprefix test-,$(SHELLS))`), `subst` replaces text and `patsubst` the words a pattern matches."""
     if name == "strip":
         return " ".join(arguments.split())
+    if name in ("subst", "patsubst"):
+        found, _, rest = arguments.partition(",")
+        replacement, _, text = rest.partition(",")
+        if name == "subst":
+            return text.replace(found, replacement)
+        return " ".join(_substituted(word, found, replacement) for word in text.split())
     first, _, second = arguments.partition(",")
+    if name == "addprefix":
+        return " ".join(first + word for word in second.split())
+    if name == "addsuffix":
+        return " ".join(word + first for word in second.split())
     if name == "findstring":
         return first if first in second else ""
     patterns = first.split()
     return " ".join(word for word in second.split() if any(map(_matches(word), patterns)) == (name == "filter"))
+
+
+def _substituted(word: str, pattern: str, replacement: str) -> str:
+    """A word as `patsubst` gives it: the replacement, with the text `%` matched in the pattern in place of its `%`,
+    when the pattern matches the word; else the word."""
+    prefix, percent, suffix = pattern.partition("%")
+    if not percent:
+        return replacement if word == pattern else word
+    if not _matches(word)(pattern):
+        return word
+    stem = word[len(prefix) : len(word) - len(suffix)]
+    return replacement.replace("%", stem, 1) if "%" in replacement else replacement
 
 
 def _matches(word: str) -> Callable[[str], bool]:
@@ -272,13 +297,26 @@ class _Evaluation:
 
     def rule(self, node: make_syntax.Rule) -> None:
         makefile = self.makefile
-        self.current = [makefile.rules.setdefault(target, Rule()) for target in node.targets]
+        targets = [name for target in node.targets for name in self._names(target)]
+        self.current = [makefile.rules.setdefault(target, Rule()) for target in targets]
         for rule in self.current:
-            rule.prerequisites += [(prerequisite, self.when) for prerequisite in node.prerequisites]
+            rule.prerequisites += [
+                (name, self.when) for prerequisite in node.prerequisites for name in self._names(prerequisite)
+            ]
             if node.recipe:
                 rule.recipe.append(Step(node.span, _recipe_line(node.recipe), self.when))
         if makefile.default is None:
-            makefile.default = next((target for target in node.targets if not target.startswith(".")), None)
+            makefile.default = next((target for target in targets if not target.startswith(".")), None)
+
+    def _names(self, target: str) -> list[str]:
+        """The rules a target or prerequisite names: itself, or, as make expands a rule's targets and prerequisites
+        when it reads them, the words its references give with the variables set so far (nvm's `$(SHELL_TARGETS):`,
+        pyenv's `test-docker: $(TEST_UNIT_DOCKER_PREFIX)`), in any build; as written while one is left unexpanded."""
+        if "$" not in target:
+            return [target]
+        expanded = _Test(self.makefile.variables).expanded(target)
+        names = list(dict.fromkeys(word for value, _ in expanded for word in value.split()))
+        return names if names and not any("$" in name for name in names) else [target]
 
     def conditional(self, node: make_syntax.Conditional) -> None:
         """Each branch, read in the builds where it holds and no branch before it does; what none holds in, after."""
