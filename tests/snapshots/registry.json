@@ -2144,6 +2144,25 @@
     },
     {
       "can": {
+        "test": {
+          "runs": "bazel test"
+        }
+      },
+      "languages": [
+        "C",
+        "C++",
+        "Objective-C",
+        "Objective-C++",
+        "Swift"
+      ],
+      "name": "bazel test",
+      "reads": [
+        "Bazel"
+      ],
+      "required": []
+    },
+    {
+      "can": {
         "analysis": {
           "checks": "biome lint"
         },

@@ -638,6 +638,13 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "bazel test": {
+                "can": {
+                  "runs": "bazel test"
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "swift test or xcodebuild test": {
                 "can": {
                   "runs": "swift test or xcodebuild test"
@@ -946,7 +953,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no tests found (XCTestCase classes or Swift Testing @Test functions)",
+      "message": "no tests found (tests defined by Bazel test rules (cc_test, swift_test, sh_test, \u2026) in BUILD files or XCTestCase classes or Swift Testing @Test functions)",
       "status": "FAIL"
     },
     "top-level-guard": {

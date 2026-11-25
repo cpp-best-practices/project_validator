@@ -13,6 +13,7 @@ from project_validator.ecosystems.javascript.analysis import _strict_settings
 from project_validator.facts import Command, Fact, Facts, Unknown
 from project_validator.facts.build import CompilerOption
 from project_validator.limits import (
+    BAZELRC_IMPORTS,
     CMAKE_NESTING,
     COMPOSITE_ACTIONS,
     GITLAB_EXTENDS,
@@ -93,6 +94,23 @@ class GitlabLimitTests(LimitTestCase):
     def test_references_past_the_limit_say_so(self) -> None:
         reasons = _reasons(_facts(self._references(GITLAB_REFERENCES.most + 1)))
         self.assertEqual(reasons, ["its !reference tags nest more than 10 levels deep"])
+
+
+class BazelLimitTests(LimitTestCase):
+    @staticmethod
+    def _imports(levels: int) -> Files:
+        files = {"MODULE.bazel": "", ".bazelrc": "import %workspace%/r1.bazelrc\n"}
+        for level in range(1, levels):
+            files[f"r{level}.bazelrc"] = f"import %workspace%/r{level + 1}.bazelrc\n"
+        files[f"r{levels}.bazelrc"] = "build --copt=-Werror\n"
+        return {**files, **github_job("ubuntu-latest", "bazel build //...")}
+
+    def test_rc_files_import_each_other_at_most_the_limit_deep(self) -> None:
+        self.assert_limit(
+            BAZELRC_IMPORTS,
+            self._imports,
+            lambda files: any("--copt=-Werror" in argv for argv in _commands(_facts(files))),
+        )
 
 
 class GithubLimitTests(LimitTestCase):

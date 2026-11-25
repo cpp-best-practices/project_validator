@@ -10,6 +10,7 @@ from collections.abc import Iterator
 from pathlib import PurePosixPath
 
 from project_validator.build_configurations import build_type_kinds
+from project_validator.build_systems.bazel.build import BAZEL
 from project_validator.build_systems.model import standalone_package
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts import Command, Fact, Facts, Setting, Unknown, resolved
@@ -478,7 +479,7 @@ SWIFT_TOOLCHAINS = versions_axis("Swift toolchain", SWIFT_LANGUAGE, SWIFT_ONLY, 
 SWIFT = Ecosystem(
     label=SWIFT_LANGUAGE,
     languages=SWIFT_ONLY,
-    build_systems=(SWIFTPM, XCODE),
+    build_systems=(SWIFTPM, XCODE, BAZEL),
     source_suffixes={".swift": SWIFT_LANGUAGE},
     toolchain=toolchain_patterns(
         SWIFT_LANGUAGE,

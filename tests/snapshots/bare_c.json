@@ -713,6 +713,13 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "bazel test": {
+                "can": {
+                  "runs": "bazel test"
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "ctest": {
                 "can": {
                   "runs": "ctest"
@@ -1053,7 +1060,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no tests found (tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call) or tests registered with Meson's test() in meson.build)",
+      "message": "no tests found (tests defined by Bazel test rules (cc_test, swift_test, sh_test, \u2026) in BUILD files, tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call) or tests registered with Meson's test() in meson.build)",
       "status": "FAIL"
     },
     "top-level-guard": {
