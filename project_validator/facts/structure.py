@@ -668,8 +668,13 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     yield from _unrecognised(files, accounted, recognised)
     every = Facts((*plain, *ambiguous))
     implied = _auxiliary_languages(every)
-    named = Selectors.parse(project.auxiliary, implied)
-    yield AuxiliaryCode(origin=Origin(path="."), named=tuple(project.auxiliary), implied=tuple(sorted(implied)))
+    named = Selectors.parse(project.auxiliary, implied, project.primary)
+    yield AuxiliaryCode(
+        origin=Origin(path="."),
+        named=tuple(project.auxiliary),
+        implied=tuple(sorted(implied)),
+        primary=tuple(project.primary),
+    )
     yield from _units(project, every, named)
 
 

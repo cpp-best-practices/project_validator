@@ -156,23 +156,24 @@ and bun workspaces, Cargo and uv workspaces, go.work). A unit's languages are th
 units below it), and what its build files build unless they only declare a workspace; sources outside every unit
 belong to the root unit.
 
-Every source file and unit has a **role** (`project_validator/facts/roles.py`), told by the directories it is in
-(above any source root such as `src` or `lib`, so `com/example/App.java` is product code, but for a test directory
-below one, `src/test/resources`): `product`, `test`,
-`example`, `docs`, `tooling`, `benchmark`, `template` (below a `templates` directory: rendered before it is read, so a
-data file there is noted, not parsed), or `vendored` (below a vendor directory anywhere, or a minified bundle).
-A unit's build files can say it is a unit of tests (`Ecosystem.test_units`: a Racket `-test` package), and so can
-what CI does with it, once its commands are read (`Ecosystem.ci_test_units`, a stage after the CI jobs): a private
-npm workspace package that no other package depends on and that CI runs only by its test scripts (`test`,
-`test:*`, `test-*`) exists to test the others (zod's `packages/integration`). A `--filter` or `--workspace` that
-names packages exactly runs only their scripts; a pattern runs every package's.
-A role names code; it judges none: every source outside vendored directories is the product's, whatever its role,
-and adds its language to its unit. `--auxiliary` dials that back (`project_validator/facts/auxiliary.py`): what it
-names, by role (`tooling`), by language or ecosystem (`python`, `c++`) or by directory (`scripts/`), is recorded as
-a fact (`AuxiliaryCode`) and resolved once per project (`selectors`). Code it names adds no language to its unit; a
-language only such code is written in is still judged by every practice, in the units that code is in, but the
-judging layer makes its failures warnings that say so and name the dial, and labels them `(auxiliary: tooling)`.
-The policies know nothing of it. Vendored code is never judged, named or not.
+Every source file and unit has a **role** (`project_validator/facts/roles.py`), told by the directories it is in (above
+any source root such as `src` or `lib`, so `com/example/App.java` is product code, but for a test directory below one,
+`src/test/resources`): `product`, `test`, `example`, `docs`, `tooling`, `benchmark`, `template` (below a `templates`
+directory: rendered before it is read, so a data file there is noted, not parsed), or `vendored` (below a vendor
+directory anywhere, or a minified bundle). A unit's build files can say it is a unit of tests (`Ecosystem.test_units`: a
+Racket `-test` package), and so can what CI does with it, once its commands are read (`Ecosystem.ci_test_units`, a stage
+after the CI jobs): a private npm workspace package that no other package depends on and that CI runs only by its test
+scripts (`test`, `test:*`, `test-*`) exists to test the others (zod's `packages/integration`). A `--filter` or
+`--workspace` that names packages exactly runs only their scripts; a pattern runs every package's. A role names code; it
+judges none: every source outside vendored directories is the product's, whatever its role, and adds its language to its
+unit. `--auxiliary` dials that back (`project_validator/facts/auxiliary.py`): what it names, by role (`tooling`), by
+language or ecosystem (`python`, `c++`) or by directory (`scripts/`), is recorded as a fact (`AuxiliaryCode`) and
+resolved once per project (`selectors`). Code it names adds no language to its unit; a language only such code is
+written in is still judged by every practice, in the units that code is in, but the judging layer makes its failures
+warnings that say so and name the dial, and labels them `(auxiliary: tooling)`. The policies know nothing of it.
+Vendored code is never judged, named or not. `--primary` names the product's code instead (its languages, or its
+directories): every other language's code is auxiliary, named `outside --primary ...`, and formats are judged as they
+are.
 
 ### CI: jobs, and what each one runs
 
