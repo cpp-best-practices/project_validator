@@ -131,6 +131,29 @@ def load(text: str) -> object:
         raise YamlError(NESTED_MESSAGE) from error
 
 
+def load_pairs(text: str) -> object:
+    """The YAML document of `text`, its top-level mapping as a list of (key, value) pairs in order, each key kept as
+    often as it is written (Cirrus CI's repeated `task:`); a document that is no mapping is as `load` gives it."""
+    if _yaml is None:
+        raise YamlError(MISSING_MESSAGE)
+    loader = _loader()(text)
+    try:
+        root = loader.get_single_node()
+        if not isinstance(root, _yaml.MappingNode):
+            return None if root is None else loader.construct_document(root)
+        loader.flatten_mapping(root)
+        return [
+            (loader.construct_object(key, deep=True), loader.construct_object(value, deep=True))
+            for key, value in root.value
+        ]
+    except _yaml.YAMLError as error:
+        raise YamlError(str(error).replace("\n", " "), *_position(error)) from error
+    except RecursionError as error:
+        raise YamlError(NESTED_MESSAGE) from error
+    finally:
+        loader.dispose()
+
+
 type Place = tuple[str | int, ...]
 # At most this deep, and this many places, are recorded of one document.
 _DEEPEST_PLACE = 64
