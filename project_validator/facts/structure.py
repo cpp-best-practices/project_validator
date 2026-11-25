@@ -593,6 +593,24 @@ def _path_dependencies(project: Project, facts: Facts, directory: str) -> Iterat
             yield posixpath.normpath(posixpath.join(directory, path))
 
 
+def ci_test_units(project: Project, facts: Facts) -> Facts:
+    """`facts`, with the product units that an ecosystem's CI shows are units of tests made so (see
+    `Ecosystem.ci_test_units`)."""
+    tests = {
+        directory: tested
+        for ecosystem in registered()
+        if ecosystem.ci_test_units is not None
+        for directory, tested in ecosystem.ci_test_units(project, facts).items()
+    }
+    units = tuple(unit.directory for unit in facts.of(Unit))
+    return Facts(
+        replace(fact, role="test", tests=tests[fact.directory] or _tested(project, facts, fact.directory, units))
+        if isinstance(fact, Unit) and fact.role == "product" and fact.directory in tests
+        else fact
+        for fact in facts
+    )
+
+
 def tests_unit(facts: Facts) -> Callable[[str, str], bool]:
     """Whether a path is in a unit of tests (a separate test project) that tests a unit (see `Unit.tests`)."""
     units = {found.directory: found for found in facts.of(Unit)}
@@ -652,6 +670,7 @@ __all__ = [
     "SourceFile",
     "Unit",
     "UnrecognisedSuffix",
+    "ci_test_units",
     "project_formats",
     "project_languages",
     "source_languages",

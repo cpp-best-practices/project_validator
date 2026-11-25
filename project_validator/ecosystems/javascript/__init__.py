@@ -13,6 +13,7 @@ CI runs count as CI configuration wherever a rule reads more than CI configurati
 from __future__ import annotations
 
 import json
+import posixpath
 import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
@@ -20,7 +21,7 @@ from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
 
 from project_validator import yaml_support
-from project_validator.core import Context
+from project_validator.core import Context, Project
 from project_validator.ecosystems.model import (
     VERSION_FILE_CONTENTS,
     BuildSystem,
@@ -219,10 +220,28 @@ def workspace_members(context: Context, directory: str | None) -> list[str]:
 _WORKSPACE_FLAGS = frozenset({"-r", "--recursive", "--filter", "-F", "--workspaces", "-ws", "--workspace", "-w"})
 
 
+def _selected(command: Command, context: Context, members: list[str]) -> list[str]:
+    """The workspace packages a command's `--filter` or `--workspace` options name, each by its name or directory;
+    every package when one names none exactly (a pattern, `./packages/a...`, or no such option)."""
+    selections = option_values(command.argv, *_SELECTION_OPTIONS)
+    by_selection = {
+        **{posixpath.normpath(member): member for member in members},
+        **{name: member for member in members if isinstance(name := _package_name(context, member), str)},
+    }
+    chosen = [by_selection.get(posixpath.normpath(value) if "/" in value else value) for value in selections]
+    if not chosen or None in chosen:
+        return members
+    return [member for member in members if member in chosen]
+
+
+def _package_name(context: Context, member: str) -> object:
+    return json_value(context, joined(member, PACKAGE_JSON), "name")
+
+
 def _in_workspaces(command: Command, context: Context, name: str) -> list[Expansion]:
-    """The script `name` of each workspace package that has it."""
+    """The script `name` of each workspace package that has it, of those its options select."""
     found: list[Expansion] = []
-    for member in workspace_members(context, command.directory):
+    for member in _selected(command, context, workspace_members(context, command.directory)):
         path = joined(member, PACKAGE_JSON)
         if (script := _json_strings(json_value(context, path, "scripts")).get(name)) is not None:
             origin = Origin(path=path, at=("scripts", name))
@@ -768,6 +787,58 @@ TOOL_CONFIGURATION = (
 )
 
 
+_DEPENDENCY_FIELDS = ("dependencies", "devDependencies", "peerDependencies", "optionalDependencies")
+
+
+def _test_script(name: str) -> bool:
+    return name == "test" or name.startswith(("test:", "test-"))
+
+
+def _scripts_ci_runs(facts: Facts) -> dict[str, set[str]]:
+    """The package.json scripts CI runs, directly or through one another (each script's own commands are CI's), by
+    the manifest that defines them."""
+    found: dict[str, set[str]] = {}
+    for command in facts.of(Command):
+        # A package.json runs only its scripts, each at ("scripts", name).
+        if PurePosixPath(command.origin.path).name == PACKAGE_JSON:
+            found.setdefault(command.origin.path, set()).update(map(str, command.origin.at[1:2]))
+    return found
+
+
+def _dependencies(document: Mapping[str, object]) -> set[str]:
+    """The names of the packages a package.json depends on, in any of its kinds of dependency."""
+    return {name for field in _DEPENDENCY_FIELDS if isinstance(found := document.get(field), Mapping) for name in found}
+
+
+def _ci_test_packages(project: Project, facts: Facts) -> dict[str, tuple[str, ...]]:
+    """The private workspace packages that no other package depends on and that CI runs only by their test scripts
+    (zod's packages/integration, upstream #374): packages that exist to test the others, each with the workspace
+    packages it depends on, which it tests."""
+    from project_validator.facts.structure import Unit  # structure reads the profiles
+
+    manifests: dict[str, Mapping[str, object]] = {}
+    for unit in facts.of(Unit):
+        path = joined(unit.directory, PACKAGE_JSON)
+        if unit.directory != "." and project.exists(path):
+            try:
+                document = json.loads(project.read_text(path))
+            except ValueError:
+                continue
+            if isinstance(document, Mapping):
+                manifests[unit.directory] = document
+    depended = set().union(*map(_dependencies, manifests.values()))
+    named = {
+        name: directory for directory, document in manifests.items() if isinstance(name := document.get("name"), str)
+    }
+    run = _scripts_ci_runs(facts)
+    return {
+        directory: tuple(sorted(named[name] for name in _dependencies(document) if name in named))
+        for directory, document in manifests.items()
+        if document.get("private") is True and document.get("name") not in depended
+        if (scripts := run.get(joined(directory, PACKAGE_JSON))) and all(map(_test_script, scripts))
+    }
+
+
 def ecmascript_ecosystem(language: str, suffixes: tuple[str, ...]) -> Ecosystem:
     """The ecosystem of JavaScript or TypeScript (`language`, recognised by its `suffixes`): separate languages, which
     share package.json, Deno, their runtimes and their tools (this profile's components)."""
@@ -778,6 +849,7 @@ def ecmascript_ecosystem(language: str, suffixes: tuple[str, ...]) -> Ecosystem:
         source_suffixes=dict.fromkeys(suffixes, language),
         family="ECMAScript",
         tool_configuration=TOOL_CONFIGURATION if language == JAVASCRIPT else (),
+        ci_test_units=_ci_test_packages,
         toolchain=toolchain_patterns(
             "JavaScript runtime",
             more=RUNTIME_VERSIONS,
