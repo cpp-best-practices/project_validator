@@ -341,6 +341,15 @@ coverage report
 CI uploads the coverage report to [Codecov](https://codecov.io/gh/cpp-best-practices/project_validator)
 and fails if branch coverage drops below the threshold.
 
+### Releasing
+
+1. Set the new version in `project_validator/__init__.py` (`__version__`, the one source of the version).
+2. Add its section to [CHANGELOG.md](CHANGELOG.md) (`## <version>`), and merge both.
+3. Push the tag `v<version>`. The release workflow (`.github/workflows/release.yml`) checks that the tag, the version
+   and the changelog agree, builds the sdist and the wheel, installs the wheel in a clean environment and runs it,
+   publishes to PyPI with trusted publishing (its `pypi` environment can require approval), and makes the GitHub
+   release with the changelog section as its notes.
+
 ## Dependency Policy
 
 The validator is meant to run anywhere a project can be built,

@@ -10,8 +10,11 @@ import tomllib
 import unittest
 from pathlib import Path
 
+import yaml
+
 import project_validator
 from project_validator.cli import EXIT_SUCCESS, JSON_FORMATS, deprecated_main, main
+from tests import release_check
 from tests.support import temp_project
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -90,3 +93,37 @@ def _stdout(*arguments: str) -> str:
     with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(io.StringIO()):
         main(list(arguments))
     return stdout.getvalue()
+
+
+class ReleaseCheckTests(unittest.TestCase):
+    """What the release workflow checks before it builds: the tag, the package's version and the changelog agree."""
+
+    CHANGELOG = "# Changelog\n\n## 0.2.0\n\n- More.\n\n## 0.1.0\n\n- First.\n"
+
+    def test_a_tag_that_matches_a_version_with_a_changelog_section_passes(self) -> None:
+        self.assertEqual(release_check.problems("v0.2.0", "0.2.0", self.CHANGELOG), [])
+        self.assertEqual(release_check.notes(self.CHANGELOG, "0.1.0"), "- First.")
+
+    def test_a_tag_that_differs_from_the_version_or_has_no_section_is_refused(self) -> None:
+        self.assertEqual(
+            release_check.problems("v0.3.0", "0.2.0", self.CHANGELOG),
+            ["the tag v0.3.0 is not the package's version, 0.2.0"],
+        )
+        self.assertEqual(
+            release_check.problems("v0.3.0", "0.3.0", self.CHANGELOG), ["CHANGELOG.md has no section for 0.3.0"]
+        )
+        self.assertEqual(release_check.problems("0.2.0", "0.2.0", self.CHANGELOG), ["the tag 0.2.0 is not v<version>"])
+
+    def test_this_version_has_its_changelog_section(self) -> None:
+        changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+        self.assertTrue(release_check.notes(changelog, project_validator.__version__))
+
+
+class ReleaseWorkflowTests(unittest.TestCase):
+    def test_only_the_publishing_job_can_mint_a_pypi_token(self) -> None:
+        workflow = yaml.safe_load((ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8"))
+        self.assertEqual(workflow["permissions"], {"contents": "read"})
+        minting = [name for name, job in workflow["jobs"].items() if job.get("permissions", {}).get("id-token")]
+        self.assertEqual(minting, ["publish"])
+        self.assertEqual(workflow["jobs"]["publish"]["environment"]["name"], "pypi")
+        self.assertEqual(workflow[True]["push"]["tags"], ["v*"])
