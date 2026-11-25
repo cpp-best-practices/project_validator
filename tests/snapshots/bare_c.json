@@ -1110,6 +1110,11 @@
       "message": "no CI configuration found",
       "status": "FAIL"
     },
+    "repository-hygiene": {
+      "details": [],
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
     "sanitizers": {
       "details": [
         "build with -fsanitize=address,undefined (MSVC: /fsanitize=address) in at least one configuration, behind an option CI turns on (Meson: -Db_sanitize=address,undefined)"

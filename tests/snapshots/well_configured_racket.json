@@ -810,6 +810,11 @@
       "message": "CI covers 3 OS(es) (linux, macos, windows), 3 Racket version(s) (8.12, 8.12 BC, stable), 7 combination(s)",
       "status": "PASS"
     },
+    "repository-hygiene": {
+      "details": [],
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
     "sanitizers": {
       "details": [],
       "message": "not applicable to Racket",

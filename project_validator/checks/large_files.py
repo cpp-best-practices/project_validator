@@ -32,7 +32,8 @@ class _LfsPattern:
         return fnmatchcase(relative.name, self.pattern)
 
 
-def _lfs_patterns(context: Context, files: tuple[str, ...]) -> list[_LfsPattern]:
+def lfs_patterns(context: Context, files: tuple[str, ...]) -> list[_LfsPattern]:
+    """The patterns the project's `.gitattributes` files store in Git LFS."""
     patterns = []
     for path in files:
         if PurePosixPath(path).name == GITATTRIBUTES:
@@ -55,7 +56,7 @@ def large_files(context: Context) -> Result:
     project = context.project
     files = context.tracked_files
     limit = context.options.max_file_size
-    patterns = _lfs_patterns(context, files)
+    patterns = lfs_patterns(context, files)
     large = [
         (project.size(path), path)
         for path in files

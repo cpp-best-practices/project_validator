@@ -124,6 +124,12 @@ WHY: Mapping[str, Why] = {
         "Large binaries in git make every clone slow forever, even after they are deleted. Git LFS or DVC keeps them "
         "out of the history.",
     ),
+    "repository-hygiene": Why(
+        "Repository",
+        "A leftover conflict marker or an invisible bidirectional character (Trojan Source) makes code read "
+        "differently from how it runs, and a path that collides by case or that Windows reserves breaks some "
+        "contributors' checkouts.",
+    ),
     "license": Why(
         "Repository",
         "Without a licence nobody may legally use, change or share the code. A known licence file says what they "

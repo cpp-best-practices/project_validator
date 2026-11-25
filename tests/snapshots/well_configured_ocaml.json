@@ -865,6 +865,11 @@
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 OCaml version(s) (4.14, 5.2), 6 combination(s)",
       "status": "PASS"
     },
+    "repository-hygiene": {
+      "details": [],
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
     "sanitizers": {
       "details": [],
       "message": "not applicable to OCaml",

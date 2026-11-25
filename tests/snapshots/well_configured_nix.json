@@ -877,6 +877,11 @@
       "message": "CI covers 2 OS(es) (linux, macos), 3 system(s) (aarch64-darwin, aarch64-linux, x86_64-linux), 3 combination(s)",
       "status": "PASS"
     },
+    "repository-hygiene": {
+      "details": [],
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
     "sanitizers": {
       "details": [],
       "message": "not applicable to Nix",

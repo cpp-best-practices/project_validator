@@ -106,6 +106,10 @@
       "aliases": [],
       "description": "CI runs on several operating systems with several compilers (or interpreter/toolchain versions)"
     },
+    "repository-hygiene": {
+      "aliases": [],
+      "description": "No Trojan Source characters, conflict markers, unportable paths, broken links or stray LFS pointers"
+    },
     "sanitizers": {
       "aliases": [],
       "description": "Sanitizers are used in some configuration: AddressSanitizer and UndefinedBehaviorSanitizer for C and C++ (one of the two warns), cargo miri test or -Zsanitizer for Rust, go test -race for Go"

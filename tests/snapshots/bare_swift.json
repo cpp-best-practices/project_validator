@@ -888,6 +888,11 @@
       "message": "no CI configuration found",
       "status": "FAIL"
     },
+    "repository-hygiene": {
+      "details": [],
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
     "sanitizers": {
       "details": [
         "run swift test --sanitize=address (or thread) in CI (Xcode: -enableAddressSanitizer YES)"

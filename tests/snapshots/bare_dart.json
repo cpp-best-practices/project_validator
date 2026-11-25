@@ -805,6 +805,11 @@
       "message": "no CI configuration found",
       "status": "FAIL"
     },
+    "repository-hygiene": {
+      "details": [],
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
     "sanitizers": {
       "details": [],
       "message": "not applicable to Dart",

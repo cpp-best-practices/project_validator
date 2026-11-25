@@ -908,6 +908,11 @@
       "message": "no CI configuration found",
       "status": "FAIL"
     },
+    "repository-hygiene": {
+      "details": [],
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
     "sanitizers": {
       "details": [
         "run cargo +nightly miri test, or build with RUSTFLAGS=-Zsanitizer=address on nightly, in CI"
