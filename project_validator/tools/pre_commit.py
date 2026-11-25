@@ -56,13 +56,17 @@ def _expansion(path: str, at: tuple[str | int, ...], repo: str, hook: Mapping[st
 
 
 def _invocation(hook: str, words: tuple[str, ...], repo: str, origin: Origin) -> Invocation:
-    program = _PROGRAMS_OF_HOOKS.get(hook, hook)
-    return Invocation(argv=(program, *words), line=f"the {hook} hook of {repo}", origin=origin)
+    command = _COMMANDS_OF_HOOKS.get(hook, (hook,))
+    return Invocation(argv=(*command, *words), line=f"the {hook} hook of {repo}", origin=origin)
 
 
-# Hooks whose id is not their program's name: the program the repository's hook runs (hadolint's `hadolint-docker`
-# runs hadolint in its image).
-_PROGRAMS_OF_HOOKS = {"hadolint-docker": "hadolint"}
+# Hooks whose id is not the command they run: the command the repository's hook runs (hadolint's `hadolint-docker`
+# runs hadolint in its image; keith/pre-commit-buildifier's hooks run buildifier in a mode).
+_COMMANDS_OF_HOOKS = {
+    "hadolint-docker": ("hadolint",),
+    "buildifier": ("buildifier", "-mode=fix", "-lint=fix"),
+    "buildifier-lint": ("buildifier", "-mode=diff", "-lint=warn"),
+}
 
 
 _OPTIONS = frozenset(

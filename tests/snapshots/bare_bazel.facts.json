@@ -1,0 +1,83 @@
+{
+  "facts": [
+    {
+      "build_system": "Bazel",
+      "kind": "BuildFile",
+      "languages": [],
+      "origin": "MODULE.bazel"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "Bazel",
+      "origin": "MODULE.bazel",
+      "role": "product"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": "."
+    },
+    {
+      "build_systems": [
+        "Bazel"
+      ],
+      "formats": [
+        "Bazel"
+      ],
+      "kind": "Unit",
+      "languages": [],
+      "origin": ".",
+      "role": "product",
+      "tests": []
+    }
+  ],
+  "map": {
+    "build_systems": [
+      "Bazel"
+    ],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "Bazel": [
+        ".bazel files"
+      ]
+    },
+    "files": [
+      {
+        "files": 1,
+        "language": "Bazel",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 1.0
+      }
+    ],
+    "formats": [
+      "Bazel"
+    ],
+    "languages": [],
+    "units": [
+      {
+        "build_systems": [
+          "Bazel"
+        ],
+        "directory": ".",
+        "formats": [
+          "Bazel"
+        ],
+        "languages": [],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}

@@ -2361,6 +2361,23 @@
     },
     {
       "can": {
+        "analysis": {
+          "checks": "buildifier -lint=warn -mode=check -r ."
+        },
+        "format": {
+          "apply": "buildifier -r .",
+          "check": "buildifier -mode=check -r ."
+        }
+      },
+      "languages": [
+        "Bazel"
+      ],
+      "name": "buildifier",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "audit": {
           "runs": "bun audit"
         }

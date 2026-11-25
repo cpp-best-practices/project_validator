@@ -90,7 +90,7 @@ issues = [207, 282]
 [[project]]
 name = "google/googletest"
 commit = "e882c36410197464e3429546e6a7d5e217bde51e"
-ecosystems = ["C++"]
+ecosystems = ["C++", "Bazel"]
 issues = [182, 207]
 
 [[project]]
@@ -796,7 +796,7 @@ issues = [271, 280]
 [[project]]
 name = "grpc/grpc-proto"
 commit = "a0515b76877ff1298b0f430198043705a216541d"
-ecosystems = ["Protobuf"]
+ecosystems = ["Protobuf", "Bazel"]
 issues = [207]
 
 [[project]]
