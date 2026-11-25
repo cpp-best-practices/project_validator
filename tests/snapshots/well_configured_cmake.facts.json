@@ -303,6 +303,25 @@
       "via": []
     },
     {
+      "advisory": "",
+      "argv": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build",
+        "-Werror=dev"
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:lint",
+      "kind": "Command",
+      "line": "cmake -S . -B build -Werror=dev",
+      "origin": ".github/workflows/ci.yml:10:9 (jobs.lint.steps[4].run)",
+      "via": []
+    },
+    {
       "kind": "StepReference",
       "origin": ".github/workflows/ci.yml",
       "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
@@ -390,10 +409,14 @@
       "toolchains": []
     },
     {
-      "compilers": [],
+      "compilers": [
+        "gcc"
+      ],
       "configurations": [],
-      "default_compiler": false,
+      "default_compiler": true,
       "ecosystems": [
+        "C",
+        "C++",
         "CMake"
       ],
       "heuristic": false,
@@ -525,9 +548,13 @@
           "toolchains": []
         },
         {
-          "compilers": [],
+          "compilers": [
+            "gcc"
+          ],
           "configurations": [],
           "ecosystems": [
+            "C",
+            "C++",
             "CMake"
           ],
           "name": ".github/workflows/ci.yml: lint",

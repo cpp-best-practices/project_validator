@@ -7,3 +7,4 @@ jobs:
       - run: pipx install gersemi cmakelang
       - run: gersemi --check .
       - run: cmake-lint CMakeLists.txt cmake/Shop.cmake
+      - run: cmake -S . -B build -Werror=dev

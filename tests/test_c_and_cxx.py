@@ -125,7 +125,8 @@ class PerLanguageFlagsTests(unittest.TestCase):
         files = {"CMakeLists.txt": cmake, "src/main.cpp": "", "src/legacy.c": ""}
         with temp_project(files) as root:
             result = warnings_as_errors.run(make_context(root))
-        return {place.ecosystem: place.result.status for place in result.places}
+        # The CMake code's own warnings-as-errors is the CMake format's, not a language's.
+        return {place.ecosystem: place.result.status for place in result.places if place.ecosystem != "CMake"}
 
     def test_cxx_flags_count_for_cxx_alone(self) -> None:
         found = self._warnings_as_errors('project(app C CXX)\nset(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")\n')

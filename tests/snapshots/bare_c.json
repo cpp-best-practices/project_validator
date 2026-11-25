@@ -898,6 +898,28 @@
             "unknowns": []
           }
         ]
+      },
+      {
+        "auxiliary": {},
+        "language": "CMake",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "cmake -Werror=dev"
+                ]
+              }
+            ],
+            "language": "CMake",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ],
     "wellformed": [
@@ -1171,9 +1193,10 @@
     },
     "warnings-as-errors": {
       "details": [
-        "add -Werror (GCC/Clang), /WX (MSVC) or set CMAKE_COMPILE_WARNING_AS_ERROR (Meson: werror=true), at least as an option"
+        "C: add -Werror (GCC/Clang), /WX (MSVC) or set CMAKE_COMPILE_WARNING_AS_ERROR (Meson: werror=true), at least as an option",
+        "CMake: configure with cmake -Werror=dev (or a preset's \"errors\": {\"dev\": true}), so CMake's warnings fail CI"
       ],
-      "message": "warnings are not treated as errors in CI configuration or the build files (CMake files, presets, meson.build)",
+      "message": "C: warnings are not treated as errors in CI configuration or the build files (CMake files, presets, meson.build); CMake: warnings are not treated as errors in CI configuration and CMakePresets.json",
       "status": "FAIL"
     }
   }

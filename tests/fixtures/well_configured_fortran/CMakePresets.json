@@ -1,0 +1,4 @@
+{
+  "version": 6,
+  "configurePresets": [{"name": "ci", "binaryDir": "build", "errors": {"dev": true}}]
+}

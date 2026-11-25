@@ -15,6 +15,12 @@ style in `.cmake-format.yaml` (or `.cmake-format`, `.json`, `.py`). Their pre-co
 
 cmake-lint (cmakelang, configured as cmake-format is) or cmakelint (`.cmakelintrc`).
 
+## `warnings-as-errors`
+
+CMake's own warnings about the project's code (deprecated commands, policy warnings meant for the project) fail CI:
+the `cmake` that configures the build has `-Werror=dev`, or the configure preset CI uses has `"errors": {"dev": true}`
+in `CMakePresets.json`.
+
 ## Not judged
 
 CMake code is not a program of its own: tests, coverage and the compiled-language checks belong to the language it

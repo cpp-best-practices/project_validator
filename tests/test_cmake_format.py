@@ -7,6 +7,7 @@ import unittest
 
 from project_validator.checks.code_formatting import code_formatting
 from project_validator.checks.static_analysis import static_analysis
+from project_validator.checks.warnings_as_errors import warnings_as_errors
 from project_validator.core import Check, Result, Status
 from tests.support import github_job, make_context, run_in_layout, temp_project
 
@@ -63,6 +64,19 @@ class CMakeFormattingTests(unittest.TestCase):
             with self.subTest(line=line):
                 self.assertEqual(self._run(static_analysis, _ci(line)), Result.passed(f"{tool} runs"))
         self.assertEqual(self._run(static_analysis, _ci("cmake -B build")).status, Status.FAIL)
+
+    def test_cmake_warnings_are_errors_with_werror_dev(self) -> None:
+        """`cmake -Werror=dev` (or a configure preset's `errors: {dev: true}`) makes CMake's warnings for the project
+        errors; without it, warnings-as-errors fails."""
+        passed = Result.passed("warnings are treated as errors with cmake -Werror=dev")
+        self.assertEqual(self._run(warnings_as_errors, _ci("cmake -S . -B build -Werror=dev")), passed)
+        presets = {
+            "CMakePresets.json": '{"version": 6, "configurePresets": [{"name": "ci", "errors": {"dev": true}}]}\n'
+        }
+        self.assertEqual(self._run(warnings_as_errors, {**presets, **_ci("cmake --preset ci")}).status, Status.PASS)
+        for line in ("cmake -S . -B build", "cmake -S . -B build -Wdev"):
+            with self.subTest(line=line):
+                self.assertEqual(self._run(warnings_as_errors, _ci(line)).status, Status.FAIL)
 
     def test_a_cxx_projects_cmake_code_is_judged_beside_its_cxx(self) -> None:
         """fmt and cmake_template format their CMake code too; a C++ project's CMake code is asked to be formatted

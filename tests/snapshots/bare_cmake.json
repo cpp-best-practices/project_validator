@@ -101,7 +101,30 @@
     "top-level-guard": [],
     "type-checking": [],
     "vcs-ignore": [],
-    "warnings-as-errors": [],
+    "warnings-as-errors": [
+      {
+        "auxiliary": {},
+        "language": "CMake",
+        "units": [
+          {
+            "answer": "no",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {},
+                "missing": [
+                  "cmake -Werror=dev"
+                ]
+              }
+            ],
+            "language": "CMake",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
+      }
+    ],
     "wellformed": [
       {
         "auxiliary": {},
@@ -340,9 +363,11 @@
       "status": "SKIP"
     },
     "warnings-as-errors": {
-      "details": [],
-      "message": "not applicable to a project of no recognised language",
-      "status": "SKIP"
+      "details": [
+        "configure with cmake -Werror=dev (or a preset's \"errors\": {\"dev\": true}), so CMake's warnings fail CI"
+      ],
+      "message": "warnings are not treated as errors in CI configuration and CMakePresets.json",
+      "status": "FAIL"
     }
   }
 }

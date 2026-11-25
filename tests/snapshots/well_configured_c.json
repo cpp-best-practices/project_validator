@@ -1236,6 +1236,31 @@
             "unknowns": []
           }
         ]
+      },
+      {
+        "auxiliary": {},
+        "language": "CMake",
+        "units": [
+          {
+            "answer": "yes",
+            "compilers": [
+              {
+                "compiler": null,
+                "found": {
+                  "cmake -Werror=dev": [
+                    "CI (.github/workflows/ci.yml)",
+                    "CI (.github/workflows/codeql-analysis.yml)"
+                  ]
+                },
+                "missing": []
+              }
+            ],
+            "language": "CMake",
+            "practice": "warnings-as-errors",
+            "unit": ".",
+            "unknowns": []
+          }
+        ]
       }
     ],
     "wellformed": [
@@ -1516,7 +1541,7 @@
     },
     "warnings-as-errors": {
       "details": [],
-      "message": "warnings are treated as errors with -Werror",
+      "message": "C: warnings are treated as errors with -Werror; CMake: warnings are treated as errors with cmake -Werror=dev",
       "status": "PASS"
     }
   }

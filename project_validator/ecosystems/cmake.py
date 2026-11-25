@@ -1,13 +1,16 @@
 """CMake: the project's CMake code (`CMakeLists.txt`, `*.cmake`), a format judged beside the language it builds. The
 build system itself is read by `project_validator.build_systems.cmake` for the C and C++ profiles; what is asked of
-the CMake code here is hygiene: it is formatted (`code-formatting`: gersemi, cmake-format) and linted
-(`static-analysis`: cmake-lint, cmakelint)."""
+the CMake code here is hygiene: it is formatted (`code-formatting`: gersemi, cmake-format), linted (`static-analysis`:
+cmake-lint, cmakelint), and CMake's own warnings about it fail CI (`warnings-as-errors`: `cmake -Werror=dev`)."""
 
 from __future__ import annotations
+
+import re
 
 from project_validator.ecosystems.model import Ecosystem
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.practices import Practice, PracticeName, Requirement, Wording, always, requirement_reader
 from project_validator.facts.settings import file_reader
 from project_validator.facts.tools import defined_by, starts, when
 
@@ -66,4 +69,28 @@ CMAKELINT = analyzer(
     how="cmakelint CMakeLists.txt",
     analyses=when(starts(("cmakelint",)), analysed),
     rules=defined_by(files=(CMAKELINT_SETTINGS.name,)),
+)
+
+
+# --- warnings as errors ---------------------------------------------------------------------------------------------
+
+# `cmake -Werror=dev` makes CMake's warnings for the project's own code (deprecated commands, policy warnings) errors
+# when CI configures the build; a configure preset says so with `errors: {dev: true}`.
+WERROR_DEV = Requirement(
+    name="cmake -Werror=dev",
+    runs=re.compile(r"(?<![\w-])cmake\b.*\s-Werror=dev\b"),
+    pattern=re.compile(r'"errors"\s*:\s*\{[^{}]*"dev"\s*:\s*true'),
+    hints=("-Werror=dev",),
+)
+CMAKE_PRESET_ERRORS = requirement_reader("CMake preset errors", ("CMakePresets.json",), (WERROR_DEV,))
+WARNINGS_AS_ERRORS = Practice(
+    name=PracticeName.WARNINGS_AS_ERRORS,
+    languages=CMAKE_ONLY,
+    requirements=always(WERROR_DEV),
+    reads=(CMAKE_PRESET_ERRORS.name,),
+    words=Wording(
+        kind="warnings as errors",
+        searched="CI configuration and CMakePresets.json",
+        hint='configure with cmake -Werror=dev (or a preset\'s "errors": {"dev": true}), so CMake\'s warnings fail CI',
+    ),
 )

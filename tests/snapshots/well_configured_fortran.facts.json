@@ -46,6 +46,13 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "JSON",
+      "origin": "CMakePresets.json",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "Fortran",
       "origin": "app/main.f90",
       "role": "product"
@@ -82,6 +89,7 @@
         "fpm"
       ],
       "formats": [
+        "JSON",
         "TOML",
         "YAML"
       ],
@@ -139,6 +147,16 @@
       "kind": "DataFile",
       "line": null,
       "origin": ".github/workflows/function-limits.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "JSON",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "CMakePresets.json",
       "problem": null,
       "role": "product",
       "unread": null
@@ -4409,6 +4427,24 @@
     },
     {
       "kind": "ConfigurationFile",
+      "origin": "CMakePresets.json",
+      "reader": "CMake"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "CMakePresets.json",
+      "reader": "CMake preset errors"
+    },
+    {
+      "heuristic": true,
+      "key": "cmake -Werror=dev",
+      "kind": "Setting",
+      "origin": "CMakePresets.json",
+      "tool": "CMake preset errors",
+      "value": true
+    },
+    {
+      "kind": "ConfigurationFile",
       "origin": "LICENSE",
       "reader": "license files"
     },
@@ -6245,6 +6281,7 @@
     },
     "ecosystems": {
       "Data": [
+        ".json files",
         ".toml files",
         ".yml files"
       ],
@@ -6264,7 +6301,7 @@
             "role": "product"
           }
         ],
-        "share": 0.5556
+        "share": 0.5
       },
       {
         "files": 3,
@@ -6286,7 +6323,19 @@
             "role": "test"
           }
         ],
-        "share": 0.3333
+        "share": 0.3
+      },
+      {
+        "files": 1,
+        "language": "JSON",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.1
       },
       {
         "files": 1,
@@ -6298,10 +6347,11 @@
             "role": "product"
           }
         ],
-        "share": 0.1111
+        "share": 0.1
       }
     ],
     "formats": [
+      "JSON",
       "TOML",
       "YAML"
     ],
@@ -6315,6 +6365,7 @@
         ],
         "directory": ".",
         "formats": [
+          "JSON",
           "TOML",
           "YAML"
         ],
