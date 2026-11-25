@@ -129,6 +129,7 @@ also_copy = [
     ".github/",
     ".gitignore",
     ".jscpd.json",
+    "CHANGELOG.md",
     "LICENSE.txt",
     "README.md",
     "SECURITY.md",

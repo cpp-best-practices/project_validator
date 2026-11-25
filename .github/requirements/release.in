@@ -2,3 +2,5 @@
 build==1.3.0
 # The build backend, installed here (hash-locked) because the wheel is built without isolation.
 setuptools==80.9.0
+# Pinned to the version the other requirements files lock: the dependency audit installs them all together.
+packaging==26.3
