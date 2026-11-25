@@ -8,7 +8,7 @@ A tool to validate a project's build, CI and tooling against best practices.
 It recognises a project's languages and build systems, and judges each language by its own
 ecosystem's tools: a C++ project needs branch coverage from gcovr or llvm-cov, a Python project from coverage.py, a
 Rust project from cargo-llvm-cov. [docs/ecosystems](docs/ecosystems) has a page for each supported ecosystem, saying
-how it is recognised and what each check accepts for it; `project-validator --list` shows which checks apply to which
+how it is recognised and what each check accepts for it; `project_validator --list` shows which checks apply to which
 ecosystems, and `--format markdown` lays a project's results out as a grid of checks against ecosystems, each
 cell naming the tools that ran. The grid for project_validator itself is in the job summary of every
 [CI run](https://github.com/cpp-best-practices/project_validator/actions/workflows/ci.yml?query=branch%3Amain).
@@ -22,6 +22,18 @@ built from `main` by CI on every push; each page says which commit it reflects.
 
 The validator itself is pure Python and has no build step; it only inspects
 (and, with `--build`, configures and builds) the project it is pointed at.
+
+## Installing
+
+```sh
+pipx install project_validator          # or: python3 -m pip install project_validator
+pipx install "project_validator[all]"   # with the console report (rich) and the TUI (textual)
+project_validator path/to/project
+```
+
+The command, the package and the repository share one name, `project_validator`. The command's old spelling,
+`project-validator`, still runs for one release and says it is deprecated. `project_validator --version` prints the
+version. To run from a checkout instead, nothing needs installing: see Requirements.
 
 ## Requirements
 

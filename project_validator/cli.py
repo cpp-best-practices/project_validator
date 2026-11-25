@@ -11,7 +11,7 @@ import traceback
 from collections.abc import Sequence
 from pathlib import Path, PurePosixPath
 
-from project_validator import gitignore, yaml_support
+from project_validator import __version__, gitignore, yaml_support
 from project_validator.analysis import Analysis, analyse
 from project_validator.core import DEFAULT_MAX_FILE_SIZE, Check, Context, ExtractionError, Observer, Options, Project
 from project_validator.ecosystems import applies_to
@@ -65,6 +65,7 @@ def _parser() -> argparse.ArgumentParser:
         prog="project_validator", description="Validate a project's build, CI and tooling against best practices."
     )
     parser.add_argument("path", nargs="?", default=".", type=Path, help="project to validate (default: .)")
+    parser.add_argument("--version", action="version", version=f"project_validator {__version__}")
     _add_listing_options(parser)
     parser.add_argument("--only", action="append", default=[], metavar="CHECKS", help="run only these checks")
     parser.add_argument("--skip", action="append", default=[], metavar="CHECKS", help="do not run these checks")
@@ -317,6 +318,12 @@ def _project(arguments: argparse.Namespace) -> Project:
         tuple(arguments.auxiliary),
         primary=tuple(arguments.primary),
     )
+
+
+def deprecated_main(argv: Sequence[str] | None = None) -> int:
+    """The command's old name (`project-validator`), kept for one release: it says so, then runs `main`."""
+    print("`project-validator` is deprecated: run `project_validator`", file=sys.stderr)
+    return main(argv)
 
 
 def main(argv: Sequence[str] | None = None) -> int:

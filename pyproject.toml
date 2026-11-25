@@ -4,10 +4,24 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "project_validator"
-version = "0.1.0"
+# One version: `project_validator.__version__`, which `--version` prints and a release tag must match.
+dynamic = ["version"]
 description = "Validate a project's build, CI and tooling against best practices"
 readme = "README.md"
 requires-python = ">=3.12"
+license = "Unlicense"
+license-files = ["LICENSE.txt"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Quality Assurance",
+]
 dependencies = ["PyYAML>=6.0", "pathspec>=0.12"]
 
 [project.optional-dependencies]
@@ -19,8 +33,20 @@ tui = ["rich>=13.0", "textual>=1.0"]
 all = ["rich>=13.0", "textual>=1.0"]
 coverage = ["coverage>=7.10"]
 
+[project.urls]
+Homepage = "https://cpp-best-practices.github.io/project_validator/"
+Repository = "https://github.com/cpp-best-practices/project_validator"
+Issues = "https://github.com/cpp-best-practices/project_validator/issues"
+Changelog = "https://github.com/cpp-best-practices/project_validator/blob/main/CHANGELOG.md"
+
 [project.scripts]
-project-validator = "project_validator.cli:main"
+# One name everywhere: the repository, the import, the package and the command (upstream #337).
+project_validator = "project_validator.cli:main"
+# The command's old name, kept for one release: it says it is deprecated, then runs.
+project-validator = "project_validator.cli:deprecated_main"
+
+[tool.setuptools.dynamic]
+version = { attr = "project_validator.__version__" }
 
 [tool.setuptools.packages.find]
 include = ["project_validator*"]
