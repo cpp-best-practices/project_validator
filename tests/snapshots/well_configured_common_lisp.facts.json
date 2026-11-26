@@ -164,6 +164,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -210,6 +211,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -282,6 +284,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "sbcl-bin"
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
@@ -292,6 +297,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "sbcl-bin"
+      },
       "inputs": {
         "asdf-system": "shop"
       },
@@ -304,6 +312,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "sbcl-bin"
+      },
       "inputs": {
         "asdf-system": "shop",
         "coveralls-token": "${{ secrets.GITHUB_TOKEN }}",
@@ -357,6 +368,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "ccl-bin"
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
@@ -367,6 +381,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "ccl-bin"
+      },
       "inputs": {
         "asdf-system": "shop"
       },
@@ -379,6 +396,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "ccl-bin"
+      },
       "inputs": {
         "asdf-system": "shop",
         "coveralls-token": "${{ secrets.GITHUB_TOKEN }}",
@@ -432,6 +452,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "sbcl-bin"
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
@@ -442,6 +465,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "sbcl-bin"
+      },
       "inputs": {
         "asdf-system": "shop"
       },
@@ -454,6 +480,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "sbcl-bin"
+      },
       "inputs": {
         "asdf-system": "shop",
         "coveralls-token": "${{ secrets.GITHUB_TOKEN }}",
@@ -507,6 +536,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "ccl-bin"
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
@@ -517,6 +549,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "ccl-bin"
+      },
       "inputs": {
         "asdf-system": "shop"
       },
@@ -529,6 +564,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "ccl-bin"
+      },
       "inputs": {
         "asdf-system": "shop",
         "coveralls-token": "${{ secrets.GITHUB_TOKEN }}",
@@ -582,6 +620,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "sbcl-bin"
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
@@ -592,6 +633,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "sbcl-bin"
+      },
       "inputs": {
         "asdf-system": "shop"
       },
@@ -604,6 +648,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "sbcl-bin"
+      },
       "inputs": {
         "asdf-system": "shop",
         "coveralls-token": "${{ secrets.GITHUB_TOKEN }}",
@@ -657,6 +704,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "ccl-bin"
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
@@ -667,6 +717,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "ccl-bin"
+      },
       "inputs": {
         "asdf-system": "shop"
       },
@@ -679,6 +732,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "ccl-bin"
+      },
       "inputs": {
         "asdf-system": "shop",
         "coveralls-token": "${{ secrets.GITHUB_TOKEN }}",
@@ -729,6 +785,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "sbcl-bin"
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
@@ -739,6 +798,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "LISP": "sbcl-bin"
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
@@ -837,6 +899,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",

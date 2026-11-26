@@ -192,6 +192,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -238,6 +239,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -307,6 +309,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:R-CMD-check[0]",
       "kind": "ActionStep",
@@ -317,6 +320,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "r-version": "release",
         "use-public-rspm": "true"
@@ -330,6 +334,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "extra-packages": "any::rcmdcheck",
         "needs": "check"
@@ -343,6 +348,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "error-on": "\"warning\""
       },
@@ -388,6 +394,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:R-CMD-check[1]",
       "kind": "ActionStep",
@@ -398,6 +405,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "r-version": "release",
         "use-public-rspm": "true"
@@ -411,6 +419,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "extra-packages": "any::rcmdcheck",
         "needs": "check"
@@ -424,6 +433,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "error-on": "\"warning\""
       },
@@ -469,6 +479,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:R-CMD-check[2]",
       "kind": "ActionStep",
@@ -479,6 +490,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "r-version": "devel",
         "use-public-rspm": "true"
@@ -492,6 +504,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "extra-packages": "any::rcmdcheck",
         "needs": "check"
@@ -505,6 +518,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "error-on": "\"warning\""
       },
@@ -550,6 +564,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:R-CMD-check[3]",
       "kind": "ActionStep",
@@ -560,6 +575,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "r-version": "release",
         "use-public-rspm": "true"
@@ -573,6 +589,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "extra-packages": "any::rcmdcheck",
         "needs": "check"
@@ -586,6 +603,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "error-on": "\"warning\""
       },
@@ -631,6 +649,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:R-CMD-check[4]",
       "kind": "ActionStep",
@@ -641,6 +660,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "r-version": "oldrel-1",
         "use-public-rspm": "true"
@@ -654,6 +674,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "extra-packages": "any::rcmdcheck",
         "needs": "check"
@@ -667,6 +688,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "error-on": "\"warning\""
       },
@@ -710,6 +732,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "ActionStep",
@@ -720,6 +743,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "use-public-rspm": "true"
       },
@@ -732,6 +756,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "extra-packages": "any::covr",
         "needs": "coverage"
@@ -775,6 +800,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
@@ -785,6 +811,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "use-public-rspm": "true"
       },
@@ -797,6 +824,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "extra-packages": "any::lintr, local::.",
         "needs": "lint"
@@ -828,6 +856,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
@@ -895,6 +924,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
@@ -964,6 +994,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "ActionStep",

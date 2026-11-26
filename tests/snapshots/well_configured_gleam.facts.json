@@ -175,6 +175,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -221,6 +222,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -288,6 +290,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:test",
       "kind": "ActionStep",
@@ -298,6 +301,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "gleam-version": "1.9.1",
         "otp-version": "27"
@@ -370,6 +374,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",

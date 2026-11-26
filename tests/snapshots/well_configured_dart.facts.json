@@ -223,6 +223,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -269,6 +270,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -339,6 +341,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
@@ -349,6 +352,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "sdk": "3.5"
       },
@@ -450,6 +454,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
@@ -460,6 +465,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "sdk": "stable"
       },
@@ -561,6 +567,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
@@ -571,6 +578,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "sdk": "3.5"
       },
@@ -672,6 +680,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
@@ -682,6 +691,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "sdk": "stable"
       },
@@ -783,6 +793,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
@@ -793,6 +804,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "sdk": "3.5"
       },
@@ -894,6 +906,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
@@ -904,6 +917,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "sdk": "stable"
       },
@@ -1002,6 +1016,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:audit",
       "kind": "ActionStep",
@@ -1012,6 +1027,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "scan-args": "-r ."
       },
@@ -1114,6 +1130,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
@@ -1183,6 +1200,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "ActionStep",

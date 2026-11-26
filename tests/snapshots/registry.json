@@ -433,6 +433,138 @@
     },
     {
       "can": {
+        "security": {
+          "scans": ""
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "DevSkim",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": ""
+        }
+      },
+      "languages": [
+        "C#"
+      ],
+      "name": "DevSkim",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": ""
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "DevSkim",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": ""
+        }
+      },
+      "languages": [
+        "Java"
+      ],
+      "name": "DevSkim",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": ""
+        }
+      },
+      "languages": [
+        "JavaScript",
+        "TypeScript"
+      ],
+      "name": "DevSkim",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": ""
+        }
+      },
+      "languages": [
+        "PHP"
+      ],
+      "name": "DevSkim",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": ""
+        }
+      },
+      "languages": [
+        "Python"
+      ],
+      "name": "DevSkim",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": ""
+        }
+      },
+      "languages": [
+        "Ruby"
+      ],
+      "name": "DevSkim",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": ""
+        }
+      },
+      "languages": [
+        "Rust"
+      ],
+      "name": "DevSkim",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "security": {
+          "scans": ""
+        }
+      },
+      "languages": [
+        "Swift"
+      ],
+      "name": "DevSkim",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "coverage": {
           "branch": "cover -test",
           "path": "cover -test (condition coverage)",

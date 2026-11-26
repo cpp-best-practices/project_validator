@@ -156,7 +156,7 @@ Every language is judged in each unit (build root or workspace member) of the pr
 | `ci-current` | every CI configuration is in use. Fails when one is certainly defunct (a `.travis.yml` whose README badges are only of travis-ci.org, which shut down in June 2021); warns when one last changed more than two years before another provider's configuration, by the git history or, without it, the file dates (dates within a day of each other, a fresh checkout's, are not compared). A project's only CI is never judged by age; skipped without CI |
 | `ci-lint` | CI (or a pre-commit hook) lints the configuration of each CI provider it uses: GitHub Actions with actionlint or zizmor, GitLab CI with `glab ci lint` or `gitlab-ci-local --preview`, CircleCI with `circleci config validate`. Warns otherwise; skipped without CI, or when no linter is known for the providers used |
 | `copy-paste-detection` | CI runs a duplicate code detector (PMD CPD, jscpd, Duplo, Simian, CCFinderX or SonarQube); warns otherwise |
-| `security-scanning` | CI scans each language's code in each unit for security problems: CodeQL, GitLab SAST or semgrep, or the language's security lints where CI runs them. Warns otherwise |
+| `security-scanning` | CI scans each language's code in each unit for security problems: CodeQL, GitLab SAST or semgrep, or the language's security lints where CI runs them. DevSkim (`microsoft/DevSkim-Action`) only uploads SARIF, so it counts as advisory: a warning. Warns otherwise |
 | `secret-scanning` | CI or a pre-commit hook runs a secret scanner: gitleaks, TruffleHog, detect-secrets, ggshield or Nosey Parker. Warns otherwise, and says so when a scanner is configured (`.gitleaks.toml`, `.secrets.baseline`, `.gitguardian.yaml`) but nothing runs it. GitHub's own secret scanning is a repository setting, which cannot be seen from a checkout |
 | `dependency-management` | dependencies come from a package manager and are locked (where the ecosystem expects a lock), in each unit (a lockfile locks its directory and those below it). Passes with a note when no dependencies are declared. Warns when they are not locked, or when third-party code is committed (`third_party/`, `external/`, `extern/`, `vendor/` other than `go mod vendor` output, or git submodules) |
 | `dependency-audit` | CI checks each language's dependencies in each unit against known vulnerabilities. osv-scanner, `trivy fs`, `snyk test` and GitLab Dependency Scanning (and their actions) count for every ecosystem whose lockfiles they read. Warns otherwise |
@@ -200,7 +200,10 @@ Each build system reads the build types from its own commands (`-DCMAKE_BUILD_TY
 `meson setup --buildtype`, `cargo --release`, `swift build -c`, `xcodebuild -configuration`). Jenkins, Buildkite,
 Drone, Cirrus CI, Bitbucket Pipelines and Woodpecker are detected and scanned heuristically. pre-commit.ci is the CI of a `.pre-commit-config.yaml` with a `ci:` section: it runs the
 hooks (but `ci.skip`), and builds nothing, so it is no platform or build configuration. A pre-commit hook counts only
-where CI runs it (pre-commit.ci, `pre-commit run` or `pre-commit/action`). A job that names no compiler is counted with its runner's default compiler (gcc on Linux,
+where CI runs it (pre-commit.ci, `pre-commit run` or `pre-commit/action`). super-linter (`super-linter/super-linter`,
+`github/super-linter`, or its Docker image) runs the linters its `VALIDATE_<LINTER>` environment switches leave on (every
+one when none is set; only those set true when any is; every one but those set false otherwise), each counted as that
+tool's own run would be; with `DISABLE_ERRORS=true` it only reports. A job that names no compiler is counted with its runner's default compiler (gcc on Linux,
 AppleClang on macOS, MSVC on Windows).
 
 Known limitations:

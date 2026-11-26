@@ -696,6 +696,13 @@
                 "needs_definition": false,
                 "required": false
               },
+              "DevSkim": {
+                "can": {
+                  "scans": ""
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "Find Security Bugs": {
                 "can": {
                   "scans": "Find Security Bugs (the findsecbugs-plugin of SpotBugs)"

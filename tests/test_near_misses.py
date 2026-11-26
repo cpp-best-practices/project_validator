@@ -63,7 +63,7 @@ class ScannerSpellingTests(unittest.TestCase):
     def test_each_scanner_reads_only_the_languages_it_knows(self) -> None:
         self.assertEqual(multi_language_scanners(frozenset({"Klingon"})), ())
         found = multi_language_scanners(frozenset({"Python", "Klingon"}))
-        self.assertEqual([tool.name for tool in found], ["CodeQL", "GitLab SAST", "semgrep"])
+        self.assertEqual([tool.name for tool in found], ["CodeQL", "GitLab SAST", "semgrep", "DevSkim"])
         self.assertTrue(all(tool.languages == frozenset({"Python"}) for tool in found))
 
 

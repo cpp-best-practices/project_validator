@@ -154,6 +154,9 @@ class ActionStep(Fact):
     requires: str = ""
     # Why the step cannot fail the pipeline, when it cannot (see `Command.advisory`).
     advisory: str = ""
+    # The environment the step runs in (the workflow's, the job's and its own `env`), for an action configured by it
+    # (super-linter's `VALIDATE_*` switches).
+    env: Mapping[str, str] = NOTHING
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

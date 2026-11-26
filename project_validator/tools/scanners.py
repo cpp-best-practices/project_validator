@@ -1,6 +1,7 @@
-"""Code security scanners of many languages at once: CodeQL, GitLab SAST and semgrep. Each knows the languages it
-reads (`CODEQL_LANGUAGES`, `GITLAB_SAST_LANGUAGES`, `SEMGREP_LANGUAGES`); a profile asks for the scanners of its
-languages (`multi_language_scanners`) and gets those that read one of them, for those languages only."""
+"""Code security scanners of many languages at once: CodeQL, GitLab SAST, semgrep and DevSkim. Each knows the languages
+it reads (`CODEQL_LANGUAGES`, `GITLAB_SAST_LANGUAGES`, `SEMGREP_LANGUAGES`, `DEVSKIM_LANGUAGES`); a profile asks for
+the scanners of its languages (`multi_language_scanners`) and gets those that read one of them, for those languages
+only."""
 
 from __future__ import annotations
 
@@ -33,6 +34,24 @@ CODEQL_LANGUAGES = frozenset(
 )
 GITLAB_SAST_LANGUAGES = CODEQL_LANGUAGES | {"PHP", "Scala", "Elixir", "Objective-C"}
 SEMGREP_LANGUAGES = GITLAB_SAST_LANGUAGES | {"Lua", "Julia", "OCaml", "Clojure", "Dart"}
+# DevSkim's rules: the languages of its rule set that have a profile here.
+DEVSKIM_LANGUAGES = frozenset(
+    {
+        "C",
+        "C++",
+        "C#",
+        "Go",
+        "Java",
+        "JavaScript",
+        "TypeScript",
+        "Objective-C",
+        "PHP",
+        "Python",
+        "Ruby",
+        "Rust",
+        "Swift",
+    }
+)
 
 
 def _codeql(read: frozenset[str]) -> Tool:
@@ -59,19 +78,34 @@ def _semgrep(read: frozenset[str]) -> Tool:
     )
 
 
+def _devskim(read: frozenset[str]) -> Tool:
+    """DevSkim (microsoft/DevSkim-Action) uploads its findings as SARIF and never fails CI (Humanizer): an advisory
+    scanner (upstream #224), recognised where a project runs it, never suggested."""
+    return scanner(
+        name="DevSkim",
+        languages=read,
+        how="",
+        scans=when(
+            starts(("devskim", "analyze")), lambda: scanned(advisory="it only uploads SARIF: no finding fails CI")
+        ),
+    )
+
+
 _SCANNERS: tuple[tuple[frozenset[str], Callable[[frozenset[str]], Tool]], ...] = (
     (CODEQL_LANGUAGES, _codeql),
     (GITLAB_SAST_LANGUAGES, _gitlab),
     (SEMGREP_LANGUAGES, _semgrep),
+    (DEVSKIM_LANGUAGES, _devskim),
 )
 
 
 def multi_language_scanners(languages: frozenset[str]) -> tuple[Tool, ...]:
-    """CodeQL, GitLab SAST and semgrep, each as a code security scanner of those of `languages` it reads; a scanner
-    that reads none of them is left out."""
+    """CodeQL, GitLab SAST, semgrep and DevSkim, each as a code security scanner of those of `languages` it reads; a
+    scanner that reads none of them is left out."""
     return tuple(make(read) for reads, make in _SCANNERS if (read := languages & reads))
 
 
+DEVSKIM_ACTION = Action(name="microsoft/DevSkim-Action", runs=lambda _inputs: (("devskim", "analyze"),))
 CODEQL_ACTION = Action(name="github/codeql-action/analyze", runs=lambda _inputs: (("codeql", "database", "analyze"),))
 SEMGREP_ACTIONS = tuple(
     Action(name=name, runs=lambda inputs: (("semgrep", "ci", *split_words(inputs.get("config", ""))),))

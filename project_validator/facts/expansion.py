@@ -98,21 +98,46 @@ class CommandExpander:
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Action:
-    """A reusable CI step that runs known commands: `runs` returns them from the step's inputs. `name` is the
-    action's repository (`psf/black`), matched without regard to case or version."""
+    """A reusable CI step that runs known commands: `runs` returns them from the step's inputs. `name` is the action's
+    repository (`psf/black`), or a Docker image (`docker://github/super-linter`), matched without regard to case or
+    version. An action configured by its environment (super-linter) is given the step's variables too, as `$NAME`
+    beside its inputs, and its `uses:` as `@uses` (`environment`); `advisory` says why its commands cannot fail the
+    pipeline, when its inputs make them only report."""
 
     name: str
     runs: Callable[[Mapping[str, str]], Iterable[tuple[str, ...]]]
+    environment: bool = False
+    advisory: Callable[[Mapping[str, str]], str] | None = None
+
+
+ENVIRONMENT_INPUT = "$"
+# The step's own `uses:`, given to an action configured by its environment beside the variables: what it names
+# (`docker://github/super-linter:v3.12.0`) tells the version, where the linters it runs differ by version.
+USES_INPUT = "@uses"
+
+
+def _repository(uses: str) -> str:
+    """What `uses` names, without its version: `owner/repo[/path]` before `@ref`, an image before its `:tag`."""
+    found = uses.partition("@")[0].lower()
+    if found.startswith("docker://"):
+        image, colon, tag = found.rpartition(":")
+        return image if colon and "/" not in tag and image != "docker" else found
+    return found
 
 
 def action_commands(step: ActionStep, actions: Iterable[Action]) -> Iterator[Command | Unknown]:
     """The commands the `step` runs, as the actions that know it say, where the step is (in its `working-directory`
     input, for actions that have one)."""
-    repository = step.uses.partition("@")[0].lower()
+    repository = _repository(step.uses)
     for action in actions:
         if action.name.lower() == repository:
+            inputs = step.inputs
+            if action.environment:
+                variables = {f"{ENVIRONMENT_INPUT}{name}": value for name, value in step.env.items()}
+                inputs = {**inputs, **variables, USES_INPUT: step.uses}
+            advisory = step.advisory or (action.advisory(inputs) if action.advisory is not None else "")
             try:
-                runs = tuple(action.runs(step.inputs))
+                runs = tuple(action.runs(inputs))
             except ShellSyntaxError as error:
                 reason = f"its inputs do not split into words: {error}"
                 yield Unknown(origin=step.origin, subject=f"the action {step.uses}", reason=reason, hides="commands")
@@ -126,7 +151,7 @@ def action_commands(step: ActionStep, actions: Iterable[Action]) -> Iterator[Com
                     directory=step.inputs.get("working-directory") or None,
                     condition=step.condition,
                     requires=step.requires,
-                    advisory=step.advisory,
+                    advisory=advisory,
                 )
 
 

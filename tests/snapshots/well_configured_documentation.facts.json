@@ -173,6 +173,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -219,6 +220,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -286,6 +288,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:build",
       "kind": "ActionStep",
@@ -296,6 +299,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "python-version": "3.13"
       },
@@ -356,6 +360,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:prose",
       "kind": "ActionStep",
@@ -366,6 +371,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "globs": "docs/**/*.md"
       },
@@ -394,6 +400,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "files": "docs"
       },
@@ -436,6 +443,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:links",
       "kind": "ActionStep",
@@ -446,6 +454,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "args": "--no-progress 'docs/**/*.md'"
       },
@@ -514,6 +523,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",

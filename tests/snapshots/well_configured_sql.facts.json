@@ -262,6 +262,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -308,6 +309,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -381,6 +383,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
@@ -391,6 +396,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
       "inputs": {
         "python-version": "3.13"
       },
@@ -585,6 +593,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
@@ -595,6 +606,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "PGPASSWORD": "postgres"
+      },
       "inputs": {
         "python-version": "3.13"
       },
@@ -793,6 +807,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
