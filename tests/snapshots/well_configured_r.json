@@ -909,16 +909,13 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no R version",
         ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"macos-latest\", \"r\": \"release\"}): macos / release",
         ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"windows-latest\", \"r\": \"release\"}): windows / release",
         ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"devel\"}): linux / devel",
         ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"release\"}): linux / release",
         ".github/workflows/ci.yml: R-CMD-check ({\"os\": \"ubuntu-latest\", \"r\": \"oldrel-1\"}): linux / oldrel-1",
         ".github/workflows/ci.yml: coverage: linux / default",
-        ".github/workflows/ci.yml: lint: linux / default",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no R version",
-        ".github/workflows/function-limits.yml: function-limits: linux / no R version"
+        ".github/workflows/ci.yml: lint: linux / default"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 3 R version(s) (devel, oldrel-1, release), 5 combination(s)",
       "status": "PASS"

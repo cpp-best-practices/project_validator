@@ -1158,15 +1158,12 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no Python version",
         ".github/workflows/ci.yml: test (ubuntu-latest, 3.13): linux / 3.13",
         ".github/workflows/ci.yml: test (ubuntu-latest, 3.14): linux / 3.14",
         ".github/workflows/ci.yml: test (macos-latest, 3.13): macos / 3.13",
         ".github/workflows/ci.yml: test (macos-latest, 3.14): macos / 3.14",
         ".github/workflows/ci.yml: test (windows-latest, 3.13): windows / 3.13",
-        ".github/workflows/ci.yml: test (windows-latest, 3.14): windows / 3.14",
-        ".github/workflows/codeql.yml: analyze: linux / no Python version",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Python version"
+        ".github/workflows/ci.yml: test (windows-latest, 3.14): windows / 3.14"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Python version(s) (3.13, 3.14), 6 combination(s)",
       "status": "PASS"

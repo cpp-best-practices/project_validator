@@ -83,19 +83,22 @@ class PythonPlatformMatrixTests(unittest.TestCase):
         self.assertIn("2 Python version(s) (3.12, 3.13)", result.message)
         self.assertIn("at least 2 operating systems (found 1)", result.message)
 
-    def test_jobs_that_never_run_python_are_not_counted(self) -> None:
+    def test_jobs_that_never_run_python_are_not_python_s(self) -> None:
+        """A job that runs nothing of Python (a docs build, a labeler) is no platform of Python, and is not listed
+        under it (upstream #227)."""
         result = self._run(github_job("ubuntu-latest", "make docs"))
-        self.assertIn(f"{GITHUB_WORKFLOW}: build: linux / no Python version", result.details)
-        self.assertIn("0 Python version(s) (none)", result.message)
-        # The summary names where those jobs run rather than leave "0 OS(es)" above a detail line that says linux.
-        self.assertIn("jobs on linux set up no Python version", result.message)
+        self.assertNotIn(f"{GITHUB_WORKFLOW}: build: linux / no Python version", result.details)
+        self.assertIn("0 OS(es) (none), 0 Python version(s) (none)", result.message)
+        # A job that runs Python but pins no version is listed, with the runner's Python.
+        result = self._run(github_job("ubuntu-latest", "python -m pytest"))
+        self.assertIn(f"{GITHUB_WORKFLOW}: build: linux / default", result.details)
 
     def _workflow(self, **jobs: dict[str, object]) -> dict[str, str]:
         return {GITHUB_WORKFLOW: json.dumps({"jobs": jobs})}
 
-    def test_oses_of_jobs_without_a_version_are_named_beside_the_count(self) -> None:
-        """actions/checkout: a linux job sets up Node, a three-OS matrix job only runs the action itself. The summary
-        counts linux but names the other OSes, so it does not contradict its own detail lines (upstream #227)."""
+    def test_jobs_of_another_kind_are_not_listed_beside_the_count(self) -> None:
+        """A linux job sets up Python, a three-OS matrix job builds the docs: only the Python job is Python's, so the
+        summary counts linux and lists nothing that contradicts it (upstream #227)."""
         setup = {"uses": "actions/setup-python@v5", "with": {"python-version": "${{ matrix.python }}"}}
         files = self._workflow(
             lint={
@@ -111,7 +114,9 @@ class PythonPlatformMatrixTests(unittest.TestCase):
         )
         result = self._run(files)
         self.assertIn("1 OS(es) (linux)", result.message)
-        self.assertIn("jobs on macos, windows set up no Python version", result.message)
+        # The docs job runs no Python: it is not listed under it, so nothing contradicts the count.
+        self.assertNotIn("set up no Python version", result.message)
+        self.assertFalse([job for job in result.details if "docs" in job], result.details)
 
     def test_jobs_on_runners_of_unknown_os_are_counted_in_the_summary(self) -> None:
         """ghostty: most jobs run on a self-hosted runner whose name says no OS; the summary says how many, so a

@@ -922,15 +922,13 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no Terraform version",
         ".github/workflows/ci.yml: validate (ubuntu-latest, 1.9.8): linux / 1.9.8",
         ".github/workflows/ci.yml: validate (ubuntu-latest, 1.10.3): linux / 1.10.3",
         ".github/workflows/ci.yml: validate (macos-latest, 1.9.8): macos / 1.9.8",
         ".github/workflows/ci.yml: validate (macos-latest, 1.10.3): macos / 1.10.3",
         ".github/workflows/ci.yml: validate (windows-latest, 1.9.8): windows / 1.9.8",
         ".github/workflows/ci.yml: validate (windows-latest, 1.10.3): windows / 1.10.3",
-        ".github/workflows/ci.yml: lint: linux / no Terraform version",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Terraform version"
+        ".github/workflows/ci.yml: lint: linux / no Terraform version"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Terraform version(s) (1.10.3, 1.9.8), 6 combination(s)",
       "status": "PASS"

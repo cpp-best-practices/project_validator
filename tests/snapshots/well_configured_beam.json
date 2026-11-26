@@ -1620,13 +1620,11 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no Erlang/OTP or Elixir version",
         ".github/workflows/ci.yml: test (ubuntu-latest, 1.17, 27): linux / Elixir 1.17 / OTP 27",
         ".github/workflows/ci.yml: test (ubuntu-latest, 1.18, 27): linux / Elixir 1.18 / OTP 27",
         ".github/workflows/ci.yml: test (windows-latest, 1.17, 27): windows / Elixir 1.17 / OTP 27",
         ".github/workflows/ci.yml: test (windows-latest, 1.18, 27): windows / Elixir 1.18 / OTP 27",
-        ".github/workflows/ci.yml: erlang: linux / Elixir 1.18 / OTP 27",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Erlang/OTP or Elixir version"
+        ".github/workflows/ci.yml: erlang: linux / Elixir 1.18 / OTP 27"
       ],
       "message": "CI covers 2 OS(es) (linux, windows), 2 Erlang/OTP or Elixir version(s) (Elixir 1.17 / OTP 27, Elixir 1.18 / OTP 27), 4 combination(s)",
       "status": "PASS"

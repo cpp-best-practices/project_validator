@@ -919,16 +919,13 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no Perl version",
         ".github/workflows/ci.yml: test (ubuntu-latest, 5.38): linux / 5.38",
         ".github/workflows/ci.yml: test (ubuntu-latest, 5.40): linux / 5.40",
         ".github/workflows/ci.yml: test (macos-latest, 5.38): macos / 5.38",
         ".github/workflows/ci.yml: test (macos-latest, 5.40): macos / 5.40",
         ".github/workflows/ci.yml: test (windows-latest, 5.38): windows / 5.38",
         ".github/workflows/ci.yml: test (windows-latest, 5.40): windows / 5.40",
-        ".github/workflows/ci.yml: lint: linux / 5.40",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Perl version",
-        ".github/workflows/function-limits.yml: function-limits: linux / no Perl version"
+        ".github/workflows/ci.yml: lint: linux / 5.40"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Perl version(s) (5.38, 5.40), 6 combination(s)",
       "status": "PASS"

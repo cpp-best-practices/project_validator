@@ -972,16 +972,12 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no JDK or Scala version",
         ".github/workflows/ci.yml: test (ubuntu-latest, 17): linux / JDK 17",
         ".github/workflows/ci.yml: test (ubuntu-latest, 21): linux / JDK 21",
         ".github/workflows/ci.yml: test (macos-latest, 17): macos / JDK 17",
         ".github/workflows/ci.yml: test (macos-latest, 21): macos / JDK 21",
         ".github/workflows/ci.yml: test (windows-latest, 17): windows / JDK 17",
-        ".github/workflows/ci.yml: test (windows-latest, 21): windows / JDK 21",
-        ".github/workflows/ci.yml: scan: linux / no JDK or Scala version",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no JDK or Scala version",
-        ".github/workflows/function-limits.yml: function-limits: linux / no JDK or Scala version"
+        ".github/workflows/ci.yml: test (windows-latest, 21): windows / JDK 21"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 JDK or Scala version(s) (JDK 17, JDK 21), 6 combination(s)",
       "status": "PASS"

@@ -1112,7 +1112,6 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no Swift toolchain",
         ".github/workflows/ci.yml: test (ubuntu-latest, 6.0, ): linux / 6.0",
         ".github/workflows/ci.yml: test (ubuntu-latest, 6.0, --sanitize=address): linux / 6.0",
         ".github/workflows/ci.yml: test (ubuntu-latest, 6.1, ): linux / 6.1",
@@ -1125,10 +1124,7 @@
         ".github/workflows/ci.yml: test (windows-latest, 6.0, --sanitize=address): windows / 6.0",
         ".github/workflows/ci.yml: test (windows-latest, 6.1, ): windows / 6.1",
         ".github/workflows/ci.yml: test (windows-latest, 6.1, --sanitize=address): windows / 6.1",
-        ".github/workflows/ci.yml: fuzz: linux / 6.1",
-        ".github/workflows/codeql.yml: analyze: macos / no Swift toolchain",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Swift toolchain",
-        ".github/workflows/function-limits.yml: function-limits: linux / no Swift toolchain"
+        ".github/workflows/ci.yml: fuzz: linux / 6.1"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Swift toolchain(s) (6.0, 6.1), 6 combination(s)",
       "status": "PASS"

@@ -1087,8 +1087,7 @@
         ".github/workflows/ci.yml: ifx (windows-latest, debug, -fsanitize=address): windows / intel",
         ".github/workflows/ci.yml: ifx (windows-latest, release, ): windows / intel",
         ".github/workflows/ci.yml: ifx (windows-latest, release, -fsanitize=address): windows / intel",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / gcc (runner default)",
-        ".github/workflows/function-limits.yml: function-limits: linux / no compiler"
+        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / gcc (runner default)"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 compiler(s) (gcc, intel), 5 combination(s)",
       "status": "PASS"

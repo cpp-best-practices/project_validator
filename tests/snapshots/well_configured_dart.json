@@ -945,16 +945,12 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no Dart or Flutter SDK version",
         ".github/workflows/ci.yml: test (ubuntu-latest, 3.5): linux / Dart 3.5",
         ".github/workflows/ci.yml: test (ubuntu-latest, stable): linux / Dart stable",
         ".github/workflows/ci.yml: test (macos-latest, 3.5): macos / Dart 3.5",
         ".github/workflows/ci.yml: test (macos-latest, stable): macos / Dart stable",
         ".github/workflows/ci.yml: test (windows-latest, 3.5): windows / Dart 3.5",
-        ".github/workflows/ci.yml: test (windows-latest, stable): windows / Dart stable",
-        ".github/workflows/ci.yml: audit: linux / no Dart or Flutter SDK version",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Dart or Flutter SDK version",
-        ".github/workflows/function-limits.yml: function-limits: linux / no Dart or Flutter SDK version"
+        ".github/workflows/ci.yml: test (windows-latest, stable): windows / Dart stable"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Dart or Flutter SDK version(s) (Dart 3.5, Dart stable), 6 combination(s)",
       "status": "PASS"

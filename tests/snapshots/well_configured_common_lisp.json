@@ -839,15 +839,13 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no Lisp implementation",
         ".github/workflows/ci.yml: test (ubuntu-latest, sbcl-bin): linux / sbcl-bin",
         ".github/workflows/ci.yml: test (ubuntu-latest, ccl-bin): linux / ccl-bin",
         ".github/workflows/ci.yml: test (macos-latest, sbcl-bin): macos / sbcl-bin",
         ".github/workflows/ci.yml: test (macos-latest, ccl-bin): macos / ccl-bin",
         ".github/workflows/ci.yml: test (windows-latest, sbcl-bin): windows / sbcl-bin",
         ".github/workflows/ci.yml: test (windows-latest, ccl-bin): windows / ccl-bin",
-        ".github/workflows/ci.yml: lint: linux / sbcl-bin",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Lisp implementation"
+        ".github/workflows/ci.yml: lint: linux / sbcl-bin"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Lisp implementation(s) (ccl-bin, sbcl-bin), 6 combination(s)",
       "status": "PASS"

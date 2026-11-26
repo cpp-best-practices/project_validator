@@ -875,7 +875,6 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no Emacs version",
         ".github/workflows/ci.yml: test (ubuntu-latest, 29.4): linux / 29.4",
         ".github/workflows/ci.yml: test (ubuntu-latest, 30.1): linux / 30.1",
         ".github/workflows/ci.yml: test (ubuntu-latest, snapshot): linux / snapshot",
@@ -885,8 +884,7 @@
         ".github/workflows/ci.yml: test (windows-latest, 29.4): windows / 29.4",
         ".github/workflows/ci.yml: test (windows-latest, 30.1): windows / 30.1",
         ".github/workflows/ci.yml: test (windows-latest, snapshot): windows / snapshot",
-        ".github/workflows/ci.yml: lint: linux / 30.1",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Emacs version"
+        ".github/workflows/ci.yml: lint: linux / 30.1"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 3 Emacs version(s) (29.4, 30.1, snapshot), 9 combination(s)",
       "status": "PASS"
