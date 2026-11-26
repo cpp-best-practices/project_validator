@@ -76,6 +76,7 @@ def _parser() -> argparse.ArgumentParser:
         "--plugin-dir", action="append", default=[], type=Path, metavar="DIR", help="load extra plugins from DIR/*.py"
     )
     _add_check_options(parser)
+    _add_network_options(parser)
     return parser
 
 
@@ -159,6 +160,20 @@ def _add_output_options(parser: argparse.ArgumentParser) -> None:
     )
 
 
+def _add_network_options(parser: argparse.ArgumentParser) -> None:
+    """The options that say what may be asked of the network: the source-control host, other repositories' files."""
+    parser.add_argument(
+        "--fetch-remote",
+        action="store_true",
+        help="read the reusable workflows and actions of other repositories CI uses, fetched at their pinned ref",
+    )
+    parser.add_argument(
+        "--offline",
+        action="store_true",
+        help="never ask the source-control host (GitHub, GitLab, ...) for the repository's settings",
+    )
+
+
 def _add_check_options(parser: argparse.ArgumentParser) -> None:
     """The options that change what some checks do (see `Options`)."""
     parser.add_argument("--build", action="store_true", help="configure and build the project to list its tests")
@@ -180,11 +195,6 @@ def _add_check_options(parser: argparse.ArgumentParser) -> None:
         help="without CI, read this script as the pipeline (by default, a check script or task is looked for)",
     )
     parser.add_argument(
-        "--offline",
-        action="store_true",
-        help="never ask the source-control host (GitHub, GitLab, ...) for the repository's settings",
-    )
-    parser.add_argument(
         "--allow-unknown",
         action="store_true",
         help="judge by what could be read when an answer depends on configuration that could not be (else an error)",
@@ -201,6 +211,7 @@ def _options(arguments: argparse.Namespace) -> Options:
         allow_unknown=arguments.allow_unknown,
         local_checks=arguments.local_checks,
         offline=arguments.offline,
+        fetch_remote=arguments.fetch_remote,
     )
 
 

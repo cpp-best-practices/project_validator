@@ -254,6 +254,7 @@ class GitHubActionsFactTests(unittest.TestCase):
                 "the matrix of job computed": "it is computed by an expression",
                 "job reuse": (
                     "it calls the reusable workflow org/repo/.github/workflows/build.yml@v1, which is not read"
+                    " (--fetch-remote reads it)"
                 ),
             },
         )
