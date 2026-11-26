@@ -59,6 +59,11 @@
       "outdated": "draft-04 is older than 2019-09",
       "role": "product",
       "what": "dialect ($schema) and $id"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

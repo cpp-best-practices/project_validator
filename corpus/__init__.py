@@ -156,9 +156,9 @@ def observe(project: CorpusProject, directory: Path) -> dict[str, object]:
     judging differs). An extraction failure is recorded, not raised: a crash on a real project is a regression to see
     in the diff."""
     plugins = discover()
-    context = Context(Project(directory.resolve()), plugins.providers, Options())
+    context = Context(Project(directory.resolve()), plugins.providers, Options(offline=True))
     strict = run_checks(plugins.checks, context)
-    context.options = Options(allow_unknown=True)
+    context.options = Options(allow_unknown=True, offline=True)
     judged = run_checks(plugins.checks, context)
     observation: dict[str, object] = {
         "commit": project.commit,

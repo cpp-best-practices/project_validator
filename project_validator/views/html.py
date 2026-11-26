@@ -45,6 +45,7 @@ from project_validator.views.common import (
     fact_kinds,
     file_count,
     grouped,
+    host_summary,
     is_skipped,
     judged_places,
     language_views,
@@ -297,6 +298,14 @@ def _ci_card(analysis: Analysis, jobs: Sequence[Job]) -> str:
     )
 
 
+def _host_card(analysis: Analysis) -> str:
+    """What the source-control host says of the repository: shown, never judged."""
+    return (
+        f'<div class="card" style="margin-top:1rem"><h3>Host <span class="muted" style="font-weight:400">'
+        f"{e(host_summary(analysis))}</span></h3></div>"
+    )
+
+
 NO_CHECK = '<p class="muted">No check judges it.</p>'
 
 
@@ -335,6 +344,7 @@ def _detected(analysis: Analysis) -> str:
         '<section class="wrap" id="detected"><h2>What was detected</h2>'
         f'<div class="grid two">{_languages_card(analysis)}{_units_card(analysis)}</div>{_files_card(analysis)}'
         f"{_language_views(analysis)}{_roles_card(analysis, structure.vendored)}{_ci_card(analysis, structure.ci_jobs)}"
+        f"{_host_card(analysis)}"
         "</section>"
     )
 

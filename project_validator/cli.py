@@ -180,6 +180,11 @@ def _add_check_options(parser: argparse.ArgumentParser) -> None:
         help="without CI, read this script as the pipeline (by default, a check script or task is looked for)",
     )
     parser.add_argument(
+        "--offline",
+        action="store_true",
+        help="never ask the source-control host (GitHub, GitLab, ...) for the repository's settings",
+    )
+    parser.add_argument(
         "--allow-unknown",
         action="store_true",
         help="judge by what could be read when an answer depends on configuration that could not be (else an error)",
@@ -195,6 +200,7 @@ def _options(arguments: argparse.Namespace) -> Options:
         allow_official_tags=arguments.allow_official_tags,
         allow_unknown=arguments.allow_unknown,
         local_checks=arguments.local_checks,
+        offline=arguments.offline,
     )
 
 

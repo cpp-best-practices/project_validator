@@ -114,6 +114,11 @@
       "kind": "ConfigurationFile",
       "origin": "pom.xml",
       "reader": "Maven"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

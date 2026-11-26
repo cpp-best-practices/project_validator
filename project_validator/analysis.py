@@ -23,6 +23,7 @@ from project_validator.facts import Facts
 from project_validator.facts.auxiliary import selectors
 from project_validator.facts.roles import AUXILIARY
 from project_validator.facts.structure import SourceFile
+from project_validator.hosting import remote_of
 from project_validator.project_map import ProjectStructure
 from project_validator.runner import Report, run_checks
 from project_validator.score import Score, score, sizes
@@ -161,14 +162,10 @@ def _git(directory: Path, *arguments: str) -> str | None:
     return found.stdout.strip() or None if found.returncode == 0 else None
 
 
-_SSH = re.compile(r"^(?:ssh://)?git@(?P<host>[^:/]+)[:/](?P<path>.+?)(?:\.git)?/?$")
-_HTTPS = re.compile(r"^https?://(?:[^@/]+@)?(?P<host>[^/]+)/(?P<path>.+?)(?:\.git)?/?$")
-
-
 def web_url(remote: str) -> str | None:
     """Where a git remote's files can be seen in a browser (`git@github.com:o/r.git` is https://github.com/o/r)."""
-    found = _SSH.match(remote) or _HTTPS.match(remote)
-    return f"https://{found['host']}/{found['path']}" if found else None
+    found = remote_of(remote)
+    return f"https://{found.host}/{found.path}" if found else None
 
 
 def git_of(directory: Path) -> Git:

@@ -81,6 +81,11 @@
       "origin": "cmd/app/main.go",
       "tool": "Go programs",
       "value": true
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

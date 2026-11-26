@@ -49,6 +49,11 @@
       "kind": "notebooks (*.ipynb)",
       "language": "Jupyter",
       "origin": "notebooks/prices.ipynb"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

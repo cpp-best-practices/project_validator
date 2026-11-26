@@ -101,6 +101,11 @@
       "origin": "src/App/App.csproj:Sdk",
       "tool": "MSBuild",
       "value": "Microsoft.NET.Sdk"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

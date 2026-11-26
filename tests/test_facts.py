@@ -24,6 +24,7 @@ from project_validator.facts.jobs import Job
 from project_validator.facts.shell import ShellCommand, Unsplittable, split_script
 from project_validator.facts.structure import SourceFile, Unit
 from project_validator.facts.wellformed import DataFile
+from project_validator.hosting import HostAccess
 from project_validator.parsing import Span
 from tests.support import GITHUB_WORKFLOW, make_context, temp_project
 
@@ -399,10 +400,10 @@ class OtherProviderFactTests(unittest.TestCase):
         self.assertEqual(_argvs(facts), [("ctest",)])
         # ctest is a test runner, but the project has no language to run it for, so there is no run; the job builds,
         # on Linux. The structure facts every project has (the three YAML files, what is auxiliary code, the root
-        # unit) come first, then the data files.
+        # unit) come first, then the data files; last, why the host was not asked (the suite runs offline).
         found = [type(fact) for fact in facts if not isinstance(fact, CiConfiguration)]
         yaml, data = [SourceFile] * 3, [DataFile] * 3
-        self.assertEqual(found, [*yaml, AuxiliaryCode, Unit, *data, CiJob, Command, Job])
+        self.assertEqual(found, [*yaml, AuxiliaryCode, Unit, *data, CiJob, Command, Job, HostAccess])
 
     def test_invalid_yaml_is_unknown(self) -> None:
         facts = _facts({GITHUB_WORKFLOW: "jobs: [\n"})

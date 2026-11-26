@@ -40,6 +40,11 @@
       "kind": "ConfigurationFile",
       "origin": "src/Shop.ps1",
       "reader": "Pester"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

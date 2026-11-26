@@ -103,6 +103,8 @@ class Options:
     allow_unknown: bool = False
     # The script read as the pipeline of a project without CI, instead of the ones found (upstream #384).
     local_checks: str | None = None
+    # Never ask the source-control host's API for the repository's settings (upstream #385; see `hosting`).
+    offline: bool = False
 
 
 _SKIPPED_DIRECTORIES = frozenset({"node_modules", "__pycache__"})

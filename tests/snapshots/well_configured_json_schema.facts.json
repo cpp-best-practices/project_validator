@@ -855,6 +855,11 @@
       "via": [
         ".github/workflows/ci.yml:12:9 (jobs.validate.steps[6].run)"
       ]
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

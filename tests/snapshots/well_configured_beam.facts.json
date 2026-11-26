@@ -2258,6 +2258,11 @@
       "via": [
         ".github/workflows/ci.yml:35:9 (jobs.erlang.steps[5].run)"
       ]
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

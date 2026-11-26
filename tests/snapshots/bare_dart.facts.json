@@ -79,6 +79,11 @@
       "kind": "Application",
       "manager": "pub",
       "origin": "pubspec.yaml"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

@@ -75,6 +75,11 @@
       "kind": "ConfigurationFile",
       "origin": "dune-project",
       "reader": "dune"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

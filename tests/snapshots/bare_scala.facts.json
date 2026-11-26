@@ -67,6 +67,11 @@
       "kind": "ConfigurationFile",
       "origin": "build.sbt",
       "reader": "Scala build"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

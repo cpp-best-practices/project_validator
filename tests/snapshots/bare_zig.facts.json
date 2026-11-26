@@ -70,6 +70,11 @@
       "origin": "build.zig",
       "tool": "Zig programs",
       "value": true
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

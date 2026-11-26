@@ -52,6 +52,11 @@
       ],
       "origin": "result",
       "output": "the result symlinks nix build leaves"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {
