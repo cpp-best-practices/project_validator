@@ -76,7 +76,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
-      "lines": 0,
+      "lines": 12,
       "origin": "build.sbt",
       "role": "product"
     },
@@ -84,7 +84,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
-      "lines": 0,
+      "lines": 4,
       "origin": "project/plugins.sbt",
       "role": "product"
     },
@@ -99,7 +99,8 @@
       "kind": "AuxiliaryCode",
       "named": [],
       "origin": ".",
-      "primary": []
+      "primary": [],
+      "stray": []
     },
     {
       "build_systems": [

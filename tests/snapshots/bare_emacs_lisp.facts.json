@@ -20,7 +20,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
-      "lines": 0,
+      "lines": 2,
       "origin": "shop.elc",
       "role": "product"
     },
@@ -29,7 +29,8 @@
       "kind": "AuxiliaryCode",
       "named": [],
       "origin": ".",
-      "primary": []
+      "primary": [],
+      "stray": []
     },
     {
       "build_systems": [

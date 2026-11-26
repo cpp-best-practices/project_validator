@@ -20,7 +20,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
-      "lines": 0,
+      "lines": 3,
       "origin": "shop.asd",
       "role": "product"
     },
@@ -35,7 +35,8 @@
       "kind": "AuxiliaryCode",
       "named": [],
       "origin": ".",
-      "primary": []
+      "primary": [],
+      "stray": []
     },
     {
       "build_systems": [

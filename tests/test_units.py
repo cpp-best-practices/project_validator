@@ -663,10 +663,8 @@ class AuxiliaryCodeTests(unittest.TestCase):
             code, grid, _ = run_cli(*arguments, "--format", "markdown")
             self.assertIn(f"| {MARKS[Status.WARN]} (auxiliary) |", grid)
             code, facts, _ = run_cli(*arguments, "--facts")
-            self.assertIn(
-                {"kind": "AuxiliaryCode", "origin": ".", "named": ["tooling"], "implied": ["Python"], "primary": []},
-                json.loads(facts),
-            )
+            named = {"named": ["tooling"], "implied": ["Python"], "primary": [], "stray": []}
+            self.assertIn({"kind": "AuxiliaryCode", "origin": ".", **named}, json.loads(facts))
 
     def test_the_answers_say_what_named_the_code(self) -> None:
         with temp_project({**HELPER_SCRIPTS, "benchmarks/run.py": ""}) as root:

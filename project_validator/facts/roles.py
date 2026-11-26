@@ -88,6 +88,11 @@ _TESTS_BELOW_SOURCE_ROOTS = frozenset(
 _FIXTURE_DIRECTORIES = frozenset({"fixtures", "testdata", "test-data", "test_data", "inputs", "corpus"})
 
 
+def in_source_root(path: str) -> bool:
+    """Whether `path` is below a directory that holds a unit's sources (`src/`, `lib/`, `pkg/`)."""
+    return any(part.lower() in _SOURCE_ROOTS for part in PurePosixPath(path).parts[:-1])
+
+
 def fixture_data(path: str) -> bool:
     """Whether `path` is below a directory of test data (`tests/fixtures/`, `pkg/x/testdata/`)."""
     return any(part.lower() in _FIXTURE_DIRECTORIES for part in PurePosixPath(path).parts)
@@ -153,4 +158,12 @@ def role(path: str, *, directory: bool = False) -> str:
     return "product"
 
 
-__all__ = ["AUXILIARY", "AUXILIARY_UNITS", "VENDOR_DIRECTORIES", "fixture_data", "loose_example", "role"]
+__all__ = [
+    "AUXILIARY",
+    "AUXILIARY_UNITS",
+    "VENDOR_DIRECTORIES",
+    "fixture_data",
+    "in_source_root",
+    "loose_example",
+    "role",
+]

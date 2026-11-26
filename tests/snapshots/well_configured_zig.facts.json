@@ -84,7 +84,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
-      "lines": 0,
+      "lines": 12,
       "origin": "build.zig.zon",
       "role": "product"
     },
@@ -93,7 +93,8 @@
       "kind": "AuxiliaryCode",
       "named": [],
       "origin": ".",
-      "primary": []
+      "primary": [],
+      "stray": []
     },
     {
       "build_systems": [

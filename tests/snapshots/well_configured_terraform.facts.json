@@ -60,7 +60,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "Terraform",
-      "lines": 0,
+      "lines": 11,
       "origin": ".terraform.lock.hcl",
       "role": "product"
     },
@@ -68,7 +68,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "Terraform",
-      "lines": 0,
+      "lines": 4,
       "origin": ".tflint.hcl",
       "role": "product"
     },
@@ -76,7 +76,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "Terraform",
-      "lines": 0,
+      "lines": 8,
       "origin": "tests/name.tftest.hcl",
       "role": "test"
     },
@@ -85,7 +85,8 @@
       "kind": "AuxiliaryCode",
       "named": [],
       "origin": ".",
-      "primary": []
+      "primary": [],
+      "stray": []
     },
     {
       "build_systems": [],

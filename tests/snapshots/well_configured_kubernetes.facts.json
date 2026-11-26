@@ -92,7 +92,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
-      "lines": 0,
+      "lines": 3,
       "origin": "charts/shop/templates/_helpers.tpl",
       "role": "template"
     },
@@ -101,7 +101,8 @@
       "kind": "AuxiliaryCode",
       "named": [],
       "origin": ".",
-      "primary": []
+      "primary": [],
+      "stray": []
     },
     {
       "build_systems": [],

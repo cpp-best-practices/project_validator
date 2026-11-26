@@ -29,6 +29,13 @@ class AuxiliaryCode(Fact):
     named: tuple[str, ...]
     implied: tuple[str, ...] = ()
     primary: tuple[str, ...] = ()
+    # The languages written only in a few stray files (upstream #182; see `STRAY`).
+    stray: tuple[str, ...] = ()
+
+
+# What names the code of a language written only in a few stray files outside auxiliary code (a root helper script):
+# auxiliary by default, unless `--primary` names the language.
+STRAY = "only in a few stray files"
 
 
 def implied(role_: str) -> str:
@@ -69,9 +76,13 @@ class Selectors:
     primary_languages: frozenset[str] = frozenset()
     primary_directories: tuple[str, ...] = ()
     primary: str = ""
+    # The languages written only in a few stray files (see `STRAY`), but those `--primary` names.
+    stray: frozenset[str] = frozenset()
 
     @classmethod
-    def parse(cls, named: Iterable[str], implied_: Iterable[str] = (), primary: Iterable[str] = ()) -> Selectors:
+    def parse(
+        cls, named: Iterable[str], implied_: Iterable[str] = (), primary: Iterable[str] = (), stray: Iterable[str] = ()
+    ) -> Selectors:
         """Resolve what was named; a name that is no role, language, ecosystem or directory is a `ValueError`, and so
         is a role named primary."""
         roles: dict[str, str] = {}
@@ -95,6 +106,7 @@ class Selectors:
             frozenset(primary_languages),
             tuple(primary_directories),
             label,
+            frozenset(stray) - frozenset(primary_languages),
         )
 
     def matching(self, path: str, language: str | None, *, directory: bool = False) -> str:
@@ -110,6 +122,8 @@ class Selectors:
             return found
         if not self.is_primary(path, language):
             return self.primary
+        if language in self.stray:  # its tests and tools too: the language is auxiliary
+            return implied(purpose) if purpose in AUXILIARY else STRAY
         return implied(purpose) if language in self.implied and purpose in AUXILIARY else ""
 
     def is_primary(self, path: str, language: str | None) -> bool:
@@ -152,9 +166,11 @@ def selectors(facts: Facts) -> Selectors:
 
     def resolve() -> Selectors:
         named = facts.of(AuxiliaryCode)
-        return Selectors.parse(named[0].named, named[0].implied, named[0].primary) if named else Selectors.parse(())
+        if not named:
+            return Selectors.parse(())
+        return Selectors.parse(named[0].named, named[0].implied, named[0].primary, named[0].stray)
 
     return facts.shared("auxiliary", resolve)
 
 
-__all__ = ["AuxiliaryCode", "Selectors", "as_given", "implied", "selectors"]
+__all__ = ["STRAY", "AuxiliaryCode", "Selectors", "as_given", "implied", "selectors"]

@@ -14,6 +14,7 @@ from project_validator.checks.schema_declared import schema_declared
 from project_validator.checks.static_analysis import static_analysis
 from project_validator.checks.tests_run import tests_run
 from project_validator.core import Check, Result, Status
+from project_validator.facts.auxiliary import STRAY, AuxiliaryCode, Selectors
 from project_validator.facts.jobs import Job
 from project_validator.facts.roles import fixture_data, role
 from project_validator.project_map import ProjectStructure
@@ -104,6 +105,55 @@ class AuxiliaryLanguageTests(unittest.TestCase):
         self.assertEqual(_root_unit_languages(files), frozenset({"Rust"}))
         result = _result(tests_run, {**files, **github_job("ubuntu-latest", "cargo test")})
         self.assertNotEqual(result.status, Status.FAIL, result)
+
+    def test_a_language_of_a_few_stray_files_is_auxiliary(self) -> None:
+        """A root helper script, a bash completion file or a packaging formula beside a Rust crate is no product
+        language (golang-migrate's and dbt-utils' root scripts, busted's completions/bash): a language of at most 3
+        files and under 2% of the lines, none in a source folder, is auxiliary by default (upstream #182)."""
+        crate = {**RUST, "src/lib.rs": "fn f() {}\n" * 200}
+        stray = {**crate, "install.sh": "#!/bin/sh\ncargo install --path .\n", "completions/bash/x": ""}
+        self.assertEqual(_root_unit_languages(stray), frozenset({"Rust"}))
+        result = _result(tests_run, {**stray, **github_job("ubuntu-latest", "cargo test")})
+        self.assertIn("Shell (auxiliary: only in a few stray files)", result.message)
+
+    def test_a_language_of_more_files_or_lines_or_in_a_source_folder_is_the_products(self) -> None:
+        crate = {**RUST, "src/lib.rs": "fn f() {}\n" * 200}
+        cases = {
+            "four files": {f"script{index}.sh": "true\n" for index in range(4)},
+            "2% of the lines": {"install.sh": "true\n" * 5},
+            "in a source folder": {"src/build.sh": "true\n"},
+        }
+        for name, scripts in cases.items():
+            with self.subTest(case=name):
+                self.assertEqual(_root_unit_languages({**crate, **scripts}), frozenset({"Rust", "Shell"}))
+
+    def test_a_stray_language_s_tests_are_auxiliary_too_and_count_for_nothing(self) -> None:
+        """Only the product's files are counted: three test scripts beside one root script leave Shell stray, and the
+        test scripts are auxiliary with it."""
+        crate = {**RUST, "src/lib.rs": "fn f() {}\n" * 200, "install.sh": "true\n"}
+        tests = {f"tests/run{index}.sh": "true\n" * 20 for index in range(3)}
+        self.assertEqual(_root_unit_languages({**crate, **tests}), frozenset({"Rust"}))
+        stray = Selectors.parse((), (), (), {"Shell"})
+        self.assertEqual(stray.matching("install.sh", "Shell"), STRAY)
+        self.assertEqual(stray.matching("tests/run0.sh", "Shell"), "only in test code")
+
+    def test_a_language_a_build_declares_or_of_the_products_ecosystem_or_alone_is_not_stray(self) -> None:
+        crate = {**RUST, "src/lib.rs": "fn f() {}\n" * 200}
+        cpp = {"CMakeLists.txt": "project(app CXX)\n", "src/main.cpp": "int f();\n" * 200}
+        cases = {
+            "declared by a build file": ({**crate, "pyproject.toml": "[project]\nname = 'x'\n", "x.py": ""}, "Python"),
+            "of the product's ecosystem": ({**cpp, "helper.c": "int g;\n"}, "C"),
+            "the only language": ({"install.sh": "true\n", "config.yaml": "a: 1\n" * 100}, "Shell"),
+        }
+        for name, (files, language) in cases.items():
+            with self.subTest(case=name):
+                self.assertIn(language, _root_unit_languages(files))
+
+    def test_primary_keeps_a_stray_language_the_products(self) -> None:
+        crate = {**RUST, "src/lib.rs": "fn f() {}\n" * 200, "install.sh": "true\n"}
+        with temp_project(crate) as root:
+            context = make_context(root, primary=("rust", "shell"))
+            self.assertEqual(context.facts.of(AuxiliaryCode)[0].stray, ())
 
     def test_a_format_only_in_auxiliary_files_is_not_the_products(self) -> None:
         """Notebooks that are a formatter's test inputs are auxiliary, and tests-run does not fail for them (black's

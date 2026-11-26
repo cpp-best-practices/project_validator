@@ -419,7 +419,9 @@
       "status": "SKIP"
     },
     "static-analysis": {
-      "details": [],
+      "details": [
+        "no run reaches operations/ (7 lines, 32% of the GraphQL lines)"
+      ],
       "message": "graphql-schema-linter (.graphql-schema-linterrc) runs",
       "status": "PASS"
     },

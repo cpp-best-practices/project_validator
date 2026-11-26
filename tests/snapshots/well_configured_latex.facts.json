@@ -44,7 +44,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
-      "lines": 0,
+      "lines": 4,
       "origin": "refs.bib",
       "role": "product"
     },
@@ -52,7 +52,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "LaTeX",
-      "lines": 0,
+      "lines": 7,
       "origin": "main.tex",
       "role": "product"
     },
@@ -61,7 +61,8 @@
       "kind": "AuxiliaryCode",
       "named": [],
       "origin": ".",
-      "primary": []
+      "primary": [],
+      "stray": []
     },
     {
       "build_systems": [],

@@ -18,7 +18,7 @@ from project_validator.core import Project
 from project_validator.ecosystems import Ecosystem, Kind, build_systems, families, formats, registered
 from project_validator.facts import Fact, Facts, Origin
 from project_validator.facts.auxiliary import AuxiliaryCode, Selectors
-from project_validator.facts.roles import AUXILIARY, fixture_data, role
+from project_validator.facts.roles import AUXILIARY, fixture_data, in_source_root, role
 from project_validator.facts.tools import owner, within
 
 # Suffixes of files that are not source code of any language: documents, styles, media, archives, binaries and plain
@@ -208,7 +208,11 @@ def source_signal(path: str) -> str:
 
 
 def _ambiguous(
-    files: list[str], confirmed: list[Ecosystem], sources: Iterable[SourceFile], declared: frozenset[str]
+    project: Project,
+    files: list[str],
+    confirmed: list[Ecosystem],
+    sources: Iterable[SourceFile],
+    declared: frozenset[str],
 ) -> Iterator[SourceFile]:
     """The sources with a suffix the `confirmed` ecosystems claim ambiguously. A file several of them claim for
     different languages (a `.h` header, C's or C++'s) is the language of the sources around it (see `_neighbours`)."""
@@ -222,7 +226,8 @@ def _ambiguous(
     for path, candidates in claims.items():
         named = list(dict.fromkeys(language for language in candidates if language is not None))
         language = named[0] if len(named) == 1 else neighbours.language(path, named, declared) if named else None
-        yield SourceFile(origin=Origin(path=path), language=language, ambiguous=True, role=role(path))
+        purpose, lines = _role_and_lines(project, path)
+        yield SourceFile(origin=Origin(path=path), language=language, ambiguous=True, role=purpose, lines=lines)
 
 
 class _Neighbours:
@@ -391,9 +396,14 @@ def _sources(project: Project, generated: frozenset[str]) -> Iterator[SourceFile
         if found is None and (named := _by_name(path)) is not None:
             found = named[1:]
         if found is not None and (found[1] == "format" or not _configuration(path)):
-            purpose = role(path)
-            lines = 0 if purpose == "vendored" else _lines(project, path)
+            purpose, lines = _role_and_lines(project, path)
             yield SourceFile(origin=Origin(path=path), language=found[0], role=purpose, lines=lines)
+
+
+def _role_and_lines(project: Project, path: str) -> tuple[str, int]:
+    """A source's role, and its lines (none counted for vendored code)."""
+    purpose = role(path)
+    return purpose, 0 if purpose == "vendored" else _lines(project, path)
 
 
 def _lines(project: Project, path: str) -> int:
@@ -518,13 +528,62 @@ def _auxiliary_languages(facts: Facts) -> frozenset[str]:
     as it is). The product left is its languages and the content the probes find (a Helm chart): a format's files
     alone (CI's YAML, a `renovate.json`) leave no product."""
     product, auxiliary = _languages_by_purpose(facts)
-    built = (build for build in facts.of(BuildFile) if role(_directory(build), directory=True) not in AUXILIARY)
-    product |= given_way((language for build in built for language in build.languages), product)
+    product |= _built(facts, product)
     product |= set(_content_names(facts))
     product |= {
         language for ecosystem in registered() if ecosystem.languages & product for language in ecosystem.languages
     }
     return frozenset(auxiliary - product) if product - _plain_formats(facts) else frozenset()
+
+
+def _built(facts: Facts, sources: set[str]) -> set[str]:
+    """The languages build files outside auxiliary code declare (see `given_way`)."""
+    built = (build for build in facts.of(BuildFile) if role(_directory(build), directory=True) not in AUXILIARY)
+    return given_way((language for build in built for language in build.languages), sources)
+
+
+# A language of at most this many of the product's files, holding under this share of their lines, none in a source
+# folder, is written only in a few stray files (see `_stray_languages`).
+STRAY_FILES = 3
+STRAY_SHARE = 0.02
+
+
+def _few_and_small(found: list[SourceFile], total: int) -> bool:
+    """Whether a language's sources are few, small and outside the source folders (see `_stray_languages`)."""
+    small = sum(source.lines for source in found) < STRAY_SHARE * total
+    return len(found) <= STRAY_FILES and small and not any(in_source_root(source.path) for source in found)
+
+
+def _product_sources(facts: Facts) -> dict[str, list[SourceFile]]:
+    """The project's own sources outside auxiliary code, by language."""
+    by_language: dict[str, list[SourceFile]] = {}
+    for source in facts.of(SourceFile):
+        if source.language and not source.vendored and source.role not in AUXILIARY:
+            by_language.setdefault(source.language, []).append(source)
+    return by_language
+
+
+def _kin(languages: set[str]) -> set[str]:
+    """The languages of the ecosystems and families (C beside C++) of `languages`."""
+    groups = (*(ecosystem.languages for ecosystem in registered()), *families())
+    return {language for group in groups if group & languages for language in group}
+
+
+def _stray_languages(facts: Facts) -> frozenset[str]:
+    """The languages written only in a few stray files outside auxiliary code (upstream #182): a root helper script, a
+    bash completion file, a packaging formula. Each has at most `STRAY_FILES` files with under `STRAY_SHARE` of the
+    product's lines, none in a source folder, no build file declares it, and no other language of its ecosystem or
+    family is the product's; none when no product language would be left."""
+    by_language = _product_sources(facts)
+    total = sum(source.lines for found in by_language.values() for source in found)
+    ruled_out = _built(facts, set(by_language)) | set(formats())
+    stray = {
+        language
+        for language, found in by_language.items()
+        if language not in ruled_out and _few_and_small(found, total)
+    }
+    product = set(by_language) - stray - set(formats())
+    return frozenset(stray - _kin(product)) if product else frozenset()
 
 
 def _plain_formats(facts: Facts) -> set[str]:
@@ -659,7 +718,7 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     names = project_languages(plain) | project_formats(plain)
     confirmed = [ecosystem for ecosystem in registered() if ecosystem.languages & names]
     declared = frozenset(language for build in plain.of(BuildFile) for language in build.languages)
-    ambiguous = list(_ambiguous(files, confirmed, plain.of(SourceFile), declared))
+    ambiguous = list(_ambiguous(project, files, confirmed, plain.of(SourceFile), declared))
     yield from ambiguous
     sources = (*plain.of(SourceFile), *ambiguous)
     recognised = {signal for source in sources if (signal := source_signal(source.path)).startswith(".")}
@@ -668,12 +727,13 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     yield from _unrecognised(files, accounted, recognised)
     every = Facts((*plain, *ambiguous))
     implied = _auxiliary_languages(every)
-    named = Selectors.parse(project.auxiliary, implied, project.primary)
+    named = Selectors.parse(project.auxiliary, implied, project.primary, _stray_languages(every))
     yield AuxiliaryCode(
         origin=Origin(path="."),
         named=tuple(project.auxiliary),
         implied=tuple(sorted(implied)),
         primary=tuple(project.primary),
+        stray=tuple(sorted(named.stray)),
     )
     yield from _units(project, every, named)
 

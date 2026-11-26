@@ -116,7 +116,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": null,
-      "lines": 0,
+      "lines": 1,
       "origin": "roles/shop/templates/shop.conf.j2",
       "role": "template"
     },
@@ -125,7 +125,8 @@
       "kind": "AuxiliaryCode",
       "named": [],
       "origin": ".",
-      "primary": []
+      "primary": [],
+      "stray": []
     },
     {
       "build_systems": [],

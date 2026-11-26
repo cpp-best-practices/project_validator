@@ -44,7 +44,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "SQL",
-      "lines": 0,
+      "lines": 1,
       "origin": "migrations/V1__orders.sql",
       "role": "product"
     },
@@ -52,7 +52,7 @@
       "ambiguous": true,
       "kind": "SourceFile",
       "language": "SQL",
-      "lines": 0,
+      "lines": 1,
       "origin": "models/orders.sql",
       "role": "product"
     },
@@ -61,7 +61,8 @@
       "kind": "AuxiliaryCode",
       "named": [],
       "origin": ".",
-      "primary": []
+      "primary": [],
+      "stray": []
     },
     {
       "build_systems": [
