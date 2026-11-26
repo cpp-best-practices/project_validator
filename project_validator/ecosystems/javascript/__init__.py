@@ -61,7 +61,7 @@ from project_validator.facts.settings import (
     unreadable,
 )
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import Claim, Run, Tool, all_of, defined_by, starts, when, with_option
+from project_validator.facts.tools import Claim, Run, Tool, all_of, defined_by, known_tools, starts, when, with_option
 from project_validator.text import pattern, strip_json_comments
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.prettier import prettier_tool
@@ -281,6 +281,45 @@ def _binary(command: Command, run: _ScriptRun) -> Iterator[Expansion] | None:
 
 
 PACKAGE_SCRIPTS = CommandExpander(name="package.json scripts", expand=_package_scripts)
+# The programs a package script runs that are the shell's, or the package managers' and Node's own: none is a
+# dependency's binary.
+_SHELL_PROGRAMS = frozenset(
+    {"node", "npm", "npx", "yarn", "pnpm", "bun", "deno", "sh", "bash", "echo", "cd", "rm", "cp", "mv", "mkdir", "cat"}
+    | {"test", "[", "true", "false", "exit", "export", "set", "env", "git", "ln", "touch", "sleep", "printf", "exec"}
+)
+# A dependency installed from a source the validator does not read: a git repository, a URL, or GitHub's shorthand.
+_UNREAD_SOURCE = re.compile(r"^(?:git(?:\+[a-z]+)?:|https?:|github:|gitlab:|bitbucket:|[\w.-]+/[\w.-]+(?:#.*)?$)")
+
+
+def _unread_program(command: Command, context: Context) -> Iterator[Expansion] | None:
+    """A package script's program that no tool the validator knows is, in a package with a dependency installed from
+    git or a URL, which may provide it: what it runs is unknown, for the package's languages only (OAI's `test`
+    script runs `oai-spec-test`, from a git dependency, upstream #273). A program named for a registry dependency is
+    that dependency's binary."""
+    if not command.origin.path.endswith(PACKAGE_JSON) or command.origin.at[:1] != ("scripts",):
+        return None
+    argv = resolved(command)
+    if not argv or "/" in argv[0] or argv[0] in _SHELL_PROGRAMS:
+        return None
+    specs = {
+        name: spec
+        for field in DEPENDENCY_FIELDS
+        for name, spec in _json_strings(json_value(context, command.origin.path, field)).items()
+    }
+    unread = [name for name, spec in specs.items() if _UNREAD_SOURCE.match(spec)]
+    if not unread or (argv[0] in specs and argv[0] not in unread):
+        return None
+    if any(tool.claims(command, Facts()) for tool in known_tools()):
+        return None
+    reason = (
+        f"no tool the validator knows is it, and it may come from {unread[0]} ({specs[unread[0]]}), which is not read"
+    )
+    return iter(
+        (Unknown(origin=command.origin, subject=f"the program {argv[0]}", reason=reason, languages=JS_LANGUAGES),)
+    )
+
+
+UNREAD_PROGRAMS = CommandExpander(name="package script programs from unread dependencies", expand=_unread_program)
 # Monorepo task runners, which run a script in each workspace package that has it.
 _TASK_RUNNERS = frozenset({"turbo", "lerna", "nx"})
 _TASK_OPTIONS = frozenset({"-t", "--target", "--targets", "--filter", "--scope", "--projects", "-p", "--parallel"})

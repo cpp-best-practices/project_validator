@@ -135,7 +135,7 @@ def coverage_answer(
     is about that), by the facts, and what the known `tools` could report."""
     known = tuple(tool for tool in tools if measures_coverage(tool) and language in tool.languages)
     runs = _with_uploads(runs_of(COVERAGE, language, unit, facts, auxiliary=auxiliary), facts)
-    unknowns = unknowns_for(known, facts)
+    unknowns = unknowns_for(known, facts, language=language)
     return CoverageAnswer(
         language=language,
         unit=unit,

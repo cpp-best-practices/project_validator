@@ -178,6 +178,9 @@ class Unknown(Fact):
     reason: str
     hides: str = "commands"
     tools: tuple[str, ...] = ()
+    # The languages whose questions it counts for: a package script's program that cannot be read hides only that
+    # package's languages' runs (upstream #273); none, every language's.
+    languages: frozenset[str] = frozenset()
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

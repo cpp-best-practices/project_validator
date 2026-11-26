@@ -183,7 +183,9 @@ class UnknownCommandTests(unittest.TestCase):
             ],
         )
 
-    @unittest.expectedFailure  # upstream #324 (from #195): an unknown action that is the whole job is not unknown
+    # upstream #273: telling an unread composite action that does the job from one that runs nothing of the project's
+    # (release-drafter) needs its action.yml, which the opt-in --fetch-remote reads (#248).
+    @unittest.expectedFailure
     def test_an_unknown_composite_action_that_is_the_whole_job_is_unknown(self) -> None:
         """A job that is one composite action the validator does not know (as terraform-aws-modules' pre-commit job
         was, before clowdhaus' action was known); telling it from the many actions that run nothing of the project's

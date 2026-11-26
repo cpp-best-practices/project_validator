@@ -165,16 +165,19 @@ def unknowns_for(
     *,
     hiding: Iterable[str] = ("jobs", "commands", "settings"),
     reads: Iterable[str] = (),
+    language: str | None = None,
 ) -> tuple[str, ...]:
     """What was not read that may hide a run (a job or a command), or the settings the `tools` read (or those of
     `reads`, for a question that reads settings without a tool), as `subject: reason (origin)`; only what may hide one
-    of `hiding`."""
+    of `hiding`, and, for a question about one `language`, only what may hide that language's."""
     read = {name for tool in tools for name in (tool.name, *tool.reads)} | set(reads)
     kinds = frozenset(hiding)
     return tuple(
         f"{fact.subject}: {fact.reason} ({fact.origin})"
         for fact in facts.of(Unknown)
-        if fact.hides in kinds and (fact.hides != "settings" or read & set(fact.tools))
+        if fact.hides in kinds
+        and (fact.hides != "settings" or read & set(fact.tools))
+        and (language is None or not fact.languages or language in fact.languages)
     )
 
 

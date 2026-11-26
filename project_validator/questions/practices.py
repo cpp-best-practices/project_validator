@@ -120,7 +120,7 @@ def practice_answer(name: str, language: str, facts: Facts) -> PracticeAnswer | 
     compilers = practice.compilers(facts) if practice.compilers else (None,)
     texts = ci_texts(facts)
     compiled = tuple(_compiled(practice, facts, compiler, texts) for compiler in compilers)
-    unknowns = unknowns_for((), facts, reads=practice.reads)
+    unknowns = unknowns_for((), facts, reads=practice.reads, language=language)
     met_ = _met(practice, compiled)
     answer = _answer(practice, met_, bool(unknowns))
     found = () if met_ else tuple(part.name for part in practice.parts if met(practice, part, facts, None, texts))
