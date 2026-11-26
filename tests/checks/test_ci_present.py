@@ -30,8 +30,12 @@ class CiPresentTests(unittest.TestCase):
     def test_pre_commit_ci_is_a_pre_commit_configuration_with_a_ci_section(self) -> None:
         configured = self._run({".pre-commit-config.yaml": "ci:\n  autofix_prs: false\nrepos: []\n"})
         self.assertEqual(configured.message, "CI configuration found for pre-commit.ci")
-        self.assertEqual(self._run({".pre-commit-config.yaml": "repos: []\n"}).status, Status.FAIL)
-        self.assertEqual(self._run({".pre-commit-config.yaml": "ci: ["}).status, Status.FAIL)
+        # Without a ci: section the hooks are run locally: the local checks, judged at an entry level (upstream #384).
+        for text in ("repos: []\n", "ci: ["):
+            with self.subTest(text=text):
+                local = self._run({".pre-commit-config.yaml": text})
+                self.assertEqual(local.status, Status.WARN)
+                self.assertIn("pre-commit run --all-files", local.message)
 
     def test_passes_with_every_ci_provider(self) -> None:
         for provider, path in CI_FILES.items():

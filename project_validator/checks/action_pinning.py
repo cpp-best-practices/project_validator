@@ -7,7 +7,7 @@ from project_validator.policy.pinning import judge_pinning
 from project_validator.questions.pinning import pinning_answer
 
 
-@check(name="action-pinning", description="The actions CI uses are pinned to full commit SHAs")
+@check(name="action-pinning", description="The actions CI uses are pinned to full commit SHAs", ci_only=True)
 def action_pinning(context: Context) -> Result:
     return judge_pinning(
         pinning_answer(context.facts),

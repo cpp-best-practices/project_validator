@@ -143,8 +143,9 @@ class PythonTests(unittest.TestCase):
         ):
             with self.subTest(files=files):
                 self.assertEqual(self._run(files), Result.passed("ruff check runs"))
-        # Hooks that nothing runs (only contributors, locally) are not CI.
-        self.assertEqual(self._run({".pre-commit-config.yaml": hooks}).status, Status.FAIL)
+        # Hooks CI never runs (only contributors, locally, beside a CI that does other things) are not CI's.
+        never = {".pre-commit-config.yaml": hooks, **github_job("ubuntu-latest", "echo built")}
+        self.assertEqual(self._run(never).status, Status.FAIL)
         # pre-commit.ci skips the hooks its ci.skip names.
         skipped = {".pre-commit-config.yaml": f"ci:\n  skip: [ruff]\n{hooks}"}
         self.assertEqual(self._run(skipped).status, Status.FAIL)

@@ -60,7 +60,8 @@ class TypeCheckingTests(unittest.TestCase):
         hooks = "repos:\n  - repo: https://github.com/pre-commit/mirrors-mypy\n    hooks:\n      - id: mypy\n"
         on_pre_commit_ci = {".pre-commit-config.yaml": f"ci: {{}}\n{hooks}"}
         self.assertEqual(self._run(on_pre_commit_ci), Result.passed("mypy runs", STRICT_HINT))
-        self.assertEqual(self._run({".pre-commit-config.yaml": hooks}).status, Status.FAIL)
+        never = {".pre-commit-config.yaml": hooks, **github_job("ubuntu-latest", "echo built")}
+        self.assertEqual(self._run(never).status, Status.FAIL)
 
     def test_names_every_checker_that_runs(self) -> None:
         self.assertEqual(self._run(_ci("mypy .", "pyright")), Result.passed("mypy and pyright run", STRICT_HINT))

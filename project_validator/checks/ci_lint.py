@@ -7,6 +7,6 @@ from project_validator.policy.ci_lint import judge_ci_lint
 from project_validator.questions.ci_lint import ci_lint_answer
 
 
-@check(name="ci-lint", description="CI lints its own configuration (e.g. actionlint or zizmor)")
+@check(name="ci-lint", description="CI lints its own configuration (e.g. actionlint or zizmor)", ci_only=True)
 def ci_lint(context: Context) -> Result:
     return judge_ci_lint(ci_lint_answer(context.facts), allow_unknown=context.options.allow_unknown)

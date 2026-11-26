@@ -17,7 +17,9 @@ HISTORY_NOTE = (
 
 
 @check(
-    name="ci-current", description="Every CI configuration is in use, none left from a CI the project moved away from"
+    name="ci-current",
+    description="Every CI configuration is in use, none left from a CI the project moved away from",
+    ci_only=True,
 )
 def ci_current(context: Context) -> Result:
     if not context.ci_files:

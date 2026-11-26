@@ -175,6 +175,11 @@ def _add_check_options(parser: argparse.ArgumentParser) -> None:
         "--allow-official-tags", action="store_true", help="let actions from actions/ and github/ be pinned to tags"
     )
     parser.add_argument(
+        "--local-checks",
+        metavar="SCRIPT",
+        help="without CI, read this script as the pipeline (by default, a check script or task is looked for)",
+    )
+    parser.add_argument(
         "--allow-unknown",
         action="store_true",
         help="judge by what could be read when an answer depends on configuration that could not be (else an error)",
@@ -189,6 +194,7 @@ def _options(arguments: argparse.Namespace) -> Options:
         max_file_size=arguments.max_file_size,
         allow_official_tags=arguments.allow_official_tags,
         allow_unknown=arguments.allow_unknown,
+        local_checks=arguments.local_checks,
     )
 
 
@@ -333,6 +339,15 @@ def deprecated_main(argv: Sequence[str] | None = None) -> int:
     return main(argv)
 
 
+def _path_problem(arguments: argparse.Namespace) -> str | None:
+    """What is wrong with the project's path, or the script `--local-checks` names in it; None when nothing is."""
+    if not arguments.path.is_dir():
+        return f"{arguments.path} is not a directory"
+    if arguments.local_checks is not None and not (arguments.path / arguments.local_checks).is_file():
+        return f"--local-checks {arguments.local_checks} is not a file of the project"
+    return None
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _parser()
     arguments = parser.parse_args(argv)
@@ -357,8 +372,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     for required in (yaml_support, gitignore):
         if not required.available():
             return _usage_error(parser, required.MISSING_MESSAGE)
-    if not arguments.path.is_dir():
-        return _usage_error(parser, f"{arguments.path} is not a directory")
+    if problem := _path_problem(arguments):
+        return _usage_error(parser, problem)
 
     context = Context(_project(arguments), plugins.providers, _options(arguments))
     return _run(parser, arguments, context, selected, [found.name for found in plugins.checks])

@@ -101,6 +101,8 @@ class Options:
     allow_official_tags: bool = False
     # Judge answers that depend on configuration that could not be read by what could, instead of erroring.
     allow_unknown: bool = False
+    # The script read as the pipeline of a project without CI, instead of the ones found (upstream #384).
+    local_checks: str | None = None
 
 
 _SKIPPED_DIRECTORIES = frozenset({"node_modules", "__pycache__"})
@@ -367,8 +369,17 @@ class Context:
     @cached_property
     def ci_files(self) -> tuple[CiFile, ...]:
         from project_validator.ci import find_ci_files
+        from project_validator.ci.local_checks import local_check_files
 
-        return find_ci_files(self.project, self.providers)
+        # Without CI, a local check script or task is read as the pipeline (upstream #384).
+        return find_ci_files(self.project, self.providers) or local_check_files(self.project, self.options.local_checks)
+
+    @cached_property
+    def local_pipeline(self) -> bool:
+        """Whether the pipeline is the local checks: the project has no CI, and is judged at an entry level."""
+        from project_validator.ci.local_checks import LOCAL_CHECKS
+
+        return bool(self.ci_files) and all(ci_file.provider is LOCAL_CHECKS for ci_file in self.ci_files)
 
     @cached_property
     def ci_currency(self) -> CiCurrency:
@@ -454,6 +465,9 @@ class Check:
     # The tool aspect the check judges (coverage, format): how the support matrix names its tools; None for a check
     # without tools.
     aspect: str | None = None
+    # Whether only CI can satisfy the check (ci-present, platform-matrix): judged at an entry level, it warns instead of
+    # failing when the pipeline is a project's local checks (upstream #384).
+    ci_only: bool = False
 
     @property
     def languages(self) -> frozenset[str]:
@@ -465,10 +479,14 @@ class Check:
         return not self.languages or bool(self.languages & languages)
 
 
-def check(*, name: str, description: str, languages: frozenset[str] = frozenset()) -> Callable[[CheckFunction], Check]:
+def check(
+    *, name: str, description: str, languages: frozenset[str] = frozenset(), ci_only: bool = False
+) -> Callable[[CheckFunction], Check]:
     """Turn a function taking a `Context` and returning a `Result` into a discoverable `Check`."""
 
     def wrap(function: CheckFunction) -> Check:
-        return Check(name=name, description=description, run=function, languages_from=lambda: languages)
+        return Check(
+            name=name, description=description, run=function, languages_from=lambda: languages, ci_only=ci_only
+        )
 
     return wrap
