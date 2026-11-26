@@ -14,11 +14,11 @@ wired in.
 
 ## `fuzz-testing`
 
-Jazzer fuzz tests (`@FuzzTest` methods, or `fuzzerTestOneInput` in `.java` or `.kt` files), run by the
-`jazzer` command (given `--target_class`, a classpath option or a `.jar`; Jazzer.js is the JavaScript
-profile's), or by a Maven or Gradle command that runs tests (`mvn test`, `verify` or `install`, `gradle test`, `check` or `build`) with `JAZZER_FUZZ=1` set in the step or job environment: without it Jazzer's JUnit integration runs only the
-seed inputs, which is not fuzzing. jqwik and junit-quickcheck tests alone warn: they are property-based tests, not
-fuzz targets.
+Jazzer fuzz tests (`@FuzzTest` methods, or `fuzzerTestOneInput` in `.java` or `.kt` files), run by the `jazzer` command
+(given `--target_class`, a classpath option or a `.jar`; Jazzer.js is the JavaScript profile's), or by a Maven or Gradle
+command that runs tests (`mvn test`, `verify` or `install`, `gradle test`, `check` or `build`) with `JAZZER_FUZZ=1` set
+in the step or job environment: without it Jazzer's JUnit integration runs only the seed inputs, which is not fuzzing.
+jqwik and junit-quickcheck tests alone warn: they are property-based tests, not fuzz targets.
 
 ## `coverage`
 
@@ -41,10 +41,10 @@ javac's `-Xlint:all`; a Kotlin-only project passes on Kotlin's default warnings.
 
 ## `mutation-testing`
 
-PIT, run by `mvn pitest:mutationCoverage` or the `pitest` Gradle task, or by `mvn verify` with the `pitest-maven`
-plugin (and a `mutationCoverage` goal bound), or by a Gradle task that depends on `pitest` (the
-`info.solidsoft.pitest` plugin does not attach it to `check`; add `check.dependsOn("pitest")`). `pitest:scmMutationCoverage`
-or `-DwithHistory` (Maven) counts as running on the changes only.
+PIT, run by `mvn pitest:mutationCoverage` or the `pitest` Gradle task, or by `mvn verify` with the `pitest-maven` plugin
+(and a `mutationCoverage` goal bound), or by a Gradle task that depends on `pitest` (the `info.solidsoft.pitest` plugin
+does not attach it to `check`; add `check.dependsOn("pitest")`). `pitest:scmMutationCoverage` or `-DwithHistory` (Maven)
+counts as running on the changes only.
 
 ## `code-formatting`
 

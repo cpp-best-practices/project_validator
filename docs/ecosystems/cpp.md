@@ -29,12 +29,12 @@ really configured and built, and `ctest` must list at least one test (a build th
 ## `fuzz-testing`
 
 libFuzzer targets (files defining `LLVMFuzzerTestOneInput`) and AFL++ targets (`__AFL_LOOP`), run by a CI step that
-passes a libFuzzer option to a binary (`./fuzz_tester -max_total_time=30`, a heuristic), by `afl-fuzz` (whose target, the words
-after `--`, is not a `dotnet` program or a `.dll`), or by `ctest` when a CMake `add_test` passes a libFuzzer option to
-its command (a test that only replays crash files does not count). The `ctest` command's `-R`/`-L` and `-E`/`-LE`
-regexes are matched against the test's name. This is a heuristic: a fuzz test registered behind an option CI does not
-turn on (`if(ENABLE_FUZZING)`) is still counted, and the run is credited to the CMake files' unit. RapidCheck tests alone warn: they are property-based tests, not
-fuzz targets.
+passes a libFuzzer option to a binary (`./fuzz_tester -max_total_time=30`, a heuristic), by `afl-fuzz` (whose target,
+the words after `--`, is not a `dotnet` program or a `.dll`), or by `ctest` when a CMake `add_test` passes a libFuzzer
+option to its command (a test that only replays crash files does not count). The `ctest` command's `-R`/`-L` and
+`-E`/`-LE` regexes are matched against the test's name. This is a heuristic: a fuzz test registered behind an option CI
+does not turn on (`if(ENABLE_FUZZING)`) is still counted, and the run is credited to the CMake files' unit. RapidCheck
+tests alone warn: they are property-based tests, not fuzz targets.
 
 ## `coverage`
 
@@ -62,8 +62,9 @@ AddressSanitizer and UndefinedBehaviorSanitizer are used in some configuration, 
 `-fsanitize=address,undefined` (MSVC's `/fsanitize=address`) among the build files' options or on a CI command line,
 cmake_template's `ENABLE_SANITIZER_ADDRESS` and `ENABLE_SANITIZER_UNDEFINED_BEHAVIOR` options (with or without the
 project's prefix) on by default or turned on by CI, Meson's `b_sanitize`, or a job in an R image built with them
-(`rocker/r-devel-san` or a project's own `r-devel-<compiler>-san`: both; `rocker/r-devel-ubsan-clang`: UBSan). One of the two warns; neither fails.
-ThreadSanitizer and MemorySanitizer are not asked, since they exclude the other two in one build.
+(`rocker/r-devel-san` or a project's own `r-devel-<compiler>-san`: both; `rocker/r-devel-ubsan-clang`: UBSan). One of
+the two warns; neither fails. ThreadSanitizer and MemorySanitizer are not asked, since they exclude the other two in one
+build.
 
 ## `compiler-warnings`
 
@@ -141,7 +142,9 @@ clang-tidy or cppcheck: run directly (`clang-tidy`, `run-clang-tidy`, `cppcheck`
 configures with `CMAKE_CXX_CLANG_TIDY` / `CMAKE_CXX_CPPCHECK` (on the `cmake` command line, or in the CMake files,
 target properties or presets), or a custom target CI builds (`cmake --build build --target lint`) that runs either.
 clang-tidy needs its checks chosen in a `.clang-tidy`. The Clang Static Analyzer counts when CI runs the build under
-`scan-build --status-bugs`, which fails on any finding. Plain `scan-build` only reports, and so does Coverity Scan (`cov-build`, uploaded to scan.coverity.com): each is an advisory analyser. Where one runs and nothing else does, the check warns rather than fails, for half the credit.
+`scan-build --status-bugs`, which fails on any finding. Plain `scan-build` only reports, and so does Coverity Scan
+(`cov-build`, uploaded to scan.coverity.com): each is an advisory analyser. Where one runs and nothing else does, the
+check warns rather than fails, for half the credit.
 
 ## `dependency-management`
 

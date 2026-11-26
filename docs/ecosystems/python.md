@@ -4,9 +4,9 @@ Recognised by `.py` sources, `pyproject.toml` or `setup.py`.
 
 ## `tests-run`
 
-`test_*.py` / `*_test.py` files (and `*_tests.py` under a tests directory) run by pytest or unittest (directly, as `python -m` or `coverage run -m`, or in the
-tox environments CI runs, named by `-e` or `TOX_ENV`, or the hatch scripts it runs, `hatch run <env>:<script>`), or by
-nox, whose sessions are not read.
+`test_*.py` / `*_test.py` files (and `*_tests.py` under a tests directory) run by pytest or unittest (directly, as
+`python -m` or `coverage run -m`, or in the tox environments CI runs, named by `-e` or `TOX_ENV`, or the hatch scripts
+it runs, `hatch run <env>:<script>`), or by nox, whose sessions are not read.
 
 ## `fuzz-testing`
 

@@ -82,6 +82,7 @@ support matrix a 44-column wall, the leaderboard a bare table.
 ### JavaScript and TypeScript are separate ecosystems
 
 Different concerns, so yes:
+
 - **TypeScript**: `.ts`, `.tsx`, `.mts`, `.cts`, `.d.ts`, or a `tsconfig.json`. Type checking applies (tsc, vue-tsc,
   or a bundler's type check).
 - **JavaScript**: `.js`, `.jsx`, `.mjs`, `.cjs`. Type checking doesn't apply: it isn't the ecosystem's norm.
@@ -130,6 +131,7 @@ shows it live on stderr; the TUI shows it on its loading screen.
 ### The console report
 
 In order:
+
 1. **Header**: project, path, commit if it's a git checkout.
 2. **Detected**: each ecosystem with the signals that recognised it; the units (directory, role, languages, build
    systems); code in each detected role, with the `--auxiliary` flag that would judge it as auxiliary; vendored and
@@ -148,6 +150,7 @@ deduplicates details.
 ### The HTML report
 
 One self-contained file: inline CSS and JavaScript, no network, light and dark themes, printable.
+
 - **Summary**: a score ring, the milestone, status counts, the top next steps.
 - **Detected project**: ecosystems and their signals, units, roles, vendored code, CI jobs with OS, compilers and
   configurations, and how it was read.
@@ -162,10 +165,11 @@ One self-contained file: inline CSS and JavaScript, no network, light and dark t
 `--tui` (textual): a tree on the left (Overview, Detected, Units, Results by status, Score, Facts by kind), detail on
 the right, `/` to search, `q` to quit. It shows extraction progress while it loads.
 
-### The site
+### The site's design
 
 One design system, shared by the HTML report, the docs site and the leaderboard: a stylesheet in the package, with
 light and dark themes and a header with navigation.
+
 - **Docs site**: styled pages; the support matrix with sticky headers, coloured cells and a language filter.
 - **Leaderboard**: score bars, milestone chips, per-language tabs and sparklines. Each project page links its full
   nightly HTML report, which the nightly job now writes.

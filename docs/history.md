@@ -88,8 +88,8 @@ except where a step deliberately changes results and says so.
      its aspect; a tool that serves several practices (ruff formats and lints) is one tool with several aspects.
      Coverage is spelled with `coverage_tool` and `measured` (`project_validator/facts/coverage.py`), which only
      fill in the `coverage` aspect.
-   - **One way a command runs another.** Wrappers (`sudo`, `env CC=clang`, `nice`, `emcmake`, `xvfb-run`,
-     `ccache`, `timeout 5m`; `project_validator/tools/wrappers.py`) are launchers like `bundle exec` and `npx`: the command they
+   - **One way a command runs another.** Wrappers (`sudo`, `env CC=clang`, `nice`, `emcmake`, `xvfb-run`, `ccache`,
+     `timeout 5m`; `project_validator/tools/wrappers.py`) are launchers like `bundle exec` and `npx`: the command they
      run is a `Launched` command of its own, with the variables they set. `resolved` only substitutes variables.
    - **One way to read a command line** (`project_validator/facts/arguments.py`): `program`, `option_values`,
      `has_option`, `short_flags`, `positional`.
@@ -210,10 +210,11 @@ except where a step deliberately changes results and says so.
      hide jobs); PowerShell scripts (a step's `shell: pwsh`, or a Windows runner's default) split with PowerShell's
      escape character; and a GitHub job whose matrix is an expression runs its steps with the matrix values unknown
      (before, its steps were lost).
-   - **Auxiliary code does not speak for the product**: with `--auxiliary example`, a run only in an example's
-     directory (tsc in `examples/app`) covers no product code, and the example's own configuration defines no tool of
-     the unit it is in; both count for the advisory answer about the examples. tsc reads the configuration it uses (`-p`, or `tsconfig.json` where it runs, and the local
-     ones it extends). Findings list at most three files, and how many more.
+   - **Auxiliary code does not speak for the product**: with `--auxiliary example`, a run only in an example's directory
+     (tsc in `examples/app`) covers no product code, and the example's own configuration defines no tool of the unit it
+     is in; both count for the advisory answer about the examples. tsc reads the configuration it uses (`-p`, or
+     `tsconfig.json` where it runs, and the local ones it extends). Findings list at most three files, and how many
+     more.
 
    **4c. Tests** (`tests-run`; the `TestSuite` rule is deleted).
    - **The `test` aspect** (`project_validator/facts/testing.py`), one level, `runs`. A runner's `Definition` is where
@@ -326,8 +327,8 @@ except where a step deliberately changes results and says so.
      run target's command. `Dimension` (`project_validator/facts/conditions.py`) is how each build system names a
      dimension's values (CMake's `GNU`, Meson's `gcc`).
    - Each build system turns its own settings into the compiler options they pass (`implied_options`): CMake's
-     `COMPILE_WARNING_AS_ERROR` passes GCC `-Werror` and MSVC `/WX`, Meson's `warning_level` (1 by default) and
-     `werror` theirs. The C and C++ compilers' flag vocabulary is a shared tool (`project_validator/tools/toolchains.py`).
+     `COMPILE_WARNING_AS_ERROR` passes GCC `-Werror` and MSVC `/WX`, Meson's `warning_level` (1 by default) and `werror`
+     theirs. The C and C++ compilers' flag vocabulary is a shared tool (`project_validator/tools/toolchains.py`).
    - What CI builds with is a fact: a `Job` (`project_validator/facts/jobs.py`) holds each CI job's OS, compilers (or
      the runner's default), toolchains, build configurations and ecosystems, extracted once after the jobs' commands
      are expanded.
@@ -371,10 +372,10 @@ except where a step deliberately changes results and says so.
    - The CI layer: `$GITHUB_ENV` carries to later steps; a word that is one variable splits; a program that is a
      variable nothing sets is unknown; matrix objects are read as written.
    - Conditions are open: a profile adds its compiler (GHC) and language to their dimensions when it is imported
-     (`extend`), so that its options scope `CompilerOption` facts like CMake's, and every run knows the same values. Compiler flags are requirements built once
-     (`project_validator/facts/flags.py`): on a command line, as an option's value, in the build files' options for
-     the language and compiler, with hints derived from the flag's spellings; the Meson and CMake settings that set
-     them are the build systems' (`tools/toolchains.py`).
+     (`extend`), so that its options scope `CompilerOption` facts like CMake's, and every run knows the same values.
+     Compiler flags are requirements built once (`project_validator/facts/flags.py`): on a command line, as an option's
+     value, in the build files' options for the language and compiler, with hints derived from the flag's spellings; the
+     Meson and CMake settings that set them are the build systems' (`tools/toolchains.py`).
    - A tool run on files its job wrote, and none of the project's, covers none of the project's code; project-wide
      tools' hints name tools for every language.
    - Build outputs name the build systems that write them (several), and only the project's languages' are looked

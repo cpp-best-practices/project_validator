@@ -19,7 +19,8 @@ cargo-llvm-cov, cargo-tarpaulin or grcov with `--branch`. MC/DC coverage (`cargo
 
 ## `platform-matrix`
 
-The toolchains are Rust toolchains; a job that names none runs the channel `rust-toolchain.toml` (or `rust-toolchain`) pins, else the runner's default.
+The toolchains are Rust toolchains; a job that names none runs the channel `rust-toolchain.toml` (or `rust-toolchain`)
+pins, else the runner's default.
 
 ## `ci-build-types`
 

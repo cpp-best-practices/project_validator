@@ -4,7 +4,7 @@ project_validator learns as much as it can about a project into a database of fa
 project from those facts, and judges the answers against a policy. Knowing how to read a build system, a tool or a CI
 configuration is kept apart from deciding what a well-run project needs.
 
-```
+```text
  project files ──► extractors ──► facts ──► questions ──► answers ──► policy ──► check results
                    (parse)        (database)  (query)     (machine-     (judge)
                                                           readable)
@@ -127,24 +127,24 @@ project's facts.
 
 ### Structure: languages, formats, units and roles
 
-The structure stage (`project_validator/facts/structure.py`) records every source file with its language
-(`SourceFile`: by suffix, or by name where the suffix tells nothing, `Ecosystem.source_names`), every build file with
-the languages it builds (`BuildFile`), what content probes found (`ContentLanguages`: a language, or a format whose
-files are another format's, like the YAML of a Kubernetes manifest or an Ansible playbook, which goes to the project's
-and the root unit's formats), the suffixes no ecosystem accounts for, and the project's units. The project map (`--map`, `project_validator/project_map.py`)
-is a view over these facts.
+The structure stage (`project_validator/facts/structure.py`) records every source file with its language (`SourceFile`:
+by suffix, or by name where the suffix tells nothing, `Ecosystem.source_names`), every build file with the languages it
+builds (`BuildFile`), what content probes found (`ContentLanguages`: a language, or a format whose files are another
+format's, like the YAML of a Kubernetes manifest or an Ansible playbook, which goes to the project's and the root unit's
+formats), the suffixes no ecosystem accounts for, and the project's units. The project map (`--map`,
+`project_validator/project_map.py`) is a view over these facts.
 
-An ecosystem is a **language** or a **format** (`Ecosystem.kind`, `project_validator/ecosystems/model.py`). A format
-is a kind of file that is not a program: JSON, YAML, TOML, XML, a Dockerfile, a Kubernetes manifest, a notebook, a
-schema, a documentation site's configuration. It has no toolchain, coverage or dependencies; what can be asked of it
-is hygiene: its files parse, validate against their schema (`schema-validation`), are formatted, are linted, are
-scanned, are built or run where a tool does (a chart's tests, a notebook's execution, a site's build). Everything downstream of recognition is keyed on a name: a format's
-`languages` hold its format names, so a tool that handles `"YAML"` makes its check apply to the format, and a
-question answers for a format in the units whose files are in it (`Unit.formats`, beside `Unit.languages`). What is
-kept apart is the project's languages: `--map` lists `formats` beside `languages`, a format never makes a C++ project
-a "YAML project", and skip messages name languages only. A format's files are recognised in the hidden
-configuration directories too (`.github`, `.vscode`), where a language's are not: configuration is data. The first
-format ecosystem is `data` (`project_validator/ecosystems/data.py`), whose parsers make a `DataFile` fact of every
+An ecosystem is a **language** or a **format** (`Ecosystem.kind`, `project_validator/ecosystems/model.py`). A format is
+a kind of file that is not a program: JSON, YAML, TOML, XML, a Dockerfile, a Kubernetes manifest, a notebook, a schema,
+a documentation site's configuration. It has no toolchain, coverage or dependencies; what can be asked of it is hygiene:
+its files parse, validate against their schema (`schema-validation`), are formatted, are linted, are scanned, are built
+or run where a tool does (a chart's tests, a notebook's execution, a site's build). Everything downstream of recognition
+is keyed on a name: a format's `languages` hold its format names, so a tool that handles `"YAML"` makes its check apply
+to the format, and a question answers for a format in the units whose files are in it (`Unit.formats`, beside
+`Unit.languages`). What is kept apart is the project's languages: `--map` lists `formats` beside `languages`, a format
+never makes a C++ project a "YAML project", and skip messages name languages only. A format's files are recognised in
+the hidden configuration directories too (`.github`, `.vscode`), where a language's are not: configuration is data. The
+first format ecosystem is `data` (`project_validator/ecosystems/data.py`), whose parsers make a `DataFile` fact of every
 data file at extraction (`project_validator/facts/wellformed.py`); `data-wellformed` is its question and policy. A
 format whose files are schemas defines a `Declares` (`project_validator/facts/declaration.py`): which files are its
 schemas and what each declares (a dialect, an identifier), read once at extraction into `SchemaDeclaration` facts;
@@ -205,14 +205,14 @@ what the conditionals it is read under still require. A tool run by a command th
 (`hides="settings"` for that tool), never a run.
 
 **Command expansion** (`project_validator/facts/expansion.py`): a `CommandExpander` says what a command runs in turn
-(package.json scripts and Deno tasks, Composer scripts, Rake tasks, Make and CMake targets, just recipes, pixi tasks, tox
-environments, pre-commit hooks, the project's own shell scripts, the string `sh -c '…'` runs, workspace-wide script runs), and the commands found are
-expanded again, each with `via`, the chain that led to it. Launchers and wrappers (`bundle exec`, `npx`, `python -m`,
-`uv run`, `go tool`, `sudo`, `env`, `xvfb-run` and the `coactions/setup-xvfb` action, vmactions' BSD virtual
-machines, `timeout`;
-`project_validator/tools/wrappers.py`) yield the command they run as a `Launched` command of its own. `cd` changes where
-the rest of a script runs; commands in a directory the project does not contain are not expanded and cover none of the
-project's code; a directory a variable names is unknown, and a tool run there covers the whole project, heuristically.
+(package.json scripts and Deno tasks, Composer scripts, Rake tasks, Make and CMake targets, just recipes, pixi tasks,
+tox environments, pre-commit hooks, the project's own shell scripts, the string `sh -c '…'` runs, workspace-wide script
+runs), and the commands found are expanded again, each with `via`, the chain that led to it. Launchers and wrappers
+(`bundle exec`, `npx`, `python -m`, `uv run`, `go tool`, `sudo`, `env`, `xvfb-run` and the `coactions/setup-xvfb`
+action, vmactions' BSD virtual machines, `timeout`; `project_validator/tools/wrappers.py`) yield the command they run as
+a `Launched` command of its own. `cd` changes where the rest of a script runs; commands in a directory the project does
+not contain are not expanded and cover none of the project's code; a directory a variable names is unknown, and a tool
+run there covers the whole project, heuristically.
 
 **What a job builds with** is a fact (`Job`, `project_validator/facts/jobs.py`, from `ci.job_facts`): its OS, its
 compilers (or the runner's default), its toolchains and versions, its build configurations, and the ecosystems it
@@ -225,16 +225,16 @@ and compilers are matched in the evidence as text, matrix values first (`project
 
 ### Tools
 
-There is one tool model (`Tool`, `project_validator/facts/tools.py`). A tool records the languages it handles and,
-per *aspect* it can provide (`coverage`, `format`, `analysis`, `type-check`, `test`, `audit`, `security`, `schema`, `examples`, `compatibility`,
-`links`, `migrations`, `function-length`, `fuzz`, `mutation`), the levels it can provide and how to ask for each (`can`). It claims commands
-(`claims(command, facts)`: `starts`, `when`, `flagged`, `with_option`, `all_of`, `any_of` spell the common claims)
-and reads only facts. A claimed command is a `ToolRun`: job, tool, languages, the aspects and levels that run
-provides, the settings files it read, and its scope (its working directory); only the tools of the project's own
-languages and formats are asked, so a shared tool's run is recorded for the project, not for every language the tool
-serves. A tool that serves several practices
-(ruff formats and lints) is one tool with several aspects (`combined`); each tool handles only its own languages
-(ktlint formats Kotlin, not Java). `Tool.required` marks an analyzer that must run alongside the others.
+There is one tool model (`Tool`, `project_validator/facts/tools.py`). A tool records the languages it handles and, per
+*aspect* it can provide (`coverage`, `format`, `analysis`, `type-check`, `test`, `audit`, `security`, `schema`,
+`examples`, `compatibility`, `links`, `migrations`, `function-length`, `fuzz`, `mutation`), the levels it can provide
+and how to ask for each (`can`). It claims commands (`claims(command, facts)`: `starts`, `when`, `flagged`,
+`with_option`, `all_of`, `any_of` spell the common claims) and reads only facts. A claimed command is a `ToolRun`: job,
+tool, languages, the aspects and levels that run provides, the settings files it read, and its scope (its working
+directory); only the tools of the project's own languages and formats are asked, so a shared tool's run is recorded for
+the project, not for every language the tool serves. A tool that serves several practices (ruff formats and lints) is
+one tool with several aspects (`combined`); each tool handles only its own languages (ktlint formats Kotlin, not Java).
+`Tool.required` marks an analyzer that must run alongside the others.
 
 A run also records the project paths its command names (`ToolRun.paths`, upstream #333): the folders and files of its
 languages it is given, and the globs that match some; none, when it names none, or a path is still a variable, or it

@@ -11,7 +11,7 @@ issue #295; this is **version 1**.
 A **slot** is one check's result for one language in one unit: one of the `places` in `--format json`. A check of the
 whole project (a licence, CI, action pinning) is one slot. The score is the share of the slots that are filled:
 
-```
+```text
 percent = 100 * filled / slots
 ```
 
@@ -67,7 +67,7 @@ Every slot not filled is a next step, with the points filling it is worth and, w
 level, which level. The next level's gates come first (the one that completes it first), then the lower levels, core
 before auxiliary code, then the most points. Each says what was found and, when a detail says what to do, that:
 
-```
+```text
 coverage (C++ in lib): +4.2 points, needed for Level 2 (Analysis); consider running gcovr in CI
 ```
 
@@ -78,6 +78,7 @@ for each language.
 
 With `--format json --score`, the output is `{"format": "results", "version": "1", "results": [...], "score": {...}}`.
 `results` is exactly what `--format json` prints without `--score`. `score` holds:
+
 - `version`, `percent` (with any extra credit), `base` (the share of slots filled), `extra` and `held`;
 - `level` and `level_name`, `filled` and `slots`, and the `summary` line;
 - `breakdown`: each language's filled slots and slots (`""` for the whole project's own gates);

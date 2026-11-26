@@ -20,20 +20,20 @@ Both have a default style, so running one is enough.
 ## `static-analysis`
 
 `sqlfluff lint`, with its dialect and rules in `.sqlfluff` or `[tool.sqlfluff]` (`[sqlfluff]` in `setup.cfg` or
-`tox.ini`); squawk, which lints Postgres migrations for locking and destructive changes (and is `migration-safety`'s check); `sqlc vet`; tsqllint; or
-`dbt parse` (or `dbt compile`), which resolves every ref, source and macro.
+`tox.ini`); squawk, which lints Postgres migrations for locking and destructive changes (and is `migration-safety`'s
+check); `sqlc vet`; tsqllint; or `dbt parse` (or `dbt compile`), which resolves every ref, source and macro.
 
 ## `tests-run`
 
 `dbt test`, or `dbt build`, which runs the tests too, with tests to run: schema tests (`tests:`, `data_tests:` or
 `unit_tests:` in the YAML under `models/`, `seeds/` or `snapshots/`) or singular tests (`tests/*.sql` selecting from a
-`ref()` or `source()`). pgTAP tests (`tests/*.sql` with `SELECT plan(...)`) run by `pg_prove`. A PostgreSQL extension's pg_regress tests
-(`test/sql/*.sql`) run by PGXS's `make installcheck`, and its TAP tests (`t/*.pl` starting a server with
-`PostgreSQL::Test::Cluster`, found where Perl is read) by `make prove_installcheck`. Both test the extension built and
-installed, so they count for its C or C++ code too (upstream #276), though they are never suggested for C that is no
+`ref()` or `source()`). pgTAP tests (`tests/*.sql` with `SELECT plan(...)`) run by `pg_prove`. A PostgreSQL extension's
+pg_regress tests (`test/sql/*.sql`) run by PGXS's `make installcheck`, and its TAP tests (`t/*.pl` starting a server
+with `PostgreSQL::Test::Cluster`, found where Perl is read) by `make prove_installcheck`. Both test the extension built
+and installed, so they count for its C or C++ code too (upstream #276), though they are never suggested for C that is no
 extension. PGXS's targets (`installcheck`, `prove_installcheck`, `install`, ...) are known where the Makefile includes
-`$(PGXS)`. A test needs a database,
-which CI provides as a service container or an installation; that is not checked for.
+`$(PGXS)`. A test needs a database, which CI provides as a service container or an installation; that is not checked
+for.
 
 ## `migration-safety`
 
