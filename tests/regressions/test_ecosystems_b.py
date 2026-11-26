@@ -409,11 +409,14 @@ class NixTests(unittest.TestCase):
                 result = _run(code_formatting, NIX, github_job(CI, line))
                 self.assertEqual(result.status, Status.PASS, result)
 
-    @unittest.expectedFailure  # upstream #285: a job that shows the diff (or commits it back) is taken to enforce it
-    def test_a_git_diff_quiet_in_an_if_condition_is_not_a_failing_step(self) -> None:
+    def test_a_job_that_commits_the_formatting_back_enforces_it(self) -> None:
         """`nix fmt one-file.nix` followed by `if git diff --quiet ...; then ...; else git commit ...; fi` commits what
-        changed; nothing fails, so the style is not enforced (nix-community/home-manager)."""
+        changed: as decided in upstream #285, committing the formatted files back enforces the style
+        (nix-community/home-manager), while a job that only shows the diff does not."""
         result = _run(code_formatting, NIX, github_job(CI, "nix fmt all-maintainers.nix", BOT_COMMIT))
+        self.assertEqual(result.status, Status.PASS, result)
+        shown = "if git diff --quiet all-maintainers.nix; then echo same; else echo changed; fi"
+        result = _run(code_formatting, NIX, github_job(CI, "nix fmt all-maintainers.nix", shown))
         self.assertNotEqual(result.status, Status.PASS, result)
 
     def test_treefmt_toml_says_which_lints_nix_fmt_runs(self) -> None:
