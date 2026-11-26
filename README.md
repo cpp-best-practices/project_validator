@@ -8,7 +8,7 @@ A tool to validate a project's build, CI and tooling against best practices.
 It recognises a project's languages and build systems, and judges each language by its own
 ecosystem's tools: a C++ project needs branch coverage from gcovr or llvm-cov, a Python project from coverage.py, a
 Rust project from cargo-llvm-cov. [docs/ecosystems](docs/ecosystems) has a page for each supported ecosystem, saying
-how it is recognised and what each check accepts for it; `project-validator --list` shows which checks apply to which
+how it is recognised and what each check accepts for it; `project_validator --list` shows which checks apply to which
 ecosystems, and `--format markdown` lays a project's results out as a grid of checks against ecosystems, each
 cell naming the tools that ran. The grid for project_validator itself is in the job summary of every
 [CI run](https://github.com/cpp-best-practices/project_validator/actions/workflows/ci.yml?query=branch%3Amain).
@@ -22,6 +22,18 @@ built from `main` by CI on every push; each page says which commit it reflects.
 
 The validator itself is pure Python and has no build step; it only inspects
 (and, with `--build`, configures and builds) the project it is pointed at.
+
+## Installing
+
+```sh
+pipx install project_validator          # or: python3 -m pip install project_validator
+pipx install "project_validator[all]"   # with the console report (rich) and the TUI (textual)
+project_validator path/to/project
+```
+
+The command, the package and the repository share one name, `project_validator`. The command's old spelling,
+`project-validator`, still runs for one release and says it is deprecated. `project_validator --version` prints the
+version. To run from a checkout instead, nothing needs installing: see Requirements.
 
 ## Requirements
 
@@ -73,7 +85,7 @@ What you see:
 | `--answers` | print the answers to every question about the project as JSON, per language in each unit of the project: each `yes`, `no`, `unknown` (something that could answer it was not read) or `impossible` (no known tool provides it for the language), with what shows it (the tools CI runs and the files that define them, the coverage at each granularity, the settings met, the platforms, the manifests and lockfiles, …) and what the known tools could do |
 | `--only CHECKS` / `--skip CHECKS` | comma separated check names to run / not run |
 | `--format text\|json\|markdown\|html` | output format; `text` is the console report on a terminal with rich, plain text otherwise; `html` prints the HTML report; `json` gives each check's result and, in `places`, its result for each ecosystem in each unit (status, message, details, the tools that ran, what `--auxiliary` named); `markdown` lays those places out as a grid of checks against ecosystems, for a CI job summary (and says so when no ecosystem was recognised) |
-| `--score` | also print the tooling score ([docs/score.md](docs/score.md)) in the plain text, markdown and JSON outputs (the console and HTML reports always show it): **100% means every quality gate that applies to each part of the project is in place**, with extra credit above it for complementary tools once every gate is; its **level** (Foundations, Analysis, Hardening, Complete); and the next steps worth the most. JSON becomes `{"results": [...], "score": {...}}`. The statuses and the exit code do not change |
+| `--score` | also print the tooling score ([docs/score.md](docs/score.md)) in the plain text, markdown and JSON outputs (the console and HTML reports always show it): **100% means every quality gate that applies to each part of the project is in place**, with extra credit above it for complementary tools once every gate is; its **level** (Foundations, Analysis, Hardening, Complete); and the next steps worth the most. The JSON output gains a `score` beside its `results`. The statuses and the exit code do not change |
 | `--html FILE` | also write the self-contained HTML report to `FILE`, whatever `--format` prints |
 | `-v`, `--verbose` | in the console report, show every detail, the checks that do not apply, and each stage of the reading |
 | `--explain CHECK` | explain a check: what it looks for, why it matters, the level it counts for, and the tools it recognises for each language |
@@ -91,6 +103,22 @@ What you see:
 | `--plugin-dir DIR` | load extra checks and CI providers from `DIR/*.py` |
 
 Exit codes: `0` everything passed, `1` a check failed or raised an error, `2` usage error.
+
+Every JSON output (`--format json`, `--map`, `--facts`, `--answers`, `--list --format json`, `--support-matrix
+--format json`) is an object that names its format and that format's version, with what it holds under the format's
+name: `{"format": "results", "version": "1", "results": [...]}`; the formats are `results`, `map`, `facts`,
+`answers`, `checks` and `support-matrix`.
+
+### Stability
+
+The validator is at 0.x: what it judges improves with every release, so results change. What a 0.x release promises:
+- **The command line:** flags may be added; a flag is renamed or removed only after a release in which it still works
+  and says it is deprecated (as `project-validator`, the command's old name, does now). The exit codes stay `0`, `1`
+  and `2`.
+- **The JSON outputs:** a format may change, but when it does its `version` is bumped and the change is in
+  [CHANGELOG.md](CHANGELOG.md), so a consumer can tell.
+- **The score:** `score.version` is bumped whenever the same results would score differently (as weighting each
+  language by its size, #331, will).
 
 ## Checks
 
@@ -312,6 +340,15 @@ coverage report
 
 CI uploads the coverage report to [Codecov](https://codecov.io/gh/cpp-best-practices/project_validator)
 and fails if branch coverage drops below the threshold.
+
+### Releasing
+
+1. Set the new version in `project_validator/__init__.py` (`__version__`, the one source of the version).
+2. Add its section to [CHANGELOG.md](CHANGELOG.md) (`## <version>`), and merge both.
+3. Push the tag `v<version>`. The release workflow (`.github/workflows/release.yml`) checks that the tag, the version
+   and the changelog agree, builds the sdist and the wheel, installs the wheel in a clean environment and runs it,
+   publishes to PyPI with trusted publishing (its `pypi` environment can require approval), and makes the GitHub
+   release with the changelog section as its notes.
 
 ## Dependency Policy
 

@@ -27,7 +27,7 @@ is shared, and a check is a question and a policy that name no language.
 
 ## The run
 
-`project-validator <path>`:
+`project_validator <path>`:
 
 1. **Discovery** (`project_validator/plugins.py`): the checks (`project_validator/checks`, one module each) and CI
    providers (`project_validator/ci`) are found in their packages; the built-in ecosystems are registered from the

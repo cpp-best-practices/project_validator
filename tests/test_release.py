@@ -1,0 +1,129 @@
+"""Releasing the validator (upstream #337): one name everywhere (`project_validator`: the repository, the import, the
+PyPI package and the command), one version, `--version`, and the metadata a published package needs."""
+
+from __future__ import annotations
+
+import contextlib
+import io
+import json
+import tomllib
+import unittest
+from pathlib import Path
+
+import yaml
+
+import project_validator
+from project_validator.cli import EXIT_SUCCESS, JSON_FORMATS, deprecated_main, main
+from tests import release_check
+from tests.support import temp_project
+
+ROOT = Path(__file__).resolve().parent.parent
+PYPROJECT = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+
+
+class NameTests(unittest.TestCase):
+    def test_the_package_and_its_command_share_the_repositorys_name(self) -> None:
+        project = PYPROJECT["project"]
+        self.assertEqual(project["name"], "project_validator")
+        self.assertEqual(project["scripts"]["project_validator"], "project_validator.cli:main")
+
+    def test_the_old_command_still_runs_and_says_it_is_deprecated(self) -> None:
+        self.assertEqual(PYPROJECT["project"]["scripts"]["project-validator"], "project_validator.cli:deprecated_main")
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+            code = deprecated_main(["--list"])
+        self.assertEqual(code, EXIT_SUCCESS)
+        self.assertIn("platform-matrix", stdout.getvalue())
+        self.assertIn("`project-validator` is deprecated: run `project_validator`", stderr.getvalue())
+
+
+class VersionTests(unittest.TestCase):
+    def test_the_version_has_one_source(self) -> None:
+        self.assertEqual(PYPROJECT["project"]["dynamic"], ["version"])
+        self.assertNotIn("version", PYPROJECT["project"])
+        attribute = PYPROJECT["tool"]["setuptools"]["dynamic"]["version"]["attr"]
+        self.assertEqual(attribute, "project_validator.__version__")
+
+    def test_version_prints_the_packages_version(self) -> None:
+        stdout = io.StringIO()
+        with contextlib.redirect_stdout(stdout), self.assertRaises(SystemExit) as raised:
+            main(["--version"])
+        self.assertEqual(raised.exception.code, 0)
+        self.assertEqual(stdout.getvalue(), f"project_validator {project_validator.__version__}\n")
+
+
+class MetadataTests(unittest.TestCase):
+    def test_the_package_says_what_it_is_and_where_it_lives(self) -> None:
+        project = PYPROJECT["project"]
+        self.assertEqual(project["license"], "Unlicense")
+        self.assertIn("Programming Language :: Python :: 3.12", project["classifiers"])
+        self.assertIn("Development Status :: 3 - Alpha", project["classifiers"])
+        urls = project["urls"]
+        self.assertEqual(urls["Repository"], "https://github.com/cpp-best-practices/project_validator")
+        self.assertEqual(urls["Issues"], "https://github.com/cpp-best-practices/project_validator/issues")
+
+
+class JsonFormatTests(unittest.TestCase):
+    """Every JSON output says which format it is and that format's version: a 0.x release may change a format, but
+    bumps its version and says so in the changelog."""
+
+    def test_every_json_output_names_its_format_and_version(self) -> None:
+        with temp_project({"main.py": "print(1)\n"}) as root:
+            for arguments, kind in (
+                (("--format", "json", str(root)), "results"),
+                (("--facts", str(root)), "facts"),
+                (("--answers", str(root)), "answers"),
+                (("--map", str(root)), "map"),
+                (("--list", "--format", "json"), "checks"),
+                (("--support-matrix", "--format", "json"), "support-matrix"),
+            ):
+                with self.subTest(kind=kind):
+                    output = json.loads(_stdout(*arguments))
+                    self.assertEqual((output["format"], output["version"]), (kind, JSON_FORMATS[kind]))
+                    self.assertIn(kind, output)
+
+    def test_the_score_sits_beside_the_results(self) -> None:
+        with temp_project({"main.py": "print(1)\n"}) as root:
+            output = json.loads(_stdout("--format", "json", "--score", str(root)))
+        self.assertEqual(sorted(output), ["format", "results", "score", "version"])
+
+
+def _stdout(*arguments: str) -> str:
+    stdout = io.StringIO()
+    with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(io.StringIO()):
+        main(list(arguments))
+    return stdout.getvalue()
+
+
+class ReleaseCheckTests(unittest.TestCase):
+    """What the release workflow checks before it builds: the tag, the package's version and the changelog agree."""
+
+    CHANGELOG = "# Changelog\n\n## 0.2.0\n\n- More.\n\n## 0.1.0\n\n- First.\n"
+
+    def test_a_tag_that_matches_a_version_with_a_changelog_section_passes(self) -> None:
+        self.assertEqual(release_check.problems("v0.2.0", "0.2.0", self.CHANGELOG), [])
+        self.assertEqual(release_check.notes(self.CHANGELOG, "0.1.0"), "- First.")
+
+    def test_a_tag_that_differs_from_the_version_or_has_no_section_is_refused(self) -> None:
+        self.assertEqual(
+            release_check.problems("v0.3.0", "0.2.0", self.CHANGELOG),
+            ["the tag v0.3.0 is not the package's version, 0.2.0"],
+        )
+        self.assertEqual(
+            release_check.problems("v0.3.0", "0.3.0", self.CHANGELOG), ["CHANGELOG.md has no section for 0.3.0"]
+        )
+        self.assertEqual(release_check.problems("0.2.0", "0.2.0", self.CHANGELOG), ["the tag 0.2.0 is not v<version>"])
+
+    def test_this_version_has_its_changelog_section(self) -> None:
+        changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+        self.assertTrue(release_check.notes(changelog, project_validator.__version__))
+
+
+class ReleaseWorkflowTests(unittest.TestCase):
+    def test_only_the_publishing_job_can_mint_a_pypi_token(self) -> None:
+        workflow = yaml.safe_load((ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8"))
+        self.assertEqual(workflow["permissions"], {"contents": "read"})
+        minting = [name for name, job in workflow["jobs"].items() if job.get("permissions", {}).get("id-token")]
+        self.assertEqual(minting, ["publish"])
+        self.assertEqual(workflow["jobs"]["publish"]["environment"]["name"], "pypi")
+        self.assertEqual(workflow[True]["push"]["tags"], ["v*"])

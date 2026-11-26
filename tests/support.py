@@ -10,6 +10,7 @@ from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 from pathlib import Path
 from types import MappingProxyType
+from typing import Any
 
 from project_validator.core import Check, Context, Options, Project, Result
 from project_validator.ecosystems import BUILT_IN, C_FAMILY, Ecosystem, ecosystems_for, registered
@@ -382,3 +383,11 @@ def in_cmake_project(
 def in_meson_project(test: unittest.TestCase, selected: Check, build: str = "project('app', 'cpp')\n") -> Result:
     """The result of `selected` in a Meson C++ project with `build` as its meson.build."""
     return run_in_layout(test, "Meson C++", selected, {"meson.build": build})
+
+
+def json_output(output: str, kind: str) -> Any:
+    """What a JSON output of `kind` holds, checking that it names its format (see `project_validator.cli.versioned`)."""
+    found = json.loads(output)
+    if found.get("format") != kind:
+        raise AssertionError(f"not a {kind} output: {output[:80]}")
+    return found[kind]

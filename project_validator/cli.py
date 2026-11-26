@@ -11,7 +11,7 @@ import traceback
 from collections.abc import Sequence
 from pathlib import Path, PurePosixPath
 
-from project_validator import gitignore, yaml_support
+from project_validator import __version__, gitignore, yaml_support
 from project_validator.analysis import Analysis, analyse
 from project_validator.core import DEFAULT_MAX_FILE_SIZE, Check, Context, ExtractionError, Observer, Options, Project
 from project_validator.ecosystems import applies_to
@@ -65,6 +65,7 @@ def _parser() -> argparse.ArgumentParser:
         prog="project_validator", description="Validate a project's build, CI and tooling against best practices."
     )
     parser.add_argument("path", nargs="?", default=".", type=Path, help="project to validate (default: .)")
+    parser.add_argument("--version", action="version", version=f"project_validator {__version__}")
     _add_listing_options(parser)
     parser.add_argument("--only", action="append", default=[], metavar="CHECKS", help="run only these checks")
     parser.add_argument("--skip", action="append", default=[], metavar="CHECKS", help="do not run these checks")
@@ -217,8 +218,14 @@ def report_dicts(reports: list[Report]) -> list[dict[str, object]]:
     ]
 
 
-def _format_json(reports: list[Report]) -> str:
-    return json.dumps(report_dicts(reports), indent=2)
+# The JSON outputs, each with the version of its format (upstream #337). A 0.x release may change a format, but bumps
+# its version and says so in the changelog.
+JSON_FORMATS = {"results": "1", "facts": "1", "answers": "1", "map": "1", "checks": "1", "support-matrix": "1"}
+
+
+def versioned(kind: str, payload: object, **beside: object) -> dict[str, object]:
+    """A JSON output: which format it is, that format's version, and what it holds (under the format's name)."""
+    return {"format": kind, "version": JSON_FORMATS[kind], kind: payload, **beside}
 
 
 def _use_color(choice: str) -> bool:
@@ -251,12 +258,13 @@ def _print_listing(checks: Sequence[Check], arguments: argparse.Namespace) -> No
     as_json = arguments.format == "json"
     if arguments.list:
         if as_json:
-            print(json.dumps(check_list(checks), indent=2))
+            print(json.dumps(versioned("checks", check_list(checks)), indent=2))
         else:
             print(_format_list_markdown(checks) if arguments.format == "markdown" else _format_list(checks))
         return
     matrix = support_matrix(checks)
-    print(json.dumps(as_dict(matrix), indent=2) if as_json else render(matrix), end="\n" if as_json else "")
+    shown = json.dumps(versioned("support-matrix", as_dict(matrix)), indent=2) if as_json else render(matrix)
+    print(shown, end="\n" if as_json else "")
 
 
 def _usage_error(parser: argparse.ArgumentParser, message: str) -> int:
@@ -272,7 +280,7 @@ def _print_analysis(analysis: Analysis, arguments: argparse.Namespace) -> None:
     if arguments.format == "json":
         results = report_dicts(reports)
         scored = analysis.score.as_dict() if arguments.score and analysis.score else None
-        print(json.dumps(results if scored is None else {"results": results, "score": scored}, indent=2))
+        print(json.dumps(versioned("results", results, **({} if scored is None else {"score": scored})), indent=2))
     elif arguments.format == "html":
         print(html_view.render(analysis), end="")
     elif arguments.format == "markdown":
@@ -297,10 +305,10 @@ def _progress(arguments: argparse.Namespace) -> contextlib.AbstractContextManage
 def _dump(context: Context, arguments: argparse.Namespace) -> object:
     """What --facts, --answers or --map prints."""
     if arguments.facts:
-        return context.facts.as_dicts()
+        return versioned("facts", context.facts.as_dicts())
     if arguments.answers:
-        return answers(context)
-    return context.structure.as_dict()
+        return versioned("answers", answers(context))
+    return versioned("map", context.structure.as_dict())
 
 
 def _check_scope(arguments: argparse.Namespace) -> None:
@@ -317,6 +325,12 @@ def _project(arguments: argparse.Namespace) -> Project:
         tuple(arguments.auxiliary),
         primary=tuple(arguments.primary),
     )
+
+
+def deprecated_main(argv: Sequence[str] | None = None) -> int:
+    """The command's old name (`project-validator`), kept for one release: it says so, then runs `main`."""
+    print("`project-validator` is deprecated: run `project_validator`", file=sys.stderr)
+    return main(argv)
 
 
 def main(argv: Sequence[str] | None = None) -> int:

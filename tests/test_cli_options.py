@@ -6,13 +6,13 @@ from __future__ import annotations
 import argparse
 import contextlib
 import io
-import json
 import re
 import unittest
 from pathlib import Path
 
 from project_validator.cli import _options, _parser, main
 from project_validator.core import DEFAULT_MAX_FILE_SIZE, Options
+from tests.support import json_output
 
 
 def _normalised(text: str) -> str:
@@ -130,15 +130,15 @@ class ListingFormatTests(unittest.TestCase):
     def test_list_as_json_is_indented_by_two(self) -> None:
         code, output, _ = _run("--list", "--format", "json")
         self.assertEqual(code, 0)
-        self.assertTrue(output.startswith('[\n  {\n    "'), output[:40])
-        self.assertIsInstance(json.loads(output), list)
+        self.assertTrue(output.startswith('{\n  "format": "checks"'), output[:40])
+        self.assertIsInstance(json_output(output, "checks"), list)
 
     def test_the_support_matrix_as_json_is_indented_by_two_and_ends_with_one_newline(self) -> None:
         code, output, _ = _run("--support-matrix", "--format", "json")
         self.assertEqual(code, 0)
         self.assertTrue(output.startswith('{\n  "'), output[:40])
         self.assertTrue(output.endswith("}\n") and not output.endswith("\n\n"))
-        self.assertIsInstance(json.loads(output), dict)
+        self.assertIsInstance(json_output(output, "support-matrix"), dict)
 
     def test_the_support_matrix_as_markdown_ends_with_one_newline(self) -> None:
         _, output, _ = _run("--support-matrix")

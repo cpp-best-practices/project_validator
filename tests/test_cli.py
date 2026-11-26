@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import contextlib
 import io
-import json
 import tomllib
 import unittest
 from collections.abc import Iterator
@@ -30,6 +29,7 @@ from tests.support import (
     PROJECT_LAYOUTS,
     WELL_CONFIGURED,
     WELL_CONFIGURED_PYTHON,
+    json_output,
     layout_project,
     make_context,
     requires_rich,
@@ -84,7 +84,7 @@ class CliTests(unittest.TestCase):
                 code, output, _ = run_cli("--strict", str(root))
                 self.assertEqual(code, EXIT_SUCCESS, output)
                 # The profile's well-configured project may add languages of its own to the layout's (C# to F#).
-                languages = set(json.loads(run_cli("--map", str(root))[1])["languages"])
+                languages = set(json_output(run_cli("--map", str(root))[1], "map")["languages"])
                 for found in LANGUAGE_SPECIFIC_CHECKS:
                     status = "PASS" if found.languages & languages else "SKIP"
                     self.assertIn(f"[{status}] {found.name}:", output)
@@ -117,7 +117,9 @@ class CliTests(unittest.TestCase):
             with layout_project(self, layout, BARE_PROJECT) as root:
                 code, output, _ = run_cli("--format", "json", "--only", "ci-present,coverage", str(root))
                 self.assertEqual(code, EXIT_FAILURE)
-                self.assertEqual([entry["check"] for entry in json.loads(output)], ["ci-present", "coverage"])
+                self.assertEqual(
+                    [entry["check"] for entry in json_output(output, "results")], ["ci-present", "coverage"]
+                )
 
     def test_an_unknown_answer_is_an_error_unless_allowed(self) -> None:
         # Jenkinsfiles are scanned heuristically, so what their jobs run is not known for certain.
@@ -158,14 +160,14 @@ class CliTests(unittest.TestCase):
     def test_map_prints_the_project_structure(self) -> None:
         code, output, _ = run_cli("--map", str(FIXTURES / "well_configured_cpp"))
         self.assertEqual(code, EXIT_SUCCESS)
-        mapped = json.loads(output)
+        mapped = json_output(output, "map")
         self.assertEqual(mapped["languages"], ["C++"])
         self.assertIn("GitHub Actions", mapped["ci"]["providers"])
 
     def assert_map_matches_layout(self, layout: ProjectLayout, *arguments: str) -> dict[str, Any]:
         code, output, _ = run_cli("--map", *arguments)
         self.assertEqual(code, EXIT_SUCCESS)
-        mapped: dict[str, Any] = json.loads(output)
+        mapped: dict[str, Any] = json_output(output, "map")
         self.assertEqual(mapped["languages"], sorted(layout.languages))
         self.assertEqual(mapped["build_systems"], sorted(layout.build_systems))
         return mapped
@@ -276,7 +278,7 @@ class ListTests(unittest.TestCase):
     def test_facts_are_printed_as_json(self) -> None:
         code, output, _ = run_cli("--facts", str(FIXTURES / "well_configured_cpp"))
         self.assertEqual(code, EXIT_SUCCESS)
-        facts = json.loads(output)
+        facts = json_output(output, "facts")
         self.assertIn("CiJob", {fact["kind"] for fact in facts})
         self.assertTrue(all("origin" in fact for fact in facts))
 
@@ -295,7 +297,7 @@ class ListTests(unittest.TestCase):
     def test_list_as_json_is_the_check_list(self) -> None:
         code, output, _ = run_cli("--list", "--format", "json")
         self.assertEqual(code, EXIT_SUCCESS)
-        matrix = {row["check"]: row["applies_to"] for row in json.loads(output)}
+        matrix = {row["check"]: row["applies_to"] for row in json_output(output, "checks")}
         self.assertEqual(matrix, {found.name: list(applies_to(found)) for found in discover().checks})
         self.assertEqual(matrix["ci-present"], [])
         self.assertIn("C", matrix["ci-build-types"])
@@ -319,7 +321,7 @@ class ListTests(unittest.TestCase):
     def test_support_matrix_as_json(self) -> None:
         code, output, _ = run_cli("--support-matrix", "--format", "json")
         self.assertEqual(code, EXIT_SUCCESS)
-        self.assertIn("C", json.loads(output)["ecosystems"])
+        self.assertIn("C", json_output(output, "support-matrix")["ecosystems"])
 
     def test_support_matrix_needs_no_yaml(self) -> None:
         with mock.patch.object(yaml_support, "available", return_value=False):

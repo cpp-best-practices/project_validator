@@ -13,7 +13,7 @@ from project_validator.facts.auxiliary import Selectors, as_given
 from project_validator.facts.structure import Unit
 from project_validator.grid import MARKS
 from project_validator.questions.analysis import static_analysis
-from tests.support import GITHUB_WORKFLOW, checks_named, make_context, temp_project
+from tests.support import GITHUB_WORKFLOW, checks_named, json_output, make_context, temp_project
 from tests.test_cli import run_cli
 
 
@@ -644,7 +644,7 @@ class AuxiliaryCodeTests(unittest.TestCase):
         with temp_project(HELPER_SCRIPTS) as root:
             code, output, _ = run_cli("--only", "static-analysis", "--format", "json", str(root))
             self.assertEqual(code, EXIT_FAILURE)
-            [report] = json.loads(output)
+            [report] = json_output(output, "results")
             self.assertEqual(report["status"], "FAIL")
             places = {(place["ecosystem"], place["unit"]): place for place in report["places"]}
             self.assertEqual(set(places), {("C++", "."), ("CMake", "."), ("Python", ".")})
@@ -656,7 +656,7 @@ class AuxiliaryCodeTests(unittest.TestCase):
             arguments = ("--only", "static-analysis", "--auxiliary", "tooling", str(root))
             code, output, _ = run_cli(*arguments, "--format", "json")
             self.assertEqual(code, EXIT_FAILURE)
-            [report] = json.loads(output)
+            [report] = json_output(output, "results")
             [python] = [place for place in report["places"] if place["ecosystem"] == "Python"]
             self.assertEqual((python["status"], python["auxiliary"]), ("WARN", ["tooling"]))
             self.assertIn(f"Python (auxiliary: tooling): {ADVISORY}", report["details"])
@@ -664,7 +664,7 @@ class AuxiliaryCodeTests(unittest.TestCase):
             self.assertIn(f"| {MARKS[Status.WARN]} (auxiliary) |", grid)
             code, facts, _ = run_cli(*arguments, "--facts")
             named = {"named": ["tooling"], "implied": ["Python"], "primary": [], "stray": []}
-            self.assertIn({"kind": "AuxiliaryCode", "origin": ".", **named}, json.loads(facts))
+            self.assertIn({"kind": "AuxiliaryCode", "origin": ".", **named}, json_output(facts, "facts"))
 
     def test_the_answers_say_what_named_the_code(self) -> None:
         with temp_project({**HELPER_SCRIPTS, "benchmarks/run.py": ""}) as root:

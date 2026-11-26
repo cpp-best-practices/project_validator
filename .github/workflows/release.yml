@@ -1,0 +1,108 @@
+name: release
+
+# Releasing the validator (upstream #337): pushing a tag `v<version>` builds the sdist and the wheel, checks that the
+# wheel installs and runs, publishes both to PyPI with trusted publishing (OIDC: no token is stored), and makes a
+# GitHub release with the version's CHANGELOG.md section. The tag must match `project_validator.__version__` and have
+# that section, or nothing is built.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build and check the distributions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Check the tag against the version and the changelog
+        env:
+          TAG: ${{ github.ref_name }}
+        run: python tests/release_check.py "$TAG" --notes notes.md
+
+      - name: Install the build tools
+        run: python -m pip install --require-hashes -r .github/requirements/release.txt
+
+      # Without isolation, the build uses the hash-locked setuptools installed above.
+      - name: Build the sdist and the wheel
+        run: python -m build --no-isolation --outdir dist .
+
+      - name: Check that the wheel holds the package alone
+        run: |
+          python - <<'EOF'
+          import pathlib, sys, zipfile
+          [wheel] = pathlib.Path("dist").glob("*.whl")
+          names = zipfile.ZipFile(wheel).namelist()
+          stray = [name for name in names if name.startswith(("tests/", "corpus/", "leaderboard/"))]
+          assets = [name for name in names if name.startswith("project_validator/views/assets/")]
+          if stray or not assets:
+              sys.exit(f"the wheel holds {stray[:5]} and {len(assets)} report assets")
+          EOF
+
+      - name: Install the wheel in a clean environment and run it
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          python -m venv "$RUNNER_TEMP/clean"
+          "$RUNNER_TEMP/clean/bin/python" -m pip install dist/*.whl
+          test "$("$RUNNER_TEMP/clean/bin/project_validator" --version)" = "project_validator ${TAG#v}"
+          "$RUNNER_TEMP/clean/bin/project_validator" --format json tests/fixtures/well_configured_python > /dev/null || test $? -eq 1
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: distributions
+          path: dist/
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: notes
+          path: notes.md
+          if-no-files-found: error
+
+  # The only job that can mint a PyPI token, in an environment that can require approval.
+  publish:
+    name: publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/project_validator/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: distributions
+          path: dist/
+
+      - uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
+
+  github-release:
+    name: make the GitHub release
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          path: artifacts/
+
+      - name: Release the tag with its changelog section
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" artifacts/distributions/* --repo "$REPOSITORY" --title "$TAG" \
+            --notes-file artifacts/notes/notes.md --verify-tag
