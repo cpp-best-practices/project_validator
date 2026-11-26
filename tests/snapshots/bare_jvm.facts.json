@@ -26,7 +26,8 @@
       "implied": [],
       "kind": "AuxiliaryCode",
       "named": [],
-      "origin": "."
+      "origin": ".",
+      "primary": []
     },
     {
       "build_systems": [

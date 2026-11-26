@@ -129,6 +129,8 @@ class Project:
     excluded: frozenset[PurePosixPath] = frozenset()
     # What `--auxiliary` named as not the product's code (see `project_validator.facts.auxiliary`), as given.
     auxiliary: tuple[str, ...] = ()
+    # What `--primary` named as the product's, the rest being auxiliary (upstream #386), as given.
+    primary: tuple[str, ...] = ()
     # The files listed so far, by what was asked: the tree is walked once, as it is when first asked.
     _listed: dict[object, Collection[str]] = field(default_factory=dict, repr=False, compare=False)
 

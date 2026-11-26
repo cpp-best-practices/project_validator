@@ -118,6 +118,14 @@ def _add_scope_options(parser: argparse.ArgumentParser) -> None:
         "language or ecosystem (python, c++), or directory (scripts/); its failures are warnings, labelled; "
         "may be repeated",
     )
+    parser.add_argument(
+        "--primary",
+        action="append",
+        default=[],
+        metavar="WHAT",
+        help="judge only this code as the product's, every other language's as auxiliary: by language or ecosystem "
+        "(python, c++) or directory (src/); formats are judged as they are; may be repeated; not with --auxiliary",
+    )
 
 
 def _add_output_options(parser: argparse.ArgumentParser) -> None:
@@ -295,13 +303,29 @@ def _dump(context: Context, arguments: argparse.Namespace) -> object:
     return context.structure.as_dict()
 
 
+def _check_scope(arguments: argparse.Namespace) -> None:
+    """Refuse what --auxiliary and --primary name, when it is nothing known or both are given (a `ValueError`)."""
+    if arguments.primary and arguments.auxiliary:
+        raise ValueError("--primary and --auxiliary cannot be given together")
+    Selectors.parse(arguments.auxiliary, primary=arguments.primary)
+
+
+def _project(arguments: argparse.Namespace) -> Project:
+    return Project(
+        arguments.path.resolve(),
+        frozenset(arguments.exclude),
+        tuple(arguments.auxiliary),
+        primary=tuple(arguments.primary),
+    )
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = _parser()
     arguments = parser.parse_args(argv)
     try:
         plugins = discover(arguments.plugin_dir)
         selected = select(plugins.checks, _names(arguments.only), _names(arguments.skip))
-        Selectors.parse(arguments.auxiliary)
+        _check_scope(arguments)
     except (PluginError, SelectionError, ValueError) as error:
         parser.print_usage(sys.stderr)
         return _usage_error(parser, str(error))
@@ -322,8 +346,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not arguments.path.is_dir():
         return _usage_error(parser, f"{arguments.path} is not a directory")
 
-    project = Project(arguments.path.resolve(), frozenset(arguments.exclude), tuple(arguments.auxiliary))
-    context = Context(project, plugins.providers, _options(arguments))
+    context = Context(_project(arguments), plugins.providers, _options(arguments))
     return _run(parser, arguments, context, selected, [found.name for found in plugins.checks])
 
 

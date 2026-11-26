@@ -9,7 +9,7 @@ from project_validator.checks.coverage import coverage
 from project_validator.cli import EXIT_FAILURE, EXIT_USAGE
 from project_validator.core import Placed, Result, Status
 from project_validator.facts import CiJob, Command, Unknown
-from project_validator.facts.auxiliary import Selectors
+from project_validator.facts.auxiliary import Selectors, as_given
 from project_validator.facts.structure import Unit
 from project_validator.grid import MARKS
 from project_validator.questions.analysis import static_analysis
@@ -473,9 +473,9 @@ ADVISORY = "a warning, not a failure: the Python here is auxiliary code (--auxil
 PRACTICES = ("static-analysis", "code-formatting", "coverage", "tests-run", "type-checking", "compiler-warnings")
 
 
-def _check(name: str, files: dict[str, str], auxiliary: tuple[str, ...] = ()) -> Result:
+def _check(name: str, files: dict[str, str], auxiliary: tuple[str, ...] = (), primary: tuple[str, ...] = ()) -> Result:
     with temp_project(files) as root:
-        return checks_named(name)[0].run(make_context(root, auxiliary=auxiliary))
+        return checks_named(name)[0].run(make_context(root, auxiliary=auxiliary, primary=primary))
 
 
 def _place(result: Result, ecosystem: str) -> Placed:
@@ -664,7 +664,8 @@ class AuxiliaryCodeTests(unittest.TestCase):
             self.assertIn(f"| {MARKS[Status.WARN]} (auxiliary) |", grid)
             code, facts, _ = run_cli(*arguments, "--facts")
             self.assertIn(
-                {"kind": "AuxiliaryCode", "origin": ".", "named": ["tooling"], "implied": ["Python"]}, json.loads(facts)
+                {"kind": "AuxiliaryCode", "origin": ".", "named": ["tooling"], "implied": ["Python"], "primary": []},
+                json.loads(facts),
             )
 
     def test_the_answers_say_what_named_the_code(self) -> None:
@@ -675,6 +676,45 @@ class AuxiliaryCodeTests(unittest.TestCase):
         self.assertEqual(
             [(answer.unit, answer.auxiliary) for answer in answers.units], [(".", ("benchmark", "tooling"))]
         )
+
+
+class PrimaryTests(unittest.TestCase):
+    """`--primary`, the other way to say it (upstream #386): the languages (or directories) named are the product's,
+    and every other language's code is auxiliary. Formats are judged as they are."""
+
+    def test_every_other_language_is_auxiliary(self) -> None:
+        named = Selectors.parse((), primary=("c++",))
+        self.assertEqual(named.matching("scripts/release.py", "Python"), "outside --primary c++")
+        self.assertEqual(named.matching("src/main.cpp", "C++"), "")
+        self.assertEqual(named.matching(".github/workflows/ci.yml", "YAML"), "")  # a format
+        self.assertEqual(as_given("outside --primary c++"), "outside --primary c++")
+
+    def test_a_directory_named_primary_leaves_the_code_elsewhere_auxiliary(self) -> None:
+        named = Selectors.parse((), primary=("src/",))
+        self.assertEqual(named.matching("scripts/release.py", "Python"), "outside --primary src/")
+        self.assertEqual(named.matching("src/app.py", "Python"), "")
+        self.assertEqual(named.matching("scripts/Makefile", None), "")  # no language: not set apart
+        both = Selectors.parse((), primary=("python", "src/"))
+        self.assertEqual(both.matching("src/a.c", "C"), "outside --primary python --primary src/")
+        self.assertEqual(both.matching("lib/a.py", "Python"), "outside --primary python --primary src/")
+        self.assertEqual(both.matching("src/a.py", "Python"), "")
+
+    def test_a_role_or_an_unknown_name_cannot_be_primary(self) -> None:
+        for named in ("tooling", "Shellfish"):
+            with self.subTest(named), self.assertRaises(ValueError) as refused:
+                Selectors.parse((), primary=(named,))
+            self.assertIn(f"--primary {named}: not a language or ecosystem", str(refused.exception))
+
+    def test_the_other_languages_are_judged_as_auxiliary_code(self) -> None:
+        result = _check("static-analysis", HELPER_SCRIPTS, primary=("c++",))
+        python = _place(result, "Python")
+        self.assertEqual((python.result.status, python.auxiliary), (Status.WARN, ("outside --primary c++",)))
+        self.assertIn("Python (auxiliary: outside --primary c++): ", result.message)
+
+    def test_primary_and_auxiliary_together_are_a_usage_error(self) -> None:
+        code, _, error = run_cli("--primary", "c++", "--auxiliary", "tooling", ".")
+        self.assertEqual(code, EXIT_USAGE)
+        self.assertIn("--primary and --auxiliary cannot be given together", error)
 
 
 class SelectorTests(unittest.TestCase):
