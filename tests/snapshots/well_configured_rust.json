@@ -1615,7 +1615,6 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no Rust toolchain",
         ".github/workflows/ci.yml: test (ubuntu-latest, stable, ): linux / stable",
         ".github/workflows/ci.yml: test (ubuntu-latest, stable, -Zsanitizer=address): linux / stable",
         ".github/workflows/ci.yml: test (ubuntu-latest, nightly, ): linux / nightly",
@@ -1627,10 +1626,7 @@
         ".github/workflows/ci.yml: test (windows-latest, stable, ): windows / stable",
         ".github/workflows/ci.yml: test (windows-latest, stable, -Zsanitizer=address): windows / stable",
         ".github/workflows/ci.yml: test (windows-latest, nightly, ): windows / nightly",
-        ".github/workflows/ci.yml: test (windows-latest, nightly, -Zsanitizer=address): windows / nightly",
-        ".github/workflows/codeql.yml: analyze: linux / no Rust toolchain",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Rust toolchain",
-        ".github/workflows/function-limits.yml: function-limits: linux / no Rust toolchain"
+        ".github/workflows/ci.yml: test (windows-latest, nightly, -Zsanitizer=address): windows / nightly"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Rust toolchain(s) (nightly, stable), 6 combination(s)",
       "status": "PASS"

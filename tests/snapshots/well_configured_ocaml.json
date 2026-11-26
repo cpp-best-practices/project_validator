@@ -854,15 +854,13 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no OCaml version",
         ".github/workflows/ci.yml: test (ubuntu-latest, 4.14): linux / 4.14",
         ".github/workflows/ci.yml: test (ubuntu-latest, 5.2): linux / 5.2",
         ".github/workflows/ci.yml: test (macos-latest, 4.14): macos / 4.14",
         ".github/workflows/ci.yml: test (macos-latest, 5.2): macos / 5.2",
         ".github/workflows/ci.yml: test (windows-latest, 4.14): windows / 4.14",
         ".github/workflows/ci.yml: test (windows-latest, 5.2): windows / 5.2",
-        ".github/workflows/ci.yml: lint: linux / 5.2",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no OCaml version"
+        ".github/workflows/ci.yml: lint: linux / 5.2"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 OCaml version(s) (4.14, 5.2), 6 combination(s)",
       "status": "PASS"

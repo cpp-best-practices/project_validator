@@ -1109,15 +1109,12 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no PHP version",
         ".github/workflows/ci.yml: test (ubuntu-latest, 8.3): linux / 8.3",
         ".github/workflows/ci.yml: test (ubuntu-latest, 8.4): linux / 8.4",
         ".github/workflows/ci.yml: test (macos-latest, 8.3): macos / 8.3",
         ".github/workflows/ci.yml: test (macos-latest, 8.4): macos / 8.4",
         ".github/workflows/ci.yml: test (windows-latest, 8.3): windows / 8.3",
-        ".github/workflows/ci.yml: test (windows-latest, 8.4): windows / 8.4",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no PHP version",
-        ".github/workflows/function-limits.yml: function-limits: linux / no PHP version"
+        ".github/workflows/ci.yml: test (windows-latest, 8.4): windows / 8.4"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 PHP version(s) (8.3, 8.4), 6 combination(s)",
       "status": "PASS"

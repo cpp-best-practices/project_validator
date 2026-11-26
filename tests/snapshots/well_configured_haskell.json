@@ -936,15 +936,12 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no GHC version",
         ".github/workflows/ci.yml: test (ubuntu-latest, 9.8): linux / 9.8",
         ".github/workflows/ci.yml: test (ubuntu-latest, 9.10): linux / 9.10",
         ".github/workflows/ci.yml: test (macos-latest, 9.8): macos / 9.8",
         ".github/workflows/ci.yml: test (macos-latest, 9.10): macos / 9.10",
         ".github/workflows/ci.yml: test (windows-latest, 9.8): windows / 9.8",
-        ".github/workflows/ci.yml: test (windows-latest, 9.10): windows / 9.10",
-        ".github/workflows/ci.yml: lint: linux / no GHC version",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no GHC version"
+        ".github/workflows/ci.yml: test (windows-latest, 9.10): windows / 9.10"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 GHC version(s) (9.10, 9.8), 6 combination(s)",
       "status": "PASS"

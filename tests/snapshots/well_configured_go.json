@@ -1071,16 +1071,12 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no Go version",
         ".github/workflows/ci.yml: test (ubuntu-latest, 1.22): linux / 1.22",
         ".github/workflows/ci.yml: test (ubuntu-latest, 1.23): linux / 1.23",
         ".github/workflows/ci.yml: test (macos-latest, 1.22): macos / 1.22",
         ".github/workflows/ci.yml: test (macos-latest, 1.23): macos / 1.23",
         ".github/workflows/ci.yml: test (windows-latest, 1.22): windows / 1.22",
-        ".github/workflows/ci.yml: test (windows-latest, 1.23): windows / 1.23",
-        ".github/workflows/codeql.yml: analyze: linux / no Go version",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Go version",
-        ".github/workflows/function-limits.yml: function-limits: linux / no Go version"
+        ".github/workflows/ci.yml: test (windows-latest, 1.23): windows / 1.23"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Go version(s) (1.22, 1.23), 6 combination(s)",
       "status": "PASS"

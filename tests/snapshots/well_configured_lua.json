@@ -987,7 +987,6 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no Lua version",
         ".github/workflows/ci.yml: test (ubuntu-latest, 5.1): linux / 5.1",
         ".github/workflows/ci.yml: test (ubuntu-latest, 5.4): linux / 5.4",
         ".github/workflows/ci.yml: test (ubuntu-latest, luajit-2.1): linux / luajit-2.1",
@@ -997,9 +996,7 @@
         ".github/workflows/ci.yml: test (windows-latest, 5.1): windows / 5.1",
         ".github/workflows/ci.yml: test (windows-latest, 5.4): windows / 5.4",
         ".github/workflows/ci.yml: test (windows-latest, luajit-2.1): windows / luajit-2.1",
-        ".github/workflows/ci.yml: lint: linux / no Lua version",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Lua version",
-        ".github/workflows/function-limits.yml: function-limits: linux / no Lua version"
+        ".github/workflows/ci.yml: lint: linux / no Lua version"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 3 Lua version(s) (5.1, 5.4, luajit-2.1), 9 combination(s)",
       "status": "PASS"

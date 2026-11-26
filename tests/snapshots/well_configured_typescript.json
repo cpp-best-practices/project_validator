@@ -1177,15 +1177,12 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no runtime version",
         ".github/workflows/ci.yml: test (ubuntu-latest, 22): linux / 22",
         ".github/workflows/ci.yml: test (ubuntu-latest, 24): linux / 24",
         ".github/workflows/ci.yml: test (macos-latest, 22): macos / 22",
         ".github/workflows/ci.yml: test (macos-latest, 24): macos / 24",
         ".github/workflows/ci.yml: test (windows-latest, 22): windows / 22",
-        ".github/workflows/ci.yml: test (windows-latest, 24): windows / 24",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no runtime version",
-        ".github/workflows/function-limits.yml: function-limits: linux / no runtime version"
+        ".github/workflows/ci.yml: test (windows-latest, 24): windows / 24"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 runtime version(s) (22, 24), 6 combination(s)",
       "status": "PASS"

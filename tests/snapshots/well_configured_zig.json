@@ -889,7 +889,6 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no Zig version",
         ".github/workflows/ci.yml: test (ubuntu-latest, 0.13.0, Debug, ): linux / 0.13.0",
         ".github/workflows/ci.yml: test (ubuntu-latest, 0.13.0, Debug, -fsanitize-c): linux / 0.13.0",
         ".github/workflows/ci.yml: test (ubuntu-latest, 0.13.0, ReleaseSafe, ): linux / 0.13.0",
@@ -915,9 +914,7 @@
         ".github/workflows/ci.yml: test (windows-latest, 0.14.1, ReleaseSafe, ): windows / 0.14.1",
         ".github/workflows/ci.yml: test (windows-latest, 0.14.1, ReleaseSafe, -fsanitize-c): windows / 0.14.1",
         ".github/workflows/ci.yml: fuzz: linux / 0.14.1",
-        ".github/workflows/ci.yml: coverage: linux / 0.14.1",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no Zig version",
-        ".github/workflows/function-limits.yml: function-limits: linux / no Zig version"
+        ".github/workflows/ci.yml: coverage: linux / 0.14.1"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Zig version(s) (0.13.0, 0.14.1), 6 combination(s)",
       "status": "PASS"

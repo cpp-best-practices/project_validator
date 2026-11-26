@@ -7,6 +7,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 
 from project_validator.build_configurations import BuildConfiguration
+from project_validator.ecosystems import registered
 from project_validator.facts import CiConfiguration, Facts, Unknown
 from project_validator.facts.axes import ToolchainAxis, axis_of
 from project_validator.facts.jobs import Job
@@ -65,12 +66,21 @@ def _placed(
     return found, unversioned, unplaced
 
 
+def _of_language(job: Job, language: str, axis: ToolchainAxis, facts: Facts) -> bool:
+    """Whether a job is one of the language's: it builds with or runs an ecosystem of the language, or sets up one of
+    its toolchains. A housekeeping job (a labeler, an artifact cleanup) is no platform of any language (upstream
+    #227)."""
+    labels = {ecosystem.label for ecosystem in registered() if language in ecosystem.languages}
+    return bool(job.ecosystems & labels) or bool(axis.toolchains(job, facts))
+
+
 def platform_answer(language: str, facts: Facts) -> PlatformAnswer | None:
-    """Where CI runs `language`; None when no axis covers it. No CI at all is the answer NO."""
+    """Where CI runs `language`, in the language's own jobs; None when no axis covers it. No CI at all is the answer
+    NO."""
     axis = axis_of(language)
     if axis is None:
         return None
-    jobs = facts.of(Job)
+    jobs = tuple(job for job in facts.of(Job) if _of_language(job, language, axis, facts))
     found, unversioned, unplaced = _placed(jobs, axis, facts)
     notes = tuple(
         dict.fromkeys(f"{fact.origin.path}: {fact.reason}" for fact in facts.of(Unknown) if fact.subject == _JOBS)

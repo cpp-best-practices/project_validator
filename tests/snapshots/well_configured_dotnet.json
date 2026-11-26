@@ -1089,15 +1089,12 @@
     },
     "platform-matrix": {
       "details": [
-        ".github/workflows/ci-lint.yml: ci-lint: linux / no .NET SDK version",
         ".github/workflows/ci.yml: test (ubuntu-latest, 9.0.x): linux / 9.0.x",
         ".github/workflows/ci.yml: test (ubuntu-latest, 10.0.x): linux / 10.0.x",
         ".github/workflows/ci.yml: test (macos-latest, 9.0.x): macos / 9.0.x",
         ".github/workflows/ci.yml: test (macos-latest, 10.0.x): macos / 10.0.x",
         ".github/workflows/ci.yml: test (windows-latest, 9.0.x): windows / 9.0.x",
-        ".github/workflows/ci.yml: test (windows-latest, 10.0.x): windows / 10.0.x",
-        ".github/workflows/copy-paste-detection.yml: copy-paste-detection: linux / no .NET SDK version",
-        ".github/workflows/function-limits.yml: function-limits: linux / no .NET SDK version"
+        ".github/workflows/ci.yml: test (windows-latest, 10.0.x): windows / 10.0.x"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 .NET SDK version(s) (10.0.x, 9.0.x), 6 combination(s)",
       "status": "PASS"
