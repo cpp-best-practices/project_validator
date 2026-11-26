@@ -13,6 +13,7 @@ from project_validator.checks.data_wellformed import data_wellformed
 from project_validator.checks.link_check import link_check
 from project_validator.checks.schema_declared import schema_declared
 from project_validator.checks.schema_examples import schema_examples
+from project_validator.checks.static_analysis import static_analysis
 from project_validator.checks.tests_run import tests_run
 from project_validator.checks.type_checking import type_checking
 from project_validator.core import Check, Result, Status
@@ -52,11 +53,8 @@ DECLARED_OPENAPI = Result.passed("1 OpenAPI file declares its version (openapi) 
 # asyncapi/spec: every document under examples/ is an AsyncAPI document the CLI validates on every PR.
 ASYNCAPI_EXAMPLES = {"examples/a.yaml": ASYNCAPI, **github_job("ubuntu-latest", "asyncapi validate examples/a.yaml")}
 # OAI/OpenAPI-Specification: `yarn test` runs `oai-spec-test`, a program from a git dependency.
-_OAI_PACKAGE = {
-    "main": "index.js",
-    "scripts": {"test": "oai-spec-test"},
-    "devDependencies": {"@oai/build-infra": "git+https://github.com/OAI/build-infra.git#main"},
-}
+_OAI_DEPENDENCIES = {"@oai/build-infra": "git+https://github.com/OAI/build-infra.git#main"}
+_OAI_PACKAGE = {"main": "index.js", "scripts": {"test": "oai-spec-test"}, "devDependencies": _OAI_DEPENDENCIES}
 UNKNOWN_TEST_PROGRAM = {
     "package.json": json.dumps(_OAI_PACKAGE),
     "index.js": "",
@@ -145,12 +143,28 @@ class JsonSchemaAndOpenApiGapTests(unittest.TestCase):
         """The AsyncAPI CLI run over `examples/` checks the schemas' examples (asyncapi/spec)."""
         self.assertEqual(_run(schema_examples, ASYNCAPI_EXAMPLES).status, Status.PASS)
 
-    @unittest.expectedFailure  # upstream #273: a test script whose program comes from a git dependency is unread
     def test_a_test_program_from_a_git_dependency_is_unknown(self) -> None:
         """A package `test` script whose program comes from a git dependency is unknown, not "no CI configuration
-        runs ... (or npm test)" (OAI/OpenAPI-Specification)."""
+        runs ... (or npm test)" (OAI/OpenAPI-Specification, upstream #273); only for the package's languages."""
         result = _run(tests_run, UNKNOWN_TEST_PROGRAM)
-        self.assertNotIn(result.status, (Status.WARN, Status.FAIL), result.message)
+        self.assertEqual(result.status, Status.ERROR, result)
+        self.assertIn("oai-spec-test", " ".join(result.details))
+        # Another language's answer is not in doubt: Python has no tests, whatever the JavaScript program runs.
+        mixed = _run(static_analysis, {**UNKNOWN_TEST_PROGRAM, "tools/build.py": "print(1)\n", "pyproject.toml": ""})
+        [python] = (place for place in mixed.places if place.ecosystem == "Python")
+        self.assertEqual(python.result.status, Status.FAIL, python.result)
+        # A program named for a registry dependency, or without any git dependency, is that package's, not unknown.
+        for package in (
+            {
+                **_OAI_PACKAGE,
+                "scripts": {"test": "build-infra-test"},
+                "devDependencies": {**_OAI_DEPENDENCIES, "build-infra-test": "^1"},
+            },
+            {**_OAI_PACKAGE, "devDependencies": {}},
+        ):
+            with self.subTest(package=package):
+                files = {**UNKNOWN_TEST_PROGRAM, "package.json": json.dumps(package)}
+                self.assertEqual(_run(tests_run, files).status, Status.WARN)
 
     def test_a_schema_named_like_a_configuration_is_not_one(self) -> None:
         """A JSON Schema called tsconfig.json is not a TypeScript configuration (SchemaStore)."""

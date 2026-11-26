@@ -244,14 +244,14 @@ def tool_answer(
     runs = _runs(aspect, language, unit, facts, auxiliary)
     return replace(
         answer,
-        answer=_verdict(level, runs, unknowns := unknowns_for(known, facts)),
+        answer=_verdict(level, runs, unknowns := unknowns_for(known, facts, language=language)),
         reach=_reach(aspect, level, language, unit, facts),
         runs=runs,
         defined=(defined := _defined(aspect, known, facts, unit, auxiliary)),
         lent_by=_lent_by(defined, facts, unit),
         known=tuple(_known(tool, aspect) for tool in known),
         unknowns=unknowns,
-        unknown_definitions=unknowns_for(known, facts, hiding=("settings",)),
+        unknown_definitions=unknowns_for(known, facts, hiding=("settings",), language=language),
         advisory=_advisory(aspect, language, unit, facts, auxiliary, runs),
     )
 
