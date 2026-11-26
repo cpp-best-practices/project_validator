@@ -7,6 +7,7 @@ from __future__ import annotations
 import os
 import unittest
 from collections.abc import Mapping
+from pathlib import Path
 
 from project_validator.checks.repository_hygiene import repository_hygiene
 from project_validator.core import Options, Result, Status
@@ -16,8 +17,17 @@ CONFLICT = "a = 1\n<<<<<<< HEAD\nb = 2\n=======\nb = 3\n>>>>>>> topic\n"
 POINTER = "version https://git-lfs.github.com/spec/v1\noid sha256:" + "0" * 64 + "\nsize 1234\n"
 
 
+def _held(root: Path, files: Mapping[str, str]) -> None:
+    """Skips the test where the file system can't hold the files' names as given (Windows refuses a colon or a
+    trailing dot; macOS and Windows fold case)."""
+    held = {path.relative_to(root).as_posix() for path in root.rglob("*") if path.is_file()}
+    if held != set(files):
+        raise unittest.SkipTest(f"this file system holds {sorted(held)}, not {sorted(files)}")
+
+
 def _run(files: Mapping[str, str], links: Mapping[str, str] | None = None, *, limit: int | None = None) -> Result:
     with temp_project(files) as root:
+        _held(root, files)
         for link, target in (links or {}).items():
             (root / link).parent.mkdir(parents=True, exist_ok=True)
             os.symlink(target, root / link)
@@ -43,6 +53,18 @@ class RepositoryHygieneTests(unittest.TestCase):
         ):
             with self.subTest(detail=detail):
                 result = _run(files, links)
+                self.assertEqual(result.status, Status.FAIL, result)
+                self.assertIn(detail, result.details)
+
+    def test_a_checkout_with_windows_line_endings_is_read_alike(self) -> None:
+        for path, contents, detail in (
+            ("src/a.py", CONFLICT, "src/a.py:2: a merge-conflict marker"),
+            ("assets/logo.png", POINTER, "assets/logo.png: a Git LFS pointer, not the file"),
+        ):
+            with self.subTest(detail=detail), temp_project({}) as root:
+                (root / path).parent.mkdir(parents=True)
+                (root / path).write_bytes(contents.replace("\n", "\r\n").encode())
+                result = repository_hygiene.run(make_context(root))
                 self.assertEqual(result.status, Status.FAIL, result)
                 self.assertIn(detail, result.details)
 

@@ -30,14 +30,15 @@ LISTED = 20
 
 
 def _text(context: Context, path: str) -> str | None:
-    """A file's text, when it is text no larger than the files read; None for a binary or a larger one."""
+    """A file's text, with Windows line endings read as Unix ones (a checkout with `core.autocrlf` has them), when it is
+    text no larger than the files read; None for a binary or a larger one."""
     project = context.project
     if project.size(path) > context.options.max_file_size:
         return None
     data = project.read_bytes(path)
     if b"\x00" in data:
         return None
-    return data.decode("utf-8", errors="replace")
+    return data.decode("utf-8", errors="replace").replace("\r\n", "\n")
 
 
 def _in_text(path: str, text: str) -> Iterator[str]:
