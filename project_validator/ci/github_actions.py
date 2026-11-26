@@ -252,6 +252,20 @@ _FAILED_OUTCOME = re.compile(r"\bsteps\.([\w-]+)\.outcome\s*==\s*'failure'")
 _FAILS = re.compile(r"\s*(?:exit\s+[1-9]\d*|false)\s*")
 
 
+# vmactions' virtual machines (`vmactions/freebsd-vm`): the system a job's commands run in, beyond its runner's.
+_VIRTUAL_MACHINE = re.compile(r"vmactions/(\w+)-vm(?:@|$)", re.IGNORECASE)
+
+
+def _virtual_machine(steps: list[object]) -> str | None:
+    """The system a step of the job boots to run the job's commands in (FreeBSD, OpenBSD, NetBSD, ...): the OS the job
+    counts as on the platform axis (upstream #224), though its expressions still see the runner's."""
+    for step in steps:
+        uses = step.get("uses") if isinstance(step, Mapping) else None
+        if isinstance(uses, str) and (found := _VIRTUAL_MACHINE.match(uses)):
+            return found[1].lower()
+    return None
+
+
 def _rechecked(steps: list[object]) -> frozenset[str]:
     """The ids of the steps whose failure a later step fails the job on (fastapi's prek run continues on error, then
     the job commits the fixes and errors out on the run's outcome): their `continue-on-error` defers the failure."""
@@ -359,13 +373,15 @@ class _Combination:
 
     def job_facts(self, job: Mapping[str, object], known: Known) -> Iterator[Fact]:
         container = job.get("container")
+        steps = job.get("steps")
+        steps = steps if isinstance(steps, list) else []
         yield CiJob(
             origin=self.origin,
             id=self.identity,
             provider=GITHUB_ACTIONS.name,
             name=_job_label(str(job.get("name", self.origin.at[-1])), self.combination, self.substitute)
             + ("" if self.matrix_known else " (matrix computed by an expression)"),
-            os=known.os,
+            os=_virtual_machine(steps) or known.os,
             matrix={
                 key: value if isinstance(value, str) else json.dumps(value) for key, value in self.combination.items()
             },
@@ -373,8 +389,6 @@ class _Combination:
             services=self._services(job.get("services")),
             env=self.substituted(known.env),
         )
-        steps = job.get("steps")
-        steps = steps if isinstance(steps, list) else []
         rechecked = _rechecked(steps)
         for number, step in enumerate(steps):
             if isinstance(step, Mapping):
