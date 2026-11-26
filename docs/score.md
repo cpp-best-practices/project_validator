@@ -22,8 +22,12 @@ percent = 100 * filled / slots
 | fail, or error | nothing, but the slot counts: hiding something never helps |
 | skip (the gate does not apply) | not a slot |
 
-- **Pooled.** Every slot counts the same, so a folder of data files with one gate weighs one slot, not as much as the
-  code with twenty.
+- **Weighed by size** (score version 2). A language's slots weigh its share of its unit's product lines, but at least
+  10%: in a Rust crate with a one-line helper script, a Shell gap costs a tenth of a Rust one, and still costs
+  something. Test, tooling, example and vendored code count for no language's size, and a format's lines (YAML,
+  JSON, TOML) count as a language's do. The whole project's own gates (a licence, CI) weigh one slot each.
+- **Pooled.** The slots are pooled, so a folder of data files with one gate weighs its slot, not as much as the code
+  with twenty.
 - **Auxiliary code** (what `--auxiliary` names: tests, examples, scripts) weighs half, and is not asked for the gates
   of the product alone: coverage, fuzzing, mutation testing, sanitizers, hardening, dependency audit, the platform
   matrix, build types and security scanning.
@@ -31,7 +35,8 @@ percent = 100 * filled / slots
 - A language the validator has no tools for adds no slot for the gates it can not judge: that gap is the validator's to
   fix, not the project's.
 
-So 100% is reachable, and means exactly that: every gate that applies to each part of the project is in place.
+So 100% is reachable, and means exactly that: every gate that applies to each part of the project is in place. Size
+weights only the percent: the levels still ask every language for every gate of theirs.
 
 ## Extra credit
 

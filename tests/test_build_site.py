@@ -18,6 +18,7 @@ from leaderboard import entries
 from leaderboard.evaluation import write
 from leaderboard.history import record
 from project_validator.ecosystems import PROFILES
+from project_validator.score import SCORE_VERSION
 from tests import build_site
 from tests.build_site import ROOT, Site, build, pages, render_page, rewrite_links, title_of
 
@@ -149,7 +150,7 @@ def _nightly(name: str, language: str) -> dict[str, object]:
         "validator": "v" * 40,
         "evaluated": "2026-11-18T03:17:00Z",
         "score": {
-            "version": "1",
+            "version": SCORE_VERSION,
             "percent": 50.0,
             "level": 1,
             "level_name": "Foundations",
