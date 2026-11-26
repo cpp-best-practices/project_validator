@@ -105,6 +105,9 @@ class Options:
     local_checks: str | None = None
     # Never ask the source-control host's API for the repository's settings (upstream #385; see `hosting`).
     offline: bool = False
+    # Read the reusable workflows and composite actions of other repositories CI uses, fetched from GitHub at the ref
+    # they are pinned to (upstream #248; see `remote`).
+    fetch_remote: bool = False
 
 
 _SKIPPED_DIRECTORIES = frozenset({"node_modules", "__pycache__"})

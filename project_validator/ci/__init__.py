@@ -7,7 +7,7 @@ import re
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass, replace
 
-from project_validator import yaml_support
+from project_validator import remote, yaml_support
 from project_validator.build_configurations import BuildConfiguration, sanitizers_enabled
 from project_validator.core import Project
 from project_validator.ecosystems import build_systems, registered
@@ -371,7 +371,7 @@ def _heuristic_facts(ci_file: CiFile, text: str, reason: str) -> Iterator[Fact]:
     yield Unknown(origin=origin, subject=_JOBS, reason=reason, hides="jobs")
 
 
-def _file_facts(project: Project, ci_file: CiFile) -> Iterator[Fact]:
+def _file_facts(project: Project, ci_file: CiFile, *, fetch_remote: bool = False) -> Iterator[Fact]:
     provider = ci_file.provider
     text = project.read_text(ci_file.path)
     if provider.facts is None:
@@ -382,7 +382,7 @@ def _file_facts(project: Project, ci_file: CiFile) -> Iterator[Fact]:
     except yaml_support.YamlError as error:
         yield from _heuristic_facts(ci_file, text, f"invalid YAML ({error}), scanned heuristically")
         return
-    yield from provider.facts(ci_file.path, document, _loader(project))
+    yield from provider.facts(ci_file.path, document, _loader(project, fetch_remote=fetch_remote))
     if provider.step_references is not None:
         origin = Origin(path=ci_file.path)
         references = dict.fromkeys(provider.step_references(document))
@@ -402,21 +402,35 @@ def _repository(project: Project) -> str | None:
     return found[1] if found else None
 
 
-def _loader(project: Project) -> Load:
+# What `load` answers with whether files of other repositories are fetched (see `project_validator.remote`).
+FETCHES_REMOTE = "<fetches remote>"
+
+
+def _parsed(text: str | None) -> object | None:
+    if text is None:
+        return None
+    try:
+        return yaml_support.load(text)
+    except yaml_support.YamlError:
+        return None
+
+
+def _loader(project: Project, *, fetch_remote: bool = False) -> Load:
     def load(path: str) -> object | None:
         if path == REPOSITORY:
             return _repository(project)
-        if not project.exists(path):
-            return None
-        try:
-            return yaml_support.load(project.read_text(path))
-        except yaml_support.YamlError:
-            return None
+        if path == FETCHES_REMOTE:
+            return fetch_remote
+        if remote.is_remote(path):
+            return _parsed(remote.fetched(path)) if fetch_remote else None
+        return _parsed(project.read_text(path)) if project.exists(path) else None
 
     return load
 
 
-def ci_facts(project: Project, ci_files: tuple[CiFile, ...]) -> Facts:
-    """What the CI configuration shows: its files, its jobs, and the commands and reusable steps each one runs."""
+def ci_facts(project: Project, ci_files: tuple[CiFile, ...], *, fetch_remote: bool = False) -> Facts:
+    """What the CI configuration shows: its files, its jobs, and the commands and reusable steps each one runs; with
+    `fetch_remote`, the reusable workflows and composite actions of other repositories they use too."""
     files = (CiConfiguration(origin=Origin(path=ci_file.path), provider=ci_file.provider.name) for ci_file in ci_files)
-    return collected((files, *(_file_facts(project, ci_file) for ci_file in ci_files)))
+    read = (_file_facts(project, ci_file, fetch_remote=fetch_remote) for ci_file in ci_files)
+    return collected((files, *read))

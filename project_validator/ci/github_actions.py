@@ -9,7 +9,8 @@ from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass, replace
 from functools import partial
 
-from project_validator.ci import REPOSITORY, CiProvider, Load, strings
+from project_validator import remote
+from project_validator.ci import FETCHES_REMOTE, REPOSITORY, CiProvider, Load, strings
 from project_validator.ci.github_expressions import Known, evaluate, rendered, requirement
 from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, Origin, Unknown
 from project_validator.facts.exit_status import ERREXIT, STRICT, Shell, shell_of
@@ -428,8 +429,11 @@ class _Combination:
             yield ActionStep(
                 origin=origin, job=self.identity, uses=uses, inputs=inputs, condition=condition, advisory=self.advisory
             )
-            if (local := _local_action(uses)) is not None:
-                yield from self.composite_facts(origin, local, inputs, known, (*via, origin))
+            # The repository's own action is at its root, "": a local path, not a remote one.
+            if (directory := _local_action(uses)) is None:
+                directory = self._remote_action(uses)
+            if directory is not None:
+                yield from self.composite_facts(origin, directory, inputs, known, (*via, origin))
         if isinstance(run := step.get("run"), str):
             yield from self.run_facts(origin, step, self.substitute(run), known, condition, via)
 
@@ -502,7 +506,7 @@ class _Combination:
         if found is None:
             yield Unknown(
                 origin=origin,
-                subject=f"the action ./{directory}",
+                subject=_action_subject(directory),
                 reason="its action.yml is not read",
                 hides="commands",
             )
@@ -515,13 +519,20 @@ class _Combination:
         # `via` holds the steps that use each action on the way here, the workflow's first.
         reached = follow(Chain(tuple(step.path for step in via)), path, COMPOSITE_ACTIONS, verb="uses")
         if isinstance(reached, Refused):
-            yield Unknown(origin=origin, subject=f"the action ./{directory}", reason=reached.reason, hides="commands")
+            yield Unknown(origin=origin, subject=_action_subject(directory), reason=reached.reason, hides="commands")
             return
         values = {**_input_defaults(action.get("inputs")), **inputs}
         for number, step in enumerate(steps):
             if isinstance(step, Mapping):
                 at = Origin(path=path, at=("runs", "steps", number))
                 yield from self.step_facts(at, _with_inputs(step, values), known, via)
+
+    def _remote_action(self, uses: str) -> str | None:
+        """Where an action of another repository is (see `remote.reference`), when files of other repositories are
+        fetched and the validator does not know the action already; else None."""
+        if self.load is None or self.load(FETCHES_REMOTE) is not True or _modelled(uses):
+            return None
+        return _remote_path(uses)
 
     def _action(self, directory: str) -> tuple[str, Mapping[str, object]] | None:
         for name in ("action.yml", "action.yaml"):
@@ -530,6 +541,29 @@ class _Combination:
             if self.load is not None and isinstance(document := self.load(path), Mapping):
                 return path, document
         return None
+
+
+def _action_subject(directory: str) -> str:
+    return f"the action {_shown(directory)}" if remote.is_remote(directory) else f"the action ./{directory}"
+
+
+def _shown(name: str) -> str:
+    """`owner/repo/path@ref`, as a workflow writes the remote file `name` (see `remote.reference`)."""
+    ref, _, rest = name.removeprefix(remote.PREFIX).partition("/")
+    return f"{rest}@{ref}"
+
+
+# A file of another repository a workflow uses: `owner/repo[/path]@ref` (an action), or a reusable workflow below it.
+_ELSEWHERE = re.compile(r"^(?P<repository>[\w.-]+/[\w.-]+)(?:/(?P<path>[^@]+))?@(?P<ref>[\w./-]+)$")
+
+
+def _remote_path(uses: str) -> str | None:
+    """The remote name of what `uses` names in another repository (see `remote.reference`); None for a local path or a
+    Docker image."""
+    found = _ELSEWHERE.match(uses)
+    if found is None:
+        return None
+    return remote.reference(found["repository"], found["path"] or "", found["ref"])
 
 
 _INPUTS = Syntax(re.compile(r"\$\{\{\s*inputs\.(?P<name>[\w-]+)\s*\}\}"))
@@ -689,8 +723,10 @@ def _modelled(uses: str) -> bool:
 
 def _called(uses: str, load: Load | None, chain: Chain) -> tuple[Chain, object] | str:
     """The chain that reaches the reusable workflow `uses` names, and its document; why it is not read, when not."""
-    unread = f"it calls the reusable workflow {uses}, which is not read"
-    called = _local(uses) or _own(uses, load)
+    fetching = load is not None and load(FETCHES_REMOTE) is True
+    hint = "" if fetching else " (--fetch-remote reads it)"
+    unread = f"it calls the reusable workflow {uses}, which is not read{hint}"
+    called = _local(uses) or _own(uses, load) or (_remote_path(uses) if fetching else None)
     reached = follow(chain, called, REUSABLE_WORKFLOWS, verb="calls") if called is not None else Refused(unread)
     if isinstance(reached, Refused):
         return reached.reason

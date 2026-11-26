@@ -95,7 +95,10 @@ def extract_facts(context: Context) -> Facts:
     """Every fact about the project `context` reads, in the stages above; an `ExtractionError` when a stage fails."""
     project = context.project
     found = _project_facts(context)
-    jobs = _stage(context, "the CI configuration", lambda: ci.ci_facts(project, context.live_ci_files))
+    fetches = context.options.fetch_remote and not hosting.offline(context.options.offline)
+    jobs = _stage(
+        context, "the CI configuration", lambda: ci.ci_facts(project, context.live_ci_files, fetch_remote=fetches)
+    )
     expanders, actions = expansion.known_expanders(), expansion.known_actions()
     found = _stage(
         context, "the CI commands", lambda: found + expansion.expanded(jobs, context, expanders, actions), before=found
