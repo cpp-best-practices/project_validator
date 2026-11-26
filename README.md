@@ -70,11 +70,15 @@ What you see:
   while the project is read. `--verbose` shows every detail and the checks that do not apply.
 - **Elsewhere** (CI logs, or without rich): the same detection, then one greppable `[STATUS] check: message` line per
   check, each detail said once.
-- **The HTML report** (`--html FILE`, or `--format html`): one self-contained file, light and dark, with the score,
-  what was detected, every result with why it matters, a matrix of checks by language, the next steps, a searchable
-  browser of every fact the validator read (linked to the file on GitHub for a checkout) and how long each stage took.
+- **The HTML report** (`--html FILE`, or `--format html`): one self-contained file, light and dark, with the score, what
+  was detected, every result with why it matters, a matrix of checks by language, the next steps, a searchable browser
+  of every fact the validator read (linked to the file on GitHub for a checkout) and how long each stage took. Each
+  language's name opens its own view: where its files are, and what each check says of it. Results open and close with
+  the arrow keys too.
 - **The TUI** (`--tui`, with textual): the stages as they are read, then a tree of the overview, what was detected,
-  the results, the next steps and the facts by kind.
+  each language's own page (where its files are, and what each check says of it), the results, the next steps and
+  the facts by kind. The arrow keys walk the tree: Right expands a branch or enters it, Left collapses it or leaves
+  it.
 
 | Option | Meaning |
 |---|---|

@@ -35,6 +35,7 @@ from project_validator.views.common import (
     OUTCOMES,
     STATUS_ORDER,
     SYMBOLS,
+    LanguageView,
     branch_label,
     ci_summary,
     counts,
@@ -46,6 +47,7 @@ from project_validator.views.common import (
     grouped,
     is_skipped,
     judged_places,
+    language_views,
     place_count,
     place_label,
     reading,
@@ -226,12 +228,15 @@ def _linked_places(analysis: Analysis, found: LanguageFiles) -> str:
     return ", ".join(places) + e(rest)
 
 
+def _language_link(language: str) -> str:
+    """A language's name, linked to its own view (see `_language_views`)."""
+    anchor = LanguageView(language=language, files="", places=(), results=()).anchor
+    return f'<a href="#{anchor}"><strong>{e(language)}</strong></a>'
+
+
 def _files_card(analysis: Analysis) -> str:
     files = analysis.structure.files if analysis.structure else ()
-    rows = (
-        (f"<strong>{e(found.language)}</strong>", e(file_count(found)), _linked_places(analysis, found))
-        for found in files
-    )
+    rows = ((_language_link(found.language), e(file_count(found)), _linked_places(analysis, found)) for found in files)
     listed = table(("Language or format", "Files", "Where"), rows)
     return f'<div class="card" style="margin-top:1rem"><h3>Where the files are</h3>{listed}</div>'
 
@@ -292,6 +297,33 @@ def _ci_card(analysis: Analysis, jobs: Sequence[Job]) -> str:
     )
 
 
+NO_CHECK = '<p class="muted">No check judges it.</p>'
+
+
+def _check_link(name: str) -> str:
+    return f'<a href="#{_anchor(name)}">{e(name)}</a>'
+
+
+def _language_views(analysis: Analysis) -> str:
+    """Each language's own view (upstream #388): its files and folders, and what each check says of it. A view is
+    shown when its link is followed (`.language-view:target`), so the report needs no script for it."""
+    views = []
+    for view in language_views(analysis):
+        places = ", ".join(
+            f"{_linked_folder(analysis, place.directory)} {e(place_count(place))}" for place in view.places
+        )
+        rows = (
+            (pill(result.status), _check_link(result.check), e(result.message), e(result.place))
+            for result in view.results
+        )
+        said = table(("", "Check", "What it says", "Where"), rows) if view.results else NO_CHECK
+        views.append(
+            f'<div class="card language-view" id="{view.anchor}"><h3>{e(view.language)} '
+            f'<span class="muted">{e(view.files)}</span></h3><p>{places}</p>{said}</div>'
+        )
+    return "".join(views)
+
+
 def _detected(analysis: Analysis) -> str:
     structure = analysis.structure
     if structure is None:
@@ -302,7 +334,8 @@ def _detected(analysis: Analysis) -> str:
     return (
         '<section class="wrap" id="detected"><h2>What was detected</h2>'
         f'<div class="grid two">{_languages_card(analysis)}{_units_card(analysis)}</div>{_files_card(analysis)}'
-        f"{_roles_card(analysis, structure.vendored)}{_ci_card(analysis, structure.ci_jobs)}</section>"
+        f"{_language_views(analysis)}{_roles_card(analysis, structure.vendored)}{_ci_card(analysis, structure.ci_jobs)}"
+        "</section>"
     )
 
 

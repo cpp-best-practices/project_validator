@@ -12,6 +12,7 @@ from dataclasses import dataclass
 
 from project_validator.analysis import Analysis, Git, RoleSummary
 from project_validator.core import Placed, Status
+from project_validator.ecosystems import registered
 from project_validator.explanations import CATEGORIES, category
 from project_validator.facts import PartlyRead
 from project_validator.project_map import LanguageFiles, Place
@@ -219,6 +220,58 @@ def files_by_language(analysis: Analysis) -> list[tuple[str, str, str]]:
     return [(found.language, *language_files(found)) for found in analysis.structure.files]
 
 
+@dataclass(frozen=True, slots=True, kw_only=True)
+class LanguageResult:
+    """What one check says of a language in one unit."""
+
+    check: str
+    status: Status
+    message: str
+    place: str
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class LanguageView:
+    """One language's (or format's) own view (upstream #388): how many files it has, the folders that hold them, and
+    what each check that judged it says."""
+
+    language: str
+    files: str
+    places: tuple[Place, ...]
+    results: tuple[LanguageResult, ...]
+
+    @property
+    def anchor(self) -> str:
+        """Where the HTML report shows it: `language-python`, `language-c--`."""
+        return "language-" + "".join(character if character.isalnum() else "-" for character in self.language.lower())
+
+
+def language_views(analysis: Analysis) -> list[LanguageView]:
+    """Each language's and format's view, most files first. A check speaks of a language through its ecosystem's
+    places (a YAML file's through Data's)."""
+    if analysis.structure is None:
+        return []
+    labels = {language: ecosystem.label for ecosystem in registered() for language in ecosystem.languages}
+    views = []
+    for found in analysis.structure.files:
+        label = labels.get(found.language, found.language)
+        results = tuple(
+            LanguageResult(
+                check=str(report.check.name),
+                status=place.result.status,
+                message=place.result.message,
+                place=place_label(place),
+            )
+            for report in analysis.reports
+            for place in judged_places(report)
+            if place.ecosystem == label
+        )
+        views.append(
+            LanguageView(language=found.language, files=file_count(found), places=found.places, results=results)
+        )
+    return views
+
+
 def unrecognised(analysis: Analysis) -> str:
     """The suffixes no ecosystem recognised, most common first: languages the validator does not know yet."""
     if analysis.structure is None or not analysis.structure.unrecognised_suffixes:
@@ -239,6 +292,8 @@ __all__ = [
     "STATUS_ORDER",
     "SYMBOLS",
     "Group",
+    "LanguageResult",
+    "LanguageView",
     "branch_label",
     "ci_summary",
     "counts",
@@ -252,6 +307,7 @@ __all__ = [
     "is_skipped",
     "judged_places",
     "language_files",
+    "language_views",
     "place_count",
     "place_label",
     "reading",

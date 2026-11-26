@@ -24,6 +24,8 @@ from project_validator.views.common import (
     ecosystems,
     files_by_language,
     judged_places,
+    language_views,
+    place_count,
     place_label,
     reading,
     role_judgement,
@@ -33,6 +35,7 @@ from project_validator.views.common import (
 )
 from project_validator.views.console import STYLES
 from project_validator.views.progress import STAGE_NAMES
+from project_validator.words import folder
 
 if TYPE_CHECKING:
     from textual.app import App
@@ -128,6 +131,23 @@ def next_steps(analysis: Analysis) -> str:
     lines = ["[bold]Next steps[/] [dim](the points each is worth)[/]", ""]
     for step in analysis.score.next_steps:
         lines.append(f"[bold green]+{step.points:5.1f}[/]  {markup(step.describe())}")
+    return "\n".join(lines)
+
+
+def language_page(analysis: Analysis, language: str) -> str:
+    """One language's view (upstream #388): its files, the folders that hold them, and what each check says of it."""
+    view = next((found for found in language_views(analysis) if found.language == language), None)
+    if view is None:
+        return f"No {markup(language)} files were found."
+    lines = [f"[bold]{markup(view.language)}[/]  [dim]{markup(view.files)}[/]", ""]
+    lines += [f"  {markup(folder(place.directory))} [dim]{markup(place_count(place))}[/]" for place in view.places]
+    lines += ["", "[bold]What the checks say[/]"]
+    said = [
+        f"{status_markup(result.status)} {markup(result.check)}  {markup(result.message)}"
+        f" [dim]{markup(result.place)}[/]"
+        for result in view.results
+    ]
+    lines += said or ["[dim]no check judges it[/]"]
     return "\n".join(lines)
 
 
