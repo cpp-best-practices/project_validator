@@ -6,13 +6,13 @@ import json
 import tempfile
 import textwrap
 import unittest
-from collections.abc import Iterator, Mapping
+from collections.abc import Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from pathlib import Path
 from types import MappingProxyType
 from typing import Any
 
-from project_validator.core import Check, Context, Options, Project, Result
+from project_validator.core import Check, Context, Options, Project, Result, Status
 from project_validator.ecosystems import BUILT_IN, C_FAMILY, Ecosystem, ecosystems_for, registered
 from project_validator.ecosystems.c import C
 from project_validator.ecosystems.cpp import CXX
@@ -396,3 +396,20 @@ def json_output(output: str, kind: str) -> Any:
 # Checks of every project that apply only where it holds what they check (binary and asset files): a fixture with
 # none skips them.
 CONTENT_CHECKS = frozenset({"file-soundness"})
+
+# The best result a well-configured project of a language can get from a check, where no tool the validator knows can
+# fail the build for it: Racket's one analyser, Resyntax, only reports (upstream #278).
+CEILINGS: Mapping[tuple[str, str], Status] = {("Racket", "static-analysis"): Status.WARN}
+
+
+def capped(languages: Iterable[str]) -> frozenset[str]:
+    """The checks a well-configured project of `languages` cannot pass (see `CEILINGS`)."""
+    found = frozenset(languages)
+    return frozenset(check for language, check in CEILINGS if language in found)
+
+
+def best(languages: Iterable[str], check: str) -> Status:
+    """The best result a well-configured project of `languages` can get from `check`."""
+    found = frozenset(languages)
+    ceilings = (CEILINGS.get((language, check), Status.PASS) for language in found)
+    return max(ceilings, key=lambda status: status.severity, default=Status.PASS)

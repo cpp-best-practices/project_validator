@@ -113,12 +113,14 @@ class ToolAnswer:
         providing = set(self.providing())
         return tuple(tool.name for tool in self.known if tool.required and tool.name not in providing)
 
-    def how(self, level: str | None = None) -> tuple[str, ...]:
-        """How each known tool provides `level` (by default, the answer's); a tool with no way to give is never
-        suggested (it only provides the level as part of something else, molecule's testinfra verifier, or is
-        recognised where a project uses it but another is recommended: uncrustify beside clang-format)."""
+    def how(self, level: str | None = None, *, besides: Iterable[str] = ()) -> tuple[str, ...]:
+        """How each known tool provides `level` (by default, the answer's), but the tools named `besides`; a tool with
+        no way to give is never suggested (it only provides the level as part of something else, molecule's testinfra
+        verifier, or is recognised where a project uses it but another is recommended: uncrustify beside
+        clang-format)."""
         wanted = self.level if level is None else level
-        return tuple(tool.can[wanted] for tool in self.known if tool.can.get(wanted))
+        left_out = frozenset(besides)
+        return tuple(tool.can[wanted] for tool in self.known if tool.can.get(wanted) and tool.name not in left_out)
 
     def names(self) -> tuple[str, ...]:
         """The known tools to name: those suggested (see `how`), and those the project defines."""

@@ -27,6 +27,13 @@ version, `8.14`.
 `raco fmt -i` rewrites the files, which enforces the style where the job fails on `git diff --exit-code` or commits
 the changes; `raco fmt` without `-i` only prints the formatted code. The formatter has one style.
 
+## `static-analysis`
+
+Resyntax, the Racket refactoring linter (`racket -l- resyntax/cli analyze`, or `raco resyntax analyze` and `fix`),
+which typed-racket and scribble run on every pull request. It reports, as a review or a scheduled pull request of its
+fixes, and never fails the build, so it is an advisory analyser: running it is a warning, not a pass. No Racket linter
+the validator knows can fail the build, so a Racket project warns at best; one that runs none fails.
+
 ## `license`
 
 The `license` an `info.rkt` declares, an SPDX expression (`(define license '(Apache-2.0 OR MIT))`).
@@ -41,8 +48,7 @@ The `compiled/` directories (`.zo` and `.dep` files) raco writes beside each mod
 
 ## Not judged
 
-Racket's compiler reports no warnings worth a practice (`compiler-warnings`, `warnings-as-errors`), and no linter
-the validator knows is in common use (`static-analysis`); it is dynamically typed, Typed Racket aside
-(`type-checking`); no code security scanner, dependency auditor, function length limiter, fuzzer or mutation testing
-tool the validator knows reads Racket; a package's dependencies are resolved by the catalog without a lock file
-(`dependency-management`).
+Racket's compiler reports no warnings worth a practice (`compiler-warnings`, `warnings-as-errors`); it is
+dynamically typed, Typed Racket aside (`type-checking`); no code security scanner, dependency auditor, function
+length limiter, fuzzer or mutation testing tool the validator knows reads Racket; a package's dependencies are
+resolved by the catalog without a lock file (`dependency-management`).

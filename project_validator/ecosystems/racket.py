@@ -9,6 +9,7 @@ from pathlib import Path, PurePosixPath
 
 from project_validator.core import Project
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, subcommands, toolchain_patterns
+from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.axes import ToolchainAxis, toolchain_versions
 from project_validator.facts.coverage import Granularity, coverage_tool, reported
 from project_validator.facts.expansion import Action
@@ -97,6 +98,22 @@ RACO_FMT = format_tool(
     can={Enforcement.APPLY: "raco fmt -i $(git ls-files '*.rkt'), with the job failing on git diff --exit-code"},
     formats=flagged(("raco", "fmt"), checks=(), applies=("-i", "--in-place")),
     style=defined_by(),
+)
+
+
+# --- Static analysis ------------------------------------------------------------------------------------------------
+
+# Resyntax, the Racket refactoring linter (`racket -l- resyntax/cli analyze`, or `raco resyntax`): typed-racket and
+# scribble run it on every pull request, as a review, and a scheduled job opens a pull request of its fixes. It reports
+# and never fails the build, so it is an advisory analyser (upstream #278).
+RESYNTAX = analyzer(
+    name="Resyntax",
+    languages=RACKET,
+    how="racket -l- resyntax/cli analyze --local-git-repository . origin/main (it reports; it never fails the build)",
+    analyses=when(
+        starts(("racket", "-l-", "resyntax/cli"), ("raco", "resyntax")),
+        lambda: analysed(advisory="it only reports, as a review or a pull request of fixes"),
+    ),
 )
 
 
