@@ -293,6 +293,19 @@ class SummaryTests(unittest.TestCase):
         ]
         self.assertEqual(scored(reports).breakdown(), {"C++": (1, 1), "Python": (0, 1), "": (1, 1)})
 
+    def test_the_units_breakdown_is_by_unit(self) -> None:
+        reports = [
+            report("tests-run", PASS, place(PASS, unit="lib"), place(FAIL, unit="app"), place(PASS, unit="app")),
+            project_wide("license", PASS),
+        ]
+        found = scored(reports)
+        self.assertEqual(found.units(), {"lib": (1, 1), "app": (1, 2), "": (1, 1)})
+        self.assertTrue(found.several_units)
+        self.assertEqual(found.as_dict()["units"], {"lib": [1, 1], "app": [1, 2], "": [1, 1]})
+
+    def test_one_unit_is_not_several(self) -> None:
+        self.assertFalse(scored(foundations()).several_units)
+
     def test_as_json(self) -> None:
         data = scored(foundations()).as_dict()
         self.assertEqual(data["version"], SCORE_VERSION)

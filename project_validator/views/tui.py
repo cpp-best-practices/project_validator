@@ -16,7 +16,7 @@ from project_validator.core import Check, Context, Status
 from project_validator.explanations import why
 from project_validator.facts import as_dict
 from project_validator.runner import Report
-from project_validator.score import LEVEL_NAMES
+from project_validator.score import LEVEL_NAMES, floor_percent
 from project_validator.views.common import (
     SYMBOLS,
     ci_summary,
@@ -31,6 +31,7 @@ from project_validator.views.common import (
     reading,
     role_judgement,
     role_line,
+    score_parts,
     summary,
     units,
 )
@@ -65,16 +66,18 @@ def overview(analysis: Analysis) -> str:
     if analysis.score is not None:
         scored = analysis.score
         lines += [
-            f"[bold]{int(scored.percent)}%[/]  Level {scored.level} {LEVEL_NAMES[scored.level]}",
+            f"[bold]{floor_percent(scored.percent)}%[/]  Level {scored.level} {LEVEL_NAMES[scored.level]}",
             f"[dim]{markup(scored.summary())}[/]",
             "",
         ]
-        for name, (filled, slots) in sorted(scored.breakdown().items()):
-            percent = 100.0 * filled / slots if slots else 100.0
-            width = 24
-            done = round(width * min(percent, 100) / 100)
-            bar = f"[green]{'█' * done}[/][dim]{'░' * (width - done)}[/]"
-            lines.append(f"  {markup(name or 'the whole project'):<22} {bar} {int(percent)}%")
+        parts = score_parts(scored)
+        for heading, rows in parts:
+            lines += [f"[bold]By {heading}[/]"] if len(parts) > 1 else []
+            for name, percent, _, _ in rows:
+                width = 24
+                done = round(width * min(percent, 100) / 100)
+                bar = f"[green]{'█' * done}[/][dim]{'░' * (width - done)}[/]"
+                lines.append(f"  {markup(name):<22} {bar} {floor_percent(percent)}%")
         lines.append("")
     lines += [markup(summary(analysis.reports)), f"[dim]Read {markup(reading(analysis))}[/]"]
     return "\n".join(lines)

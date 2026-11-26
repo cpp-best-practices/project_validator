@@ -31,3 +31,6 @@ oom-*
 
 # The documentation site
 _site/
+
+# Local patch-coverage reports
+.patchcov.*

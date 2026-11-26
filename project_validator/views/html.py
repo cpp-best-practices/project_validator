@@ -30,12 +30,13 @@ from project_validator.facts import as_dict
 from project_validator.facts.jobs import Job
 from project_validator.project_map import LanguageFiles
 from project_validator.runner import Report
-from project_validator.score import LEVEL_NAMES, Score
+from project_validator.score import LEVEL_NAMES, Score, floor_percent
 from project_validator.views.common import (
     OUTCOMES,
     STATUS_ORDER,
     SYMBOLS,
     LanguageView,
+    ScoreRow,
     branch_label,
     ci_summary,
     counts,
@@ -55,6 +56,7 @@ from project_validator.views.common import (
     role_directories,
     role_judgement,
     role_line,
+    score_parts,
     shown_places,
     summary,
     units,
@@ -100,7 +102,7 @@ def ring(percent: float, label: str) -> str:
         f'<circle class="track" cx="64" cy="64" r="{radius}" fill="none" stroke-width="{width}"/>'
         f'<circle class="value" cx="64" cy="64" r="{radius}" fill="none" stroke="{colour}" stroke-width="{width}" '
         f'stroke-dasharray="{circumference:.2f}" stroke-dashoffset="{offset:.2f}"/></svg>'
-        f'<div class="label"><div><strong>{math.floor(round(percent, 6))}%</strong><span>score</span></div></div></div>'
+        f'<div class="label"><div><strong>{floor_percent(percent)}%</strong><span>score</span></div></div></div>'
     )
 
 
@@ -156,15 +158,12 @@ def _hero(analysis: Analysis) -> str:
     )
 
 
-def _breakdown(scored: Score) -> str:
-    rows = []
-    for name, (filled, slots) in sorted(scored.breakdown().items()):
-        percent = 100.0 * filled / slots if slots else 100.0
-        rows.append(
-            f"<div>{e(name or 'The whole project')}</div>{bar(percent)}"
-            f'<div class="muted" style="text-align:right">{math.floor(round(percent, 6))}%</div>'
-        )
-    return f'<div class="breakdown">{"".join(rows)}</div>'
+def _breakdown(rows: Sequence[ScoreRow]) -> str:
+    cells = (
+        f'<div>{e(name)}</div>{bar(percent)}<div class="muted" style="text-align:right">{floor_percent(percent)}%</div>'
+        for name, percent, _, _ in rows
+    )
+    return f'<div class="breakdown">{"".join(cells)}</div>'
 
 
 def _top_steps(scored: Score) -> str:
@@ -192,9 +191,12 @@ def _overview(analysis: Analysis) -> str:
     scored = analysis.score
     if scored is None:
         return ""
+    breakdowns = "".join(
+        f"<h3>Gates in place, by {heading}</h3>{_breakdown(rows)}" for heading, rows in score_parts(scored)
+    )
     return (
         '<div class="wrap grid two">'
-        f'<div class="card"><h3>Gates in place, by language</h3>{_breakdown(scored)}'
+        f'<div class="card">{breakdowns}'
         f'<p class="muted" style="font-size:.85rem;margin-bottom:0">{e(SCORE_EXPLAINED)}</p></div>'
         f'<div class="card"><h3>Next steps</h3>{_top_steps(scored)}'
         '<p style="margin-bottom:0"><a href="#next">All next steps →</a></p></div>'

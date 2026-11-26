@@ -38,6 +38,11 @@ percent = 100 * filled / slots
 So 100% is reachable, and means exactly that: every gate that applies to each part of the project is in place. Size
 weights only the percent: the levels still ask every language for every gate of theirs.
 
+## By language and by unit
+
+The views break the score down by language, and, in a project of several units (a monorepo), by unit too: how much of
+each part's gates is in place. The headline stays the one score of the whole project.
+
 ## Extra credit
 
 Some gates find more with each tool: two static analysers, a scanner beside CodeQL, a second fuzzing engine, more
@@ -95,6 +100,7 @@ With `--format json --score`, the output is `{"format": "results", "version": "1
 - `version`, `percent` (with any extra credit), `base` (the share of slots filled), `extra` and `held`;
 - `level` and `level_name`, `filled` and `slots`, and the `summary` line;
 - `breakdown`: each language's filled slots and slots (`""` for the whole project's own gates);
+- `units`: each unit's filled slots and slots, the same way;
 - `cells`: each slot's check, level, language, unit, tier, status, tools, weight, filled share and extra credit;
 - `next_steps`: each step's check, language, unit, tier, status, level, points, `needed_for`, `completes`, the
   message found and the hint.

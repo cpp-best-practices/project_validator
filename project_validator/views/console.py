@@ -15,7 +15,7 @@ from typing import Any, TextIO
 from project_validator.analysis import Analysis
 from project_validator.core import Status
 from project_validator.runner import Report
-from project_validator.score import LEVEL_NAMES, Score
+from project_validator.score import LEVEL_NAMES, Score, floor_percent
 from project_validator.views.common import (
     SYMBOLS,
     Group,
@@ -33,6 +33,7 @@ from project_validator.views.common import (
     reading,
     role_judgement,
     role_line,
+    score_parts,
     summary,
     units,
     unrecognised,
@@ -114,7 +115,7 @@ class _Renderer:
     def _score_line(self, scored: Score) -> Any:
         table = self.rich["table"].Table.grid(padding=(0, 2))
         line = self.text.assemble(
-            (f"{int(scored.percent)}%", score_style(scored.percent) + " bold"),
+            (f"{floor_percent(scored.percent)}%", score_style(scored.percent) + " bold"),
             "  ",
             (f"Level {scored.level} {LEVEL_NAMES[scored.level]}", "bold"),
         )
@@ -226,16 +227,19 @@ class _Renderer:
         self.print(self.rich["rule"].Rule("[bold]Score", align="left", style=ACCENT))
         self.print(self._score_line(scored))
         self.print(self.text(scored.summary(), style="dim"))
-        breakdown = self.rich["table"].Table(box=None, show_header=False, pad_edge=False, padding=(0, 2))
-        for name, (filled, slots) in sorted(scored.breakdown().items()):
-            percent = 100.0 * filled / slots if slots else 100.0
-            breakdown.add_row(
-                self.text(name or "the whole project", style=ACCENT),
-                self.bar(percent, 20),
-                self.text(f"{int(percent)}%", style=score_style(percent)),
-                self.text(f"{filled:g} of {slots:g} slots", style="dim"),
-            )
-        self.print(breakdown)
+        parts = score_parts(scored)
+        for heading, rows in parts:
+            if len(parts) > 1:
+                self.print(self.text(f"By {heading}", style="bold"))
+            breakdown = self.rich["table"].Table(box=None, show_header=False, pad_edge=False, padding=(0, 2))
+            for name, percent, filled, slots in rows:
+                breakdown.add_row(
+                    self.text(name, style=ACCENT),
+                    self.bar(percent, 20),
+                    self.text(f"{floor_percent(percent)}%", style=score_style(percent)),
+                    self.text(f"{filled:g} of {slots:g} slots", style="dim"),
+                )
+            self.print(breakdown)
         if scored.next_steps:
             self.next_steps(scored)
 
