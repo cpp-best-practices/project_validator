@@ -40,7 +40,8 @@ version. To run from a checkout instead, nothing needs installing: see Requireme
 - Python 3.12+ (the system Python on Ubuntu 24.04 LTS and later; no installation step,
   run with `python3 -m project_validator <path>`)
 - [PyYAML](https://pyyaml.org/) 6.0+ (`python3-yaml` on Ubuntu, or `python3 -m pip install PyYAML`)
-- [pathspec](https://github.com/cpburnz/python-pathspec) 0.12+ (`python3-pathspec` on Ubuntu, or `python3 -m pip install pathspec`)
+- [pathspec](https://github.com/cpburnz/python-pathspec) 0.12+ (`python3-pathspec` on Ubuntu, or `python3 -m pip install
+  pathspec`)
 - Optionally [rich](https://github.com/Textualize/rich) 13.0+ for the console report (`pip install
   project_validator[pretty]`), and [textual](https://github.com/Textualize/textual) for the TUI (`[tui]`; `[all]` for
   both). The HTML report needs nothing more
@@ -64,6 +65,7 @@ python3 -m project_validator --tui path/to/project
 ```
 
 What you see:
+
 - **In a terminal** (with rich): a header with the score, then what was detected (each language and what recognised
   it, the units, the code in each role and how it is judged, the CI, what the source-control host says of the
   repository, how much was read), the results grouped by
@@ -82,7 +84,7 @@ What you see:
   it.
 
 | Option | Meaning |
-|---|---|
+| --- | --- |
 | `--list` | list the available checks; with `--format json`, also the ecosystems each one applies to; with `--format markdown`, as a table of check, ecosystems and description |
 | `--support-matrix` | print what each check recognises for each ecosystem: the grid of every check against every ecosystem, with the tools each recognises (markdown; JSON with `--format json`). A tool several ecosystems share (CodeQL, osv-scanner, lizard) is listed once below the grid with the ecosystems it reads |
 | `--map` | print the detected project structure as JSON: languages, formats (what its data files are in), build systems, the signals that recognised each ecosystem, the file suffixes no ecosystem recognises, vendored files (other projects' code and minified bundles, which add no language), the units the project is judged in (one for most projects; each package of a monorepo and each build root of a mixed-language project), and the CI providers, jobs and toolchains |
@@ -120,6 +122,7 @@ name: `{"format": "results", "version": "1", "results": [...]}`; the formats are
 ### Stability
 
 The validator is at 0.x: what it judges improves with every release, so results change. What a 0.x release promises:
+
 - **The command line:** flags may be added; a flag is renamed or removed only after a release in which it still works
   and says it is deprecated (as `project-validator`, the command's old name, does now). The exit codes stay `0`, `1`
   and `2`.
@@ -130,10 +133,21 @@ The validator is at 0.x: what it judges improves with every release, so results 
 
 ## Checks
 
-Every language is judged in each unit (build root or workspace member) of the project whose code is written in it, whatever directory that code is in: a C++ project's `scripts/release.py` or `docs/conf.py` makes Python one of its languages, held to every check as the product is. The dial is `--auxiliary`: code it names (by role, `--auxiliary tooling`; by language or ecosystem, `--auxiliary python`; or by directory, `--auxiliary scripts/`) is still judged in full, where it is, but its failures are warnings labelled `(auxiliary: tooling)`, with a detail saying what named the code. Vendored code (`third_party/`, `vendor/`, minified bundles) is not judged. A *format* (JSON, TOML, YAML, XML: see [Data](docs/ecosystems/data.md)) is an ecosystem of files that are not programs, judged the same way in each unit whose files are in it, for hygiene only; its files make no language the project's, and are read in the configuration directories (`.github/`, `.vscode/`) too. What each check accepts for a language is on that ecosystem's page in [docs/ecosystems](docs/ecosystems); `python -m project_validator --support-matrix` prints the grid of every check against every ecosystem, with the tools each recognises (on the site as [the support matrix](https://cpp-best-practices.github.io/project_validator/docs/support-matrix.html)).
+Every language is judged in each unit (build root or workspace member) of the project whose code is written in it,
+whatever directory that code is in: a C++ project's `scripts/release.py` or `docs/conf.py` makes Python one of its
+languages, held to every check as the product is. The dial is `--auxiliary`: code it names (by role, `--auxiliary
+tooling`; by language or ecosystem, `--auxiliary python`; or by directory, `--auxiliary scripts/`) is still judged in
+full, where it is, but its failures are warnings labelled `(auxiliary: tooling)`, with a detail saying what named the
+code. Vendored code (`third_party/`, `vendor/`, minified bundles) is not judged. A *format* (JSON, TOML, YAML, XML: see
+[Data](docs/ecosystems/data.md)) is an ecosystem of files that are not programs, judged the same way in each unit whose
+files are in it, for hygiene only; its files make no language the project's, and are read in the configuration
+directories (`.github/`, `.vscode/`) too. What each check accepts for a language is on that ecosystem's page in
+[docs/ecosystems](docs/ecosystems); `python -m project_validator --support-matrix` prints the grid of every check
+against every ecosystem, with the tools each recognises (on the site as [the support
+matrix](https://cpp-best-practices.github.io/project_validator/docs/support-matrix.html)).
 
 | Check | Passes when |
-|---|---|
+| --- | --- |
 | `ci-present` | at least one live CI configuration is found; a defunct one (see `ci-current`) is no CI, and fails when it is the only one. Defunct configurations are left out of what every other check judges CI to do. Without any CI, the project's local checks are read as the pipeline (see `--local-checks`): ci-present warns, and the project is judged at an entry level |
 | `tests-run` | each language's tests exist in each unit (a separate test project's count for all of them) and CI runs them (`ctest-runs` is accepted as an old name). Warns when CI never runs the tests |
 | `fuzz-testing` | each language with a fuzzer has fuzz targets in each unit (libFuzzer, cargo-fuzz, atheris, Go fuzzing, ...) and CI runs them (a ClusterFuzzLite or CIFuzz action, or a CTest registration that passes a libFuzzer option, counts). Warns when CI never runs the targets, when CI runs a fuzzer but no targets are recognised, or when only property-based tests exist |
@@ -165,7 +179,7 @@ Every language is judged in each unit (build root or workspace member) of the pr
 | `schema-declared` | every schema declares its dialect and its identifier, so that it is read as meant and can be referred to: a JSON Schema's `$schema` and `$id` (a draft older than 2019-09 warns), an OpenAPI or AsyncAPI description's version and `info.version` (Swagger 2.0 warns), an XSD's `targetNamespace` and, on each document of one of the project's XSDs, the schema's location (`xsi:schemaLocation`, or an `xml-model` instruction), a `.proto` file's `syntax` (or `edition`) and `package`, a Data Package descriptor's profile and `name`. Judged per format in each unit; a test suite's schemas are reported, not judged. Fails listing what each schema leaves out |
 | `schema-examples` | CI checks the examples that come with each format's schemas in each unit: valid ones that must pass and invalid ones that must fail (`ajv test --valid`, `--invalid`), a validator run on an `examples` directory (check-jsonschema, jv, xmllint, jing), a linter whose rules validate a description's examples (spectral, redocly, vacuum), or contract tests (schemathesis, dredd). Warns otherwise |
 | `schema-compatibility` | CI checks each format's schemas in each unit for breaking changes against the main branch or a registry: `buf breaking` (or `bufbuild/buf-action`), `oasdiff breaking` (or `oasdiff/oasdiff-action/breaking`), `openapi-diff --fail-on-incompatible`, json-schema-diff, `graphql-inspector diff` (or `graphql-hive/graphql-inspector`), `rover graph check`. Warns otherwise |
-| `link-check` | CI checks each documentation site's links in each unit and fails on a broken one: lychee (or `lycheeverse/lychee-action`), `sphinx-build -b linkcheck`, markdown-link-check (or its action), mdbook-linkcheck (`[output.linkcheck]` in `book.toml`), MkDocs' htmlproofer plugin, linkinator, muffet, htmltest, HTMLProofer or LinkChecker. A scheduled run counts, since links rot without a change to the repository. Warns otherwise |
+| `link-check` | CI checks each documentation site's links in each unit, and plain Markdown documentation's (a root `docs/` of Markdown no generator renders), and fails on a broken one: lychee (or `lycheeverse/lychee-action`), `sphinx-build -b linkcheck`, markdown-link-check (or its action), mdbook-linkcheck (`[output.linkcheck]` in `book.toml`), MkDocs' htmlproofer plugin, linkinator, muffet, htmltest, HTMLProofer or LinkChecker. A scheduled run counts, since links rot without a change to the repository. Warns otherwise |
 | `migration-safety` | CI checks each language's database migrations in each unit for changes that are unsafe to apply to a live database (a lock held on a busy table, a column dropped): squawk (or `sbdchd/squawk-action` with `fail-on-violations: true`), `atlas migrate lint` (or `ariga/atlas-action/migrate/lint`), `liquibase checks run`. Warns otherwise; a project without migrations (Flyway-named files, or `.sql` under `migrations/`, `db/migrate/`, `db/migrations/`) is not judged |
 | `data-wellformed` | every data file of a format with a parser (JSON, TOML, YAML and XML are built in; a plugin's format adds its own) parses, judged per format in each unit, the configuration in `.github/`, `.gitlab/`, `.circleci/`, `.buildkite/`, `.devcontainer/` and `.vscode/` included. JSON that tools read with comments (`*.jsonc`, `tsconfig*.json`, `jsconfig.json`, `devcontainer.json`, `.vscode/*.json`) may have comments and trailing commas; YAML tags of any tool (GitLab's `!reference`) are accepted; XML external entities are never read. Files over 5 MiB are not parsed. Fails listing each file that does not parse, with the line and column. Data files under test directories (`tests/`, `spec/`, `fixtures/`, …) are read but only reported, not judged: a parser's test data is malformed on purpose |
 | `large-files` | no committed file is larger than 5 MiB (`--max-file-size`) unless Git LFS stores it (`filter=lfs` in a `.gitattributes`) or DVC tracks it (a `.dvc` file beside it). In a git checkout only the files git tracks are judged. Warns listing the largest files |
@@ -193,19 +207,19 @@ CI detection is pluggable too. These configurations are parsed as YAML:
   in its builder's image;
 - Read the Docs (`.readthedocs.yaml`): the documentation build it runs, which builds nothing of the project's.
 
-A job is judged by what it runs: its commands (and the commands those run in turn), its image,
-environment and actions. A GitHub step or job whose `if:` is false for a matrix combination does not run in it
-(`runner.os`, `matrix.*`, `env.*` and `contains`/`startsWith`/`endsWith` are evaluated; conditions on anything else
-are kept), and expressions whose values are known are evaluated the way GitHub evaluates them before a step runs.
-Each build system reads the build types from its own commands (`-DCMAKE_BUILD_TYPE`, `--config`, `ctest -C`,
-`meson setup --buildtype`, `cargo --release`, `swift build -c`, `xcodebuild -configuration`). Jenkins, Buildkite,
-Drone, Cirrus CI, Bitbucket Pipelines and Woodpecker are detected and scanned heuristically. pre-commit.ci is the CI of a `.pre-commit-config.yaml` with a `ci:` section: it runs the
-hooks (but `ci.skip`), and builds nothing, so it is no platform or build configuration. A pre-commit hook counts only
-where CI runs it (pre-commit.ci, `pre-commit run` or `pre-commit/action`). super-linter (`super-linter/super-linter`,
-`github/super-linter`, or its Docker image) runs the linters its `VALIDATE_<LINTER>` environment switches leave on (every
-one when none is set; only those set true when any is; every one but those set false otherwise), each counted as that
-tool's own run would be; with `DISABLE_ERRORS=true` it only reports. A job that names no compiler is counted with its runner's default compiler (gcc on Linux,
-AppleClang on macOS, MSVC on Windows).
+A job is judged by what it runs: its commands (and the commands those run in turn), its image, environment and actions.
+A GitHub step or job whose `if:` is false for a matrix combination does not run in it (`runner.os`, `matrix.*`, `env.*`
+and `contains`/`startsWith`/`endsWith` are evaluated; conditions on anything else are kept), and expressions whose
+values are known are evaluated the way GitHub evaluates them before a step runs. Each build system reads the build types
+from its own commands (`-DCMAKE_BUILD_TYPE`, `--config`, `ctest -C`, `meson setup --buildtype`, `cargo --release`,
+`swift build -c`, `xcodebuild -configuration`). Jenkins, Buildkite, Drone, Cirrus CI, Bitbucket Pipelines and Woodpecker
+are detected and scanned heuristically. pre-commit.ci is the CI of a `.pre-commit-config.yaml` with a `ci:` section: it
+runs the hooks (but `ci.skip`), and builds nothing, so it is no platform or build configuration. A pre-commit hook
+counts only where CI runs it (pre-commit.ci, `pre-commit run` or `pre-commit/action`). super-linter
+(`super-linter/super-linter`, `github/super-linter`, or its Docker image) runs the linters its `VALIDATE_<LINTER>`
+environment switches leave on (every one when none is set; only those set true when any is; every one but those set
+false otherwise), each counted as that tool's own run would be; with `DISABLE_ERRORS=true` it only reports. A job that
+names no compiler is counted with its runner's default compiler (gcc on Linux, AppleClang on macOS, MSVC on Windows).
 
 Known limitations:
 
@@ -273,7 +287,6 @@ A project is recognised as an ecosystem by any of:
 Registering an ecosystem that claims another one's build file, source suffix or source name is an error.
 `--map` lists the suffixes no ecosystem recognises, so the gaps are visible.
 
-
 ```python
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toolchain_patterns
 from project_validator.facts.axes import versions_axis
@@ -325,19 +338,20 @@ python3 -m project_validator --strict --exclude tests/fixtures .
 ```
 
 CI also appends `--format markdown` output to the job summary, a grid of every check against the ecosystems in the
-project: open the latest [CI run on main](https://github.com/cpp-best-practices/project_validator/actions/workflows/ci.yml?query=branch%3Amain) to see it.
+project: open the latest [CI run on
+main](https://github.com/cpp-best-practices/project_validator/actions/workflows/ci.yml?query=branch%3Amain) to see it.
 
 Each quality gate is its own CI job, so a pull request shows which one failed.
 To run them locally:
 
 | CI job | Command |
-|---|---|
+| --- | --- |
 | `lint` | `ruff check .` |
 | `formatting` | `ruff format --check --diff .` |
 | `typing` | `mypy` |
 | `copy-paste-detection` | `npx --yes jscpd@4.3.0` (settings in `.jscpd.json`) |
 | `function-limits` | `lizard --length 30 --warnings_only project_validator tests` |
-| `mutation testing` | `mapfile -t p < <(python tests/changed_mutants.py origin/main...HEAD) && mutmut run "${p[@]}"`: the mutants of the functions a pull request changes (settings in `[tool.mutmut]`; with no patterns, `mutmut run` would mutate everything); `mutmut results` lists survivors. mutmut copies the tree into `mutants/`, which the self-referential tests need to be a git repository: `git -C mutants init && git -C mutants add -A` after a first run. CI caches the verdicts between runs (`python tests/mutation_cache.py save|restore DIR`, which keeps a verdict only while its function and the tests covering it are unchanged), and a push to `main` collects the map of tests to functions a new pull request starts from. A weekly run (`mutation-full.yml`) mutates the whole package in eight shards (`python tests/changed_mutants.py --shard 3/8`), each continuing from its own cache, and lists the survivors that are new. Under `pytest -x`, as mutmut runs it, a test stops at its first failing subtest (`tests/conftest.py`) |
+| `mutation testing` | `mapfile -t p < <(python tests/changed_mutants.py origin/main...HEAD) && mutmut run "${p[@]}"`: the mutants of the functions a pull request changes (settings in `[tool.mutmut]`; with no patterns, `mutmut run` would mutate everything); `mutmut results` lists survivors. mutmut copies the tree into `mutants/`, which the self-referential tests need to be a git repository: `git -C mutants init && git -C mutants add -A` after a first run. CI caches the verdicts between runs (`python tests/mutation_cache.py save\|restore DIR`, which keeps a verdict only while its function and the tests covering it are unchanged), and a push to `main` collects the map of tests to functions a new pull request starts from. A weekly run (`mutation-full.yml`) mutates the whole package in eight shards (`python tests/changed_mutants.py --shard 3/8`), each continuing from its own cache, and lists the survivors that are new. Under `pytest -x`, as mutmut runs it, a test stops at its first failing subtest (`tests/conftest.py`) |
 | `pages` | `python tests/build_site.py _site` (needs `Markdown`): the documentation site, written to `_site/`; CI publishes it to GitHub Pages from `main` and only builds it on a pull request that changes the builder or its workflow |
 | `corpus` | `python -m corpus record out/head` then `python -m corpus diff out/base out/head`: the [project corpus](corpus/README.md), real repositories pinned to a commit, validated and compared between two versions of the validator (CI compares a pull request with its base branch); about 5 GB of shallow checkouts, cached in `~/.cache/project_validator/corpus` |
 | `fuzzing` | `python tests/fuzz/fuzz_<parser>.py fuzz-corpus tests/fuzz/corpus/<parser> -max_total_time=60` for each of the six parsers (atheris), in its own workflow (`fuzzing.yml`, ten minutes a target weekly). Each target's corpus is cached between runs under a key of the target and the modules it imports (`python tests/fuzz/fingerprint.py <parser>`), and pruned with `-merge=1` before it is saved; the committed seeds are always read. The unit tests replay the seeds and the crash inputs of fixed crashes ([`tests/fuzz/crashes/`](tests/fuzz/crashes/README.md)) on every OS. Locally, write new corpus entries to a temp directory first: `python tests/fuzz/fuzz_<parser>.py "$(mktemp -d)" tests/fuzz/corpus/<parser> -max_total_time=60` |
@@ -386,7 +400,7 @@ with as little setup as possible. To keep it that way:
 ### Current Dependencies
 
 | Dependency | Kind | Why |
-|---|---|
+| --- | --- | --- |
 | [PyYAML](https://pyyaml.org/) `>=6.0` | required | The standard library has no YAML parser, and CI configuration is YAML. PyYAML is mature, MIT licensed, has no dependencies, and is packaged by every major distro (`python3-yaml` on Ubuntu). It is required rather than optional because scanning CI files as text cannot tell which compiler runs on which OS, nor apply a matrix's `include`/`exclude`, so it over-counts platform combinations and can pass `platform-matrix` for a project that should fail. Without PyYAML the validator exits with an error that says how to install it. |
 | [pathspec](https://github.com/cpburnz/python-pathspec) `>=0.12` | required | Matches `.gitignore` entries as git does (`vcs-ignore` asks whether an entry ignores each build output). git's rules (wildmatch, `**` matching zero or more directories, character classes such as `[!a]`, anchoring, directory-only entries) are subtle: a hand-written matcher got eight of them wrong. pathspec is the de facto Python implementation (black, yamllint and others use it), MPL-2.0 licensed (file-level copyleft, compatible with depending on it), pure Python with no dependencies, actively maintained, and packaged by every major distro (`python3-pathspec` on Ubuntu 24.04 is 0.12). It is required rather than optional because a wrong answer here passes or fails `vcs-ignore` wrongly, and a fallback would keep the hand-written matcher and its bugs. Without pathspec the validator exits with an error that says how to install it. |
 | [rich](https://github.com/Textualize/rich) `>=13.0` | optional (`pretty`, `tui` and `all` extras) | The console report: colour, tables, progress while the project is read. MIT licensed and widely used. Without it the validator prints plain text and says so. |

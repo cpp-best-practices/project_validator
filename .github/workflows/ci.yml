@@ -111,6 +111,22 @@ jobs:
       - name: Detect duplicated code
         run: npx --yes jscpd@4.3.0
 
+  documentation:
+    name: documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The docs' Markdown, as .markdownlint-cli2.yaml configures it (prose wrapped at 120 columns).
+      - uses: DavidAnson/markdownlint-cli2-action@3ce8f712b5d8f31acd8e201be6d97e3d2bb23eb7 # v25.1.0
+
+      # The links between the docs' pages and to the repository's files; the web's are checked weekly (links.yml).
+      - uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: --offline --no-progress 'docs/**/*.md'
+
   function-limits:
     name: function limits
     runs-on: ubuntu-latest

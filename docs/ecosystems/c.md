@@ -29,12 +29,12 @@ really configured and built, and `ctest` must list at least one test (a build th
 ## `fuzz-testing`
 
 libFuzzer targets (files defining `LLVMFuzzerTestOneInput`) and AFL++ targets (`__AFL_LOOP`), run by a CI step that
-passes a libFuzzer option to a binary (`./fuzz_tester -max_total_time=30`, a heuristic), by `afl-fuzz` (whose target, the words
-after `--`, is not a `dotnet` program or a `.dll`), or by `ctest` when a CMake `add_test` passes a libFuzzer option to
-its command (a test that only replays crash files does not count). The `ctest` command's `-R`/`-L` and `-E`/`-LE`
-regexes are matched against the test's name. This is a heuristic: a fuzz test registered behind an option CI does not
-turn on (`if(ENABLE_FUZZING)`) is still counted, and the run is credited to the CMake files' unit. RapidCheck tests alone warn: they are property-based tests, not
-fuzz targets.
+passes a libFuzzer option to a binary (`./fuzz_tester -max_total_time=30`, a heuristic), by `afl-fuzz` (whose target,
+the words after `--`, is not a `dotnet` program or a `.dll`), or by `ctest` when a CMake `add_test` passes a libFuzzer
+option to its command (a test that only replays crash files does not count). The `ctest` command's `-R`/`-L` and
+`-E`/`-LE` regexes are matched against the test's name. This is a heuristic: a fuzz test registered behind an option CI
+does not turn on (`if(ENABLE_FUZZING)`) is still counted, and the run is credited to the CMake files' unit. RapidCheck
+tests alone warn: they are property-based tests, not fuzz targets.
 
 ## `coverage`
 
@@ -62,8 +62,9 @@ AddressSanitizer and UndefinedBehaviorSanitizer are used in some configuration, 
 `-fsanitize=address,undefined` (MSVC's `/fsanitize=address`) among the build files' options or on a CI command line,
 cmake_template's `ENABLE_SANITIZER_ADDRESS` and `ENABLE_SANITIZER_UNDEFINED_BEHAVIOR` options (with or without the
 project's prefix) on by default or turned on by CI, Meson's `b_sanitize`, or a job in an R image built with them
-(`rocker/r-devel-san` or a project's own `r-devel-<compiler>-san`: both; `rocker/r-devel-ubsan-clang`: UBSan). One of the two warns; neither fails.
-ThreadSanitizer and MemorySanitizer are not asked, since they exclude the other two in one build.
+(`rocker/r-devel-san` or a project's own `r-devel-<compiler>-san`: both; `rocker/r-devel-ubsan-clang`: UBSan). One of
+the two warns; neither fails. ThreadSanitizer and MemorySanitizer are not asked, since they exclude the other two in one
+build.
 
 ## `compiler-warnings`
 

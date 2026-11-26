@@ -180,9 +180,30 @@ class ProtobufTests(unittest.TestCase):
                 result = _run(schema_declared, _module_at(directory))
                 self.assertNotEqual(result.status, Status.FAIL, result.details)
 
-    @unittest.expectedFailure  # upstream #271: plain Markdown documentation is invisible to link-check
     def test_markdown_docs_with_a_link_checker_are_judged(self) -> None:
-        """Plain Markdown documentation that lychee checks in CI is a documentation unit the link check judges
-        (opentelemetry-proto), not "no recognised language"."""
+        """Plain Markdown documentation (a docs/ of Markdown with no site generator) is judged like a documentation
+        site (upstream #271): lychee checking it in CI passes the link check (opentelemetry-proto), and its prose is
+        to be linted."""
         result = _run(link_check, MARKDOWN_DOCS_WITH_LYCHEE)
-        self.assertNotEqual(result.status, Status.SKIP, result.message)
+        self.assertEqual(result.status, Status.PASS, result)
+        linted = _run(static_analysis, MARKDOWN_DOCS_WITH_LYCHEE)
+        self.assertEqual(linted.status, Status.FAIL, linted)
+        self.assertIn("markdownlint", " ".join(linted.details))
+        unchecked = _run(link_check, {**MARKDOWN_DOCS_WITH_LYCHEE, **github_job("ubuntu-latest", "make")})
+        self.assertNotEqual(unchecked.status, Status.PASS, unchecked)
+
+    def test_documentation_in_subdirectories_only_is_found(self) -> None:
+        with temp_project({"doc/guide/install.markdown": "# Install\n", "doc/api/z.markdown": "# Z\n"}) as root:
+            self.assertIn("Markdown documentation", make_context(root).structure.formats)
+
+    def test_markdown_alone_or_a_generators_site_is_no_markdown_documentation(self) -> None:
+        """A README alone is no documentation, and a docs/ a generator renders is that generator's site."""
+        for files in (
+            {"README.md": "# Project\n", "CONTRIBUTING.md": "# Contributing\n"},
+            {"docs/index.md": "# Docs\n", "mkdocs.yml": "site_name: x\n"},
+            {"docs/index.md": "# Docs\n", "docs/conf.py": "project = 'x'\nextensions = []\n"},
+            {"docs/index.rst": "Docs\n====\n"},
+        ):
+            with self.subTest(files=sorted(files)), temp_project(files) as root:
+                formats = make_context(root).structure.formats
+            self.assertNotIn("Markdown documentation", formats)

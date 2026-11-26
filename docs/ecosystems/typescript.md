@@ -44,6 +44,7 @@ A lint warning fails CI: `eslint --max-warnings 0`, `biome ci` or `--error-on-wa
 TypeScript's defining gate: `tsc` (usually `tsc --noEmit`) or `vue-tsc`, or `deno check` / `deno test`, also through
 the package scripts CI runs. Strict mode is a bonus: `"strict": true` or `@tsconfig/strictest` (and the other strict
 published bases) in a `tsconfig.json`, or Deno, strict by default.
+
 ## `mutation-testing`
 
 StrykerJS (`stryker run`, also as `npx stryker run` or a package script; settings in `stryker.config.json`,

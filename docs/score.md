@@ -11,12 +11,12 @@ issue #295; this is **version 1**.
 A **slot** is one check's result for one language in one unit: one of the `places` in `--format json`. A check of the
 whole project (a licence, CI, action pinning) is one slot. The score is the share of the slots that are filled:
 
-```
+```text
 percent = 100 * filled / slots
 ```
 
 | Result | Fills |
-|---|---|
+| --- | --- |
 | pass | the whole slot |
 | warning (configured but not enforced, or partly in place) | half |
 | fail, or error | nothing, but the slot counts: hiding something never helps |
@@ -55,7 +55,7 @@ Levels are milestones: a project reaches level N when every core and project slo
 passes, and each of those checks ran. A warning does not complete a level, and auxiliary code never holds one back.
 
 | Level | Checks |
-|---|---|
+| --- | --- |
 | 1, Foundations | `ci-present`, `compiler-warnings`, `warnings-as-errors`, `code-formatting`, `tests-run`, `license`, `vcs-ignore` |
 | 2, Analysis | `static-analysis`, `type-checking`, `coverage`, `dependency-management`, `dependency-audit` |
 | 3, Hardening | `sanitizers`, `fuzz-testing`, `mutation-testing`, `security-scanning`, `action-pinning` |
@@ -67,7 +67,7 @@ Every slot not filled is a next step, with the points filling it is worth and, w
 level, which level. The next level's gates come first (the one that completes it first), then the lower levels, core
 before auxiliary code, then the most points. Each says what was found and, when a detail says what to do, that:
 
-```
+```text
 coverage (C++ in lib): +4.2 points, needed for Level 2 (Analysis); consider running gcovr in CI
 ```
 
@@ -78,6 +78,7 @@ for each language.
 
 With `--format json --score`, the output is `{"format": "results", "version": "1", "results": [...], "score": {...}}`.
 `results` is exactly what `--format json` prints without `--score`. `score` holds:
+
 - `version`, `percent` (with any extra credit), `base` (the share of slots filled), `extra` and `held`;
 - `level` and `level_name`, `filled` and `slots`, and the `summary` line;
 - `breakdown`: each language's filled slots and slots (`""` for the whole project's own gates);

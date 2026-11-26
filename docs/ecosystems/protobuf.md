@@ -31,5 +31,5 @@ unless `breaking: false`. Warns when CI checks nothing.
 
 ## Not judged
 
-`buf.lock` beside a `buf.yaml` with `deps` is a dependency rule (#24). The generated code is the generating language's. The other checks have no tool
-for schemas and are skipped.
+`buf.lock` beside a `buf.yaml` with `deps` is a dependency rule (#24). The generated code is the generating language's.
+The other checks have no tool for schemas and are skipped.

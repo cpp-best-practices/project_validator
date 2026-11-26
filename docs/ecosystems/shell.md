@@ -1,8 +1,9 @@
 # Shell
 
-Shell and PowerShell. Recognised by `.sh`, `.bash`, `.zsh`, `.zsh-theme`, `.zunit` and `.bats` sources (Shell), by `.ps1` and `.psm1` sources (PowerShell), and by
-a script without a suffix whose shebang names a shell (`#!/usr/bin/env bash`) or `pwsh`. A module manifest (`.psd1`)
-is data about a module and counts for no language. There is no build system.
+Shell and PowerShell. Recognised by `.sh`, `.bash`, `.zsh`, `.zsh-theme`, `.zunit` and `.bats` sources (Shell), by
+`.ps1` and `.psm1` sources (PowerShell), and by a script without a suffix whose shebang names a shell (`#!/usr/bin/env
+bash`) or `pwsh`. A module manifest (`.psd1`) is data about a module and counts for no language. There is no build
+system.
 
 A project's helper scripts make Shell one of its languages, judged in the units they are in, like any other source
 would; `--auxiliary shell`, or `--auxiliary scripts/`, dials that back to warnings that say so. The policies hold
@@ -10,11 +11,11 @@ either way: a script CI runs deserves shellcheck.
 
 ## `tests-run`
 
-Shell: bats tests (`*.bats` with `@test`), zunit tests (`*.zunit` with `@test`), shellspec specs (`spec/*_spec.sh` with `Describe` or `It`) or shunit2
-tests (`*_test.sh` sourcing shunit2), and CI runs them: `bats tests`, `zunit`, `shellspec`, or the shunit2 script itself
-(`./tests/shop_test.sh`, `bash tests/shop_test.sh`, `shunit2 tests/shop_test.sh`). urchin's tests are the shell
-scripts without a suffix under a `test/` directory (but its `setup` and `teardown` hooks), where CI runs `urchin`
-(nvm's `urchin test/fast`); elsewhere such scripts are helpers.
+Shell: bats tests (`*.bats` with `@test`), zunit tests (`*.zunit` with `@test`), shellspec specs (`spec/*_spec.sh` with
+`Describe` or `It`) or shunit2 tests (`*_test.sh` sourcing shunit2), and CI runs them: `bats tests`, `zunit`,
+`shellspec`, or the shunit2 script itself (`./tests/shop_test.sh`, `bash tests/shop_test.sh`, `shunit2
+tests/shop_test.sh`). urchin's tests are the shell scripts without a suffix under a `test/` directory (but its `setup`
+and `teardown` hooks), where CI runs `urchin` (nvm's `urchin test/fast`); elsewhere such scripts are helpers.
 
 PowerShell: Pester tests (`*.Tests.ps1` with `Describe` or `It`) that `Invoke-Pester` runs.
 
