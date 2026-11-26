@@ -8,13 +8,14 @@ import json
 import unittest
 from collections.abc import Mapping
 
+from project_validator.checks.committed_artifacts import committed_artifacts
 from project_validator.checks.data_wellformed import data_wellformed
 from project_validator.checks.schema_declared import schema_declared
 from project_validator.checks.static_analysis import static_analysis
 from project_validator.checks.tests_run import tests_run
 from project_validator.core import Check, Result, Status
 from project_validator.facts.jobs import Job
-from project_validator.facts.roles import role
+from project_validator.facts.roles import fixture_data, role
 from project_validator.project_map import ProjectStructure
 from project_validator.questions.testing import tests
 from tests.layouts.openapi import OPENAPI
@@ -140,6 +141,16 @@ class RoleBelowSourceRootTests(unittest.TestCase):
         for path in (MAVEN_TEST_RESOURCE, "pkg/x/testdata/bad.json", "src/__tests__/fixtures/x/package.json"):
             with self.subTest(path=path):
                 self.assertEqual(role(path), "test")
+
+    def test_a_corpus_is_a_test_suite_s_data(self) -> None:
+        """clj-kondo's corpus/ (the code its linter is tested on, compiled .class files too) and Dist-Zilla's
+        corpus/dist/ (the distributions its tests build): test data (upstream #235)."""
+        for path in ("corpus/acme/core.clj", "corpus/dist/DZT/lib/DZT.pm"):
+            with self.subTest(path=path):
+                self.assertEqual(role(path), "test")
+                self.assertTrue(fixture_data(path))
+        result = _result(committed_artifacts, {"deps.edn": "{}\n", "src/a.clj": "(ns a)\n", "corpus/x/A.class": ""})
+        self.assertEqual(result.status, Status.PASS, result)
 
     def test_malformed_test_data_below_a_source_root_is_reported_not_judged(self) -> None:
         """A deliberately broken JSON fixture under src/test/resources is test data and does not fail the project
