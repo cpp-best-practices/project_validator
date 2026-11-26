@@ -11,7 +11,8 @@ l3build, or installs TeX Live with `xu-cheng/latex-action` or `TeX-Live/setup-te
 CI compiles the documents: `latexmk`, `pdflatex`, `xelatex`, `lualatex` or `tectonic`, or `xu-cheng/latex-action`
 (its `root_file`). The documents themselves are what defines the tests. A package's regression tests are l3build's
 `.lvt` and `.pvt` files, which `l3build check` (or `texlua l3build.lua check`) runs, failing when a log differs from
-its `.tlg`.
+its `.tlg`. l3build runs them in LuaTeX, so they test the Lua the package loads as well (l3build's own
+`l3build-*.lua`, upstream #276).
 
 ## `compiler-warnings`
 

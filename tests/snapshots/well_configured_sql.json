@@ -647,6 +647,13 @@
               ]
             },
             "known": {
+              "PostgreSQL TAP tests": {
+                "can": {
+                  "runs": "make prove_installcheck (PGXS's TAP tests, with TAP_TESTS = 1)"
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "dbt test": {
                 "can": {
                   "runs": "dbt test (dbt build runs the tests too)"

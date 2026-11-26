@@ -32,7 +32,7 @@ from project_validator.facts.jobs import Job
 from project_validator.facts.migrations import is_migration, migration_linter, migrations_linted
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings, unreadable
-from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested, tests_of
+from project_validator.facts.testing import TestFile, TestFiles, of_the_compiled_code, test_runner, tested, tests_of
 from project_validator.facts.tools import combined, defined_by, either, starts, when
 
 SQL = "SQL"
@@ -227,8 +227,11 @@ PGTAP_TESTS = TestFiles(
     path=re.compile(r"(?:^|/)tests?/(?:.*/)?[^/]+\.sql$"),
     contains=re.compile(r"\bSELECT\s+plan\s*\(", re.IGNORECASE),
 )
-# A PostgreSQL extension's pg_regress tests: `test/sql/*.sql` with their expected output, which PGXS's `make
-# installcheck` runs (pgvector, pgaudit).
+# A PostgreSQL extension's tests run against the extension built and installed, so they test its C (or C++) code
+# as well as its SQL (upstream #276): pgvector's and pgaudit's C has no tests of its own.
+COMPILED_INTO_EXTENSIONS = frozenset({"C", "C++"})
+# Its pg_regress tests: `test/sql/*.sql` with their expected output, which PGXS's `make installcheck` runs (pgvector,
+# pgaudit).
 PG_REGRESS_TESTS = TestFiles(
     name="pg_regress tests (test/sql/*.sql)",
     languages=SQL_LANGUAGE,
@@ -240,6 +243,25 @@ PG_REGRESS = test_runner(
     how="make installcheck (PGXS's pg_regress)",
     runs=when(starts(("make", "installcheck"), ("make", "check")), tested),
     tests=tests_of(PG_REGRESS_TESTS.name),
+)
+# Its TAP tests: Perl scripts under `t/` (`test/t/`) that start a server (PostgreSQL::Test::Cluster), which PGXS's
+# `make prove_installcheck` runs with prove where the Makefile sets `TAP_TESTS = 1` (pgvector).
+PG_TAP_TESTS = TestFiles(
+    name="PostgreSQL TAP tests (t/*.pl)",
+    languages=SQL_LANGUAGE,
+    path=re.compile(r"(?:^|/)t/[^/]+\.pl$"),
+    contains=re.compile(r"\bPostgreSQL::Test::|\bPostgresNode\b"),
+    written_in=frozenset({"Perl"}),
+)
+PG_TAP = test_runner(
+    name="PostgreSQL TAP tests",
+    languages=SQL_LANGUAGE,
+    how="make prove_installcheck (PGXS's TAP tests, with TAP_TESTS = 1)",
+    runs=when(starts(("make", "prove_installcheck"), ("make", "prove_check")), tested),
+    tests=tests_of(PG_TAP_TESTS.name),
+)
+PG_EXTENSION_CODE_TESTS = tuple(
+    of_the_compiled_code(runner, COMPILED_INTO_EXTENSIONS) for runner in (PG_REGRESS, PG_TAP)
 )
 PG_PROVE = test_runner(
     name="pg_prove",

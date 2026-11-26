@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable, Iterable, Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from project_validator.components import known
 from project_validator.core import Project
@@ -97,6 +97,13 @@ def test_runner(
     )
 
 
+def of_the_compiled_code(runner: Tool, languages: frozenset[str]) -> Tool:
+    """`runner` as a runner of the tests of the code a build compiles into what its tests exercise, in `languages`: a
+    PostgreSQL extension's C under pg_regress, an R package's src/ under R CMD check (upstream #276). It is never
+    suggested for those languages, and named only where the project has its tests."""
+    return replace(runner, languages=languages, can={TEST: {RUNS: ""}})
+
+
 def tested(*, read: Iterable[Setting | str] = (), heuristic: bool = False) -> Run:
     return provided(TEST, RUNS, read=read, heuristic=heuristic)
 
@@ -109,6 +116,7 @@ __all__ = [
     "TestFiles",
     "known_probes",
     "known_test_files",
+    "of_the_compiled_code",
     "test_file_facts",
     "test_runner",
     "tested",

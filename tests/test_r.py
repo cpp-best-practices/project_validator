@@ -199,3 +199,19 @@ class RTests(unittest.TestCase):
             with self.subTest(line=line):
                 self.assertIn(f"1 R version(s) ({version})", self._run(platform_matrix, _ci(line)).message)
         self.assertIn("0 R version(s)", self._run(platform_matrix, github_steps("run: npm test")).message)
+
+
+class NativeCodeTests(unittest.TestCase):
+    def test_r_cmd_check_tests_the_packages_compiled_code_too(self) -> None:
+        """R CMD check builds the package with its src/ compiled in, and its tests call that code: they test its C
+        (C++, Fortran) as well as its R (upstream #276)."""
+        package = {
+            "DESCRIPTION": "Package: shop\nVersion: 1.0\n",
+            "R/total.R": "total <- function(x) .Call(C_total, x)\n",
+            "src/total.c": "#include <R.h>\n",
+            "tests/testthat/test-total.R": 'test_that("total", { expect_equal(total(1), 1) })\n',
+            **github_job("ubuntu-latest", "R CMD check ."),
+        }
+        with temp_project(package) as root:
+            result = tests_run.run(make_context(root))
+        self.assertEqual(result.status, Status.PASS, result)

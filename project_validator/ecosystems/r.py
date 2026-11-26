@@ -23,7 +23,7 @@ from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required
 from project_validator.facts.settings import SettingsReader, file_reader
-from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
+from project_validator.facts.testing import TestFiles, of_the_compiled_code, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by, when
 from project_validator.text import pattern
 from project_validator.tools.limits import function_length_limiters
@@ -100,6 +100,9 @@ R_TESTS = test_runner(
     runs=lambda command, _facts: tested() if _runs_tests(command) else None,
     tests=tests_of(R_TEST_FILES.name, R_TEST_SCRIPTS.name),
 )
+# R CMD check builds the package with its src/ compiled in, and the tests call that code: they test its C, C++ or
+# Fortran too (upstream #276).
+R_COMPILED_CODE_TESTS = of_the_compiled_code(R_TESTS, frozenset({"C", "C++", "Fortran"}))
 
 
 def _rcmdcheck(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:

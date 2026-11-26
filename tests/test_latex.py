@@ -57,6 +57,23 @@ class RecognitionTests(unittest.TestCase):
         self.assertFalse(uses(LATEX_ECOSYSTEM, "make check"))
 
 
+class L3buildLuaTests(unittest.TestCase):
+    def test_l3build_check_tests_the_packages_lua_too(self) -> None:
+        """l3build's regression tests run the package in LuaTeX, so they test its Lua as well as its LaTeX: l3build's
+        own `l3build-*.lua`, not "Lua: no tests found" (upstream #276)."""
+        package = {
+            "build.lua": 'module = "shop"\n',
+            "shop.dtx": "",
+            "shop-tools.lua": "local M = {}\nreturn M\n",
+            "testfiles/a.lvt": "\\input{regression-test}\n",
+            "testfiles/a.tlg": "",
+            **_ci("l3build check"),
+        }
+        with temp_project(package) as root:
+            result = tests_run.run(make_context(root))
+        self.assertEqual(result.status, Status.PASS, result)
+
+
 class LatexTests(unittest.TestCase):
     def _run(self, selected: Check, files: dict[str, str]) -> Result:
         return run_as(self, selected, files, LATEX_ECOSYSTEM)
