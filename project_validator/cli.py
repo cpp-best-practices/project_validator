@@ -21,6 +21,7 @@ from project_validator.grid import render_grid
 from project_validator.plugins import PluginError, discover
 from project_validator.questions.answers import answers
 from project_validator.runner import Report, SelectionError, select, succeeded
+from project_validator.score import TOP_LEVEL, shortfalls
 from project_validator.support_matrix import as_dict, render, support_matrix
 from project_validator.views import console as console_view
 from project_validator.views import html as html_view
@@ -52,6 +53,17 @@ def _mebibytes(value: str) -> int:
     return int(size * 1024 * 1024)
 
 
+def _percent(value: str) -> float:
+    """A share from 0 to 100."""
+    try:
+        share = float(value)
+    except ValueError:
+        share = -1.0
+    if not 0 <= share <= 100:
+        raise argparse.ArgumentTypeError(f"expected a percent from 0 to 100, got {value!r}")
+    return share
+
+
 # What --map, --facts and --answers print.
 _DUMPS = {
     "map": "the detected project structure",
@@ -70,6 +82,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--only", action="append", default=[], metavar="CHECKS", help="run only these checks")
     parser.add_argument("--skip", action="append", default=[], metavar="CHECKS", help="do not run these checks")
     _add_output_options(parser)
+    _add_score_options(parser)
     _add_scope_options(parser)
     parser.add_argument("--strict", action="store_true", help="treat warnings as failures")
     parser.add_argument(
@@ -151,12 +164,29 @@ def _add_output_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--color", choices=("auto", "always", "never"), default="auto", help="color the text output (needs rich)"
     )
+
+
+def _add_score_options(parser: argparse.ArgumentParser) -> None:
+    """The options of the tooling score: whether to print it, and the floors it must reach."""
     parser.add_argument(
         "--score",
         action="store_true",
         help="also score the project's tooling: the share of the quality gates that apply to it that are in place "
         "(100%%: all of them; extra credit above for complementary tools), its level, and the next steps (the "
         "statuses and exit code do not change)",
+    )
+    parser.add_argument(
+        "--min-level",
+        type=int,
+        choices=range(TOP_LEVEL + 1),
+        metavar="LEVEL",
+        help=f"fail unless the score reaches this level (0 to {TOP_LEVEL})",
+    )
+    parser.add_argument(
+        "--min-completeness",
+        type=_percent,
+        metavar="PERCENT",
+        help="fail unless at least this share of the quality gates that apply is in place (0 to 100)",
     )
 
 
@@ -405,6 +435,8 @@ def _run(
 ) -> int:
     """Print what was asked (a dump, or the analysis) and say how it went; `every_check` names every check there is,
     for the score."""
+    if (dump := _unscored(arguments)) and (arguments.min_level is not None or arguments.min_completeness is not None):
+        return _usage_error(parser, f"--min-level and --min-completeness need the analysis, not {dump}")
     if arguments.facts or arguments.map or arguments.answers:
         try:
             print(json.dumps(_dump(context, arguments), indent=2))
@@ -418,7 +450,22 @@ def _run(
     _print_analysis(analysis, arguments)
     if (cause := analysis.error) is not None:
         return _extraction_failed(parser, cause)
-    return EXIT_SUCCESS if succeeded(list(analysis.reports), strict=arguments.strict) else EXIT_FAILURE
+    passed = succeeded(list(analysis.reports), strict=arguments.strict)
+    return EXIT_SUCCESS if _meets_floors(parser, arguments, analysis) and passed else EXIT_FAILURE
+
+
+def _unscored(arguments: argparse.Namespace) -> str:
+    """The option that prints something other than the analysis (so no score); "" when none does."""
+    return next((f"--{name}" for name in ("facts", "map", "answers", "tui") if getattr(arguments, name)), "")
+
+
+def _meets_floors(parser: argparse.ArgumentParser, arguments: argparse.Namespace, analysis: Analysis) -> bool:
+    """Whether the score meets the floors `--min-level` and `--min-completeness` set; when not, says why on stderr."""
+    assert analysis.score is not None  # noqa: S101 - a run that raised nothing is scored
+    short = shortfalls(analysis.score, min_level=arguments.min_level, min_completeness=arguments.min_completeness)
+    for reason in short:
+        print(f"{parser.prog}: score below its floor: {reason}", file=sys.stderr)
+    return not short
 
 
 def _extraction_failed(parser: argparse.ArgumentParser, failed: ExtractionError) -> int:

@@ -29,34 +29,39 @@ def _run(*arguments: str) -> tuple[int, str, str]:
     return code, out.getvalue(), err.getvalue()
 
 
+# Each option and its documented default.
+DEFAULTS = {
+    "path": Path("."),
+    "only": [],
+    "skip": [],
+    "format": "text",
+    "color": "auto",
+    "exclude": [],
+    "auxiliary": [],
+    "strict": False,
+    "plugin_dir": [],
+    "build": False,
+    "cmake": "cmake",
+    "ctest": "ctest",
+    "max_file_size": DEFAULT_MAX_FILE_SIZE,
+    "allow_official_tags": False,
+    "allow_unknown": False,
+    "score": False,
+    "min_level": None,
+    "min_completeness": None,
+    "html": None,
+    "verbose": False,
+    "tui": False,
+    "explain": None,
+    "list": False,
+    "support_matrix": False,
+}
+
+
 class ParserDefaultsTests(unittest.TestCase):
     def test_every_option_has_its_documented_default(self) -> None:
         arguments = _parser().parse_args([])
-        expected = {
-            "path": Path("."),
-            "only": [],
-            "skip": [],
-            "format": "text",
-            "color": "auto",
-            "exclude": [],
-            "auxiliary": [],
-            "strict": False,
-            "plugin_dir": [],
-            "build": False,
-            "cmake": "cmake",
-            "ctest": "ctest",
-            "max_file_size": DEFAULT_MAX_FILE_SIZE,
-            "allow_official_tags": False,
-            "allow_unknown": False,
-            "score": False,
-            "html": None,
-            "verbose": False,
-            "tui": False,
-            "explain": None,
-            "list": False,
-            "support_matrix": False,
-        }
-        for name, value in expected.items():
+        for name, value in DEFAULTS.items():
             with self.subTest(option=name):
                 self.assertEqual(getattr(arguments, name), value)
 

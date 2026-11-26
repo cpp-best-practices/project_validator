@@ -9,7 +9,7 @@ import io
 import json
 import unittest
 
-from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, main
+from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
 from project_validator.core import Check, Placed, Result, Status
 from project_validator.runner import Report
 from project_validator.score import (
@@ -22,6 +22,7 @@ from project_validator.score import (
     Score,
     family,
     score,
+    shortfalls,
     sizes,
 )
 from tests.support import FIXTURES, make_context, temp_project
@@ -327,6 +328,75 @@ class CliTests(unittest.TestCase):
     def test_the_next_steps_are_listed(self) -> None:
         _, output = self._run("--score", "--color", "never", str(FIXTURES / "bare_python"))
         self.assertIn("Next steps:", output)
+
+
+class GateTests(unittest.TestCase):
+    """`--min-level` and `--min-completeness` (upstream #295): opt-in floors that fail the run when the score is below
+    them; without them the exit code is the statuses' alone."""
+
+    def test_a_score_at_or_above_the_floors_falls_short_of_nothing(self) -> None:
+        level_1 = scored(foundations())
+        self.assertEqual(shortfalls(level_1, min_level=1, min_completeness=100), [])
+        self.assertEqual(shortfalls(level_1), [])
+
+    def test_a_lower_level_falls_short(self) -> None:
+        level_1 = scored(foundations())
+        self.assertEqual(shortfalls(level_1, min_level=2), ["Level 1 Foundations is below --min-level 2"])
+
+    def test_the_share_of_the_gates_in_place_is_the_completeness(self) -> None:
+        missing = scored(foundations(), report("static-analysis", FAIL, place(FAIL)))
+        self.assertEqual(shortfalls(missing, min_completeness=87.5), [])
+        self.assertEqual(
+            shortfalls(missing, min_completeness=88, min_level=2),
+            [
+                "Level 1 Foundations is below --min-level 2",
+                "87.5% of the gates in place is below --min-completeness 88",
+            ],
+        )
+
+    def test_extra_credit_is_no_completeness(self) -> None:
+        extra = scored(foundations(), report("static-analysis", PASS, place(PASS, "clang-tidy", "cppcheck")))
+        self.assertGreater(extra.percent, 100)
+        self.assertEqual(shortfalls(extra, min_completeness=100), [])
+
+
+class GateCliTests(unittest.TestCase):
+    def _run(self, *arguments: str) -> tuple[int, str]:
+        errors = io.StringIO()
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(errors):
+            code = main([*arguments])
+        return code, errors.getvalue()
+
+    def test_a_score_below_a_floor_fails_a_run_that_passes(self) -> None:
+        project = str(FIXTURES / "well_configured_python")
+        self.assertEqual(self._run("--only", "license", project)[0], EXIT_SUCCESS)
+        self.assertEqual(self._run("--only", "license", "--min-completeness", "100", project)[0], EXIT_SUCCESS)
+        code, errors = self._run("--only", "license", "--min-level", "1", project)
+        self.assertEqual(code, EXIT_FAILURE)
+        self.assertIn("score below its floor: Level 0 Getting started is below --min-level 1", errors)
+
+    def test_a_complete_project_meets_every_floor(self) -> None:
+        project = str(FIXTURES / "well_configured_python")
+        code, errors = self._run("--min-level", "4", "--min-completeness", "100", project)
+        self.assertEqual((code, errors), (EXIT_SUCCESS, ""))
+
+    def test_the_floors_are_checked_against_their_range(self) -> None:
+        for arguments in (
+            ("--min-level", "5"),
+            ("--min-level", "-1"),
+            ("--min-completeness", "101"),
+            ("--min-completeness", "most"),
+        ):
+            with self.subTest(arguments=arguments), self.assertRaises(SystemExit) as raised:
+                self._run(*arguments, str(FIXTURES / "bare_python"))
+            self.assertEqual(raised.exception.code, EXIT_USAGE)
+
+    def test_a_floor_needs_a_score(self) -> None:
+        for dump in ("--facts", "--map", "--answers", "--tui"):
+            with self.subTest(dump=dump):
+                code, errors = self._run(dump, "--min-level", "1", str(FIXTURES / "bare_python"))
+                self.assertEqual(code, EXIT_USAGE)
+                self.assertIn(f"--min-level and --min-completeness need the analysis, not {dump}", errors)
 
 
 if __name__ == "__main__":
