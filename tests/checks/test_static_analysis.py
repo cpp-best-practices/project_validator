@@ -30,7 +30,6 @@ C_HINT = (
     "(CMAKE_CXX_CPPCHECK) or scan-build --status-bugs (the Clang Static Analyzer) in CI"
 )
 PYTHON_HINT = "consider running ruff check, pylint or flake8 in CI"
-GO_HINT = "consider running golangci-lint (with linters enabled beyond its defaults in a .golangci.yml) in CI"
 RUST_HINT = "consider running cargo clippy in CI"
 DEFAULTS = "{} has no configuration of its checks, so it runs only its defaults"
 CLANG_TIDY_CONFIG = {".clang-tidy": "Checks: 'bugprone-*'\n"}
@@ -47,7 +46,7 @@ class StaticAnalysisTests(unittest.TestCase):
             (WELL_CONFIGURED, (CXX,), "clang-tidy (.clang-tidy) and cppcheck run"),
             (WELL_CONFIGURED_PYTHON, (PYTHON,), "ruff check runs"),
             (WELL_CONFIGURED_RUST, (RUST,), "clippy (Cargo.toml) runs"),
-            (WELL_CONFIGURED_GO, (GO,), "golangci-lint (.golangci.yml) runs"),
+            (WELL_CONFIGURED_GO, (GO,), "go vet, staticcheck and golangci-lint (.golangci.yml) run"),
         )
         for files, ecosystems, message in cases:
             with self.subTest(message):
@@ -195,16 +194,17 @@ class GoTests(unittest.TestCase):
             with self.subTest(path):
                 self.assertEqual(self._run({**GOLANGCI_CI, path: text}), Result.passed(f"golangci-lint ({path}) runs"))
 
-    def test_warns_with_only_the_default_linters(self) -> None:
-        expected = Result.warned(f"golangci-lint runs, but {DEFAULTS.format('golangci-lint')}", GO_HINT)
+    def test_the_default_linters_are_static_analysis(self) -> None:
+        """golangci-lint's defaults run go vet and staticcheck, which count for static analysis as well as for the
+        warnings (upstream #248)."""
         for text in ("linters:\n  enable: []\n", 'version: "2"\nlinters:\n  default: standard\n', None):
             with self.subTest(text):
                 files = GOLANGCI_CI if text is None else {**GOLANGCI_CI, ".golangci.yml": text}
-                self.assertEqual(self._run(files), expected)
+                self.assertEqual(self._run(files).status, Status.PASS)
 
-    def test_go_vet_and_staticcheck_are_not_enough(self) -> None:
+    def test_go_vet_and_staticcheck_are_static_analysis(self) -> None:
         result = self._run(github_job("ubuntu-latest", "go vet ./...", "staticcheck ./..."))
-        self.assertEqual(result.status, Status.FAIL)
+        self.assertEqual(result, Result.passed("go vet and staticcheck run"))
 
     def test_the_golangci_lint_action_runs_it(self) -> None:
         files = {

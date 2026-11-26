@@ -2872,6 +2872,52 @@
       "languages": [
         "Go"
       ],
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "paths": [],
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go vet",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)",
+      "paths": [],
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "staticcheck",
+      "via": [
+        ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)"
+      ]
+    },
+    {
+      "advisory": "",
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[0]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
       "origin": ".github/workflows/ci.yml:17:9 (jobs.test.steps[6].run)",
       "paths": [],
       "provides": {
@@ -3103,6 +3149,52 @@
       ],
       "tool": "gofmt",
       "via": []
+    },
+    {
+      "advisory": "",
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "paths": [],
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go vet",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[1]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)",
+      "paths": [],
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "staticcheck",
+      "via": [
+        ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)"
+      ]
     },
     {
       "advisory": "",
@@ -3343,6 +3435,52 @@
       ],
       "tool": "gofmt",
       "via": []
+    },
+    {
+      "advisory": "",
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "paths": [],
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go vet",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[2]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)",
+      "paths": [],
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "staticcheck",
+      "via": [
+        ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)"
+      ]
     },
     {
       "advisory": "",
@@ -3583,6 +3721,52 @@
       ],
       "tool": "gofmt",
       "via": []
+    },
+    {
+      "advisory": "",
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "paths": [],
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go vet",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[3]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)",
+      "paths": [],
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "staticcheck",
+      "via": [
+        ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)"
+      ]
     },
     {
       "advisory": "",
@@ -3823,6 +4007,52 @@
       ],
       "tool": "gofmt",
       "via": []
+    },
+    {
+      "advisory": "",
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "paths": [],
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go vet",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[4]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)",
+      "paths": [],
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "staticcheck",
+      "via": [
+        ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)"
+      ]
     },
     {
       "advisory": "",
@@ -4063,6 +4293,52 @@
       ],
       "tool": "gofmt",
       "via": []
+    },
+    {
+      "advisory": "",
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:14:9 (jobs.test.steps[3].run)",
+      "paths": [],
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "go vet",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:test[5]",
+      "kind": "ToolRun",
+      "languages": [
+        "Go"
+      ],
+      "origin": ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)",
+      "paths": [],
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "staticcheck",
+      "via": [
+        ".github/workflows/ci.yml:15:9 (jobs.test.steps[4].run)"
+      ]
     },
     {
       "advisory": "",

@@ -121,6 +121,8 @@ GOLANGCI_LINT_ACTION = Action(
     name="golangci/golangci-lint-action",
     runs=lambda inputs: (("golangci-lint", "run", *split_words(inputs.get("args", ""))),),
 )
+# dominikh/staticcheck-action runs staticcheck over the module (toml-lang/toml-test).
+STATICCHECK_ACTION = Action(name="dominikh/staticcheck-action", runs=lambda inputs: (("staticcheck", "./..."),))
 
 GOFMT = format_tool(
     name="gofmt",
@@ -399,14 +401,21 @@ def _more_linters(facts: Facts) -> Iterator[str]:
 _golangci_lint = when(starts(("golangci-lint", "run")), analysed)
 
 
-# go vet and staticcheck are required as warnings (see WARNINGS); static analysis asks for golangci-lint's others.
+# go vet and staticcheck are required as warnings (see WARNINGS), and are static analysis too: they count for both
+# (upstream #248). golangci-lint runs both by default, and its configuration may enable more.
 GOLANGCI_LINT = analyzer(
     name="golangci-lint",
     languages=GO_LANGUAGE,
-    how="golangci-lint (with linters enabled beyond its defaults in a .golangci.yml)",
+    how="golangci-lint run (its defaults run go vet and staticcheck; a .golangci.yml may enable more)",
     analyses=_golangci_lint,
-    rules=Definition(found=_more_linters, default=False),
+    rules=Definition(found=_more_linters, default=True),
     reads=("golangci-lint",),
+)
+GO_LINT_ANALYZERS = tuple(
+    analyzer(
+        name=name, languages=GO_LANGUAGE, how=f"{name} ./...", analyses=when(starts(tuple(name.split())), analysed)
+    )
+    for name, _, _ in GO_LINTS
 )
 FUNLEN = limiter(
     name="golangci-lint's funlen",

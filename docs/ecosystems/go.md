@@ -56,8 +56,10 @@ warns.
 ## `static-analysis`
 
 golangci-lint (`golangci-lint run`, `go run …/golangci-lint@v… run`, or the `golangci/golangci-lint-action`
-action) with linters enabled beyond its defaults (`linters.enable`, `enable-all` or `default: all` in a
-`.golangci.yml`, `.toml` or `.json`).
+action), go vet or staticcheck. The Go compiler has no warnings, and go vet and staticcheck report what other
+compilers warn about, so they count for `compiler-warnings` and for `static-analysis` alike. golangci-lint runs both
+by default, and a `.golangci.yml`, `.toml` or `.json` may enable more (`linters.enable`, `enable-all` or
+`default: all`).
 
 ## `security-scanning`
 

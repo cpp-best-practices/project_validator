@@ -788,18 +788,44 @@
               ]
             },
             "known": {
+              "go vet": {
+                "can": {
+                  "checks": "go vet ./..."
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "golangci-lint": {
                 "can": {
-                  "checks": "golangci-lint (with linters enabled beyond its defaults in a .golangci.yml)"
+                  "checks": "golangci-lint run (its defaults run go vet and staticcheck; a .golangci.yml may enable more)"
                 },
-                "needs_definition": true,
+                "needs_definition": false,
+                "required": false
+              },
+              "staticcheck": {
+                "can": {
+                  "checks": "staticcheck ./..."
+                },
+                "needs_definition": false,
                 "required": false
               }
             },
             "language": "Go",
             "level": "checks",
             "runs": {
+              "go vet": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              },
               "golangci-lint": {
+                "levels": [
+                  "checks"
+                ],
+                "read": []
+              },
+              "staticcheck": {
                 "levels": [
                   "checks"
                 ],
@@ -1127,7 +1153,7 @@
     },
     "static-analysis": {
       "details": [],
-      "message": "golangci-lint (.golangci.yml) runs",
+      "message": "go vet, staticcheck and golangci-lint (.golangci.yml) run",
       "status": "PASS"
     },
     "status-badges": {

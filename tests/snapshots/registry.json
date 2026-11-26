@@ -3722,6 +3722,19 @@
     },
     {
       "can": {
+        "analysis": {
+          "checks": "go vet ./..."
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "go vet",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "mutation": {
           "runs": "go-mutesting ./..."
         }
@@ -3752,7 +3765,7 @@
     {
       "can": {
         "analysis": {
-          "checks": "golangci-lint (with linters enabled beyond its defaults in a .golangci.yml)"
+          "checks": "golangci-lint run (its defaults run go vet and staticcheck; a .golangci.yml may enable more)"
         }
       },
       "languages": [
@@ -6694,6 +6707,19 @@
         "Haskell"
       ],
       "name": "stan",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
+          "checks": "staticcheck ./..."
+        }
+      },
+      "languages": [
+        "Go"
+      ],
+      "name": "staticcheck",
       "reads": [],
       "required": []
     },
