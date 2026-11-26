@@ -15,6 +15,7 @@ from project_validator.checks.platform_matrix import platform_matrix
 from project_validator.checks.static_analysis import static_analysis
 from project_validator.checks.tests_run import tests_run
 from project_validator.core import Check, Result, Status
+from project_validator.facts import CiJob
 from tests.support import GITHUB_WORKFLOW, ci_jobs, make_context, temp_project
 
 SHA = "17d859ba0a6af9ffcaac5c70608fed36ed33e32a"
@@ -379,6 +380,26 @@ class WrapperActionTests(unittest.TestCase):
     def _result(self, check: Check, files: Mapping[str, str]) -> Result:
         with temp_project(files) as root:
             return check.run(make_context(root))
+
+    def test_a_job_in_a_bsd_virtual_machine_runs_on_that_system(self) -> None:
+        """vmactions' virtual machines run the job's commands in FreeBSD, OpenBSD or NetBSD: the job counts as that
+        system on the platform axis, an OS beyond linux, macos and windows (tokio's FreeBSD jobs; upstream #224)."""
+        build = "cmake -S . -B build -DCMAKE_CXX_COMPILER={}\ncmake --build build"
+        vm = _setup("vmactions/freebsd-vm@v1", {"run": "pkg install -y cmake\n" + build.format("clang++")})
+        files = {
+            "CMakeLists.txt": "project(app CXX)\nadd_executable(app main.cpp)\n",
+            "main.cpp": "int main() {}\n",
+            **_workflow({"linux": _job({"run": build.format("g++")}), "bsd": _job(vm)}),
+        }
+        with temp_project(files) as root:
+            context = make_context(root)
+            self.assertEqual({job.os for job in context.facts.of(CiJob)}, {"linux", "freebsd"})
+            result = platform_matrix.run(context)
+        self.assertIn("2 OS(es) (freebsd, linux)", result.message)
+        # A job that names no compiler builds with the system's own: clang on FreeBSD (neovim's FreeBSD job).
+        unnamed = {**files, **_workflow({"bsd": _job(_setup("vmactions/freebsd-vm@v1", {"run": build.format("c++")}))})}
+        with temp_project(unnamed) as root:
+            self.assertIn("freebsd / clang (runner default)", " ".join(platform_matrix.run(make_context(root)).details))
 
     def test_actions_run_the_tools_they_wrap(self) -> None:
         """py-actions/flake8 runs flake8 (llama.cpp), differential-shellcheck runs shellcheck on the changed scripts

@@ -39,6 +39,9 @@ COMPILERS = (
 )
 
 RUNNER_DEFAULT_COMPILERS = {"linux": "gcc", "macos": "appleclang", "windows": "msvc"}
+# The system compiler (`cc`) of the BSDs vmactions boots (upstream #224): clang on FreeBSD and OpenBSD, gcc on NetBSD
+# and DragonFly.
+RUNNER_DEFAULT_COMPILERS |= {"freebsd": "clang", "openbsd": "clang", "netbsd": "gcc", "dragonflybsd": "gcc"}
 # The ecosystems whose jobs compile with the runner's default compiler when they name none.
 COMPILING_ECOSYSTEMS = frozenset({"C", "C++", "Fortran"})
 
