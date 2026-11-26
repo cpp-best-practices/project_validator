@@ -56,7 +56,7 @@ An extractor reads one kind of thing it understands and records facts. Extractor
 language, a build system, a tool or a CI provider means adding extractors, and nothing else changes.
 
 | Kind | Reads | Examples |
-|---|---|---|
+| --- | --- | --- |
 | CI provider | CI configuration | GitHub Actions, GitLab CI, CircleCI, pre-commit.ci: jobs, their OS, toolchains and environment, and the commands each step runs |
 | Command expansion | what a command runs in turn | npm, Deno and Composer scripts, Rake tasks, Make recipes, just recipes, pixi tasks, CMake targets, tox environments, pre-commit hooks, the project's own shell scripts, the string `sh -c` runs |
 | Build system | build files | CMake, Meson, Bazel, Cargo, Gradle, Maven, MSBuild, SwiftPM, Xcode: the languages built, settings and their scope, build types, build trees and outputs, the test runner |

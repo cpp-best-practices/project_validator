@@ -1,4 +1,4 @@
-# markdownlint (markdownlint-cli2) lints the documentation's Markdown in CI: prose is wrapped at 120 columns, as the
+# markdownlint (markdownlint-cli2) lints the documentation's Markdown in CI, the root's and docs/: prose is wrapped at 120 columns, as the
 # code is; tables and code blocks keep their own width.
 config:
   MD013:
@@ -6,4 +6,5 @@ config:
     tables: false
     code_blocks: false
 globs:
+  - "*.md"
   - "docs/**/*.md"

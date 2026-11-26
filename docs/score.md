@@ -16,7 +16,7 @@ percent = 100 * filled / slots
 ```
 
 | Result | Fills |
-|---|---|
+| --- | --- |
 | pass | the whole slot |
 | warning (configured but not enforced, or partly in place) | half |
 | fail, or error | nothing, but the slot counts: hiding something never helps |
@@ -55,7 +55,7 @@ Levels are milestones: a project reaches level N when every core and project slo
 passes, and each of those checks ran. A warning does not complete a level, and auxiliary code never holds one back.
 
 | Level | Checks |
-|---|---|
+| --- | --- |
 | 1, Foundations | `ci-present`, `compiler-warnings`, `warnings-as-errors`, `code-formatting`, `tests-run`, `license`, `vcs-ignore` |
 | 2, Analysis | `static-analysis`, `type-checking`, `coverage`, `dependency-management`, `dependency-audit` |
 | 3, Hardening | `sanitizers`, `fuzz-testing`, `mutation-testing`, `security-scanning`, `action-pinning` |

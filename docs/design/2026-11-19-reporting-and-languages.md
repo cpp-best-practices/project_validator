@@ -117,7 +117,7 @@ All output comes from one `Analysis` value: the project, the structure (map), th
 options, the timings and the validator's version. Every renderer takes it:
 
 | View | How | Needs |
-|---|---|---|
+| --- | --- | --- |
 | plain text | default without a terminal or rich | nothing |
 | console | default in a terminal with rich | `[pretty]`: rich |
 | markdown | `--format markdown` | nothing |
