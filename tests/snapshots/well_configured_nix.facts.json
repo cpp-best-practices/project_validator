@@ -156,6 +156,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -202,6 +203,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -272,6 +274,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:build[0]",
       "kind": "ActionStep",
@@ -282,6 +285,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "extra-conf": "extra-platforms = aarch64-linux"
       },
@@ -345,6 +349,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:build[1]",
       "kind": "ActionStep",
@@ -355,6 +360,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:build[1]",
       "kind": "ActionStep",
@@ -365,6 +371,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "extra-conf": "extra-platforms = aarch64-linux"
       },
@@ -428,6 +435,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:build[2]",
       "kind": "ActionStep",
@@ -438,6 +446,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "extra-conf": "extra-platforms = aarch64-linux"
       },
@@ -498,6 +507,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
@@ -508,6 +518,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
@@ -666,6 +677,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",

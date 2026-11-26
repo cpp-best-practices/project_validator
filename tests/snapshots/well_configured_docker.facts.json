@@ -160,6 +160,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -206,6 +207,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -273,6 +275,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
@@ -283,6 +286,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "dockerfile": "Dockerfile"
       },
@@ -311,6 +315,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "exit-code": "1",
         "scan-ref": ".",
@@ -356,6 +361,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:image",
       "kind": "ActionStep",
@@ -435,6 +441,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",

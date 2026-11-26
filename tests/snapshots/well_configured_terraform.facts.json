@@ -178,6 +178,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -224,6 +225,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -294,6 +296,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:validate[0]",
       "kind": "ActionStep",
@@ -304,6 +307,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "terraform_version": "1.9.8"
       },
@@ -400,6 +404,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:validate[1]",
       "kind": "ActionStep",
@@ -410,6 +415,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "terraform_version": "1.10.3"
       },
@@ -506,6 +512,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:validate[2]",
       "kind": "ActionStep",
@@ -516,6 +523,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "terraform_version": "1.9.8"
       },
@@ -612,6 +620,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:validate[3]",
       "kind": "ActionStep",
@@ -622,6 +631,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "terraform_version": "1.10.3"
       },
@@ -718,6 +728,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:validate[4]",
       "kind": "ActionStep",
@@ -728,6 +739,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "terraform_version": "1.9.8"
       },
@@ -824,6 +836,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:validate[5]",
       "kind": "ActionStep",
@@ -834,6 +847,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "terraform_version": "1.10.3"
       },
@@ -927,6 +941,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
@@ -937,6 +952,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
@@ -979,6 +995,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "directory": "."
       },
@@ -1042,6 +1059,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",

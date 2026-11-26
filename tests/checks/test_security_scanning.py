@@ -57,6 +57,19 @@ class SecurityScanningTests(unittest.TestCase):
     def test_applies_to_the_languages_its_scanners_handle(self) -> None:
         self.assertLessEqual({"C", "C++", "Python", "Go", "Rust"}, security_scanning.languages)
 
+    def test_devskim_only_uploads_its_findings(self) -> None:
+        """microsoft/DevSkim-Action uploads SARIF and never fails CI (Humanizer's devskim.yml): an advisory scanner,
+        a warning on its own, never suggested (upstream #224)."""
+        devskim = {"uses": "microsoft/DevSkim-Action@v1"}
+        alone = self._run(_steps(devskim))
+        self.assertEqual(alone.status, Status.WARN, alone)
+        self.assertIn(
+            "DevSkim runs in CI but cannot fail it (it only uploads SARIF: no finding fails CI)", alone.details
+        )
+        self.assertNotIn("DevSkim", C_HINT)
+        both = self._run(_steps(devskim, {"uses": "github/codeql-action/analyze@v3"}))
+        self.assertEqual(both, _found("CodeQL"))
+
     def test_warns_without_ci(self) -> None:
         self.assertEqual(
             self._run(BARE_PROJECT), Result.warned("no code security scanning found in CI configuration", C_HINT)
@@ -82,7 +95,7 @@ class SecurityScanningTests(unittest.TestCase):
     def test_the_scanners_read_their_languages_only(self) -> None:
         self.assertEqual([tool.name for tool in multi_language_scanners(frozenset({"Lua"}))], ["semgrep"])
         self.assertEqual(
-            [tool.name for tool in multi_language_scanners(frozenset({"PHP"}))], ["GitLab SAST", "semgrep"]
+            [tool.name for tool in multi_language_scanners(frozenset({"PHP"}))], ["GitLab SAST", "semgrep", "DevSkim"]
         )
         self.assertEqual(multi_language_scanners(frozenset({"Erlang", "Fortran"})), ())
         for tool in multi_language_scanners(frozenset({"Python", "Lua"})):

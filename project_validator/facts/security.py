@@ -5,6 +5,7 @@ ordinary `Tool`s; `scanner` and `scanned` only spell them."""
 from __future__ import annotations
 
 from collections.abc import Iterable
+from dataclasses import replace
 
 from project_validator.facts import Setting
 from project_validator.facts.tools import Claim, Run, Tool, provided
@@ -18,8 +19,9 @@ def scanner(*, name: str, languages: frozenset[str], how: str, scans: Claim, rea
     return Tool(name=name, languages=languages, can={SECURITY: {SCANS: how}}, claims=scans, reads=reads)
 
 
-def scanned(*, read: Iterable[Setting | str] = (), heuristic: bool = False) -> Run:
-    return provided(SECURITY, SCANS, read=read, heuristic=heuristic)
+def scanned(*, read: Iterable[Setting | str] = (), heuristic: bool = False, advisory: str = "") -> Run:
+    """A scanner's run; an `advisory` one only reports, whatever it finds (see `Run.advisory`)."""
+    return replace(provided(SECURITY, SCANS, read=read, heuristic=heuristic), advisory=advisory)
 
 
 __all__ = ["SCANS", "SECURITY", "scanned", "scanner"]

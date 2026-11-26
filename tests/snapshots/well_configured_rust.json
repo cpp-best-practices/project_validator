@@ -1097,6 +1097,13 @@
                 "needs_definition": false,
                 "required": false
               },
+              "DevSkim": {
+                "can": {
+                  "scans": ""
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "GitLab SAST": {
                 "can": {
                   "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"
@@ -1149,6 +1156,13 @@
               "CodeQL": {
                 "can": {
                   "scans": "CodeQL (github/codeql-action)"
+                },
+                "needs_definition": false,
+                "required": false
+              },
+              "DevSkim": {
+                "can": {
+                  "scans": ""
                 },
                 "needs_definition": false,
                 "required": false

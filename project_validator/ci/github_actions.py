@@ -425,8 +425,15 @@ class _Combination:
         if "uses" in step:
             inputs = self.substituted(step.get("with"))
             uses = str(step["uses"]).strip()
+            env = {**known.env, **self.substituted(step.get("env"))}
             yield ActionStep(
-                origin=origin, job=self.identity, uses=uses, inputs=inputs, condition=condition, advisory=self.advisory
+                origin=origin,
+                job=self.identity,
+                uses=uses,
+                inputs=inputs,
+                condition=condition,
+                advisory=self.advisory,
+                env=env,
             )
             if (local := _local_action(uses)) is not None:
                 yield from self.composite_facts(origin, local, inputs, known, (*via, origin))

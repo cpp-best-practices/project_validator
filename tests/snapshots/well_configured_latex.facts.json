@@ -154,6 +154,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -200,6 +201,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -267,6 +269,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:build",
       "kind": "ActionStep",
@@ -277,6 +280,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "pre_compile": "chktex -q main.tex && latexindent --check main.tex",
         "root_file": "main.tex"
@@ -364,6 +368,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",

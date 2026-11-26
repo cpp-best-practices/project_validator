@@ -258,6 +258,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -304,6 +305,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -371,6 +373,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
@@ -381,6 +384,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ActionStep",
@@ -477,6 +481,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "config": ".kube-linter.yaml",
         "directory": "charts/shop"
@@ -523,6 +528,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "fetch-depth": "0"
       },
@@ -535,6 +541,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:install",
       "kind": "ActionStep",
@@ -545,6 +552,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci.yml:install",
       "kind": "ActionStep",
@@ -614,6 +622,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",

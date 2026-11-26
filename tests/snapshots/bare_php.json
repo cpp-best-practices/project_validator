@@ -540,6 +540,13 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "DevSkim": {
+                "can": {
+                  "scans": ""
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "GitLab SAST": {
                 "can": {
                   "scans": "GitLab SAST (Security/SAST.gitlab-ci.yml)"

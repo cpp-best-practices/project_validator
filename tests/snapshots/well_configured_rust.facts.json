@@ -269,6 +269,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -315,6 +316,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/ci-lint.yml:ci-lint",
       "kind": "ActionStep",
@@ -388,6 +390,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ActionStep",
@@ -398,6 +403,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
       "inputs": {
         "toolchain": "stable"
       },
@@ -582,6 +590,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ActionStep",
@@ -592,6 +603,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
       "inputs": {
         "toolchain": "stable"
       },
@@ -776,6 +790,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[2]",
       "kind": "ActionStep",
@@ -786,6 +803,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
       "inputs": {
         "toolchain": "nightly"
       },
@@ -992,6 +1012,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[3]",
       "kind": "ActionStep",
@@ -1002,6 +1025,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
       "inputs": {
         "toolchain": "nightly"
       },
@@ -1208,6 +1234,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[4]",
       "kind": "ActionStep",
@@ -1218,6 +1247,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
       "inputs": {
         "toolchain": "stable"
       },
@@ -1402,6 +1434,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[5]",
       "kind": "ActionStep",
@@ -1412,6 +1447,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
       "inputs": {
         "toolchain": "stable"
       },
@@ -1596,6 +1634,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[6]",
       "kind": "ActionStep",
@@ -1606,6 +1647,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
       "inputs": {
         "toolchain": "nightly"
       },
@@ -1812,6 +1856,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[7]",
       "kind": "ActionStep",
@@ -1822,6 +1869,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
       "inputs": {
         "toolchain": "nightly"
       },
@@ -2028,6 +2078,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[8]",
       "kind": "ActionStep",
@@ -2038,6 +2091,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
       "inputs": {
         "toolchain": "stable"
       },
@@ -2222,6 +2278,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[9]",
       "kind": "ActionStep",
@@ -2232,6 +2291,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
       "inputs": {
         "toolchain": "stable"
       },
@@ -2416,6 +2478,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[10]",
       "kind": "ActionStep",
@@ -2426,6 +2491,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings "
+      },
       "inputs": {
         "toolchain": "nightly"
       },
@@ -2632,6 +2700,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
       "inputs": {},
       "job": ".github/workflows/ci.yml:test[11]",
       "kind": "ActionStep",
@@ -2642,6 +2713,9 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {
+        "RUSTFLAGS": "-D warnings -Zsanitizer=address"
+      },
       "inputs": {
         "toolchain": "nightly"
       },
@@ -2852,6 +2926,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/codeql.yml:analyze",
       "kind": "ActionStep",
@@ -2862,6 +2937,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {
         "languages": "python"
       },
@@ -2874,6 +2950,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/codeql.yml:analyze",
       "kind": "ActionStep",
@@ -2930,6 +3007,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/copy-paste-detection.yml:copy-paste-detection",
       "kind": "ActionStep",
@@ -2999,6 +3077,7 @@
     {
       "advisory": "",
       "condition": null,
+      "env": {},
       "inputs": {},
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "ActionStep",
