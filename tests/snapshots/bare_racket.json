@@ -447,9 +447,17 @@
         "units": [
           {
             "advisory": {},
-            "answer": "impossible",
+            "answer": "no",
             "defined": {},
-            "known": {},
+            "known": {
+              "Resyntax": {
+                "can": {
+                  "checks": "racket -l- resyntax/cli analyze --local-git-repository . origin/main (it reports; it never fails the build)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
             "language": "Racket",
             "level": "checks",
             "runs": {},
@@ -739,9 +747,11 @@
       "status": "SKIP"
     },
     "static-analysis": {
-      "details": [],
-      "message": "not applicable to Racket",
-      "status": "SKIP"
+      "details": [
+        "consider running racket -l- resyntax/cli analyze --local-git-repository . origin/main (it reports; it never fails the build) in CI"
+      ],
+      "message": "no static analyzer runs",
+      "status": "FAIL"
     },
     "status-badges": {
       "details": [

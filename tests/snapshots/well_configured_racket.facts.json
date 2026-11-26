@@ -28,7 +28,7 @@
       "ambiguous": false,
       "kind": "SourceFile",
       "language": "YAML",
-      "lines": 33,
+      "lines": 34,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
     },
@@ -840,7 +840,7 @@
       "advisory": "",
       "condition": null,
       "inputs": {
-        "packages": "cover, cover-codecov, fmt",
+        "packages": "cover, cover-codecov, fmt, resyntax",
         "version": "stable"
       },
       "job": ".github/workflows/ci.yml:coverage",
@@ -939,6 +939,26 @@
       "kind": "Command",
       "line": "git diff --exit-code",
       "origin": ".github/workflows/ci.yml:33:9 (jobs.coverage.steps[5].run)",
+      "requires": "",
+      "via": []
+    },
+    {
+      "advisory": "",
+      "argv": [
+        "racket",
+        "-l-",
+        "resyntax/cli",
+        "analyze",
+        "--directory",
+        "."
+      ],
+      "condition": null,
+      "directory": null,
+      "env": {},
+      "job": ".github/workflows/ci.yml:coverage",
+      "kind": "Command",
+      "line": "racket -l- resyntax/cli analyze --directory .",
+      "origin": ".github/workflows/ci.yml:34:9 (jobs.coverage.steps[6].run)",
       "requires": "",
       "via": []
     },
@@ -1512,6 +1532,30 @@
         "."
       ],
       "tool": "raco fmt",
+      "via": []
+    },
+    {
+      "advisory": "it only reports, as a review or a pull request of fixes",
+      "heuristic": false,
+      "job": ".github/workflows/ci.yml:coverage",
+      "kind": "ToolRun",
+      "languages": [
+        "Racket"
+      ],
+      "origin": ".github/workflows/ci.yml:34:9 (jobs.coverage.steps[6].run)",
+      "paths": [
+        "."
+      ],
+      "provides": {
+        "analysis": [
+          "checks"
+        ]
+      },
+      "read": [],
+      "scope": [
+        "."
+      ],
+      "tool": "Resyntax",
       "via": []
     },
     {

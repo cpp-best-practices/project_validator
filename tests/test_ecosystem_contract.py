@@ -12,7 +12,7 @@ from project_validator.core import Status
 from project_validator.ecosystems import PROFILES, Ecosystem, applies_to
 from project_validator.plugins import discover
 from project_validator.runner import run_checks
-from tests.support import CONTENT_CHECKS, FIXTURES, make_context
+from tests.support import CONTENT_CHECKS, FIXTURES, best, make_context
 
 # Ecosystem -> (a project that follows all of its practices, a project that follows none of them), named after the
 # profile's module.
@@ -65,9 +65,11 @@ class EcosystemContractTests(unittest.TestCase):
     def test_a_well_configured_project_passes_every_check_that_applies_to_it(self) -> None:
         for ecosystem, (well_configured, _) in FIXTURES_OF.items():
             applying = _applying(well_configured)
+            languages = make_context(FIXTURES / well_configured).structure.languages
             for name, (status, message) in _statuses(well_configured).items():
                 with self.subTest(ecosystem=ecosystem.label, check=name):
-                    expected = Status.PASS if name in applying else Status.SKIP
+                    # Passing, but where no tool the validator knows can fail the build (`CEILINGS`).
+                    expected = best(languages, name) if name in applying else Status.SKIP
                     self.assertEqual(status, expected, message)
 
     def test_a_bare_project_passes_none_of_its_ecosystems_practices(self) -> None:

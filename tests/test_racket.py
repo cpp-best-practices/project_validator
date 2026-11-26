@@ -9,6 +9,7 @@ from project_validator.checks.code_formatting import code_formatting
 from project_validator.checks.coverage import coverage
 from project_validator.checks.license import license_
 from project_validator.checks.platform_matrix import platform_matrix
+from project_validator.checks.static_analysis import static_analysis
 from project_validator.checks.tests_run import tests_run
 from project_validator.checks.vcs_ignore import vcs_ignore
 from project_validator.core import Check, Result, Status
@@ -174,6 +175,29 @@ class RacketTests(unittest.TestCase):
                     ),
                 )
         self.assertEqual(self._run(coverage, _ci("raco test .")).status, Status.FAIL)
+
+    def test_resyntax_is_an_advisory_analyser(self) -> None:
+        """Resyntax, the Racket refactoring linter, reports and never fails the build (typed-racket's and scribble's
+        resyntax-analyze.yml): it counts, as an advisory analyser, for a warning (upstream #278)."""
+        for line in (
+            'xvfb-run racket -l- resyntax/cli analyze --local-git-repository . "origin/${GITHUB_BASE_REF}"',
+            "racket -l- resyntax/cli analyze --file shop.rkt",
+            "raco resyntax analyze --directory .",
+            "raco resyntax fix --directory .",
+        ):
+            with self.subTest(line=line):
+                result = self._run(static_analysis, _ci(line))
+                self.assertEqual(result.status, Status.WARN, result)
+                self.assertIn(
+                    "Resyntax runs in CI but cannot fail it (it only reports, as a review or a pull request of fixes)",
+                    result.details,
+                )
+                # It already runs: it is not suggested again (why it cannot fail is said instead).
+                self.assertFalse([detail for detail in result.details if detail.startswith("consider running")])
+        # Without an analyser, a Racket project is judged as any other: it fails.
+        missing = self._run(static_analysis, _ci("raco test ."))
+        self.assertEqual(missing.status, Status.FAIL, missing)
+        self.assertIn("resyntax", " ".join((missing.message, *missing.details)))
 
     def test_raco_fmt_rewrites_and_the_diff_enforces(self) -> None:
         enforced = _ci("raco fmt -i $(git ls-files '*.rkt')", "git diff --exit-code")

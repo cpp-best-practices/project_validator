@@ -1520,6 +1520,19 @@
     {
       "can": {
         "analysis": {
+          "checks": "racket -l- resyntax/cli analyze --local-git-repository . origin/main (it reports; it never fails the build)"
+        }
+      },
+      "languages": [
+        "Racket"
+      ],
+      "name": "Resyntax",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
           "checks": "Roslynator"
         }
       },

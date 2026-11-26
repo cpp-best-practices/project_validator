@@ -531,10 +531,20 @@
         "language": "Racket",
         "units": [
           {
-            "advisory": {},
-            "answer": "impossible",
+            "advisory": {
+              "Resyntax": "it only reports, as a review or a pull request of fixes"
+            },
+            "answer": "no",
             "defined": {},
-            "known": {},
+            "known": {
+              "Resyntax": {
+                "can": {
+                  "checks": "racket -l- resyntax/cli analyze --local-git-repository . origin/main (it reports; it never fails the build)"
+                },
+                "needs_definition": false,
+                "required": false
+              }
+            },
             "language": "Racket",
             "level": "checks",
             "runs": {},
@@ -861,9 +871,11 @@
       "status": "SKIP"
     },
     "static-analysis": {
-      "details": [],
-      "message": "not applicable to Racket",
-      "status": "SKIP"
+      "details": [
+        "Resyntax runs in CI but cannot fail it (it only reports, as a review or a pull request of fixes)"
+      ],
+      "message": "no static analyzer runs",
+      "status": "WARN"
     },
     "status-badges": {
       "details": [],

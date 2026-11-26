@@ -21,8 +21,12 @@ def _idle(answer: ToolAnswer, tools: tuple[str, ...]) -> list[str]:
     ]
 
 
-def _analysis_hint(answer: ToolAnswer) -> str:
-    ways = answer.how(CHECKS)
+def _analysis_hint(answer: ToolAnswer) -> str | None:
+    """What to run: the known analyzers, but those CI already runs where they cannot fail it (why they cannot says
+    what to change: scan-build's --status-bugs); none when no other is left (Resyntax, which only reports)."""
+    ways = answer.how(CHECKS, besides=(tool for tool, _ in answer.advised()))
+    if not ways:
+        return None
     joined = both(ways) if any(tool.required for tool in answer.known) else either(ways)
     return f"consider running {joined} in CI"
 
@@ -31,6 +35,7 @@ def judge_analysis(answer: ToolAnswer, *, allow_unknown: bool) -> Result:
     """Static analysis passes when CI runs an analyzer, and every required one, with its checks defined where it has
     no defaults of its own; defined but not run warns. An unknown answer is an error unless `allow_unknown`."""
     hint = _analysis_hint(answer)
+    hints = () if hint is None else (hint,)
     settled = skipped_or_unknown(
         answer.answer,
         answer.unknowns,
@@ -46,11 +51,11 @@ def judge_analysis(answer: ToolAnswer, *, allow_unknown: bool) -> Result:
         defaults = (f"{tool} has no configuration of its checks, so it runs only its defaults" for tool in undefined)
         problems = [*_idle(answer, answer.required_idle()), *defaults]
         if problems:
-            return Result.warned(f"{tools_ran(answer)}, but {'; '.join(problems)}", hint)
+            return Result.warned(f"{tools_ran(answer)}, but {'; '.join(problems)}", *hints)
         return Result.passed(tools_ran(answer))
     if configured := [name for name, _ in answer.defined]:
-        return Result.warned("; ".join(_idle(answer, tuple(configured))), hint)
-    return Result.failed("no static analyzer runs", hint)
+        return Result.warned("; ".join(_idle(answer, tuple(configured))), *hints)
+    return Result.failed("no static analyzer runs", *hints)
 
 
 def judge_type_checking(answer: ToolAnswer, *, allow_unknown: bool) -> Result:

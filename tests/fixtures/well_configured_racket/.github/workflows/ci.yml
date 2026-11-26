@@ -26,8 +26,9 @@ jobs:
       - uses: Bogdanp/setup-racket@8889db76ff6cdc86df8aa09fdd1729cd090b7144 # v1.16
         with:
           version: stable
-          packages: cover, cover-codecov, fmt
+          packages: cover, cover-codecov, fmt, resyntax
       - run: raco pkg install --auto --batch --skip-installed
       - run: raco cover -f codecov -d coverage .
       - run: raco fmt -i $(git ls-files '*.rkt')
       - run: git diff --exit-code
+      - run: racket -l- resyntax/cli analyze --directory .

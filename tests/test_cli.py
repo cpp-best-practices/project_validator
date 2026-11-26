@@ -30,6 +30,7 @@ from tests.support import (
     PROJECT_LAYOUTS,
     WELL_CONFIGURED,
     WELL_CONFIGURED_PYTHON,
+    capped,
     json_output,
     layout_project,
     make_context,
@@ -86,11 +87,15 @@ class CliTests(unittest.TestCase):
     def test_well_configured_projects_in_other_languages_pass_strictly(self) -> None:
         for layout in OTHER_LANGUAGE_LAYOUTS:
             with layout_project(self, layout, well_configured(layout)) as root:
-                code, output, _ = run_cli("--strict", str(root))
-                self.assertEqual(code, EXIT_SUCCESS, output)
                 # The profile's well-configured project may add languages of its own to the layout's (C# to F#).
                 languages = set(json_output(run_cli("--map", str(root))[1], "map")["languages"])
+                # A check no tool the validator knows lets the language pass is left out (`CEILINGS`).
+                skipped = ["--skip", ",".join(sorted(cannot))] if (cannot := capped(languages)) else []
+                code, output, _ = run_cli("--strict", *skipped, str(root))
+                self.assertEqual(code, EXIT_SUCCESS, output)
                 for found in LANGUAGE_SPECIFIC_CHECKS:
+                    if found.name in cannot:
+                        continue
                     status = "PASS" if found.languages & languages else "SKIP"
                     self.assertIn(f"[{status}] {found.name}:", output)
 
