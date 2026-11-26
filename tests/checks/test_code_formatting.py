@@ -125,18 +125,30 @@ class CodeFormattingTests(unittest.TestCase):
             with self.subTest(files=files):
                 self.assertEqual(self._run({**CLANG_FORMAT, **files}).status, Status.PASS)
 
-    def test_a_diff_a_later_step_fails_on_is_taken_to_enforce_heuristically(self) -> None:
-        files = {
-            **CLANG_FORMAT,
-            **_uses(
-                {"run": 'clang-format -i src/*.c\nDIFF=$(git diff)\necho "diff=$DIFF" >> $GITHUB_OUTPUT', "id": "f"},
-                {"run": "exit 1", "if": "${{ steps.f.outputs.diff }}"},
-            ),
-        }
-        self.assertEqual(self._run(files).status, Status.PASS)
+    def test_a_job_that_only_shows_the_diff_does_not_enforce_it(self) -> None:
+        """Showing what a formatter changed (`DIFF=$(git diff)`) is not failing on it: the job is not taken to enforce
+        the formatting (upstream #285), unless a later step fails on what the diff step's output says (nlohmann/json's
+        "Fail if not amalgamated/formatted")."""
+        shown = {"run": 'clang-format -i src/*.c\nDIFF=$(git diff)\necho "diff=$DIFF" >> $GITHUB_OUTPUT', "id": "f"}
+        files = {**CLANG_FORMAT, **_uses(shown, {"run": "echo done"})}
+        result = self._run(files)
+        self.assertNotEqual(result.status, Status.PASS, result)
         with temp_project({**files, "src/main.c": "int main(void) { return 0; }\n"}) as root:
             [run] = [run for run in make_context(root).facts.of(ToolRun) if run.tool == "clang-format"]
-        self.assertTrue(run.heuristic)
+        self.assertEqual(set(run.provides["format"]), {"apply"})
+        for failing in ("exit 1", "false"):
+            with self.subTest(failing=failing):
+                failed_on = {**CLANG_FORMAT, **_uses(shown, {"run": failing, "if": "${{ steps.f.outputs.diff }}"})}
+                self.assertEqual(self._run(failed_on).status, Status.PASS)
+        # An exit that succeeds, or one that no step's output decides, fails on nothing the diff shows.
+        others = (
+            {"run": "exit 0", "if": "${{ steps.f.outputs.diff }}"},
+            {"run": "exit 1", "if": "github.event_name == 'push'"},
+            {"run": "exit 1"},
+        )
+        for step in others:
+            with self.subTest(step=step):
+                self.assertNotEqual(self._run({**CLANG_FORMAT, **_uses(shown, step)}).status, Status.PASS)
 
     def test_the_pre_commit_action_runs_the_hooks(self) -> None:
         hooks = "repos:\n  - repo: local\n    hooks:\n      - id: lint\n        name: Lint\n        entry: make lint\n"

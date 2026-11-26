@@ -10,6 +10,7 @@ fail on `git diff --exit-code`, or commit the changes back. Formatters are ordin
 from __future__ import annotations
 
 import enum
+import re
 from collections.abc import Iterable, Mapping
 
 from project_validator.facts import ActionStep, Command, Facts, Setting, resolved
@@ -56,9 +57,8 @@ _COMMITTING_ACTIONS = frozenset(
 
 def _keeps(command: Command) -> bool | None:
     """Whether `command` fails when a file changed (`git diff --exit-code` or `--quiet`) or keeps the changes
-    (`git commit`): True; whether it shows them for a later step to fail on (`git diff`, `git status --porcelain`, or
-    a `git diff --quiet` whose status the script tests, `if git diff --quiet; then`): False; None when it does
-    neither."""
+    (`git commit`): True; whether it only shows them (`git diff`, `git status --porcelain`, or a `git diff --quiet`
+    whose status the script tests, `if git diff --quiet; then`): False; None when it does neither."""
     argv = resolved(command)
     if program(argv) != "git" or len(argv) < 2:
         return None
@@ -69,18 +69,35 @@ def _keeps(command: Command) -> bool | None:
     return False if argv[1] == "diff" or (argv[1] == "status" and has_option(argv, "--porcelain", "-s")) else None
 
 
+# What an earlier step of the job tells a later one (`if: steps.diff.outputs.has_diff == 'true'`).
+_STEP_OUTPUT = re.compile(r"\bsteps\.[\w-]+\.outputs\.")
+
+
+def _fails_on_a_step(facts: Facts, job: str) -> bool:
+    """Whether a step of the job fails it (`exit 1`, `false`) on what an earlier step's output says: the diff a step
+    shows, failed on (nlohmann/json's "Fail if not amalgamated/formatted")."""
+    for command in facts.where(Command, job=job):
+        argv = resolved(command)
+        fails = argv[:1] == ("false",) or (argv[:1] == ("exit",) and argv[1:2] not in ((), ("0",)))
+        if fails and command.condition and _STEP_OUTPUT.search(command.condition):
+            return True
+    return False
+
+
 def changes_enforced(command: Command, facts: Facts) -> bool | None:
     """Whether what `command` changes fails CI or is committed: it runs as a pre-commit hook (which fails when a hook
-    changes a file), or its job checks the diff or commits it (True). Where the job does so is not told apart. A job
-    that only shows the diff (`DIFF=$(git diff)`), for a later step to fail on, is taken to: False. None when nothing
-    shows the changes."""
+    changes a file), or its job checks the diff or commits it, or shows it to a step that fails on it (True). Where the
+    job does so is not told apart. A job that only shows the diff (`DIFF=$(git diff)`) does not enforce it (False,
+    upstream #285). None when nothing shows the changes."""
     if from_hook(command):
         return True
     steps = facts.where(ActionStep, job=command.job)
     if any(step.uses.partition("@")[0].lower() in _COMMITTING_ACTIONS for step in steps):
         return True
     kept = [found for other in facts.where(Command, job=command.job) if (found := _keeps(other)) is not None]
-    return any(kept) if kept else None
+    if not kept:
+        return None
+    return any(kept) or _fails_on_a_step(facts, command.job)
 
 
 def formatted(
@@ -93,13 +110,13 @@ def formatted(
     heuristic: bool = False,
 ) -> Run | None:
     """A formatter run: it enforces the formatting when it `checks` it, or `applies` it where the changes are
-    enforced (see `changes_enforced`). A pre-commit hook applies it. A run that does neither (one that only prints the
-    formatted code) is not a formatter run."""
+    enforced (see `changes_enforced`); shown alone, they are not. A pre-commit hook applies it. A run that does
+    neither (one that only prints the formatted code) is not a formatter run."""
     if not (checks or applies or from_hook(command)):
         return None
     enforced = None if checks else changes_enforced(command, facts)
-    level = Enforcement.CHECK if checks or enforced is not None else Enforcement.APPLY
-    return provided(FORMAT, level, read=read, heuristic=heuristic or enforced is False)
+    level = Enforcement.CHECK if checks or enforced else Enforcement.APPLY
+    return provided(FORMAT, level, read=read, heuristic=heuristic)
 
 
 def _given(argv: tuple[str, ...], words: frozenset[str]) -> bool:
