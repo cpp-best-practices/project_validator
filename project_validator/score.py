@@ -433,6 +433,19 @@ def score(reports: Iterable[Report], every_check: Iterable[str] = (), sizes: Siz
     )
 
 
+def shortfalls(found: Score, *, min_level: int | None = None, min_completeness: float | None = None) -> list[str]:
+    """How the score falls short of the floors `--min-level` and `--min-completeness` set (none when it meets them, or
+    none is set). Completeness is the share of the gates in place: extra credit is no completeness."""
+    short = []
+    if min_level is not None and found.level < min_level:
+        short.append(f"Level {found.level} {found.level_name} is below --min-level {min_level}")
+    if min_completeness is not None and found.base < min_completeness:
+        short.append(
+            f"{_number(found.base)}% of the gates in place is below --min-completeness {_number(min_completeness)}"
+        )
+    return short
+
+
 __all__ = [
     "EXTRA_CREDIT",
     "FLOOR",
@@ -448,5 +461,6 @@ __all__ = [
     "family",
     "level_of",
     "score",
+    "shortfalls",
     "sizes",
 ]

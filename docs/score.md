@@ -74,6 +74,19 @@ coverage (C++ in lib): +4.2 points, needed for Level 2 (Analysis); consider runn
 `python -m project_validator --explain CHECK` says what a gate looks for, why it matters, and the tools it recognises
 for each language.
 
+## Gates
+
+The score never changes the exit code by itself. Two opt-in floors make it: `--min-level LEVEL` (0 to 4) fails the
+run unless the project reaches that level, and `--min-completeness PERCENT` (0 to 100) fails it unless at least that
+share of the gates is in place. Extra credit is not completeness. A run below a floor exits 1 and says why on stderr:
+
+```text
+project_validator: score below its floor: Level 1 Foundations is below --min-level 2
+```
+
+A run narrowed by `--only` or `--skip` reaches no level past the checks it left out, so a level floor fails it. The
+floors need the analysis: they cannot be given with `--facts`, `--map`, `--answers` or `--tui`.
+
 ## JSON
 
 With `--format json --score`, the output is `{"format": "results", "version": "1", "results": [...], "score": {...}}`.
