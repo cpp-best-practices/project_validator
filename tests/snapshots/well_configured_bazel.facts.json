@@ -474,6 +474,16 @@
       "reader": "license links"
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": "shop/defs.bzl",
+      "reader": "Swift build settings"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "shop/defs.bzl",
+      "reader": "Swift optimization settings"
+    },
+    {
       "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",

@@ -147,6 +147,18 @@ class ToolTests(unittest.TestCase):
             with self.subTest(layout=layout):
                 self.assertEqual(run_in_layout(self, layout, WARNINGS_AS_ERRORS, files).status, Status.PASS)
 
+    def test_warnings_as_errors_in_bazels_copts(self) -> None:
+        """SwiftLint's: `-warnings-as-errors` in a Starlark macro's copts (bazel/copts.bzl), or a BUILD file's
+        (upstream #207)."""
+        module = {"MODULE.bazel": 'module(name = "shop")\n', "Sources/Shop/Shop.swift": "let shop = 1\n"}
+        for files in (
+            {"bazel/copts.bzl": 'COPTS = [\n    "-warnings-as-errors",\n]\n'},
+            {"BUILD.bazel": 'swift_library(name = "shop", copts = ["-warnings-as-errors"])\n'},
+        ):
+            with self.subTest(files=files):
+                self.assertEqual(run_as(self, WARNINGS_AS_ERRORS, {**module, **files}, SWIFT).status, Status.PASS)
+        self.assertEqual(run_as(self, WARNINGS_AS_ERRORS, module, SWIFT).status, Status.FAIL)
+
 
 class SafetyTests(unittest.TestCase):
     def test_runtime_safety_checks_must_not_be_compiled_away(self) -> None:
@@ -231,6 +243,31 @@ class DependencyAndOutputTests(unittest.TestCase):
                 """
         }
         self.assertIn("2 Swift toolchain(s) (16.4, 6.1)", run_as(self, PLATFORM_MATRIX, files, SWIFT).message)
+
+    def test_compnerds_setup_swift_names_the_windows_toolchain(self) -> None:
+        """compnerd/gha-setup-swift, the Windows Swift setup: its `swift-version`, else its `tag` (Alamofire's
+        `6.3-RELEASE`), else its `branch` (`swift-6.2-release`) names the version (upstream #207)."""
+        files = {
+            GITHUB_WORKFLOW: """\
+                jobs:
+                  windows:
+                    runs-on: windows-latest
+                    strategy:
+                      matrix:
+                        include:
+                          - {branch: swift-6.3-release, tag: 6.3.1-RELEASE}
+                          - {branch: swift-6.2-release, tag: ""}
+                          - {swift: "6.1"}
+                    steps:
+                      - uses: compnerd/gha-setup-swift@main
+                        with:
+                          branch: ${{ matrix.branch }}
+                          tag: ${{ matrix.tag }}
+                          swift-version: ${{ matrix.swift }}
+                      - run: swift test
+                """
+        }
+        self.assertIn("3 Swift toolchain(s) (6.1, 6.2, 6.3.1)", run_as(self, PLATFORM_MATRIX, files, SWIFT).message)
 
 
 class SwiftLintClaimTests(unittest.TestCase):
