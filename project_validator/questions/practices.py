@@ -4,7 +4,7 @@ warnings as errors) are met, and where; for each compiler CI builds with, where 
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from project_validator.facts import Facts
 from project_validator.facts.practices import (
@@ -15,6 +15,7 @@ from project_validator.facts.practices import (
     met,
     practices_of,
 )
+from project_validator.facts.tools import known_tools
 from project_validator.questions import (
     EVERY_KIND,
     Answer,
@@ -53,6 +54,10 @@ class PracticeAnswer:
     # When the practice is not met, which of its parts (see `Practice.parts`) are found, and which are not.
     parts_found: tuple[str, ...] = ()
     parts_missing: tuple[str, ...] = ()
+    # When it is not met, where each missing requirement is missing (requirement -> paths), and the tools that would
+    # meet one that are configured but never run (tool -> the files that configure it), upstream #248.
+    lacking: tuple[tuple[str, tuple[str, ...]], ...] = ()
+    idle: tuple[tuple[str, tuple[str, ...]], ...] = ()
 
     def found(self) -> tuple[str, ...]:
         """Every requirement met for some compiler, in order."""
@@ -106,6 +111,44 @@ def _answer(practice: Practice, met: bool, unknown: bool) -> Answer:
     return Answer.YES if met else Answer.NO
 
 
+def _configured(tool: str, facts: Facts) -> tuple[str, ...]:
+    """The files that define how the known tool named `tool` runs, if any."""
+    known = (found for found in known_tools() if found.name == tool)
+    return tuple(
+        sorted(
+            {path for found in known for definition in found.definitions.values() for path in definition.found(facts)}
+        )
+    )
+
+
+def _lacking(
+    practice: Practice, facts: Facts, compiled: tuple[Compiled, ...]
+) -> tuple[tuple[tuple[str, tuple[str, ...]], ...], tuple[tuple[str, tuple[str, ...]], ...]]:
+    """Where each requirement missing for some compiler is missing, as its `lacking` says; and each tool that meets
+    one, configured but never run, with the files that configure it."""
+    missing = {name for compiled_for in compiled for name in compiled_for.missing}
+    lacking: dict[str, tuple[str, ...]] = {}
+    idle: dict[str, tuple[str, ...]] = {}
+    for requirement in practice.requirements(facts, None):
+        if requirement.name not in missing:
+            continue
+        if requirement.lacking is not None and (where := tuple(requirement.lacking(facts))):
+            lacking[requirement.name] = where
+        idle |= {tool: files for tool in requirement.tools if (files := _configured(tool, facts))}
+    return tuple(lacking.items()), tuple(idle.items())
+
+
+def _short_of(answer: PracticeAnswer, facts: Facts, texts: Texts) -> PracticeAnswer:
+    """A practice not met, with what it falls short of: which of its parts are found and, when any is, which are not;
+    and (but for a practice that forbids settings) where each missing requirement is missing, and the tools that would
+    meet one configured but idle."""
+    practice = answer.practice
+    found = tuple(part.name for part in practice.parts if met(practice, part, facts, None, texts))
+    missing = tuple(part.name for part in practice.parts if found and part.name not in found)
+    lacking, idle = ((), ()) if practice.forbids else _lacking(practice, facts, answer.compiled)
+    return replace(answer, parts_found=found, parts_missing=missing, lacking=lacking, idle=idle)
+
+
 def practice_answer(name: str, language: str, facts: Facts) -> PracticeAnswer | None:
     """Whether CI (or the build) meets the practice called `name` for `language`; None when nothing asks it of
     `language`."""
@@ -123,18 +166,10 @@ def practice_answer(name: str, language: str, facts: Facts) -> PracticeAnswer | 
     unknowns = unknowns_for((), facts, reads=practice.reads)
     met_ = _met(practice, compiled)
     answer = _answer(practice, met_, bool(unknowns))
-    found = () if met_ else tuple(part.name for part in practice.parts if met(practice, part, facts, None, texts))
-    missing = tuple(part.name for part in practice.parts if found and part.name not in found)
-    return PracticeAnswer(
-        language=language,
-        unit=".",
-        practice=practice,
-        answer=answer,
-        compiled=compiled,
-        unknowns=unknowns,
-        parts_found=found,
-        parts_missing=missing,
+    found = PracticeAnswer(
+        language=language, unit=".", practice=practice, answer=answer, compiled=compiled, unknowns=unknowns
     )
+    return found if met_ else _short_of(found, facts, texts)
 
 
 def practice_answers(name: str) -> Callable[[str, Facts], LanguageAnswers[PracticeAnswer]]:

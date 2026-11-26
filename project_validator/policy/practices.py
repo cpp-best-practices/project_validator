@@ -7,7 +7,7 @@ from __future__ import annotations
 from collections.abc import Callable, Iterable
 
 from project_validator.core import Result
-from project_validator.policy import both, unknown
+from project_validator.policy import both, configured_idle, files, unknown
 from project_validator.questions import Answer
 from project_validator.questions.practices import Compiled, PracticeAnswer
 
@@ -34,6 +34,12 @@ def _missing(compiled: Compiled) -> tuple[str, ...]:
     return compiled.missing
 
 
+def _why(answer: PracticeAnswer) -> tuple[str, ...]:
+    """Where each missing requirement is missing, and each tool that would meet one configured but never run."""
+    lacking = (f"{name}: missing in {files(paths)}" for name, paths in answer.lacking)
+    return (*lacking, *(configured_idle(tool, paths) for tool, paths in answer.idle))
+
+
 def _required(answer: PracticeAnswer) -> dict[str, None]:
     return dict.fromkeys(name for compiled in answer.compiled for name in compiled.missing)
 
@@ -48,9 +54,10 @@ def judge_warnings(answer: PracticeAnswer, *, allow_unknown: bool) -> Result:
     if answer.answer is Answer.UNKNOWN and not allow_unknown:
         return unknown(f"whether the strict {words.kind} are enabled", answer.unknowns, words.hint)
     if not answer.found():
-        return Result.failed(f"no {words.kind} found; enable at least {joined(_required(answer))}")
+        return Result.failed(f"no {words.kind} found; enable at least {joined(_required(answer))}", *_why(answer))
     missing = _described(answer.compiled, _missing, ", ".join)
-    return Result.warned(f"missing {words.kind}: {missing}", f"found {_described(answer.compiled, _found, joined)}")
+    found = f"found {_described(answer.compiled, _found, joined)}"
+    return Result.warned(f"missing {words.kind}: {missing}", found, *_why(answer))
 
 
 def judge_settings(answer: PracticeAnswer, *, allow_unknown: bool) -> Result:
@@ -72,9 +79,11 @@ def judge_settings(answer: PracticeAnswer, *, allow_unknown: bool) -> Result:
     if practice.forbids:
         return Result.failed(f"{words.failed}: {joined(answer.found())}", words.hint)
     if not answer.found():
-        return Result.failed(words.failed or f"no {words.kind} found; enable {joined(_required(answer))}", words.hint)
+        failed = words.failed or f"no {words.kind} found; enable {joined(_required(answer))}"
+        return Result.failed(failed, words.hint, *_why(answer))
     missing = _described(answer.compiled, _missing, ", ".join)
-    return Result.warned(f"missing {words.kind}: {missing}", f"found {_described(answer.compiled, _found, joined)}")
+    found = f"found {_described(answer.compiled, _found, joined)}"
+    return Result.warned(f"missing {words.kind}: {missing}", found, *_why(answer))
 
 
 def judge_any_one(answer: PracticeAnswer, *, allow_unknown: bool) -> Result:
