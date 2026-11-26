@@ -160,6 +160,9 @@ class LanguageViewTests(unittest.TestCase):
         with mock.patch.object(tui, "language_views", return_value=[lonely]):
             self.assertIn("no check judges it", tui.language_page(_analysis(), "Typst"))
 
+    def test_a_run_that_read_no_structure_has_no_views(self) -> None:
+        self.assertEqual(language_views(dataclasses.replace(_analysis(), structure=None)), [])
+
     def test_the_terminal_page_shows_the_view(self) -> None:
         page = tui.language_page(_analysis(), "Python")
         self.assertIn("Python", page)
@@ -443,7 +446,7 @@ async def _drive_tui() -> list[str]:
         seen.append(str(app.query_one("#pane").render()))
         analysis = app.analysis
         report = next(report for report in analysis.reports if report.check.name == "static-analysis")
-        for page, value in (("facts", "SourceFile"), ("next", None), ("report", report)):
+        for page, value in (("facts", "SourceFile"), ("next", None), ("report", report), ("language", "Python")):
             app._page(page, value)
             seen.append(str(app.query_one("#pane").render()))
         await pilot.press("q")
@@ -470,8 +473,8 @@ async def _arrow_keys() -> list[bool]:
         return seen
 
 
-async def _empty_branch() -> bool:
-    """Right on an expanded branch with no children stays where it is."""
+async def _lone_tree(*keys: str, show_root: bool = True) -> Any:
+    """A navigation tree of its root alone, expanded, after the keys are pressed."""
     from textual.app import App, ComposeResult
 
     from project_validator.views.tui_app import NavTree
@@ -479,6 +482,7 @@ async def _empty_branch() -> bool:
     class _One(App[None]):
         def compose(self) -> ComposeResult:
             tree: NavTree = NavTree("root", id="nav")
+            tree.show_root = show_root
             tree.root.expand()
             yield tree
 
@@ -486,26 +490,56 @@ async def _empty_branch() -> bool:
     async with app.run_test() as pilot:
         tree = app.query_one("#nav", NavTree)
         tree.focus()
-        await pilot.press("right")
-        return tree.cursor_node is tree.root
+        await pilot.press(*keys)
+        return tree
+
+
+async def _results_without_skipped() -> list[str]:
+    """The results branches of a run in which every check applied."""
+    from textual.widgets import Tree
+
+    from project_validator.views.tui_app import _add_results
+
+    analysis = _analysis()
+    applied = dataclasses.replace(analysis, reports=tuple(r for r in analysis.reports if not common.is_skipped(r)))
+    tree: Tree[Any] = Tree("results")
+    _add_results(tree.root, applied)
+    return [str(node.label) for node in tree.root.children]
 
 
 @requires_textual
 class TuiAppTests(unittest.TestCase):
     def test_right_on_an_empty_branch_stays(self) -> None:
-        self.assertTrue(asyncio.run(_empty_branch()))
+        tree = asyncio.run(_lone_tree("right"))
+        self.assertIs(tree.cursor_node, tree.root)
+
+    def test_left_on_a_collapsed_root_stays(self) -> None:
+        tree = asyncio.run(_lone_tree("left", "left"))
+        self.assertIs(tree.cursor_node, tree.root)
+        self.assertFalse(tree.root.is_expanded)
+
+    def test_the_arrow_keys_do_nothing_with_no_node_under_the_cursor(self) -> None:
+        tree = asyncio.run(_lone_tree("right", "left", show_root=False))
+        self.assertIsNone(tree.cursor_node)
+        self.assertTrue(tree.root.is_expanded)
+
+    def test_with_every_check_applied_there_is_no_not_applicable_branch(self) -> None:
+        labels = asyncio.run(_results_without_skipped())
+        self.assertTrue(labels)
+        self.assertFalse([label for label in labels if label.startswith("Not applicable")])
 
     def test_arrow_keys_collapse_expand_and_move(self) -> None:
         self.assertEqual(asyncio.run(_arrow_keys()), [True, False, True, True, True, True])
 
     def test_it_reads_the_project_then_browses_it(self) -> None:
-        title, facts, detected, kind, steps, report = asyncio.run(_drive_tui())
+        title, facts, detected, kind, steps, report, language = asyncio.run(_drive_tui())
         self.assertRegex(title, r"\d+% · Level")
         self.assertIn("release", facts)
         self.assertIn("Languages and formats", detected)
         self.assertIn("SourceFile", kind)
         self.assertIn("Next steps", steps)
         self.assertIn("Static analysers find", report)
+        self.assertIn("scripts/", language)
 
     def test_its_exit_code_is_the_app_s_or_0(self) -> None:
         app = mock.Mock()
