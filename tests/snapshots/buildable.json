@@ -704,6 +704,13 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "Coverity Scan": {
+                "can": {
+                  "checks": ""
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "clang-tidy": {
                 "can": {
                   "checks": "clang-tidy (CMAKE_CXX_CLANG_TIDY, checks chosen in a .clang-tidy)"

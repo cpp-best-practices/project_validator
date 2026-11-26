@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import enum
 from collections.abc import Iterable, Mapping
+from dataclasses import replace
 
 from project_validator.facts import Setting
 from project_validator.facts.tools import Claim, Definition, Run, Tool, defined_by, provided
@@ -50,8 +51,9 @@ def analyzer(
     )
 
 
-def analysed(*, read: Iterable[Setting | str] = (), heuristic: bool = False) -> Run:
-    return provided(ANALYSIS, CHECKS, read=read, heuristic=heuristic)
+def analysed(*, read: Iterable[Setting | str] = (), heuristic: bool = False, advisory: str = "") -> Run:
+    """A static analyzer's run; an `advisory` one only reports, whatever it finds (see `Run.advisory`)."""
+    return replace(provided(ANALYSIS, CHECKS, read=read, heuristic=heuristic), advisory=advisory)
 
 
 def type_checker(

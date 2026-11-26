@@ -40,7 +40,7 @@ class AdvisoryRunTests(unittest.TestCase):
     def test_an_advisory_run_is_no_gate_and_the_finding_says_it_runs(self) -> None:
         files = {**PYTHON, **_workflow({"run": "ruff format --check .", "continue-on-error": True})}
         result = _result(code_formatting, files)
-        self.assertNotEqual(result.status, Status.PASS, result)
+        self.assertEqual(result.status, Status.WARN, result)  # half the gate (upstream #282)
         self.assertIn("ruff format runs in CI but cannot fail it (continue-on-error)", result.details, result)
 
     def test_a_gating_run_beside_an_advisory_one_passes(self) -> None:

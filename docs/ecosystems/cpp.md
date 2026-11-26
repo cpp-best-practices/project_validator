@@ -141,7 +141,7 @@ clang-tidy or cppcheck: run directly (`clang-tidy`, `run-clang-tidy`, `cppcheck`
 configures with `CMAKE_CXX_CLANG_TIDY` / `CMAKE_CXX_CPPCHECK` (on the `cmake` command line, or in the CMake files,
 target properties or presets), or a custom target CI builds (`cmake --build build --target lint`) that runs either.
 clang-tidy needs its checks chosen in a `.clang-tidy`. The Clang Static Analyzer counts when CI runs the build under
-`scan-build --status-bugs`, which fails on any finding; plain `scan-build` only reports.
+`scan-build --status-bugs`, which fails on any finding. Plain `scan-build` only reports, and so does Coverity Scan (`cov-build`, uploaded to scan.coverity.com): each is an advisory analyser. Where one runs and nothing else does, the check warns rather than fails, for half the credit.
 
 ## `dependency-management`
 

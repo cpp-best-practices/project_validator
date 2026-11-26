@@ -380,9 +380,23 @@ class SqlTests(unittest.TestCase):
             with self.subTest(line=line):
                 result = _result(static_analysis, {**C_MAKEFILE, **github_job(CI, line)})
                 self.assertEqual(result.status, Status.PASS, result)
-        # Without --status-bugs it reports what it finds, and the job passes whatever it finds.
+        # Without --status-bugs it reports what it finds, and the job passes whatever it finds: an advisory analyser,
+        # which warns, for half the credit (upstream #282).
         advisory = _result(static_analysis, {**C_MAKEFILE, **github_job(CI, "scan-build make")})
-        self.assertNotEqual(advisory.status, Status.PASS, advisory)
+        self.assertEqual(advisory.status, Status.WARN, advisory)
+        self.assertIn(
+            "scan-build runs in CI but cannot fail it (it only reports without --status-bugs)", advisory.details
+        )
+
+    def test_coverity_scan_is_an_advisory_analyser(self) -> None:
+        """Coverity Scan builds under cov-build and uploads to scan.coverity.com, which never fails CI (dbus-broker,
+        nlohmann/json, glib): advisory, it warns (upstream #282)."""
+        build = github_job(CI, "cov-build --dir cov-int make", "tar czf cov.tgz cov-int")
+        advisory = _result(static_analysis, {**C_MAKEFILE, **build})
+        self.assertEqual(advisory.status, Status.WARN, advisory)
+        self.assertIn(
+            "Coverity Scan runs in CI but cannot fail it (it uploads to Coverity Scan, which reports)", advisory.details
+        )
 
 
 NIX = "Nix flake"

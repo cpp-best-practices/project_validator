@@ -179,10 +179,13 @@ def auxiliary_unit_roles(facts: Facts) -> dict[str, str]:
 
 def _advised(result: Result, answer: object) -> Result:
     """A result that did not pass says which tools CI runs for the practice where they cannot fail the pipeline: they
-    run, but enforce nothing (`continue-on-error`, `allow_failure`)."""
-    if result.status is Status.PASS or not isinstance(answer, AdvisedTools):
+    run, but enforce nothing (`continue-on-error`, `allow_failure`, a tool that only reports). A failure where such a
+    tool runs is a warning: an advisory tool is half the gate (upstream #282)."""
+    if result.status is Status.PASS or not isinstance(answer, AdvisedTools) or not (advised := answer.advised()):
         return result
-    return result.with_details(*(_ADVISED.format(tool=tool, why=why) for tool, why in answer.advised()))
+    if result.status is Status.FAIL:
+        result = replace(result, status=Status.WARN)
+    return result.with_details(*(_ADVISED.format(tool=tool, why=why) for tool, why in advised))
 
 
 _ADVISED = "{tool} runs in CI but cannot fail it ({why})"
