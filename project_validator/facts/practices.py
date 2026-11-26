@@ -71,6 +71,8 @@ class Requirement:
     tools: tuple[str, ...] = ()
     # Text one of which a command `runs` matches holds: the commands without any are not searched.
     hints: tuple[str, ...] = ()
+    # Where it is missing, as a result names it when it is not met (the modules that lack it), upstream #248.
+    lacking: Callable[[Facts], Iterable[str]] | None = None
 
     @property
     def in_files(self) -> re.Pattern[str] | None:

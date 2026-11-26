@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from project_validator.core import Result
 from project_validator.facts.analysis import CHECKS, Strictness
-from project_validator.policy import both, either, skipped_or_unknown, tools_ran
+from project_validator.policy import both, configured_idle, either, skipped_or_unknown, tools_ran
 from project_validator.policy import files as files_listed
 from project_validator.questions import Answer
 from project_validator.questions.tooling import ToolAnswer
@@ -14,9 +14,7 @@ from project_validator.questions.tooling import ToolAnswer
 def _idle(answer: ToolAnswer, tools: tuple[str, ...]) -> list[str]:
     """Each of `tools`, which CI does not run, as configured or not."""
     return [
-        f"{tool} is configured ({files_listed(files)}) but does not run"
-        if (files := answer.definitions((tool,)))
-        else f"{tool} does not run"
+        configured_idle(tool, files) if (files := answer.definitions((tool,))) else f"{tool} does not run"
         for tool in tools
     ]
 

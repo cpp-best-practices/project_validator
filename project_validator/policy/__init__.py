@@ -70,6 +70,11 @@ def files(paths: Iterable[str], shown: int = 3) -> str:
     return ", ".join(paths) if more <= 0 else f"{', '.join(paths[:shown])} and {more} more"
 
 
+def configured_idle(tool: str, paths: Iterable[str]) -> str:
+    """`eslint is configured (.eslintrc.cjs) but does not run`."""
+    return f"{tool} is configured ({files(paths)}) but does not run"
+
+
 def alternatives(ways: Iterable[str]) -> str:
     """`a`, or `a (or b, c)`: the first way, and the others."""
     ways = list(ways)

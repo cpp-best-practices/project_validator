@@ -144,10 +144,13 @@ class PerlTests(unittest.TestCase):
         self.assertEqual(self._run(compiler_warnings, critic_test), passed)
         lax = {"lib/Shop/Cart.pm": "package Shop::Cart;\nuse strict;\n1;\n", **_ci("perlcritic lib")}
         result = self._run(compiler_warnings, lax)
+        # The modules that lack them are named (upstream #248).
         self.assertEqual(
             result,
             Result.warned(
-                "missing Perl pragmas and lints: use strict and use warnings in every module", "found perlcritic"
+                "missing Perl pragmas and lints: use strict and use warnings in every module",
+                "found perlcritic",
+                "use strict and use warnings in every module: missing in lib/Shop/Cart.pm",
             ),
         )
         # Installing Perl::Critic is not running it.

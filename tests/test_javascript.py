@@ -196,6 +196,15 @@ class JavaScriptTests(unittest.TestCase):
                 self.assertEqual(result, Result.passed(f"strict JavaScript linters are enabled: {linter}"))
         result = self._run(compiler_warnings, _ci("npm ci"))
         self.assertEqual(result, Result.failed("no JavaScript linters found; enable at least eslint"))
+        # A linter configured but never run says so, as static-analysis does (graphql-eslint, upstream #248).
+        configured = self._run(compiler_warnings, {".eslintrc.cjs": "module.exports = {};\n", **_ci("npm ci")})
+        self.assertEqual(
+            configured,
+            Result.failed(
+                "no JavaScript linters found; enable at least eslint",
+                "eslint is configured (.eslintrc.cjs) but does not run",
+            ),
+        )
 
     def test_a_lint_warning_must_fail_ci(self) -> None:
         passing = ("eslint --max-warnings=0 .", "biome lint --error-on-warnings", "biome ci", "deno lint")

@@ -224,9 +224,9 @@ def _read_modules(path: str, text: str) -> Iterator[Setting]:
 PERL_MODULES = SettingsReader(name=MODULES, files=("*.pm", "*.pl", "*.psgi"), read=_read_modules)
 
 
-def _every_module(facts: Facts, _compiler: str | None) -> Iterator[Evidence]:
-    """Every module read uses strict and warnings, itself or through a pragma bundle of the project's: one that does
-    not fails all of them."""
+def _pragmas(facts: Facts) -> tuple[set[str], list[str]]:
+    """The modules read, and those that do not use strict and warnings, themselves or through a pragma bundle of the
+    project's."""
     found = facts.where(Setting, tool=MODULES)
     bundles = {setting.value for setting in found if setting.key == BUNDLE}
     bundled = {
@@ -235,12 +235,22 @@ def _every_module(facts: Facts, _compiler: str | None) -> Iterator[Evidence]:
         if setting.key == USES and bundles & set(cast("tuple[str, ...]", setting.value))
     }
     pragmas = [setting for setting in found if setting.key in ("strict", "warnings")]
-    paths = {setting.path for setting in pragmas}
-    if paths and all(setting.value or setting.path in bundled for setting in pragmas):
+    lax = (setting.path for setting in pragmas if not setting.value and setting.path not in bundled)
+    return {setting.path for setting in pragmas}, sorted(set(lax))
+
+
+def _every_module(facts: Facts, _compiler: str | None) -> Iterator[Evidence]:
+    """Every module read uses strict and warnings: one that does not fails all of them."""
+    paths, lax = _pragmas(facts)
+    if paths and not lax:
         yield Evidence(f"{len(paths)} module(s), every one")
 
 
-STRICT_AND_WARNINGS = Requirement(name="use strict and use warnings in every module", found=_every_module)
+STRICT_AND_WARNINGS = Requirement(
+    name="use strict and use warnings in every module",
+    found=_every_module,
+    lacking=lambda facts: _pragmas(facts)[1],
+)
 PERLCRITIC = Requirement(
     name="perlcritic",
     runs=re.compile(r"(?<![\w:])perlcritic\b"),

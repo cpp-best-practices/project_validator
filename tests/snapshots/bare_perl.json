@@ -678,7 +678,9 @@
       "status": "SKIP"
     },
     "compiler-warnings": {
-      "details": [],
+      "details": [
+        "use strict and use warnings in every module: missing in lib/Shop.pm"
+      ],
       "message": "no Perl pragmas and lints found; enable at least use strict and use warnings in every module, perlcritic",
       "status": "FAIL"
     },
