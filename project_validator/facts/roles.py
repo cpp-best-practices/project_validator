@@ -27,7 +27,8 @@ _ROLES = {
     # `t` and `xt` are Perl's (its tests, and its author tests); a playground holds projects a test suite runs
     # against (vite's), and `inputs` a test suite's input files (json-fortran's files/inputs/).
     **dict.fromkeys(
-        ("test", "tests", "testing", "testdata", "spec", "specs", "__tests__", "fixtures", "t", "xt"), "test"
+        ("test", "tests", "testing", "testdata", "spec", "specs", "__tests__", "__test__", "fixtures", "t", "xt"),
+        "test",
     ),
     # Flutter's integration tests (phoenix's too); a corpus is the code a tool is tested on (clj-kondo's, Dist-Zilla's:
     # upstream #235).
@@ -80,7 +81,7 @@ AUXILIARY_UNITS = AUXILIARY | {"template"}
 _SOURCE_ROOTS = frozenset({"src", "lib", "source", "sources", "main", "include", "pkg", "internal", "app"})
 # Gradle's test fixtures source set (`src/testFixtures`) is code for tests too; parts are compared in lower case.
 _TESTS_BELOW_SOURCE_ROOTS = frozenset(
-    {"test", "tests", "testdata", "test-data", "test_data", "__tests__", "fixtures", "testfixtures"}
+    {"test", "tests", "testdata", "test-data", "test_data", "__tests__", "__test__", "fixtures", "testfixtures"}
 )
 
 

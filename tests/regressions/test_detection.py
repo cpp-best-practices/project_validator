@@ -202,6 +202,13 @@ class RoleBelowSourceRootTests(unittest.TestCase):
         result = _result(committed_artifacts, {"deps.edn": "{}\n", "src/a.clj": "(ns a)\n", "corpus/x/A.class": ""})
         self.assertEqual(result.status, Status.PASS, result)
 
+    def test_a_jest_test_directory_is_the_test_role(self) -> None:
+        """`__test__/`, the singular jest directory actions/checkout and peter-evans/create-pull-request keep their
+        tests in, below a source root too."""
+        for path in ("__test__/git-auth-helper.test.ts", "src/__test__/main.test.ts"):
+            with self.subTest(path=path):
+                self.assertEqual(role(path), "test")
+
     def test_malformed_test_data_below_a_source_root_is_reported_not_judged(self) -> None:
         """A deliberately broken JSON fixture under src/test/resources is test data and does not fail the project
         (liquibase's invalidChangeLog.xml, golangci-lint's testdata/json/empty.json)."""
