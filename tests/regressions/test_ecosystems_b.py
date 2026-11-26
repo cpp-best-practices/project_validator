@@ -441,6 +441,30 @@ class NixTests(unittest.TestCase):
                 result = _run(check, NIX, {**TREEFMT, **github_job(CI, "nix fmt -- --ci")})
                 self.assertEqual(result.status, Status.PASS, result)
 
+    def test_treefmt_nix_says_which_tools_treefmt_runs(self) -> None:
+        """treefmt configured in Nix code (treefmt-nix's `programs.<tool>.enable = true`, PostgREST's
+        nix/treefmt.nix): `treefmt --ci` runs the tools it enables, in either spelling of the module (upstream #266)."""
+        for treefmt in (
+            "{ ... }:\n{\n  programs.statix.enable = true;\n  programs.deadnix.enable = true;\n}\n",
+            "{ ... }:\n{\n  programs = {\n    statix.enable = true;\n    deadnix = { enable = true; };\n  };\n}\n",
+            # Cut short, its set unclosed: what it holds is still read.
+            "{ ... }:\n{\n  programs = {\n    statix.enable = true;\n    deadnix.enable = true;\n",
+        ):
+            for path in ("treefmt.nix", "nix/treefmt.nix"):
+                files = {path: treefmt, **github_job(CI, "treefmt --ci")}
+                for check in (static_analysis, compiler_warnings):
+                    with self.subTest(path=path, check=check.name, treefmt=treefmt):
+                        result = _run(check, NIX, files)
+                        self.assertEqual(result.status, Status.PASS, result)
+        # Disabled, or enabled in another set than `programs`, a tool does not run.
+        for module in (
+            "{\n  programs.statix.enable = false;\n}\n",
+            "{\n  programs = { nixfmt.enable = true; };\n  services = { statix = { enable = true; }; };\n}\n",
+        ):
+            with self.subTest(module=module):
+                files = {"treefmt.nix": module, **github_job(CI, "treefmt --ci")}
+                self.assertNotEqual(_run(static_analysis, NIX, files).status, Status.PASS)
+
     def test_devenv_shell_runs_the_command(self) -> None:
         """`devenv shell -- cargo nextest run` (or without `--`) runs the tests in devenv's environment
         (cachix/devenv)."""

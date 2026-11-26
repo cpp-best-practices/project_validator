@@ -93,12 +93,50 @@ FLAKE_CHECK = test_runner(
 # `--ci` (`--fail-on-change`), a formatter that changes a file fails the run: statix's and deadnix's fixes are their
 # checks.
 TREEFMT_FILES = ("treefmt.toml", ".treefmt.toml")
+# treefmt-nix's module, where a flake configures treefmt in Nix code (PostgREST's nix/treefmt.nix): upstream #266.
+TREEFMT_NIX_FILES = ("treefmt.nix", "nix/treefmt.nix")
 _FAILING_FORMS = {"statix": ("statix", "check"), "deadnix": ("deadnix", "--fail")}
+# treefmt-nix's programs whose name is not their command: a subcommand of a tool that does more.
+_PROGRAM_COMMANDS = {
+    "ruff-check": ("ruff", "check"),
+    "ruff-format": ("ruff", "format"),
+    "terraform": ("terraform", "fmt"),
+    "taplo": ("taplo", "format"),
+    "dprint": ("dprint", "fmt"),
+    "biome": ("biome", "format"),
+}
+# `programs.<name>.enable = true;`, and inside a `programs = { ... };` set, `<name>.enable = true;` or
+# `<name> = { enable = true; ... };`.
+_PROGRAM_ENABLED = re.compile(r"\bprograms\.([\w-]+)\.enable\s*=\s*true\b")
+_PROGRAMS_SET = re.compile(r"\bprograms\s*=\s*\{")
+_ENABLED_IN_SET = re.compile(r"(?<![\w.-])([\w-]+)(?:\.enable\s*=\s*true\b|\s*=\s*\{[^{}]*\benable\s*=\s*true\b)")
 
 
 def _treefmt_file(command: Command, context: Context) -> str | None:
-    paths = (joined(command.directory, name) for name in TREEFMT_FILES)
+    paths = (joined(command.directory, name) for name in (*TREEFMT_FILES, *TREEFMT_NIX_FILES))
     return next((path for path in paths if context.project.exists(path)), None)
+
+
+def _set_body(text: str, start: int) -> str:
+    """The text of the attribute set whose `{` is just before `start`, to its matching `}`."""
+    depth = 1
+    for index in range(start, len(text)):
+        depth += {"{": 1, "}": -1}.get(text[index], 0)
+        if depth == 0:
+            return text[start:index]
+    return text[start:]
+
+
+def _nix_programs(text: str) -> dict[str, object]:
+    """The programs a treefmt-nix module enables, as treefmt.toml's formatters (see `_formatter_argv`)."""
+    names = _PROGRAM_ENABLED.findall(text)
+    for found in _PROGRAMS_SET.finditer(text):
+        names += _ENABLED_IN_SET.findall(_set_body(text, found.end()))
+    formatters: dict[str, object] = {}
+    for name in dict.fromkeys(names):
+        program, *options = _PROGRAM_COMMANDS.get(name, (name,))
+        formatters[name] = {"command": program, "options": options}
+    return formatters
 
 
 def _formatter_argv(formatter: object, failing: bool) -> tuple[str, ...] | None:
@@ -111,12 +149,21 @@ def _formatter_argv(formatter: object, failing: bool) -> tuple[str, ...] | None:
     return _FAILING_FORMS.get(tool, words) if failing else words
 
 
+def _treefmt_configuration(path: str, context: Context) -> object:
+    """The formatters a treefmt configuration lists: treefmt.toml's `[formatter.*]`, or the programs a treefmt-nix
+    module enables."""
+    text = context.project.read_text(path)
+    if path.endswith(".nix"):
+        return _nix_programs(text)
+    return tomllib.loads(text).get("formatter", {})
+
+
 def _treefmt_formatters(command: Command, context: Context) -> list[Expansion] | None:
     argv = resolved(command)
     if not starts_with(argv, ("nix", "fmt"), ("treefmt",)) or (path := _treefmt_file(command, context)) is None:
         return None
     try:
-        formatters = tomllib.loads(context.project.read_text(path)).get("formatter", {})
+        formatters = _treefmt_configuration(path, context)
     except tomllib.TOMLDecodeError as error:
         subject = f"the treefmt configuration {path}"
         return [Unknown(origin=Origin(path=path), subject=subject, reason=str(error), hides="commands")]

@@ -14,6 +14,8 @@ nixfmt or nixpkgs-fmt (`--check`), alejandra (`--check`), each with its one styl
 `formatter` output, which checks when `--check` (or treefmt's `--fail-on-change`) is passed through:
 `nix fmt -- --check .`.
 
+When the formatter is treefmt (`nix fmt`, or `treefmt` itself), the tools it runs count as run: the formatters `treefmt.toml` lists, or the programs a treefmt-nix module enables (`programs.statix.enable = true;` in `treefmt.nix` or `nix/treefmt.nix`). With `--ci`, a tool that changes a file fails the run.
+
 ## `static-analysis`
 
 statix (`statix check .`) and deadnix (`deadnix .`).
