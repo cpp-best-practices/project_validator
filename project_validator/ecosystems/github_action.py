@@ -7,7 +7,8 @@ and that zizmor audits them and the action (`security-scanning`). Every reposito
 
 Left for the checks they belong to: every `uses:` pinned to a commit with no tag allowance (`action-pinning`),
 `action.yml`'s name, description, branding and `runs.using` on a supported runtime (`packaging`, #30), and a
-self-test on more than one OS (a platform axis, which a format has no toolchain to carry)."""
+self-test on more than one OS: the action's code's platform axis (a JavaScript action's self-test runs on the Node its
+`runs.using` names, upstream #227), which the format itself has no toolchain to carry."""
 
 from __future__ import annotations
 
@@ -16,7 +17,7 @@ import re
 from collections.abc import Mapping
 
 from project_validator.core import Project
-from project_validator.ecosystems.model import Ecosystem
+from project_validator.ecosystems.model import ACTION_FILES, Ecosystem
 from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.expansion import Action
 from project_validator.facts.security import scanned, scanner
@@ -27,7 +28,6 @@ from project_validator.facts.tools import defined_by, starts, when
 GITHUB_ACTION = "GitHub Action"
 GITHUB_ACTION_ONLY = frozenset({GITHUB_ACTION})
 YAML = frozenset({"YAML"})
-ACTION_FILES = ("action.yml", "action.yaml")
 
 
 # The manifests of a package of another ecosystem, or of a workspace of packages, at the root: the repository's product

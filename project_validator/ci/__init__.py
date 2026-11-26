@@ -11,7 +11,12 @@ from project_validator import yaml_support
 from project_validator.build_configurations import BuildConfiguration, sanitizers_enabled
 from project_validator.core import Project
 from project_validator.ecosystems import build_systems, registered
-from project_validator.ecosystems.model import VERSION_FILE_CONTENTS
+from project_validator.ecosystems.model import (
+    ACTION_FILES,
+    OWN_ACTION,
+    OWN_ACTION_DEFINITION,
+    VERSION_FILE_CONTENTS,
+)
 from project_validator.facts import (
     ActionStep,
     CiConfiguration,
@@ -207,12 +212,15 @@ def _matrix_text(matrix: Mapping[str, str]) -> str:
 
 def _with_version_files(step: ActionStep, project: Project) -> ActionStep:
     """`step` with, beside each `*-version-file` input whose file the project holds, that file's contents (under the
-    input's name and `@contents`), for a reader of the version it names (setup-node's `.tool-versions`)."""
+    input's name and `@contents`), for a reader of the version it names (setup-node's `.tool-versions`); and a step
+    `uses: ./` with the repository's own action's definition, for a reader of the runtime it names (upstream #227)."""
     found = {
         f"{name}{VERSION_FILE_CONTENTS}": project.read_text(path)
         for name, path in step.inputs.items()
         if name.endswith("-version-file") and project.exists(path)
     }
+    if step.uses == OWN_ACTION and (definition := next(filter(project.exists, ACTION_FILES), None)) is not None:
+        found[OWN_ACTION_DEFINITION] = project.read_text(definition)
     return replace(step, inputs={**step.inputs, **found}) if found else step
 
 

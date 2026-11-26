@@ -372,6 +372,33 @@ class OutputTests(unittest.TestCase):
         result = self._run(platform_matrix, files)
         self.assertIn("3 runtime version(s) (2.5.0, 22, lts/*)", result.message)
 
+    def test_an_actions_self_test_runs_the_node_its_definition_names(self) -> None:
+        """A JavaScript action's self-test (`uses: ./`) runs it on the Node its action.yml's `runs.using` names:
+        actions/checkout's test jobs, on three OSes, run node24 (upstream #227)."""
+        files = {
+            "action.yml": "name: Checkout\nruns:\n  using: 'node24'\n  main: dist/index.js\n",
+            GITHUB_WORKFLOW: """\
+                jobs:
+                  test:
+                    runs-on: ${{ matrix.os }}
+                    strategy:
+                      matrix:
+                        os: [ubuntu-latest, macos-latest, windows-latest]
+                    steps:
+                      - uses: actions/checkout@v5
+                      - uses: ./
+                """,
+        }
+        result = self._run(platform_matrix, files)
+        self.assertIn("3 OS(es) (linux, macos, windows), 1 runtime version(s) (24)", result.message)
+        # A long composite action (lychee-action's): read in time, not by trying every way to split its lines.
+        steps = "".join(f"    - run: echo {number}\n      shell: bash\n" for number in range(40))
+        long_composite = f"using: composite\n  steps:\n{steps}"
+        for composite in ("using: composite\n", "using: docker\n  image: Dockerfile\n", long_composite):
+            with self.subTest(composite=composite):
+                other = self._run(platform_matrix, {**files, "action.yml": f"name: x\nruns:\n  {composite}"})
+                self.assertNotIn("(24)", other.message)
+
 
 DENO_TASKS = '{\n  // tasks\n  "tasks": {"fmt": "deno fmt --check", "check": {"command": "deno check main.ts"}}\n}\n'
 PACKAGES = {

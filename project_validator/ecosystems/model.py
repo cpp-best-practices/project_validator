@@ -103,6 +103,11 @@ VERSION = r"(\d+\.\d+(?:\.\d+)?)"
 # The suffix of the input that holds the contents of the file a setup action's `*-version-file` input names (the CI
 # layer attaches it to the step, for a reader of the version the file pins).
 VERSION_FILE_CONTENTS = "@contents"
+# The repository's own action's definition (`action.yml` or `action.yaml` at the root), which the CI layer attaches to a
+# step `uses: ./` that runs it from the checkout, under this input: for a reader of the runtime it names (`runs.using`).
+ACTION_FILES = ("action.yml", "action.yaml")
+OWN_ACTION = "./"
+OWN_ACTION_DEFINITION = f"action{VERSION_FILE_CONTENTS}"
 
 
 def input_named(name: str) -> Callable[[Mapping[str, str]], str | None]:
