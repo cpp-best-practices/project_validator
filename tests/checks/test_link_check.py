@@ -25,7 +25,10 @@ class LinkCheckTests(unittest.TestCase):
     def test_applies_to_the_documentation_sites(self) -> None:
         self.assertEqual(link_check.aspect, LINKS)
         self.assertEqual(
-            link_check.languages, frozenset({"MkDocs", "Sphinx", "Docusaurus", "mdBook", "Hugo", "Jekyll", "VitePress"})
+            link_check.languages,
+            frozenset(
+                {"MkDocs", "Sphinx", "Docusaurus", "mdBook", "Hugo", "Jekyll", "VitePress", "Markdown documentation"}
+            ),
         )
 
     def test_a_link_checker_run_on_the_site_passes_and_none_warns(self) -> None:

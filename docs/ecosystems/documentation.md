@@ -1,10 +1,17 @@
 # Documentation site
 
-A format ecosystem of seven formats, one per generator, recognised by content: MkDocs (`mkdocs.yml`), Sphinx (a
+A format ecosystem of eight formats, one per generator and plain Markdown documentation, recognised by content: MkDocs (`mkdocs.yml`), Sphinx (a
 `conf.py` that sets Sphinx up), Docusaurus (`docusaurus.config.js`, `.ts`, `.mjs`, `.cjs`), mdBook (`book.toml`), Hugo
 (`hugo.toml`, `.yaml`, `.json`), Jekyll (a `_config.yml` beside `_posts/`, `_layouts/` or `_includes/`, or that
-names its theme) and VitePress (`.vitepress/config.ts`, `.mts`, `.js`, `.mjs`, in the site's directory). Prose itself, the Markdown in every repository, makes no documentation site. The site's
-configuration is YAML, TOML, Python or JavaScript, judged by its own profile as well.
+names its theme) and VitePress (`.vitepress/config.ts`, `.mts`, `.js`, `.mjs`, in the site's directory). Prose itself,
+the Markdown in every repository, makes no documentation site. The site's configuration is YAML, TOML, Python or
+JavaScript, judged by its own profile as well.
+
+An eighth format is plain Markdown documentation: a `docs/`, `doc/` or `documentation/` directory at the root that
+holds Markdown (`.md`, `.markdown`) no generator renders (none is configured at the root or in it). It is judged as a
+site's prose is: its links checked (`link-check`) and its prose linted (`static-analysis`: markdownlint, vale). Nothing
+builds it, so `tests-run`, `warnings-as-errors` and the build's outputs do not apply. A README and CONTRIBUTING at the
+root are no documentation of this kind.
 
 A CI job works with the ecosystem when it runs a generator (`mkdocs`, `sphinx-build`, `docusaurus`, `mdbook`, `hugo`,
 `jekyll`, `vitepress`), a prose linter, a link checker (lychee, markdown-link-check, mdbook-linkcheck, linkinator, muffet,

@@ -1,14 +1,15 @@
 """Documentation sites: MkDocs, Sphinx, Docusaurus, mdBook, Hugo, Jekyll and VitePress, one format each, recognised by
 content (the generator's configuration: `mkdocs.yml`, a Sphinx `conf.py`, `docusaurus.config.*`, `book.toml`,
 `hugo.toml`, a Jekyll `_config.yml`, `.vitepress/config.*`). Prose itself (Markdown in every repository) makes no
-documentation site. The site's files are Markdown, and its configuration is YAML, TOML, Python or JavaScript, judged
-by their own profiles; what is asked of the site is that CI builds it (`tests-run`), that the build fails on a
-warning (`warnings-as-errors`: `mkdocs build --strict`, `sphinx-build -W`, `onBrokenLinks: 'throw'`, `hugo
---panicOnWarning`, `jekyll build --strict_front_matter`; mdBook and VitePress have no such switch), that the prose
-is linted (`static-analysis`: markdownlint, vale, sphinx-lint, codespell), and that the built site is ignored and
-never committed (`vcs-ignore`, `committed-artifacts`), and that CI checks the site's links and fails on a broken one
-(`link-check`: lychee, Sphinx's `linkcheck` builder, markdown-link-check, mdbook-linkcheck, MkDocs' htmlproofer
-plugin, linkinator, muffet, htmltest, HTMLProofer, LinkChecker; a scheduled run counts)."""
+documentation site, but a root docs/ of Markdown no generator renders is plain Markdown documentation, judged by its
+links and its prose linters only (upstream #271). The site's files are Markdown, and its configuration is YAML, TOML,
+Python or JavaScript, judged by their own profiles; what is asked of the site is that CI builds it (`tests-run`), that
+the build fails on a warning (`warnings-as-errors`: `mkdocs build --strict`, `sphinx-build -W`, `onBrokenLinks:
+'throw'`, `hugo --panicOnWarning`, `jekyll build --strict_front_matter`; mdBook and VitePress have no such switch), that
+the prose is linted (`static-analysis`: markdownlint, vale, sphinx-lint, codespell), and that the built site is ignored
+and never committed (`vcs-ignore`, `committed-artifacts`), and that CI checks the site's links and fails on a broken one
+(`link-check`: lychee, Sphinx's `linkcheck` builder, markdown-link-check, mdbook-linkcheck, MkDocs' htmlproofer plugin,
+linkinator, muffet, htmltest, HTMLProofer, LinkChecker; a scheduled run counts)."""
 
 from __future__ import annotations
 
@@ -34,6 +35,10 @@ from project_validator.facts.tools import Run, Tool, defined_by, starts, when
 MKDOCS, SPHINX, DOCUSAURUS, MDBOOK, HUGO, JEKYLL = "MkDocs", "Sphinx", "Docusaurus", "mdBook", "Hugo", "Jekyll"
 VITEPRESS = "VitePress"
 GENERATORS = frozenset({MKDOCS, SPHINX, DOCUSAURUS, MDBOOK, HUGO, JEKYLL, VITEPRESS})
+# Plain Markdown documentation: a docs/ of Markdown no generator renders (upstream #271), judged like a site's prose
+# (its links checked, its prose linted) but built by nothing.
+MARKDOWN_DOCS = "Markdown documentation"
+PROSE = GENERATORS | {MARKDOWN_DOCS}
 
 
 def _only(generator: str) -> frozenset[str]:
@@ -82,20 +87,46 @@ def _configures(project: Project, generator: str, path: str, files: list[str]) -
 _HIDDEN = frozenset({"**/.vitepress"})
 
 
+# The directories plain documentation is kept in, at the root.
+_DOCS_DIRECTORIES = ("docs", "doc", "documentation")
+_MARKDOWN = (".md", ".markdown")
+
+
+def _sites(project: Project, files: list[str]) -> list[tuple[str, str]]:
+    return [
+        (path, generator)
+        for generator, pattern in _CONFIGURATION.items()
+        for path in files
+        if pattern.search(path) and _configures(project, generator, path, files)
+    ]
+
+
+def _plain_docs(files: list[str], sites: list[tuple[str, str]]) -> Iterator[tuple[str, str]]:
+    """(path, MARKDOWN_DOCS) of a Markdown file of each root docs directory no site's generator renders (one at the
+    root, or in the directory, renders it)."""
+    rendered = [str(PurePosixPath(path).parent) for path, _ in sites]
+    for directory in _DOCS_DIRECTORIES:
+        if any(site in (".", directory) or site.startswith(f"{directory}/") for site in rendered):
+            continue
+        markdown = (path for path in files if path.startswith(f"{directory}/") and path.endswith(_MARKDOWN))
+        if (found := next(markdown, None)) is not None:
+            yield found, MARKDOWN_DOCS
+
+
 def site_configurations(project: Project) -> Iterator[tuple[str, str]]:
-    """(path, generator) of each site's configuration file: the site is where it is."""
+    """(path, generator) of each site's configuration file: the site is where it is. Plain Markdown documentation is
+    where its first file is (see `_plain_docs`)."""
     files = project.files(hidden=_HIDDEN)
-    for generator, pattern in _CONFIGURATION.items():
-        yield from (
-            (path, generator) for path in files if pattern.search(path) and _configures(project, generator, path, files)
-        )
+    sites = _sites(project, files)
+    yield from sites
+    yield from _plain_docs(files, sites)
 
 
 DOCUMENTATION = Ecosystem(
     label="Documentation site",
     kind="format",
     companion=re.compile("|".join(pattern.pattern for pattern in _CONFIGURATION.values())),
-    languages=GENERATORS,
+    languages=PROSE,
     locate=site_configurations,
     ci_programs=(
         ("mkdocs",),
@@ -271,7 +302,7 @@ MARKDOWNLINT_SETTINGS = file_reader(
 )
 MARKDOWNLINT = analyzer(
     name="markdownlint",
-    languages=GENERATORS,
+    languages=PROSE,
     how="markdownlint-cli2 (or DavidAnson/markdownlint-cli2-action)",
     # markdownlint-cli is the package `npm exec` names (mkdocs: `npm exec --yes -- markdownlint-cli docs/`).
     analyses=when(starts(("markdownlint",), ("markdownlint-cli",), ("markdownlint-cli2",)), analysed),
@@ -280,7 +311,7 @@ MARKDOWNLINT = analyzer(
 VALE_SETTINGS = file_reader("vale", (".vale.ini", "_vale.ini", "vale.ini"))
 VALE = analyzer(
     name="vale",
-    languages=GENERATORS,
+    languages=PROSE,
     how="vale docs (or errata-ai/vale-action)",
     analyses=when(starts(("vale",)), analysed),
     rules=defined_by(files=(VALE_SETTINGS.name,), default=False),
@@ -297,13 +328,13 @@ SPHINX_LINT = analyzer(
 # site runs them, not suggested.
 CODESPELL = analyzer(
     name="codespell",
-    languages=GENERATORS,
+    languages=PROSE,
     how="",
     analyses=when(starts(("codespell",)), analysed),
 )
 ASPELL = analyzer(
     name="aspell",
-    languages=GENERATORS,
+    languages=PROSE,
     how="",
     analyses=when(starts(("aspell",)), analysed),
 )
@@ -319,7 +350,7 @@ VALE_ACTION = Action(name="errata-ai/vale-action", runs=lambda inputs: (("vale",
 
 def _link_checker(name: str, how: str, *prefixes: tuple[str, ...]) -> Tool:
     """A link checker any site's CI may run, told by its program."""
-    return link_checker(name=name, languages=GENERATORS, how=how, checks=when(starts(*prefixes), links_checked))
+    return link_checker(name=name, languages=PROSE, how=how, checks=when(starts(*prefixes), links_checked))
 
 
 def _lychee(command: Command, _facts: Facts) -> Run | None:
@@ -332,7 +363,7 @@ def _lychee(command: Command, _facts: Facts) -> Run | None:
 
 LYCHEE = link_checker(
     name="lychee",
-    languages=GENERATORS,
+    languages=PROSE,
     how="lychee --no-progress 'docs/**/*.md' (or lycheeverse/lychee-action)",
     checks=_lychee,
 )
