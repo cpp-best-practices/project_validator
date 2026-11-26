@@ -382,7 +382,8 @@ class SizeTests(unittest.TestCase):
             self.assertEqual(sizes(make_context(root).facts), {})
 
     def test_the_run_weighs_each_languages_slots_by_its_size(self) -> None:
-        files = {"CMakeLists.txt": "project(app CXX)\n", "src/main.cpp": "int x;\n" * 98, "build.sh": "echo hi\n"}
+        # The script is in a source folder: a root one would be a stray file's language, auxiliary (#182).
+        files = {"CMakeLists.txt": "project(app CXX)\n", "src/main.cpp": "int x;\n" * 98, "src/build.sh": "echo hi\n"}
         with temp_project(files) as root:
             _, output, _ = run_cli("--score", "--format", "json", str(root))
         weights = {cell["ecosystem"]: cell["weight"] for cell in json.loads(output)["score"]["cells"]}
