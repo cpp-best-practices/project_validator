@@ -15,7 +15,7 @@ from project_validator.facts.analysis import analysed, analyzer
 from project_validator.facts.arguments import program
 from project_validator.facts.build import BuildSetting
 from project_validator.facts.expansion import Action
-from project_validator.facts.tools import Claim, Run, defined_by
+from project_validator.facts.tools import Claim, Run, defined_by, starts, when
 from project_validator.tools.scanners import multi_language_scanners
 
 # A CMake variable (or target property) that runs an analyzer on every file the build compiles.
@@ -71,9 +71,11 @@ _SCAN_BUILD = re.compile(r"scan-build(?:-\d+)?")
 
 def _scan_build(command: Command, _facts: Facts) -> Run | None:
     """`scan-build --status-bugs <build>` runs the Clang Static Analyzer over the build and fails on any finding;
-    without --status-bugs it only reports (pgvector)."""
+    without --status-bugs it only reports (pgvector): an advisory analyser (upstream #282)."""
     argv = resolved(command)
-    return analysed() if _SCAN_BUILD.fullmatch(program(argv)) and "--status-bugs" in argv else None
+    if not _SCAN_BUILD.fullmatch(program(argv)):
+        return None
+    return analysed(advisory="" if "--status-bugs" in argv else "it only reports without --status-bugs")
 
 
 SCAN_BUILD = analyzer(
@@ -81,6 +83,14 @@ SCAN_BUILD = analyzer(
     languages=C_FAMILY,
     how="scan-build --status-bugs (the Clang Static Analyzer)",
     analyses=_scan_build,
+)
+# Coverity Scan builds the project under cov-build and uploads what it captured to scan.coverity.com, which reports
+# and never fails CI (dbus-broker, nlohmann/json, glib): an advisory analyser (upstream #282).
+COVERITY_SCAN = analyzer(
+    name="Coverity Scan",
+    languages=C_FAMILY,
+    how="",  # recognised where a project uses it, never suggested: it can only warn
+    analyses=when(starts(("cov-build",)), lambda: analysed(advisory="it uploads to Coverity Scan, which reports")),
 )
 
 

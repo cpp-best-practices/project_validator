@@ -33,6 +33,9 @@ class Run:
     read: tuple[str, ...] = ()
     # Decided from text that is not parsed (a compiler flag somewhere in a CMake file) rather than read.
     heuristic: bool = False
+    # Why the run cannot fail the pipeline whatever it finds, when the tool only reports (scan-build without
+    # --status-bugs, Coverity Scan): an advisory analyser (upstream #282; see `ToolRun.advisory`).
+    advisory: str = ""
 
 
 type Claim = Callable[[Command, Facts], Run | None]
@@ -368,7 +371,7 @@ def tool_runs(facts: Facts, tools: Iterable[Tool]) -> Iterator[ToolRun | Unknown
                     read=run.read,
                     via=command.via,
                     heuristic=run.heuristic or (command.directory or "").startswith("$"),
-                    advisory=command.advisory,
+                    advisory=command.advisory or run.advisory,
                     paths=sources.named(command, tool.languages),
                 )
 

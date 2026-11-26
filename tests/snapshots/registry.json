@@ -386,6 +386,20 @@
     {
       "can": {
         "analysis": {
+          "checks": ""
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "Coverity Scan",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "analysis": {
           "checks": "mix credo"
         }
       },
