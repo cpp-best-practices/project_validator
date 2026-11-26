@@ -26,6 +26,7 @@ from project_validator.views.common import (
     ecosystems,
     files_by_language,
     grouped,
+    host_summary,
     is_skipped,
     judged_places,
     place_label,
@@ -164,6 +165,7 @@ class _Renderer:
         if missing := unrecognised(analysis):
             grid.add_row("Not recognised", self.text(missing, style="dim"))
         grid.add_row("CI", ci_summary(analysis))
+        grid.add_row("Host", host_summary(analysis))
         grid.add_row("Read", reading(analysis))
         return grid
 

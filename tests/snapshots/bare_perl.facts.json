@@ -103,6 +103,11 @@
       "kind": "ConfigurationFile",
       "origin": "lib/Shop.pm",
       "reader": "Perl pragmas"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

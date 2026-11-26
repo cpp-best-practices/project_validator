@@ -40,6 +40,11 @@
       "outdated": null,
       "role": "product",
       "what": "syntax (or edition) and package"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

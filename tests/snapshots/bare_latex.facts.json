@@ -53,6 +53,11 @@
       "kind": "documents (*.tex with a \\documentclass)",
       "language": "LaTeX",
       "origin": "paper.tex"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

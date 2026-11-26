@@ -1238,6 +1238,11 @@
       ],
       "tool": "dbt test",
       "via": []
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

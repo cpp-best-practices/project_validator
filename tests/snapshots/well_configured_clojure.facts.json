@@ -1801,6 +1801,11 @@
       "via": [
         ".github/workflows/ci.yml:36:9 (jobs.lint.steps[6].run)"
       ]
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

@@ -70,6 +70,11 @@
       "kind": "ConfigurationFile",
       "origin": "src/shop/core.clj",
       "reader": "Clojure build settings"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

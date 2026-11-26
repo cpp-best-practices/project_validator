@@ -58,6 +58,11 @@
       ],
       "origin": "luacov.stats.out",
       "output": "luacov's output"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

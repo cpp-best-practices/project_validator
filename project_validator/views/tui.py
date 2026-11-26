@@ -23,6 +23,7 @@ from project_validator.views.common import (
     dedupe,
     ecosystems,
     files_by_language,
+    host_summary,
     judged_places,
     language_views,
     place_count,
@@ -100,6 +101,7 @@ def detected(analysis: Analysis) -> str:
     for job in analysis.structure.ci_jobs:
         what = ", ".join(sorted(job.compilers | {str(t) for t in job.toolchains})) or "-"
         lines.append(f"  {markup(job.name)} [dim]{markup(job.os or '-')} / {markup(what)}[/]")
+    lines += ["", f"[bold]Host[/]: {markup(host_summary(analysis))}"]
     lines += ["", "[bold]How it was read[/]"]
     lines += [
         f"  {markup(STAGE_NAMES.get(stage.name, stage.name))}: {stage.found:,} facts, {stage.seconds:.2f} s"

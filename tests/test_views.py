@@ -17,9 +17,12 @@ from pathlib import Path
 from typing import Any, ClassVar
 from unittest import mock
 
+from project_validator import hosting
 from project_validator.analysis import Analysis, analyse
 from project_validator.cli import EXIT_FAILURE, EXIT_USAGE
 from project_validator.core import ExtractionError, Progress, Result, Status
+from project_validator.facts import Origin
+from project_validator.hosting import HostAccess, HostSettings
 from project_validator.plugins import discover
 from project_validator.views import common, html, text, tui
 from project_validator.views import console as console_view
@@ -133,6 +136,71 @@ class CommonTests(unittest.TestCase):
         self.assertEqual(common.role_judgement(found), "judged as auxiliary code (--auxiliary)")
 
 
+def _hosted(*facts: object) -> Analysis:
+    """MIXED's analysis, the host giving `facts`."""
+    with mock.patch.object(hosting, "host_facts", return_value=iter(facts)):
+        return _analysis()
+
+
+class HostSummaryTests(unittest.TestCase):
+    """What the source-control host says of the repository (upstream #385): shown where the views say what was
+    detected, never judged."""
+
+    ORIGIN = Origin(path=".git/config")
+
+    def _summary(self, **fields: object) -> str:
+        base: dict[str, object] = {"host": "GitHub", "repository": "o/r", "branch": "main"}
+        return common.host_summary(_hosted(HostSettings(origin=self.ORIGIN, **{**base, **fields})))  # type: ignore[arg-type]
+
+    def test_offline_it_says_why_the_host_was_not_read(self) -> None:
+        self.assertEqual(
+            common.host_summary(_analysis()), "not read: the source-control host is not asked offline (--offline)"
+        )
+        self.assertEqual(
+            common.host_summary(_hosted(HostAccess(origin=self.ORIGIN, reason="no token to ask GitHub"))),
+            "not read: no token to ask GitHub",
+        )
+
+    def test_a_protected_branch_says_what_it_requires(self) -> None:
+        summary = self._summary(
+            protected=True,
+            required_checks=("build", "lint"),
+            required_reviews=1,
+            security={"secret scanning": True, "push protection": False},
+            unread=("classic branch protection (HTTP 403: it needs admin access)",),
+        )
+        self.assertEqual(
+            summary,
+            "GitHub o/r: main is protected; required checks: build, lint; required reviews: 1; secret scanning on, "
+            "push protection off; not read: classic branch protection (HTTP 403: it needs admin access)",
+        )
+        self.assertEqual(
+            self._summary(protected=True, required_checks=(), required_reviews=0),
+            "GitHub o/r: main is protected; no required checks; no required reviews",
+        )
+
+    def test_requirements_not_read_are_not_listed(self) -> None:
+        self.assertEqual(self._summary(protected=True), "GitHub o/r: main is protected")
+
+    def test_a_run_that_never_reached_the_host_says_it_was_not_read(self) -> None:
+        self.assertEqual(common.host_summary(_hosted()), "not read")
+
+    def test_an_unprotected_or_unknown_branch_says_so(self) -> None:
+        self.assertEqual(self._summary(protected=False), "GitHub o/r: main is not protected")
+        self.assertEqual(
+            self._summary(unread=("classic branch protection (HTTP 403: it needs admin access)",)),
+            "GitHub o/r: whether main is protected is not known; "
+            "not read: classic branch protection (HTTP 403: it needs admin access)",
+        )
+
+    def test_every_view_shows_it(self) -> None:
+        line = "not read: the source-control host is not asked offline (--offline)"
+        analysis = _analysis()
+        self.assertIn(f"  Host: {line}", text.render(analysis))
+        self.assertIn(f"[bold]Host[/]: {line}", tui.detected(analysis))
+        self.assertIn(line, html.render(analysis))
+
+
 class LanguageViewTests(unittest.TestCase):
     """One language's own view (upstream #388): where its files are, and what each check says of it."""
 
@@ -220,6 +288,9 @@ class ConsoleTests(unittest.TestCase):
             with self.subTest(expected=expected):
                 self.assertIn(expected, output)
         self.assertRegex(output, r"\d+% +Level \d")
+
+    def test_the_host_is_shown_with_what_was_detected(self) -> None:
+        self.assertRegex(self._render(_analysis()), r"Host +not read: the source-control host is not asked offline")
 
     def test_the_skipped_checks_are_counted_unless_verbose(self) -> None:
         analysis = _analysis()

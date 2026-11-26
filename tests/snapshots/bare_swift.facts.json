@@ -90,6 +90,11 @@
       "kind": "Application",
       "manager": "SwiftPM",
       "origin": "Package.swift"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

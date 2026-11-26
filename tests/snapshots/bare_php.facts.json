@@ -98,6 +98,11 @@
       "origin": "composer.json:psr/log",
       "tool": "Composer",
       "value": "^3.0"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

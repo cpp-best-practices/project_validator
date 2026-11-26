@@ -15,6 +15,7 @@ from project_validator.core import Placed, Status
 from project_validator.ecosystems import registered
 from project_validator.explanations import CATEGORIES, category
 from project_validator.facts import PartlyRead
+from project_validator.hosting import HostAccess, HostSettings
 from project_validator.project_map import LanguageFiles, Place
 from project_validator.runner import Report
 from project_validator.words import counted, folder
@@ -166,6 +167,37 @@ def ci_summary(analysis: Analysis) -> str:
     return f"{live}; left out as defunct: {', '.join(structure.ci_defunct)}" if structure.ci_defunct else live
 
 
+def _protection(settings: HostSettings) -> list[str]:
+    """Whether the default branch is protected, and what a merge into it requires."""
+    if settings.protected is None:
+        return [f"whether {settings.branch} is protected is not known"]
+    if not settings.protected:
+        return [f"{settings.branch} is not protected"]
+    found = [f"{settings.branch} is protected"]
+    if settings.required_checks is not None:
+        checks = ", ".join(settings.required_checks)
+        found.append(f"required checks: {checks}" if checks else "no required checks")
+    if settings.required_reviews is not None:
+        reviews = settings.required_reviews
+        found.append(f"required reviews: {reviews}" if reviews else "no required reviews")
+    return found
+
+
+def host_summary(analysis: Analysis) -> str:
+    """What the source-control host says of the repository (`hosting`), never judged: `GitHub o/r: main is
+    protected; required checks: build; required reviews: 1; secret scanning on`, or why it was not read."""
+    if access := analysis.facts.of(HostAccess):
+        return f"not read: {access[0].reason}"
+    settings = analysis.facts.of(HostSettings)
+    if not settings:
+        return "not read"
+    found = _protection(settings[0])
+    if security := settings[0].security:
+        found.append(", ".join(f"{name} {'on' if enabled else 'off'}" for name, enabled in security.items()))
+    found += [f"not read: {what}" for what in settings[0].unread]
+    return f"{settings[0].host} {settings[0].repository}: {'; '.join(found)}"
+
+
 def reading(analysis: Analysis) -> str:
     """`1,500 facts in 0.31 s`: how much was read, how many paths git ignores were left out, and how many places a
     reader could follow only in part (see `partly_read`)."""
@@ -304,6 +336,7 @@ __all__ = [
     "file_count",
     "files_by_language",
     "grouped",
+    "host_summary",
     "is_skipped",
     "judged_places",
     "language_files",

@@ -57,6 +57,11 @@
       "kind": "ConfigurationFile",
       "origin": "info.rkt",
       "reader": "info.rkt license"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

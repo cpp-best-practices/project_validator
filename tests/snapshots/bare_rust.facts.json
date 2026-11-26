@@ -147,6 +147,11 @@
       "kind": "ConfigurationFile",
       "origin": "src/main.rs",
       "reader": "Rust lints"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

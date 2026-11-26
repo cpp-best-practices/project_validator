@@ -118,7 +118,7 @@ class ProgressTests(unittest.TestCase):
             context.observe(events.append)
             _ = context.facts
             _ = context.facts
-        self.assertEqual(sum(1 for event in events if event.kind == "stage" and not event.done), 10)
+        self.assertEqual(sum(1 for event in events if event.kind == "stage" and not event.done), 11)
 
 
 def _git(root: Path, *arguments: str) -> None:

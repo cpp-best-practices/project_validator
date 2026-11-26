@@ -65,7 +65,8 @@ python3 -m project_validator --tui path/to/project
 
 What you see:
 - **In a terminal** (with rich): a header with the score, then what was detected (each language and what recognised
-  it, the units, the code in each role and how it is judged, the CI, how much was read), the results grouped by
+  it, the units, the code in each role and how it is judged, the CI, what the source-control host says of the
+  repository, how much was read), the results grouped by
   category with a line per language where they differ, and the score's breakdown and next steps. Progress is shown
   while the project is read. `--verbose` shows every detail and the checks that do not apply.
 - **Elsewhere** (CI logs, or without rich): the same detection, then one greppable `[STATUS] check: message` line per
@@ -103,6 +104,7 @@ What you see:
 | `--max-file-size MIB` | committed files larger than this belong in Git LFS or DVC (default: 5) |
 | `--local-checks SCRIPT` | without CI, read `SCRIPT` as the pipeline. By default the local checks are looked for: a `check.sh` (or `check`, `check.ps1`, `check.py`, at the root or in `scripts/`, `tools/` or `bin/`), a `check` target of make or just, a `check` script of `package.json` or `composer.json`, and pre-commit's hooks. What they run counts as CI's would; the checks only CI can satisfy (ci-present, ci-current, ci-lint, action-pinning, platform-matrix, ci-build-types) warn instead of failing, as the project is judged at an entry level |
 | `--allow-official-tags` | let the actions GitHub publishes (`actions/`, `github/`) be pinned to tags |
+| `--offline` | never ask the source-control host (GitHub, GitLab, Gitea, Bitbucket) for the repository's settings, which the report shows with what was detected (it never scores them); `PROJECT_VALIDATOR_OFFLINE` set does the same |
 | `--allow-unknown` | judge by what could be read when an answer depends on CI configuration that could not be (a provider scanned heuristically, a matrix computed by an expression, a reusable workflow in another repository). Without it, such an answer is an `ERROR`: a gap in the validator's tooling, not a finding about the project |
 | `--cmake PATH` / `--ctest PATH` | the executables used by `--build` |
 | `--plugin-dir DIR` | load extra checks and CI providers from `DIR/*.py` |

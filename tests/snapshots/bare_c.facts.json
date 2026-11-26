@@ -73,6 +73,11 @@
       "kind": "ConfigurationFile",
       "origin": "CMakeLists.txt",
       "reader": "Fortran programs"
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
     }
   ],
   "map": {

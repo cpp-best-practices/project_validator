@@ -12,6 +12,7 @@ from project_validator.views.common import (
     dedupe,
     ecosystems,
     files_by_language,
+    host_summary,
     partly_read,
     reading,
     role_judgement,
@@ -38,6 +39,7 @@ def detected_lines(analysis: Analysis) -> list[str]:
     if found := unrecognised(analysis):
         lines.append(f"  Not recognised: {found}")
     lines.append(f"  CI: {ci_summary(analysis)}")
+    lines.append(f"  Host: {host_summary(analysis)}")
     lines.append(f"  Read: {reading(analysis)}")
     lines += [f"  Read in part: {found}" for found in partly_read(analysis)]
     return lines
