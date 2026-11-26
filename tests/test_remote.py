@@ -124,6 +124,18 @@ class FetchRemoteTests(unittest.TestCase):
         subjects = [unknown.subject for unknown in facts.of(Unknown)]
         self.assertIn(f"the action {uses}", subjects)
 
+    def test_a_remote_workflow_that_does_not_parse_is_not_read(self) -> None:
+        broken = {f"the-guild-org/shared-config/{SHA}/.github/workflows/lint.yml": "jobs: [unclosed\n"}
+        with _online(broken):
+            result = _result({GITHUB_WORKFLOW: json.dumps(CALLER)}, fetch_remote=True)
+        self.assertEqual(result.status, Status.ERROR, result)
+
+    def test_a_docker_image_is_no_remote_action(self) -> None:
+        step = {"jobs": {"lint": {"runs-on": "ubuntu-latest", "steps": [{"uses": "docker://alpine:3.20"}]}}}
+        with _online() as fetched:
+            _commands({GITHUB_WORKFLOW: json.dumps(step)}, fetch_remote=True)
+        self.assertEqual(fetched, [])
+
     def test_a_malformed_name_is_never_fetched(self) -> None:
         with _online() as fetched:
             for name in ("remote:main/only-owner", "remote:main/o/r/../../etc/passwd", "remote:ma in/o/r/x.yml"):
@@ -136,7 +148,7 @@ class GetTests(unittest.TestCase):
     def test_get_reads_the_text_or_nothing(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             found = Path(directory, "a.yml")
-            found.write_text("on: push\n", encoding="utf-8")
+            found.write_bytes(b"on: push\n")  # as served: Windows would write text with \r\n
             self.assertEqual(remote._get(found.as_uri()), "on: push\n")
             self.assertIsNone(remote._get(Path(directory, "missing.yml").as_uri()))
 
