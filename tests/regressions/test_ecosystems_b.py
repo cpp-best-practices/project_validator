@@ -430,6 +430,8 @@ class NixTests(unittest.TestCase):
         for treefmt in (
             "{ ... }:\n{\n  programs.statix.enable = true;\n  programs.deadnix.enable = true;\n}\n",
             "{ ... }:\n{\n  programs = {\n    statix.enable = true;\n    deadnix = { enable = true; };\n  };\n}\n",
+            # Cut short, its set unclosed: what it holds is still read.
+            "{ ... }:\n{\n  programs = {\n    statix.enable = true;\n    deadnix.enable = true;\n",
         ):
             for path in ("treefmt.nix", "nix/treefmt.nix"):
                 files = {path: treefmt, **github_job(CI, "treefmt --ci")}
