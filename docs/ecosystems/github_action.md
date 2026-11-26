@@ -28,6 +28,7 @@ zizmor audits the workflows and the action's definition (`zizmor .`, or `zizmorc
 ## Not judged
 
 Every `uses:` pinned to a commit with no tag allowance is `action-pinning`'s to ask; `action.yml`'s name,
-description, branding and `runs.using` on a supported runtime is `packaging`'s (#30); a self-test on more than one OS
-would be a platform axis, which a format has no toolchain to carry. The other checks have no tool for an action and
-are skipped.
+description, branding and `runs.using` on a supported runtime is `packaging`'s (#30). A self-test on several OSes is
+the action's code's platform axis: a JavaScript action's self-test runs on the Node its `runs.using` names, counted by
+the JavaScript profile's `platform-matrix`; the format itself has no toolchain to carry one. The other checks have no
+tool for an action and are skipped.

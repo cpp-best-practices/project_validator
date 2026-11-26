@@ -31,7 +31,9 @@ through the package scripts it runs. `bun test --coverage` counts lines only.
 
 ## `platform-matrix`
 
-The toolchains are Node.js, Deno or Bun versions.
+The toolchains are Node.js, Deno or Bun versions. A JavaScript action's self-test (a step `uses: ./`) runs the action
+on the Node its `action.yml` names (`runs.using: node24`): actions/checkout's test jobs count as node 24 on each OS
+they run on.
 
 ## `compiler-warnings`
 

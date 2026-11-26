@@ -23,6 +23,8 @@ from pathlib import PurePosixPath
 from project_validator import yaml_support
 from project_validator.core import Context, Project
 from project_validator.ecosystems.model import (
+    OWN_ACTION,
+    OWN_ACTION_DEFINITION,
     VERSION_FILE_CONTENTS,
     BuildSystem,
     Ecosystem,
@@ -758,6 +760,18 @@ def _setup_node(inputs: Mapping[str, str]) -> str | None:
     return found[1] if found else None
 
 
+# A JavaScript action's runtime: `runs:` then, indented below it, `using: node24`. Each line of the block before it is
+# matched one way only (a blank first, then the rest), or a long composite action takes exponential time to reject.
+_ACTION_RUNTIME = re.compile(r"^runs:[ \t]*\n(?:[ \t][^\n]*\n)*?[ \t]+using:[ \t]*[\"']?node(\d+)\b", re.MULTILINE)
+
+
+def _own_action(inputs: Mapping[str, str]) -> str | None:
+    """A step `uses: ./` runs the repository's own action on the Node its `runs.using` names (actions/checkout's
+    self-test jobs run node24): none for a composite or Docker action."""
+    found = _ACTION_RUNTIME.search(inputs.get(OWN_ACTION_DEFINITION, ""))
+    return found[1] if found else None
+
+
 def _pnpm_runtime(inputs: Mapping[str, str]) -> str | None:
     """pnpm/setup's `runtime: node@<version>`."""
     runtime, _, version = inputs.get("runtime", "").partition("@")
@@ -861,7 +875,7 @@ def ecmascript_ecosystem(language: str, suffixes: tuple[str, ...]) -> Ecosystem:
                 *subcommands("bun", "install", "test", "run"),
             ),
             setup=("deno", "bun"),
-            steps=(("actions/setup-node", _setup_node), ("pnpm/setup", _pnpm_runtime)),
+            steps=(("actions/setup-node", _setup_node), ("pnpm/setup", _pnpm_runtime), (OWN_ACTION, _own_action)),
         ),
     )
 
