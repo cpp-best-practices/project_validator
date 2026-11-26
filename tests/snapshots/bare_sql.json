@@ -550,6 +550,13 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "PostgreSQL TAP tests": {
+                "can": {
+                  "runs": "make prove_installcheck (PGXS's TAP tests, with TAP_TESTS = 1)"
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "dbt test": {
                 "can": {
                   "runs": "dbt test (dbt build runs the tests too)"
@@ -891,7 +898,7 @@
     },
     "tests-run": {
       "details": [],
-      "message": "no tests found (dbt schema tests (tests: in the models' YAML), dbt singular tests (tests/*.sql), pg_regress tests (test/sql/*.sql) or pgTAP tests (SELECT plan(...) in tests/*.sql))",
+      "message": "no tests found (dbt schema tests (tests: in the models' YAML), dbt singular tests (tests/*.sql), pg_regress tests (test/sql/*.sql), PostgreSQL TAP tests (t/*.pl) or pgTAP tests (SELECT plan(...) in tests/*.sql))",
       "status": "FAIL"
     },
     "top-level-guard": {

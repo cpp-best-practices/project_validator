@@ -790,6 +790,20 @@
               ]
             },
             "known": {
+              "PostgreSQL TAP tests": {
+                "can": {
+                  "runs": ""
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "R CMD check": {
+                "can": {
+                  "runs": ""
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "bazel test": {
                 "can": {
                   "runs": "bazel test"
@@ -807,6 +821,13 @@
               "meson test": {
                 "can": {
                   "runs": "meson test"
+                },
+                "needs_definition": true,
+                "required": false
+              },
+              "pg_regress": {
+                "can": {
+                  "runs": ""
                 },
                 "needs_definition": true,
                 "required": false

@@ -320,17 +320,13 @@ class ShellTests(unittest.TestCase):
         self.assertEqual(result.status, Status.WARN)
         self.assertNotIn("no tests found", result.message)
 
-    @unittest.expectedFailure  # upstream #275: bash versions in a matrix are no toolchain axis for Shell
-    def test_bash_versions_are_a_toolchain_axis(self) -> None:
+    def test_bash_versions_are_no_toolchain_axis(self) -> None:
         """A matrix of bash versions each running the bats tests (`docker run bash:${{ matrix.bash-version }} bats
-        test`) is a toolchain axis the platform matrix counts (bats-core/bats-core)."""
+        test`, bats-core/bats-core) is no toolchain axis: Shell has no platform matrix (decided in upstream #275)."""
         matrix = {"bash-version": ["3.2", "4.4", "5.1"]}
         files = _matrix(matrix, {"run": "docker run bash:${{ matrix.bash-version }} bats test"})
         result = _run(platform_matrix, SHELL, {**BATS_TEST, **files})
-        self.assertNotEqual(result.status, Status.SKIP, result)
-        for version in matrix["bash-version"]:
-            with self.subTest(version=version):
-                self.assertIn(version, result.message)
+        self.assertEqual(result.status, Status.SKIP, result)
 
 
 # A PostgreSQL extension built with PGXS (pgvector, pgaudit): its control file, SQL scripts, C sources and the
@@ -361,17 +357,34 @@ class SqlTests(unittest.TestCase):
         """`make installcheck` runs the `REGRESS` tests under test/sql: the extension's SQL tests run
         (pgvector/pgvector, pgaudit/pgaudit)."""
         result = _result(tests_run, {**PGXS_EXTENSION, **github_job(CI, "make", "make installcheck")})
-        [clause] = (clause for clause in result.message.split("; ") if clause.startswith("SQL:"))
-        self.assertIn("run by pg_regress", clause, result)
+        self.assertIn("run by pg_regress", result.message, result)
 
-    @unittest.expectedFailure  # upstream #276: the TAP tests and an extension's C tests are unread
     def test_an_extensions_tests_cover_its_c_and_its_tap_tests_run(self) -> None:
         """`make prove_installcheck` runs the TAP tests under test/t, and the extension's C code is tested by its SQL
-        tests, not "no tests found" for C (pgvector/pgvector, pgaudit/pgaudit)."""
+        tests, not "no tests found" for C (pgvector/pgvector, pgaudit/pgaudit): they test the compiled extension
+        (upstream #276)."""
         for target in ("installcheck", "prove_installcheck"):
             with self.subTest(target=target):
                 result = _result(tests_run, {**PGXS_EXTENSION, **github_job(CI, "make", f"make {target}")})
                 self.assertEqual(result.status, Status.PASS, result)
+
+    def test_another_projects_c_is_not_told_of_an_extensions_tests(self) -> None:
+        """The tests of a compiled extension count for its C, but are never suggested to C that is not one."""
+        result = _result(tests_run, {**C_MAKEFILE, **github_job(CI, "make")})
+        self.assertNotIn("pg_regress", result.message)
+        self.assertNotIn("TAP", result.message)
+
+    def test_the_targets_pgxs_defines_are_known(self) -> None:
+        """PGXS (`include $(PGXS)`) defines installcheck and prove_installcheck, so running them hides nothing: a
+        question answered no is a no, not unknown; a target no makefile defines is still unknown."""
+        for target in ("installcheck", "prove_installcheck"):
+            with self.subTest(target=target):
+                result = _result(static_analysis, {**PGXS_EXTENSION, **github_job(CI, f"make {target}")})
+                self.assertEqual(result.status, Status.FAIL, result)
+        undefined = _result(static_analysis, {**C_MAKEFILE, **github_job(CI, "make installcheck")})
+        self.assertEqual(undefined.status, Status.ERROR, undefined)
+        not_pgxs = _result(static_analysis, {**PGXS_EXTENSION, **github_job(CI, "make lint")})
+        self.assertEqual(not_pgxs.status, Status.ERROR, not_pgxs)
 
     def test_scan_build_with_status_bugs_is_a_static_analyzer_run(self) -> None:
         """`scan-build --status-bugs make` runs the Clang Static Analyzer over the build and fails the job on any

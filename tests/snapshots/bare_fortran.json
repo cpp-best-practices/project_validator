@@ -558,6 +558,13 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "R CMD check": {
+                "can": {
+                  "runs": ""
+                },
+                "needs_definition": true,
+                "required": false
+              },
               "ctest": {
                 "can": {
                   "runs": "ctest"

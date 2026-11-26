@@ -12,7 +12,8 @@ CI runs R code in three ways, read alike: `Rscript -e "covr::codecov()"` (or `R 
 testthat's files (`test_that()` in `tests/testthat/test-*.R`), tinytest's (`inst/tinytest/test_*.R`) or test scripts
 (`tests/*.R`, which R CMD check runs), run by
 `R CMD check` (which runs the tests), `rcmdcheck::rcmdcheck()` or `r-lib/actions/check-r-package`, `devtools::test()`
-or `devtools::check()`, `testthat::test_local()` and its kin, or `tinytest::test_package()`.
+or `devtools::check()`, `testthat::test_local()` and its kin, or `tinytest::test_package()`. R CMD check builds the
+package with its `src/` compiled in, so its tests count for that C, C++ or Fortran too (upstream #276).
 
 ## `coverage`
 

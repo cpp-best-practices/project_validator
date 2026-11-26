@@ -21,7 +21,7 @@ from project_validator.facts.outputs import BuildOutput
 from project_validator.facts.practices import Practice, PracticeName, Requirement, Wording, always
 from project_validator.facts.settings import file_reader
 from project_validator.facts.shell import ShellCommand, split_script
-from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
+from project_validator.facts.testing import TestFiles, of_the_compiled_code, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by, starts, when
 
 LATEX = "LaTeX"
@@ -124,6 +124,9 @@ L3BUILD = test_runner(
     runs=_l3build_check,
     tests=tests_of(L3BUILD_TESTS.name),
 )
+# l3build's tests run the package in LuaTeX, so they test the Lua it loads as well as its LaTeX (l3build's own
+# `l3build-*.lua`, upstream #276).
+L3BUILD_LUA = of_the_compiled_code(L3BUILD, frozenset({"Lua"}))
 
 
 def _latex_action(inputs: Mapping[str, str]) -> tuple[tuple[str, ...], ...]:

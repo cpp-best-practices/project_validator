@@ -1459,6 +1459,33 @@
     },
     {
       "can": {
+        "test": {
+          "runs": ""
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "PostgreSQL TAP tests",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": "make prove_installcheck (PGXS's TAP tests, with TAP_TESTS = 1)"
+        }
+      },
+      "languages": [
+        "SQL"
+      ],
+      "name": "PostgreSQL TAP tests",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
         "analysis": {
           "checks": "psalm"
         },
@@ -1489,6 +1516,21 @@
       "reads": [
         "Psalm"
       ],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": ""
+        }
+      },
+      "languages": [
+        "C",
+        "C++",
+        "Fortran"
+      ],
+      "name": "R CMD check",
+      "reads": [],
       "required": []
     },
     {
@@ -4303,6 +4345,19 @@
     {
       "can": {
         "test": {
+          "runs": ""
+        }
+      },
+      "languages": [
+        "Lua"
+      ],
+      "name": "l3build",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
           "runs": "l3build check"
         }
       },
@@ -5508,6 +5563,20 @@
         "SQL"
       ],
       "name": "pg_prove",
+      "reads": [],
+      "required": []
+    },
+    {
+      "can": {
+        "test": {
+          "runs": ""
+        }
+      },
+      "languages": [
+        "C",
+        "C++"
+      ],
+      "name": "pg_regress",
       "reads": [],
       "required": []
     },

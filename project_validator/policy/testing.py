@@ -9,6 +9,14 @@ from project_validator.questions import Answer
 from project_validator.questions.tooling import ToolAnswer
 
 
+def _suggested_kinds(answer: ToolAnswer) -> list[str]:
+    """The kinds of tests the language's runners run, not the runners' descriptions: two runners of the same kinds say
+    them once. A runner never suggested (the tests of another language's compiled code: pg_regress for an extension's
+    C) names none."""
+    suggested = (tool for tool in answer.known if any(tool.can.values()))
+    return list(dict.fromkeys(kind for tool in suggested for kind in (tool.kinds or (tool.describe,)) if kind))
+
+
 def judge_tests(answer: ToolAnswer, *, allow_unknown: bool) -> Result:
     """Tests must exist (as each language's runners define them) and CI must run them; tests CI never runs warn. An
     unknown answer is an error unless `allow_unknown`."""
@@ -18,8 +26,7 @@ def judge_tests(answer: ToolAnswer, *, allow_unknown: bool) -> Result:
     if not files and answer.unknown_definitions and not allow_unknown:
         return unknown("whether there are tests", answer.unknown_definitions)
     if not files:
-        # The kinds, not the runners' descriptions: two runners of the same kinds say them once.
-        kinds = dict.fromkeys(kind for tool in answer.known for kind in (tool.kinds or (tool.describe,)) if kind)
+        kinds = _suggested_kinds(answer)
         return Result.failed(f"no tests found ({either(kinds)})" if kinds else "no tests found")
     found = f"{_kinds(answer) or 'tests'}: {len(files)} file(s){_lent(answer)}"
     if answer.answer is Answer.YES:

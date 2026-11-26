@@ -615,11 +615,36 @@ def _include(
         makefile.problems += other.problems
 
 
+# The targets PostgreSQL's PGXS defines for an extension (`include $(PGXS)`, the makefile `pg_config --pgxs` names,
+# which the project does not hold): what they run is the make command itself, which the test runners know
+# (`installcheck` runs pg_regress, `prove_installcheck` the TAP tests).
+_PGXS_TARGETS = frozenset(
+    {
+        "all",
+        "install",
+        "uninstall",
+        "installdirs",
+        "clean",
+        "installcheck",
+        "prove_installcheck",
+        "prove_check",
+        "check",
+    }
+)
+
+
+def _from_pgxs(makefile: Makefile, goal: str) -> bool:
+    """Whether PGXS, which the makefile includes, defines the target `goal`."""
+    return goal in _PGXS_TARGETS and any("--pgxs" in word for word in makefile.includes)
+
+
 def _goals(makefile: Makefile, path: str, goals: list[str], command: Command) -> Iterator[Expansion]:
     for problem in dict.fromkeys(makefile.problems):
         yield Unknown(origin=command.origin, subject=f"the includes of {path}", reason=problem)
     visited: set[str] = set()
     for goal in goals:
+        if _rule(makefile, goal) is None and _from_pgxs(makefile, goal):
+            continue
         if _rule(makefile, goal) is None:
             reason = "no rule of the makefile (or of the makefiles it includes) builds it"
             yield Unknown(origin=command.origin, subject=f"the make target {goal}", reason=reason)

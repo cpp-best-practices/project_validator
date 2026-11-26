@@ -673,6 +673,13 @@
                 },
                 "needs_definition": true,
                 "required": false
+              },
+              "l3build": {
+                "can": {
+                  "runs": ""
+                },
+                "needs_definition": true,
+                "required": false
               }
             },
             "language": "Lua",
