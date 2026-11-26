@@ -11,6 +11,7 @@ self-test on more than one OS (a platform axis, which a format has no toolchain 
 
 from __future__ import annotations
 
+import json
 import re
 from collections.abc import Mapping
 
@@ -29,10 +30,34 @@ YAML = frozenset({"YAML"})
 ACTION_FILES = ("action.yml", "action.yaml")
 
 
+# The manifests of a package of another ecosystem, or of a workspace of packages, at the root: the repository's product
+# is that package, and its action a convenience beside it (psf/black's pyproject.toml, lunarmodules/busted's rockspec,
+# graphql-inspector's pnpm workspace). A JavaScript action's package.json and a Docker action's go.mod are the
+# action's own.
+_OTHER_PACKAGES = re.compile(
+    r"pyproject\.toml|setup\.py|Cargo\.toml|composer\.json|pom\.xml|build\.gradle(?:\.kts)?|CMakeLists\.txt|meson\.build"
+    r"|Package\.swift|mix\.exs|.+\.(?:rockspec|gemspec|cabal|csproj|nimble)|pnpm-workspace\.yaml|lerna\.json"
+)
+
+
+def _beside_a_package(project: Project) -> bool:
+    """Whether the root holds another package's manifest (see `_OTHER_PACKAGES`), or a package.json of workspaces."""
+    if any(_OTHER_PACKAGES.fullmatch(path) for path in project.files() if "/" not in path):
+        return True
+    if not project.exists("package.json"):
+        return False
+    try:
+        manifest = json.loads(project.read_text("package.json"))
+    except ValueError:
+        return False
+    return isinstance(manifest, dict) and "workspaces" in manifest
+
+
 def action_repository(project: Project) -> frozenset[str]:
     """Whether the repository's product is an action: its definition at the root (one in a subdirectory is a local
-    action of the repository's own workflows)."""
-    return GITHUB_ACTION_ONLY if any(project.exists(name) for name in ACTION_FILES) else frozenset()
+    action of the repository's own workflows), and no other package beside it (upstream #183)."""
+    defined = any(project.exists(name) for name in ACTION_FILES)
+    return GITHUB_ACTION_ONLY if defined and not _beside_a_package(project) else frozenset()
 
 
 GITHUB_ACTION_ECOSYSTEM = Ecosystem(

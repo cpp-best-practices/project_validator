@@ -46,6 +46,31 @@ class RecognitionTests(unittest.TestCase):
             self.assertNotIn("GitHub Action", make_context(root).structure.formats)
         self.assertEqual((GITHUB_ACTION_ECOSYSTEM.kind, GITHUB_ACTION_ECOSYSTEM.toolchain), ("format", None))
 
+    def test_an_action_beside_another_package_is_not_the_product(self) -> None:
+        """The action a Python, Lua or other package ships beside itself (psf/black's, lunarmodules/busted's), or a
+        workspace's (graphql-inspector's), is a convenience: the repository's product is the package, and no self-test
+        is asked of it (upstream #183)."""
+        for name, files in {
+            "a Python package": {"pyproject.toml": "[project]\nname = 'x'\n", "x.py": ""},
+            "a Lua rock": {"busted-scm-1.rockspec": "package = 'busted'\n", "busted.lua": ""},
+            "a pnpm workspace": {"pnpm-workspace.yaml": "packages: ['packages/*']\n", "package.json": "{}"},
+            "an npm workspace": {"package.json": '{"workspaces": ["packages/*"]}'},
+        }.items():
+            with self.subTest(case=name), temp_project({"action.yml": ACTION, **files}) as root:
+                self.assertNotIn("GitHub Action", make_context(root).structure.formats)
+        # A JavaScript action's own package.json, and a Docker action's go.mod, are the action's.
+        # Nor are a package of an example or a test below the root, or a package.json that isn't an object of them.
+        mine = (
+            {"package.json": '{"main": "dist/index.js"}'},
+            {"go.mod": "module x\n", "main.go": ""},
+            {"examples/demo-1.rockspec": "package = 'demo'\n"},
+            {"package.json": "{"},
+            {"package.json": '["workspaces"]'},
+        )
+        for files in mine:
+            with self.subTest(files=files), temp_project({"action.yml": ACTION, **files}) as root:
+                self.assertIn("GitHub Action", make_context(root).structure.formats)
+
 
 class GitHubActionTests(unittest.TestCase):
     def _run(self, selected: Check, files: dict[str, str]) -> Result:
