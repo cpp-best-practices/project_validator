@@ -37,6 +37,22 @@ class GoTests(unittest.TestCase):
         self.assertEqual(self._run(code_formatting, _ci("golangci-lint run")).status, Status.FAIL)
         self.assertEqual(self._run(code_formatting, _ci("gofmt -w . && go fmt ./...")).status, Status.FAIL)
 
+    def test_the_go_linters_are_static_analysis_too(self) -> None:
+        """go vet and staticcheck are what other languages' compilers warn about, and static analysis as well: run alone
+        or by golangci-lint's defaults, they count for both checks (toml-lang/toml-test; upstream #248)."""
+        for command, tool in (
+            ("staticcheck ./...", "staticcheck"),
+            ("go vet ./...", "go vet"),
+            ("golangci-lint run", "golangci-lint"),
+        ):
+            with self.subTest(command=command):
+                self.assertEqual(self._run(static_analysis, _ci(command)), Result.passed(f"{tool} runs"))
+        action = {
+            GITHUB_WORKFLOW: "jobs:\n  s:\n    runs-on: ubuntu-latest\n"
+            "    steps:\n      - uses: dominikh/staticcheck-action@v1\n"
+        }
+        self.assertEqual(self._run(static_analysis, action), Result.passed("staticcheck runs"))
+
     def test_go_run_launches_the_program_its_package_names(self) -> None:
         pinned = _ci("go run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.6.1 run ./...")
         config = {".golangci.yml": "linters:\n  enable: [revive]\n"}

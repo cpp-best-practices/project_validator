@@ -623,11 +623,25 @@
             "answer": "no",
             "defined": {},
             "known": {
+              "go vet": {
+                "can": {
+                  "checks": "go vet ./..."
+                },
+                "needs_definition": false,
+                "required": false
+              },
               "golangci-lint": {
                 "can": {
-                  "checks": "golangci-lint (with linters enabled beyond its defaults in a .golangci.yml)"
+                  "checks": "golangci-lint run (its defaults run go vet and staticcheck; a .golangci.yml may enable more)"
                 },
-                "needs_definition": true,
+                "needs_definition": false,
+                "required": false
+              },
+              "staticcheck": {
+                "can": {
+                  "checks": "staticcheck ./..."
+                },
+                "needs_definition": false,
                 "required": false
               }
             },
@@ -927,7 +941,7 @@
     },
     "static-analysis": {
       "details": [
-        "consider running golangci-lint (with linters enabled beyond its defaults in a .golangci.yml) in CI"
+        "consider running golangci-lint run (its defaults run go vet and staticcheck; a .golangci.yml may enable more), go vet ./... or staticcheck ./... in CI"
       ],
       "message": "no static analyzer runs",
       "status": "FAIL"
