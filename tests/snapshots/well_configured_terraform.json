@@ -873,6 +873,11 @@
       "message": "automated dependency updates are configured with Dependabot",
       "status": "PASS"
     },
+    "file-soundness": {
+      "details": [],
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
     "function-limits": {
       "details": [],
       "message": "not applicable to Terraform",
@@ -931,6 +936,11 @@
         ".github/workflows/ci.yml: lint: linux / no Terraform version"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Terraform version(s) (1.10.3, 1.9.8), 6 combination(s)",
+      "status": "PASS"
+    },
+    "repository-hygiene": {
+      "details": [],
+      "message": "no conflict markers, control characters, unportable paths or broken links",
       "status": "PASS"
     },
     "sanitizers": {

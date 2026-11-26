@@ -820,6 +820,11 @@
       "message": "automated dependency updates are configured with Dependabot",
       "status": "PASS"
     },
+    "file-soundness": {
+      "details": [],
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
     "function-limits": {
       "details": [],
       "message": "not applicable to Nix",
@@ -875,6 +880,11 @@
         ".github/workflows/ci.yml: lint: linux / x86_64-linux (runner default)"
       ],
       "message": "CI covers 2 OS(es) (linux, macos), 3 system(s) (aarch64-darwin, aarch64-linux, x86_64-linux), 3 combination(s)",
+      "status": "PASS"
+    },
+    "repository-hygiene": {
+      "details": [],
+      "message": "no conflict markers, control characters, unportable paths or broken links",
       "status": "PASS"
     },
     "sanitizers": {

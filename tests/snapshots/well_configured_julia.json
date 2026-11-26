@@ -894,6 +894,11 @@
       "message": "automated dependency updates are configured with Dependabot",
       "status": "PASS"
     },
+    "file-soundness": {
+      "details": [],
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
     "function-limits": {
       "details": [],
       "message": "not applicable to Julia",
@@ -955,6 +960,11 @@
         ".github/workflows/ci.yml: format: linux / 1"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 3 Julia version(s) (1, lts, pre), 9 combination(s)",
+      "status": "PASS"
+    },
+    "repository-hygiene": {
+      "details": [],
+      "message": "no conflict markers, control characters, unportable paths or broken links",
       "status": "PASS"
     },
     "sanitizers": {

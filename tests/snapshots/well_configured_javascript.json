@@ -1096,6 +1096,11 @@
       "message": "automated dependency updates are configured with Dependabot",
       "status": "PASS"
     },
+    "file-soundness": {
+      "details": [],
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
     "function-limits": {
       "details": [],
       "message": "function length is limited with lizard",
@@ -1153,6 +1158,11 @@
         ".github/workflows/ci.yml: test (windows-latest, 24): windows / 24"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 runtime version(s) (22, 24), 6 combination(s)",
+      "status": "PASS"
+    },
+    "repository-hygiene": {
+      "details": [],
+      "message": "no conflict markers, control characters, unportable paths or broken links",
       "status": "PASS"
     },
     "sanitizers": {

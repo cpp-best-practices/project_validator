@@ -11,6 +11,7 @@ from project_validator.runner import run_check
 from tests.support import (
     C_FAMILY_LAYOUTS,
     CI_FILES,
+    CONTENT_CHECKS,
     FIXTURES,
     FORMAT_ECOSYSTEM,
     OTHER_LANGUAGE_LAYOUTS,
@@ -180,7 +181,7 @@ class LanguageApplicabilityTests(unittest.TestCase):
                     # A format's check applies wherever its files are: the CI file added here is YAML.
                     expected = found.languages
                     outside = bool(expected) and not expected & (layout.languages | context.structure.formats)
-                    skipped = outside or found.name in layout.skipped
+                    skipped = outside or found.name in layout.skipped or found.name in CONTENT_CHECKS
                     self.assertEqual(run_check(found, context).status == Status.SKIP, skipped, found.name)
 
     def test_matching_checks_run(self) -> None:

@@ -896,6 +896,11 @@
       "message": "automated dependency updates are configured with Dependabot",
       "status": "PASS"
     },
+    "file-soundness": {
+      "details": [],
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
     "function-limits": {
       "details": [],
       "message": "function length is limited with lizard",
@@ -953,6 +958,11 @@
         ".github/workflows/ci.yml: test (windows-latest, stable): windows / Dart stable"
       ],
       "message": "CI covers 3 OS(es) (linux, macos, windows), 2 Dart or Flutter SDK version(s) (Dart 3.5, Dart stable), 6 combination(s)",
+      "status": "PASS"
+    },
+    "repository-hygiene": {
+      "details": [],
+      "message": "no conflict markers, control characters, unportable paths or broken links",
       "status": "PASS"
     },
     "sanitizers": {

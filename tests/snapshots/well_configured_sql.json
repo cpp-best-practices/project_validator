@@ -862,6 +862,11 @@
       "message": "automated dependency updates are configured with Dependabot",
       "status": "PASS"
     },
+    "file-soundness": {
+      "details": [],
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
     "function-limits": {
       "details": [],
       "message": "not applicable to SQL",
@@ -915,6 +920,11 @@
         ".github/workflows/ci.yml: test (17): linux / PostgreSQL 17"
       ],
       "message": "CI covers 2 database engine version(s) (PostgreSQL 16, PostgreSQL 17), whatever the OS",
+      "status": "PASS"
+    },
+    "repository-hygiene": {
+      "details": [],
+      "message": "no conflict markers, control characters, unportable paths or broken links",
       "status": "PASS"
     },
     "sanitizers": {

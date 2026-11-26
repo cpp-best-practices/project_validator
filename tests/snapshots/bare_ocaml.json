@@ -676,6 +676,11 @@
       "message": "no automated dependency updates configured",
       "status": "WARN"
     },
+    "file-soundness": {
+      "details": [],
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
     "function-limits": {
       "details": [],
       "message": "not applicable to OCaml",
@@ -727,6 +732,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "repository-hygiene": {
+      "details": [],
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
     },
     "sanitizers": {
       "details": [],

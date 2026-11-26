@@ -898,6 +898,13 @@
       "message": "no automated dependency updates configured",
       "status": "WARN"
     },
+    "file-soundness": {
+      "details": [
+        "run ClamAV (clamscan -r .) over the repository, or a tool that decodes each kind of file (magick identify -regard-warnings, pngcheck, qpdf --check, fontbakery, ffprobe -v error, gltf_validator)"
+      ],
+      "message": "no tool checks the archive files (dist/bare-0.1.tar.gz)",
+      "status": "WARN"
+    },
     "function-limits": {
       "details": [
         "consider running in CI: lizard --length 30"
@@ -955,6 +962,11 @@
       "details": [],
       "message": "no CI configuration found",
       "status": "FAIL"
+    },
+    "repository-hygiene": {
+      "details": [],
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
     },
     "sanitizers": {
       "details": [],

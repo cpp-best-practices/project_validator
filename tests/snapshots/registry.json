@@ -66,6 +66,10 @@
       "aliases": [],
       "description": "Automated dependency updates are configured (Dependabot, Renovate or Scala Steward)"
     },
+    "file-soundness": {
+      "aliases": [],
+      "description": "CI checks the project's binary and asset files (e.g. ClamAV, magick, qpdf)"
+    },
     "function-limits": {
       "aliases": [],
       "description": "Function length is limited (lizard, or each language's linter rule)"
@@ -105,6 +109,10 @@
     "platform-matrix": {
       "aliases": [],
       "description": "CI runs on several operating systems with several compilers (or interpreter/toolchain versions)"
+    },
+    "repository-hygiene": {
+      "aliases": [],
+      "description": "No Trojan Source characters, conflict markers, unportable paths, broken links or stray LFS pointers"
     },
     "sanitizers": {
       "aliases": [],

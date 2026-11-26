@@ -715,6 +715,11 @@
       "message": "automated dependency updates are configured with Dependabot",
       "status": "PASS"
     },
+    "file-soundness": {
+      "details": [],
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
     "function-limits": {
       "details": [],
       "message": "not applicable to Gleam",
@@ -766,6 +771,11 @@
       "details": [],
       "message": "not applicable to Gleam",
       "status": "SKIP"
+    },
+    "repository-hygiene": {
+      "details": [],
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
     },
     "sanitizers": {
       "details": [],

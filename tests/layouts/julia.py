@@ -16,7 +16,7 @@ LAYOUTS = (
     ),
     ProjectLayout(
         name="Julia sources",
-        files={"src/shop.jl": "total(prices) = sum(prices)\n"},
+        files={"src/prices.jl": "total(prices) = sum(prices)\n"},
         languages=frozenset({"Julia"}),
         build_systems=frozenset(),
     ),

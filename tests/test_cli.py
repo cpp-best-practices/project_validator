@@ -24,6 +24,7 @@ from tests.support import (
     C_FAMILY_LAYOUTS,
     C_FAMILY_ONLY_LAYOUTS,
     CI_FILES,
+    CONTENT_CHECKS,
     FIXTURES,
     OTHER_LANGUAGE_LAYOUTS,
     PROJECT_LAYOUTS,
@@ -43,7 +44,11 @@ LANGUAGE_SPECIFIC_CHECKS = tuple(found for found in discover().checks if found.l
 # The checks that apply to the C++ fixture: those of every project, and of its languages and the formats its CI
 # configuration is in (YAML); the fixture passes them all.
 _CXX_FIXTURE_NAMES = make_context(FIXTURES / "well_configured_cpp").structure.languages_and_formats
-PASSING_IN_C_CPP = [found for found in discover().checks if not found.languages or found.languages & _CXX_FIXTURE_NAMES]
+PASSING_IN_C_CPP = [
+    found
+    for found in discover().checks
+    if (not found.languages or found.languages & _CXX_FIXTURE_NAMES) and found.name not in CONTENT_CHECKS
+]
 COMPILER_CHECKS = ",".join(found.name for found in LANGUAGE_SPECIFIC_CHECKS)
 # Language -> the language-specific checks that do not apply to it.
 NOT_APPLICABLE = {
