@@ -320,6 +320,17 @@ class RecoveryTests(unittest.TestCase):
         self.assertLess(time.perf_counter() - started, 1.0)
         self.assertEqual(len(script.errors), 49)
 
+    def test_unclosed_quotes_and_expansions_nest_without_rereading_their_line(self) -> None:
+        # An unclosed `${` or quote is read again to the end of its line; one inside it, already read to that end,
+        # must not read itself again, which doubled the work at each level (found by fuzzing).
+        for unit, errors in (("${", 30), ('"${', 31), ('${"', 31)):  # the quotes after the first are inside it
+            with self.subTest(unit=unit):
+                started = time.perf_counter()
+                script = parse(unit * 30 + "\nmake")
+                self.assertLess(time.perf_counter() - started, 1.0)
+                self.assertEqual(len(script.errors), errors)
+                self.assertEqual(_argvs(unit * 30 + "\nmake")[-1], ("make",))
+
     def test_what_closes_nothing_says_so(self) -> None:
         self.assertEqual(_argvs("fi\nmake\ndone"), [("make",)])
         self.assertEqual(_errors("fi\nmake\ndone"), [("fi closes nothing", 1, 1), ("done closes nothing", 3, 1)])
