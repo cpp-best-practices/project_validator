@@ -136,4 +136,5 @@ also_copy = [
     "corpus/",
     "docs/",
     "leaderboard/",
+    "web/",
 ]
