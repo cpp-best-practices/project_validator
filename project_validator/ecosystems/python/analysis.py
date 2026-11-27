@@ -3,7 +3,8 @@ settings that configure them: a dedicated file, a `[tool.<name>]` table of pypro
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterable
+import re
+from collections.abc import Callable, Iterable, Iterator
 from pathlib import PurePosixPath
 
 from project_validator.facts import Command, Fact, Facts, Setting, resolved
@@ -11,6 +12,7 @@ from project_validator.facts.analysis import Strictness, analysed, analyzer, typ
 from project_validator.facts.arguments import has_option, program
 from project_validator.facts.expansion import Action, from_hook
 from project_validator.facts.settings import Read, SettingsReader, ini_settings, json_settings, toml_settings
+from project_validator.facts.suppressions import GLOBAL, Disabler, Marker, keyed, listed
 from project_validator.facts.tools import ANCHORED, REGEX, Run, Scoping, defined_by, starts
 from project_validator.tools.limits import function_length_limiters
 
@@ -51,6 +53,61 @@ MYPY_SETTINGS = SettingsReader(
 )
 MYPY_SCOPE = Scoping(tools=("mypy",), settings="mypy", excludes=("exclude",), how=REGEX)
 MYPY_FILES = Scoping(tools=("mypy",), settings="mypy", includes=("files",), how=ANCHORED)
+# Codes that find bugs: pyflakes' (undefined names), bugbear's, bandit's (each a letter and digits, or the letter alone
+# for the whole plugin: not flynt's FLY, flake8-simplify's SIM, flake8-blind-except's BLE), and syntax errors.
+_PYTHON_KEY = ("F", "F[0-9]*", "B", "B[0-9]*", "S", "S[0-9]*", "E9*")
+_RUFF_PER_FILE = (
+    "per-file-ignores",
+    "lint.per-file-ignores",
+    "extend-per-file-ignores",
+    "lint.extend-per-file-ignores",
+)
+RUFF_DISABLED = Disabler(
+    tool="ruff check",
+    settings="ruff",
+    disabled=keyed("ignore", "extend-ignore", "lint.ignore", "lint.extend-ignore", per_file=_RUFF_PER_FILE),
+    blanket=("ALL",),
+    key=_PYTHON_KEY,
+)
+FLAKE8_DISABLED = Disabler(
+    tool="flake8",
+    settings="flake8",
+    disabled=keyed("ignore", "extend-ignore", per_file=("per-file-ignores",)),
+    key=_PYTHON_KEY,
+)
+PYLINT_DISABLED = Disabler(
+    tool="pylint",
+    settings="pylint",
+    disabled=keyed("disable", "messages_control.disable", "MESSAGES CONTROL.disable"),
+    blanket=("all",),
+    key=("E*", "undefined-*", "used-before-assignment", "no-member", "dangerous-default-value"),
+)
+
+
+def _mypy_disabled(setting: Setting) -> Iterator[tuple[str, str]]:
+    """mypy's error codes turned off, and `ignore_errors`, which turns off every one."""
+    if setting.key == "disable_error_code":
+        yield from ((code, GLOBAL) for code in listed(setting.value))
+    elif setting.key == "ignore_errors" and str(setting.value).lower() == "true":
+        yield "ignore_errors", GLOBAL
+
+
+MYPY_DISABLED = Disabler(tool="mypy", settings="mypy", disabled=_mypy_disabled, blanket=("ignore_errors",), key=("*",))
+_NOQA = re.compile(r"#\s*noqa(?::\s*(?P<codes>[A-Z]+\d*(?:\s*,\s*[A-Z]+\d*)*))?(?P<reason>[^\n]*)")
+NOQA_RUFF = Marker(tool="ruff check", languages=PYTHON, pattern=_NOQA)
+NOQA_FLAKE8 = Marker(tool="flake8", languages=PYTHON, pattern=_NOQA)
+TYPE_IGNORE = Marker(
+    tool="mypy",
+    languages=PYTHON,
+    pattern=re.compile(r"#\s*type:\s*ignore(?:\[(?P<codes>[^\]]*)\])?(?P<reason>[^\n]*)"),
+    blanket=re.compile(r"(?m)^#\s*mypy:\s*ignore-errors"),
+)
+PYLINT_DISABLE = Marker(
+    tool="pylint",
+    languages=PYTHON,
+    pattern=re.compile(r"#\s*pylint:\s*disable=(?P<codes>[\w,-]+)(?P<reason>[^\n]*)"),
+    blanket=re.compile(r"(?m)^#\s*pylint:\s*skip-file"),
+)
 PYRIGHT_SETTINGS = SettingsReader(
     name="pyright",
     files=("pyrightconfig.json", "pyproject.toml"),

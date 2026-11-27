@@ -21,6 +21,7 @@ STAGE_NAMES = {
     "the CI jobs": "Working out what each CI job builds, and on what",
     "the settings": "Reading the tools' settings",
     "the tool runs": "Matching the tools CI runs",
+    "what the tools turn off": "Reading what the tools turn off and the suppressions in the code",
     "the source-control host": "Asking the source-control host for the repository's settings",
 }
 

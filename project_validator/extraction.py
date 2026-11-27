@@ -39,6 +39,7 @@ from project_validator.facts import (
     tools,
     wellformed,
 )
+from project_validator.facts.suppressions import suppressions
 
 if TYPE_CHECKING:
     from project_validator.core import Context, Project
@@ -116,6 +117,7 @@ def extract_facts(context: Context) -> Facts:
     names = structure.project_languages(found) | structure.project_formats(found)
     used = tuple(tool for tool in tools.known_tools() if tool.languages & names)
     found = _stage(context, "the tool runs", lambda: found + tools.tool_runs(found, used), before=found)
+    found = _stage(context, "what the tools turn off", lambda: found + suppressions(project, found), before=found)
     asked = hosting.host_facts(project.origin_url(), requested_offline=context.options.offline)
     return _stage(context, "the source-control host", lambda: found + asked, before=found)
 
