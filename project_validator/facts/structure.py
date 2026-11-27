@@ -16,6 +16,7 @@ from pathlib import PurePosixPath
 
 from project_validator.core import Project
 from project_validator.ecosystems import Ecosystem, Kind, build_systems, families, formats, registered
+from project_validator.ecosystems.model import C_FAMILY
 from project_validator.facts import Fact, Facts, Origin
 from project_validator.facts.auxiliary import AuxiliaryCode, Selectors
 from project_validator.facts.roles import AUXILIARY, fixture_data, in_source_root, role
@@ -739,6 +740,24 @@ def structure_facts(project: Project) -> Iterator[Fact]:
     yield from _units(project, every, named)
 
 
+def host_built(facts: Facts) -> dict[tuple[str, str], str]:
+    """The C and C++ code another ecosystem's build compiles (upstream #186), by (unit, language): the build systems of
+    a unit that has none of C's or C++'s (an R package's src/, a gem's ext/, a SwiftPM C target, OCaml stubs, cgo).
+    A unit with no build system at all (a header-only library, a makefile) is not one: its code is judged as it is."""
+    builders = {
+        system.name
+        for ecosystem in registered()
+        if ecosystem.languages & C_FAMILY
+        for system in ecosystem.build_systems
+    }
+    return {
+        (unit.directory, language): ", ".join(unit.build_systems)
+        for unit in facts.of(Unit)
+        if unit.build_systems and not builders & set(unit.build_systems)
+        for language in sorted(unit.languages & C_FAMILY)
+    }
+
+
 __all__ = [
     "CONFIGURATION_DIRECTORIES",
     "NOT_SOURCE_SUFFIXES",
@@ -748,6 +767,7 @@ __all__ = [
     "Unit",
     "UnrecognisedSuffix",
     "ci_test_units",
+    "host_built",
     "project_formats",
     "project_languages",
     "source_languages",

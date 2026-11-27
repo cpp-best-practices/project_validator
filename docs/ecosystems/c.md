@@ -6,6 +6,14 @@ Recognised by `.c` sources, and by CMake (`CMakeLists.txt`), Meson (`meson.build
 the rules of the build system it uses; one using none is judged as a CMake project. The CMake code itself is judged as
 [CMake](cmake.md), a format: it is formatted and linted.
 
+Code another ecosystem's build compiles (upstream #186) belongs to that build: an R package's `src/`, a gem's
+`ext/` (mkmf), a SwiftPM C target, OCaml stubs, cgo, in a unit with none of CMake, Meson or Bazel. The checks of a C
+or C++ build of its own (`ci-build-types`, `compiler-extensions`, `out-of-source-build`, `compile-commands`,
+`top-level-guard`, `vcs-ignore`'s build directory and `platform-matrix`'s compilers) skip it, saying which build
+compiles it; that build is judged as its ecosystem's. The hygiene checks still judge the code (formatting, analysis,
+sanitizers), and the flags checks read the flags the host build passes: `PKG_CFLAGS`, `PKG_CXXFLAGS` and
+`PKG_CPPFLAGS` in `Makevars` (and `Makevars.in`, `.win`, `.ucrt`), and the flags `extconf.rb` adds.
+
 With Bazel (`MODULE.bazel`, `WORKSPACE` or `BUILD.bazel`), the tests are the C test rules its BUILD files define,
 which `bazel test` or `bazel coverage` runs: a rule tests the language of the sources it lists or, when they say none,
 the language of its kind (`cc_test` tests C and C++, `swift_test` Swift), and a macro whose sources are not written
