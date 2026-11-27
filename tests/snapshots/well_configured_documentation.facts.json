@@ -43,6 +43,14 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "INI",
+      "lines": 5,
+      "origin": ".vale.ini",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "YAML",
       "lines": 9,
       "origin": "mkdocs.yml",
@@ -67,6 +75,7 @@
     {
       "build_systems": [],
       "formats": [
+        "INI",
         "MkDocs",
         "YAML"
       ],
@@ -122,6 +131,16 @@
       "kind": "DataFile",
       "line": null,
       "origin": ".markdownlint.yaml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "INI",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".vale.ini",
       "problem": null,
       "role": "product",
       "unread": null
@@ -897,6 +916,9 @@
       ],
       "Documentation site": [
         "content"
+      ],
+      "File formats": [
+        ".ini files"
       ]
     },
     "files": [
@@ -915,10 +937,23 @@
             "role": "product"
           }
         ],
-        "share": 1.0
+        "share": 0.8571
+      },
+      {
+        "files": 1,
+        "language": "INI",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.1429
       }
     ],
     "formats": [
+      "INI",
       "MkDocs",
       "YAML"
     ],
@@ -928,6 +963,7 @@
         "build_systems": [],
         "directory": ".",
         "formats": [
+          "INI",
           "MkDocs",
           "YAML"
         ],

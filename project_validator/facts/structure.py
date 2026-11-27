@@ -226,7 +226,7 @@ def _ambiguous(
     for path, candidates in claims.items():
         named = list(dict.fromkeys(language for language in candidates if language is not None))
         language = named[0] if len(named) == 1 else neighbours.language(path, named, declared) if named else None
-        purpose, lines = _role_and_lines(project, path)
+        purpose, lines = _role_and_lines(project, path, language)
         yield SourceFile(origin=Origin(path=path), language=language, ambiguous=True, role=purpose, lines=lines)
 
 
@@ -396,14 +396,15 @@ def _sources(project: Project, generated: frozenset[str]) -> Iterator[SourceFile
         if found is None and (named := _by_name(path)) is not None:
             found = named[1:]
         if found is not None and (found[1] == "format" or not _configuration(path)):
-            purpose, lines = _role_and_lines(project, path)
+            purpose, lines = _role_and_lines(project, path, found[0])
             yield SourceFile(origin=Origin(path=path), language=found[0], role=purpose, lines=lines)
 
 
-def _role_and_lines(project: Project, path: str) -> tuple[str, int]:
-    """A source's role, and its lines (none counted for vendored code)."""
+def _role_and_lines(project: Project, path: str, language: str | None) -> tuple[str, int]:
+    """A source's role, and its lines (none counted for vendored code, nor for a format that holds none: an image)."""
     purpose = role(path)
-    return purpose, 0 if purpose == "vendored" else _lines(project, path)
+    unlined = any(language in ecosystem.unlined for ecosystem in registered())
+    return purpose, 0 if purpose == "vendored" or unlined else _lines(project, path)
 
 
 def _lines(project: Project, path: str) -> int:

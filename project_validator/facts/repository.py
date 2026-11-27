@@ -63,10 +63,12 @@ class _Judge:
     """Whether a tracked path a build output names is one, by what it holds."""
 
     def __init__(self, project: Project, tracked: list[str]) -> None:
+        from project_validator.ecosystems import registered
         from project_validator.facts.structure import source_languages  # structure reads the profiles
         from project_validator.project_map import build_files
 
         self.project, self.tracked, self.language = project, tracked, source_languages()
+        self.incidental = frozenset().union(*(found.languages for found in registered() if found.incidental))
         known = build_files()
         self.builds = {build for path in tracked for build, _system in known.matches(path)}
 
@@ -118,7 +120,7 @@ class _Judge:
         if file.suffix.lower() in _DOCUMENTS:
             return _FOREIGN
         language = self.language(path) or self._script(path)
-        if language is None:
+        if language is None or language in self.incidental:
             return _OWNED if file.suffix.lower() not in _MEDIA and self._holds_binary(path) else _UNKNOWN
         if written is None and (language in languages or language in _WRITTEN_BY_TOOLS):
             return _OWNED

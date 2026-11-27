@@ -96,6 +96,24 @@
     "wellformed": [
       {
         "auxiliary": {},
+        "language": "CSV",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "CSV",
+            "parsed": [
+              "data/countries.csv"
+            ],
+            "problems": [],
+            "test_data": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
         "language": "Data Package",
         "units": [
           {
@@ -195,7 +213,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "1 JSON file parses",
+      "message": "Data: 1 JSON file parses; File formats: 1 CSV file parses",
       "status": "PASS"
     },
     "dependency-audit": {

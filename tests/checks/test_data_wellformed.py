@@ -11,6 +11,7 @@ from unittest import mock
 
 from project_validator.checks.data_wellformed import data_wellformed
 from project_validator.core import Options, Project, Result, Status
+from project_validator.ecosystems.file_formats import FILE_FORMATS
 from project_validator.runner import run_check
 from tests.support import FIXTURES, make_context, temp_project
 
@@ -35,7 +36,8 @@ class DataWellformedTests(unittest.TestCase):
         self.assertEqual(result.details, problems)
 
     def test_applies_to_the_formats_with_a_parser(self) -> None:
-        self.assertEqual(data_wellformed.languages, frozenset({"Dockerfile", "JSON", "Jupyter", "TOML", "XML", "YAML"}))
+        built_in = {"Dockerfile", "JSON", "Jupyter", "TOML", "XML", "YAML"}
+        self.assertEqual(data_wellformed.languages, frozenset(built_in | FILE_FORMATS.languages))
 
     def test_passes_with_the_well_configured_fixture(self) -> None:
         result = data_wellformed.run(make_context(FIXTURES / "well_configured_cpp", Options()))

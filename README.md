@@ -140,11 +140,12 @@ languages, held to every check as the product is. The dial is `--auxiliary`: cod
 tooling`; by language or ecosystem, `--auxiliary python`; or by directory, `--auxiliary scripts/`) is still judged in
 full, where it is, but its failures are warnings labelled `(auxiliary: tooling)`, with a detail saying what named the
 code. Vendored code (`third_party/`, `vendor/`, minified bundles) is not judged. A *format* (JSON, TOML, YAML, XML: see
-[Data](docs/ecosystems/data.md)) is an ecosystem of files that are not programs, judged the same way in each unit whose
-files are in it, for hygiene only; its files make no language the project's, and are read in the configuration
-directories (`.github/`, `.vscode/`) too. What each check accepts for a language is on that ecosystem's page in
-[docs/ecosystems](docs/ecosystems); `python -m project_validator --support-matrix` prints the grid of every check
-against every ecosystem, with the tools each recognises (on the site as [the support
+[Data](docs/ecosystems/data.md); images, archives, databases and documents: see [File
+formats](docs/ecosystems/file_formats.md)) is an ecosystem of files that are not programs, judged the same way in each
+unit whose files are in it, for hygiene only; its files make no language the project's, and are read in the
+configuration directories (`.github/`, `.vscode/`) too. What each check accepts for a language is on that ecosystem's
+page in [docs/ecosystems](docs/ecosystems); `python -m project_validator --support-matrix` prints the grid of every
+check against every ecosystem, with the tools each recognises (on the site as [the support
 matrix](https://cpp-best-practices.github.io/project_validator/docs/support-matrix.html)).
 
 | Check | Passes when |

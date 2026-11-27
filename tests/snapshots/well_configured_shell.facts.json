@@ -3,6 +3,14 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "INI",
+      "lines": 15,
+      "origin": ".editorconfig",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "YAML",
       "lines": 6,
       "origin": ".github/dependabot.yml",
@@ -91,6 +99,7 @@
     {
       "build_systems": [],
       "formats": [
+        "INI",
         "YAML"
       ],
       "kind": "Unit",
@@ -101,6 +110,16 @@
       "origin": ".",
       "role": "product",
       "tests": []
+    },
+    {
+      "column": null,
+      "format": "INI",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".editorconfig",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "column": null,
@@ -1312,6 +1331,9 @@
       "Data": [
         ".yml files"
       ],
+      "File formats": [
+        ".editorconfig files"
+      ],
       "Shell": [
         ".bats files",
         ".ps1 files",
@@ -1331,7 +1353,7 @@
             "role": "product"
           }
         ],
-        "share": 0.5
+        "share": 0.4444
       },
       {
         "files": 2,
@@ -1348,7 +1370,7 @@
             "role": "test"
           }
         ],
-        "share": 0.25
+        "share": 0.2222
       },
       {
         "files": 2,
@@ -1365,10 +1387,23 @@
             "role": "test"
           }
         ],
-        "share": 0.25
+        "share": 0.2222
+      },
+      {
+        "files": 1,
+        "language": "INI",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.1111
       }
     ],
     "formats": [
+      "INI",
       "YAML"
     ],
     "languages": [
@@ -1380,6 +1415,7 @@
         "build_systems": [],
         "directory": ".",
         "formats": [
+          "INI",
           "YAML"
         ],
         "languages": [

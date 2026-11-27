@@ -36,10 +36,10 @@ def _applying(fixture: str) -> set[str]:
     """The checks that apply to the fixture: those of every project, and those of a language or format the fixture
     uses (its own, and the formats its data files are in: every project has some). A check of one format of an
     ecosystem (XSpec runs XSLT, not XSD) does not apply to a fixture in the other, nor a check of content the
-    fixtures do not hold (`CONTENT_CHECKS`)."""
+    fixture does not hold (`CONTENT_CHECKS`)."""
     names = make_context(FIXTURES / fixture).structure.languages_and_formats
     every = {check.name for check in discover().checks if not check.languages or check.languages & names}
-    return every - CONTENT_CHECKS
+    return every - {name for name, formats in CONTENT_CHECKS.items() if not formats & names}
 
 
 class EcosystemContractTests(unittest.TestCase):

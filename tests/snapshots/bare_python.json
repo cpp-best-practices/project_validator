@@ -806,6 +806,24 @@
             "unread": {}
           }
         ]
+      },
+      {
+        "auxiliary": {},
+        "language": "gzip",
+        "units": [
+          {
+            "answer": "no",
+            "language": "gzip",
+            "parsed": [],
+            "problems": [
+              "dist/bare-0.1.tar.gz: empty, not a gzip stream"
+            ],
+            "test_data": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
       }
     ]
   },
@@ -880,9 +898,11 @@
       "status": "FAIL"
     },
     "data-wellformed": {
-      "details": [],
-      "message": "1 TOML file parses",
-      "status": "PASS"
+      "details": [
+        "File formats: dist/bare-0.1.tar.gz: empty, not a gzip stream"
+      ],
+      "message": "Data: 1 TOML file parses; File formats: 1 gzip file does not parse",
+      "status": "FAIL"
     },
     "dependency-audit": {
       "details": [

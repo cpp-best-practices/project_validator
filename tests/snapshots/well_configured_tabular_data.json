@@ -102,6 +102,24 @@
     "wellformed": [
       {
         "auxiliary": {},
+        "language": "CSV",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "CSV",
+            "parsed": [
+              "data/countries.csv"
+            ],
+            "problems": [],
+            "test_data": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
         "language": "Data Package",
         "units": [
           {
@@ -224,7 +242,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "JSON: 1 JSON file parses; YAML: 4 YAML files parse",
+      "message": "Data: JSON: 1 JSON file parses; YAML: 4 YAML files parse; File formats: 1 CSV file parses",
       "status": "PASS"
     },
     "dependency-audit": {

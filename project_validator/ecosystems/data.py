@@ -84,7 +84,7 @@ def _parse_yaml(_path: str, data: bytes) -> None:
     yaml_support.check_documents(decoded(data))
 
 
-def _parse_xml(_path: str, data: bytes) -> None:
+def parse_xml(_path: str, data: bytes) -> None:
     parser = expat.ParserCreate()
     # Never read external entities or an external DTD.
     parser.SetParamEntityParsing(expat.XML_PARAM_ENTITY_PARSING_NEVER)
@@ -92,12 +92,14 @@ def _parse_xml(_path: str, data: bytes) -> None:
         parser.Parse(data, True)
     except expat.ExpatError as error:
         raise ParseError(expat.ErrorString(error.code), error.lineno, error.offset + 1) from error
+    except LookupError as error:  # an encoding Python does not know (`encoding="UTF-9"`)
+        raise ParseError(str(error)) from error
 
 
 JSON_PARSER = Parser(format=JSON, parse=_parse_json)
 TOML_PARSER = Parser(format=TOML, parse=_parse_toml)
 YAML_PARSER = Parser(format=YAML, parse=_parse_yaml)
-XML_PARSER = Parser(format=XML, parse=_parse_xml)
+XML_PARSER = Parser(format=XML, parse=parse_xml)
 
 DATA = Ecosystem(
     label="Data",

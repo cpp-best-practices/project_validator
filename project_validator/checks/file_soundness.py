@@ -16,7 +16,7 @@ from project_validator.text import Pattern, pattern
 # The kinds of binary file, by suffix.
 KINDS: Mapping[str, frozenset[str]] = {
     "image": frozenset({".png", ".jpg", ".jpeg", ".gif", ".webp", ".bmp", ".ico", ".tif", ".tiff"}),
-    "PDF": frozenset({".pdf"}),
+    "PDF document": frozenset({".pdf"}),
     "font": frozenset({".ttf", ".otf", ".woff", ".woff2"}),
     "audio or video": frozenset({".mp3", ".wav", ".ogg", ".flac", ".mp4", ".webm", ".mov", ".mkv"}),
     "archive": frozenset({".zip", ".tar", ".tgz", ".gz", ".bz2", ".xz", ".7z"}),
@@ -31,7 +31,7 @@ TOOLS: Mapping[str, tuple[Pattern, ...]] = {
         pattern("pngcheck", r"\bpngcheck\b"),
         pattern("jpeginfo", r"\bjpeginfo\b"),
     ),
-    "PDF": (pattern("qpdf", r"\bqpdf\s+(?:[^\n]*\s)?--check\b"), pattern("veraPDF", r"\bverapdf\b")),
+    "PDF document": (pattern("qpdf", r"\bqpdf\s+(?:[^\n]*\s)?--check\b"), pattern("veraPDF", r"\bverapdf\b")),
     "font": (pattern("fontbakery", r"\bfontbakery\b"),),
     "audio or video": (pattern("ffprobe", r"\bffprobe\b"),),
     "archive": (),

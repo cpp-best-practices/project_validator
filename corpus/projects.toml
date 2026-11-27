@@ -1354,3 +1354,8 @@ name = "ghostty-org/ghostty"
 commit = "6d9577708a211b0e6c5e6c6886f3cfb7efc47555"
 ecosystems = ["Zig"]
 issues = [227]
+
+[[project]]
+name = "twbs/icons"
+commit = "8ead55224786ab489ad7e5db78b3ab23b2045934"
+ecosystems = ["File formats"]

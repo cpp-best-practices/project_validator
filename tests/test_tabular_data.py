@@ -25,17 +25,17 @@ def _ci(*steps: str) -> dict[str, str]:
 
 class RecognitionTests(unittest.TestCase):
     def test_descriptors_are_told_by_name_or_by_profile_never_by_a_table_alone(self) -> None:
-        for files, data_format in (
-            ({"datapackage.json": DATAPACKAGE, "data/countries.csv": COUNTRIES}, "JSON"),
-            ({"datapackage.yaml": PACKAGE_YAML}, "YAML"),
-            ({"schema/tableschema.json": TABLE_SCHEMA}, "JSON"),
-            ({"packages/shop.json": PROFILE_V1}, "JSON"),
-            ({"shop/package.yaml": "$schema: https://datapackage.org/profiles/2.0/datapackage.json\n"}, "YAML"),
+        for files, data_formats in (
+            ({"datapackage.json": DATAPACKAGE, "data/countries.csv": COUNTRIES}, {"JSON", "CSV"}),
+            ({"datapackage.yaml": PACKAGE_YAML}, {"YAML"}),
+            ({"schema/tableschema.json": TABLE_SCHEMA}, {"JSON"}),
+            ({"packages/shop.json": PROFILE_V1}, {"JSON"}),
+            ({"shop/package.yaml": "$schema: https://datapackage.org/profiles/2.0/datapackage.json\n"}, {"YAML"}),
         ):
             with self.subTest(files=files), temp_project(files) as root:
                 structure = make_context(root).structure
                 self.assertEqual(
-                    (structure.languages, structure.formats), (frozenset(), frozenset({"Data Package", data_format}))
+                    (structure.languages, structure.formats), (frozenset(), frozenset({"Data Package", *data_formats}))
                 )
                 self.assertEqual(structure.recognised_by["Tabular data"], ("content",))
         for files in (

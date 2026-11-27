@@ -16,6 +16,7 @@ from project_validator.core import Check, Context, Options, Project, Result, Sta
 from project_validator.ecosystems import BUILT_IN, C_FAMILY, Ecosystem, ecosystems_for, registered
 from project_validator.ecosystems.c import C
 from project_validator.ecosystems.cpp import CXX
+from project_validator.ecosystems.file_formats import BINARY
 from project_validator.facts import Command, Facts, Origin, resolved
 from project_validator.facts.expansion import script_facts
 from project_validator.facts.jobs import Job
@@ -38,13 +39,17 @@ NO_FILES: Mapping[str, str] = MappingProxyType({})
 
 
 @contextmanager
-def temp_project(files: Mapping[str, str]) -> Iterator[Path]:
+def temp_project(files: Mapping[str, str | bytes]) -> Iterator[Path]:
+    """A project holding `files` (path -> text, dedented, or bytes, written as they are)."""
     with tempfile.TemporaryDirectory() as directory:
         root = Path(directory)
         for relative, contents in files.items():
             path = root / relative
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_text(textwrap.dedent(contents), encoding="utf-8")
+            if isinstance(contents, bytes):
+                path.write_bytes(contents)
+            else:
+                path.write_text(textwrap.dedent(contents), encoding="utf-8")
         yield root
 
 
@@ -393,9 +398,9 @@ def json_output(output: str, kind: str) -> Any:
     return found[kind]
 
 
-# Checks of every project that apply only where it holds what they check (binary and asset files): a fixture with
-# none skips them.
-CONTENT_CHECKS = frozenset({"file-soundness"})
+# Checks of every project that apply only where it holds what they check, by the formats that hold it (binary and
+# asset files): a fixture with none skips them.
+CONTENT_CHECKS: Mapping[str, frozenset[str]] = {"file-soundness": BINARY}
 
 # The best result a well-configured project of a language can get from a check, where no tool the validator knows can
 # fail the build for it: Racket's one analyser, Resyntax, only reports (upstream #278).
