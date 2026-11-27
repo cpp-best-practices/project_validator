@@ -590,6 +590,11 @@
       "reader": "license links"
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": "site/index.html",
+      "reader": "browser targets"
+    },
+    {
       "advisory": "",
       "excluded": [],
       "heuristic": false,

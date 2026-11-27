@@ -285,7 +285,9 @@ its `Wording` (what the settings are called, how to set them). Compiler flags ar
 flag vocabulary of the C and C++ compilers a shared tool (`project_validator/tools/toolchains.py`); C and C++ are
 judged for each compiler CI builds with, by the flags that apply to it. What varies between a language's CI jobs
 besides the OS is a `ToolchainAxis` component (`project_validator/facts/axes.py`): compilers for C and C++, toolchain
-versions for the others.
+versions for the others. An axis may apply to only some of a language's projects (`ToolchainAxis.applies`): JavaScript
+that runs in the browser has the browser engines its tests run in as its axis, whatever the OS
+(`project_validator/ecosystems/javascript/browsers.py`), and other JavaScript its runtime versions.
 
 ### Questions
 
