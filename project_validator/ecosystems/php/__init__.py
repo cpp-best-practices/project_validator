@@ -168,6 +168,7 @@ _PHP_VERSION = r"(\d+\.\d+)"
 
 PHP = Ecosystem(
     label="PHP",
+    links={"PHP": "https://www.php.net/"},
     languages=PHP_ONLY,
     build_systems=(COMPOSER,),
     source_suffixes={".php": PHP_LANGUAGE},

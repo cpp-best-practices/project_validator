@@ -493,6 +493,7 @@ def _setup_swift(inputs: Mapping[str, str]) -> str | None:
 
 SWIFT = Ecosystem(
     label=SWIFT_LANGUAGE,
+    links={SWIFT_LANGUAGE: "https://www.swift.org/"},
     languages=SWIFT_ONLY,
     build_systems=(SWIFTPM, XCODE, BAZEL),
     source_suffixes={".swift": SWIFT_LANGUAGE},

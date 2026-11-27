@@ -26,6 +26,7 @@ JUPYTER_ONLY = frozenset({JUPYTER})
 
 JUPYTER_ECOSYSTEM = Ecosystem(
     label="Jupyter",
+    links={"Jupyter": "https://jupyter.org/"},
     kind="format",
     languages=JUPYTER_ONLY,
     source_suffixes={".ipynb": JUPYTER},

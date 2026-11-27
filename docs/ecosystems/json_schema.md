@@ -1,5 +1,7 @@
 # JSON Schema
 
+Learn more: [JSON Schema](https://json-schema.org/).
+
 A format, recognised by intent, never by plain `.json` files: a `*.schema.json`, or a JSON file whose top-level
 `$schema` names a json-schema.org dialect, makes the project a JSON Schema one. A file whose `$schema` names another
 schema (a tool's configuration) is an instance, not a schema. The schemas and the documents are JSON, the Data

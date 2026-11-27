@@ -45,12 +45,13 @@ CXX_TEMPLATES = dict.fromkeys((".inl", ".ipp", ".tpp", ".txx"), "C++")
 
 
 def c_family_ecosystem(
-    language: str, sources: Mapping[str, str], ambiguous: Mapping[str, str] = MappingProxyType({})
+    language: str, link: str, sources: Mapping[str, str], ambiguous: Mapping[str, str] = MappingProxyType({})
 ) -> Ecosystem:
-    """The ecosystem of C or C++ (`language`): its own `sources`, the shared headers, CMake modules, and any more
-    `ambiguous` suffixes of its own."""
+    """The ecosystem of C or C++ (`language`, whose page is `link`): its own `sources`, the shared headers, CMake
+    modules, and any more `ambiguous` suffixes of its own."""
     return Ecosystem(
         label=language,
+        links={language: link},
         languages=frozenset({language}),
         build_systems=(CMAKE, MESON, BAZEL),
         default_build_system=CMAKE,
@@ -62,4 +63,4 @@ def c_family_ecosystem(
     )
 
 
-C = c_family_ecosystem("C", C_SOURCES)
+C = c_family_ecosystem("C", "https://en.wikipedia.org/wiki/C_(programming_language)", C_SOURCES)

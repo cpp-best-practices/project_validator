@@ -1,5 +1,7 @@
 # Common Lisp
 
+Learn more: [Common Lisp](https://common-lisp.net/).
+
 Recognised by `.lisp` sources and by ASDF system definitions (`*.asd`), the build system; once the project is known to
 be Common Lisp, `.cl` (OpenCL's suffix too), `.lsp` and Roswell `.ros` scripts are Lisp as well. Qlot's `.qlot/` is a
 build tree.

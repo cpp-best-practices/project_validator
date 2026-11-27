@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import unittest
+from pathlib import Path
 from typing import ClassVar
 
 from project_validator.core import Check, Context, Result, Status
 from project_validator.ecosystems import (
     BUILT_IN,
     C_FAMILY,
+    PROFILES,
     BuildSystem,
     Ecosystem,
     applies_to,
@@ -14,6 +16,7 @@ from project_validator.ecosystems import (
     formats,
     isolated_registry,
     languages_of,
+    link,
     register,
     registered,
 )
@@ -216,3 +219,32 @@ class FormatTests(unittest.TestCase):
         with isolated_registry():
             register(FORMAT_ECOSYSTEM)
             self.assertEqual(applies_to(selected), ("Widget data",))
+
+
+DOCS = Path(__file__).resolve().parent.parent / "docs" / "ecosystems"
+
+
+class LinkTests(unittest.TestCase):
+    """Each ecosystem links to the official page, or a Wikipedia entry, of each of its languages or formats (upstream
+    #411): what BEAM is, and how it relates to Erlang."""
+
+    def test_every_language_and_format_links_to_its_page(self) -> None:
+        for ecosystem in registered():
+            with self.subTest(ecosystem=ecosystem.label):
+                self.assertLessEqual(ecosystem.languages, set(ecosystem.links))
+                self.assertTrue(all(url.startswith("https://") for url in ecosystem.links.values()), ecosystem.links)
+
+    def test_each_ecosystems_documentation_links_its_pages(self) -> None:
+        pages = {
+            page.stem: " ".join(page.read_text(encoding="utf-8").split()) for page in DOCS.glob("*.md")
+        }  # unwrapped
+        for module, ecosystem in PROFILES.items():
+            page = pages[module]
+            for name, url in ecosystem.links.items():
+                with self.subTest(module=module, name=name):
+                    self.assertIn(f"[{name}]({url})", page)
+
+    def test_a_language_or_ecosystem_names_its_page(self) -> None:
+        self.assertEqual(link("Erlang"), "https://www.erlang.org/")
+        self.assertEqual(link("BEAM"), "https://en.wikipedia.org/wiki/BEAM_(Erlang_virtual_machine)")
+        self.assertIsNone(link("Nim"))

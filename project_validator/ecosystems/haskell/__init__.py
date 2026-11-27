@@ -85,6 +85,7 @@ _CABAL_VERBS = ("build", "test", "run", "install")
 
 HASKELL = Ecosystem(
     label="Haskell",
+    links={"Haskell": "https://www.haskell.org/"},
     languages=HASKELL_LANGUAGE,
     build_systems=(CABAL, STACK, HPACK),
     default_build_system=CABAL,

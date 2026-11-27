@@ -1,5 +1,8 @@
 # Shell
 
+Learn more: [PowerShell](https://learn.microsoft.com/en-us/powershell/),
+[Shell](https://en.wikipedia.org/wiki/Unix_shell).
+
 Shell and PowerShell. Recognised by `.sh`, `.bash`, `.zsh`, `.zsh-theme`, `.zunit` and `.bats` sources (Shell), by
 `.ps1` and `.psm1` sources (PowerShell), and by a script without a suffix whose shebang names a shell (`#!/usr/bin/env
 bash`) or `pwsh`. A module manifest (`.psd1`) is data about a module and counts for no language. There is no build

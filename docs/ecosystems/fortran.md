@@ -1,5 +1,7 @@
 # Fortran
 
+Learn more: [Fortran](https://fortran-lang.org/).
+
 Recognised by Fortran sources: fixed form (`.f`, `.for`, `.ftn`, `.f77`), free form (`.f90`, `.f95`, `.f03`, `.f08`,
 `.f18`), preprocessed (`.F`, `.F90` and the like, `.fpp`, fypp templates `.fypp`); pFUnit's `.pf` files once the
 project is known to be Fortran. Built with fpm (`fpm.toml`), CMake (a `project()` or `enable_language()` that enables

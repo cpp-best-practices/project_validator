@@ -1,5 +1,7 @@
 # Swift
 
+Learn more: [Swift](https://www.swift.org/).
+
 Recognised by `.swift` sources, SwiftPM (`Package.swift`), Xcode projects or Bazel (whose Swift test rules,
 `swift_test` or a rule listing Swift sources, `bazel test` runs, as for [C++](cpp.md)). `Package.swift` and the Xcode
 build settings and schemes count as CI configuration.

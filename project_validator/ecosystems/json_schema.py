@@ -56,6 +56,7 @@ def json_schemas(project: Project) -> Iterator[str]:
 
 JSON_SCHEMA_ECOSYSTEM = Ecosystem(
     label="JSON Schema",
+    links={"JSON Schema": "https://json-schema.org/"},
     kind="format",
     languages=JSON_SCHEMA_ONLY,
     locate=lambda project: ((path, JSON_SCHEMA) for path in json_schemas(project)),

@@ -91,6 +91,7 @@ def data_package_project(project: Project) -> frozenset[str]:
 
 TABULAR_DATA_ECOSYSTEM = Ecosystem(
     label="Tabular data",
+    links={"Data Package": "https://datapackage.org/"},
     kind="format",
     languages=DATA_PACKAGE_ONLY,
     detect=data_package_project,

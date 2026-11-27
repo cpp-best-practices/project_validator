@@ -1,5 +1,8 @@
 # GitHub Action
 
+Learn more: [GitHub
+Action](https://docs.github.com/en/actions/sharing-automations/creating-actions/about-custom-actions).
+
 A format, recognised by content: a repository whose product is a reusable action has `action.yml` (or `action.yaml`) at
 its root; one in a subdirectory is a local action of the repository's own workflows and makes no action repository. Nor
 does an action beside another package at the root: a Python, Rust, Lua, Ruby, Java, .NET or C/C++ project's manifest

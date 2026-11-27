@@ -1,5 +1,7 @@
 # XML schemas
 
+Learn more: [XML Schema](https://www.w3.org/XML/Schema), [XSLT](https://www.w3.org/TR/xslt-30/).
+
 Two formats recognised by intent, from the files' suffixes. **XML Schema** is the schemas: XSD (`.xsd`), RELAX NG
 (`.rng`, and `.rnc`, the compact syntax, which is not XML), Schematron (`.sch`), NVDL (`.nvdl`) and DTDs (`.dtd`,
 with their entity files, `.ent`; neither is XML). **XSLT** is the stylesheets

@@ -1,5 +1,7 @@
 # JavaScript
 
+Learn more: [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript).
+
 Recognised by `.js`, `.mjs`, `.cjs` and `.jsx` sources, a `package.json` that names an entry point (`main`, `module`,
 `exports`, `bin`) or `deno.json`. The package scripts CI runs (`npm test`, `npm run lint`, Deno tasks) count as CI
 configuration.

@@ -1,5 +1,10 @@
 # Documentation site
 
+Learn more: [Docusaurus](https://docusaurus.io/), [Hugo](https://gohugo.io/), [Jekyll](https://jekyllrb.com/),
+[Markdown documentation](https://commonmark.org/), [MkDocs](https://www.mkdocs.org/),
+[Sphinx](https://www.sphinx-doc.org/), [VitePress](https://vitepress.dev/),
+[mdBook](https://rust-lang.github.io/mdBook/).
+
 A format ecosystem of eight formats, one per generator and plain Markdown documentation, recognised by content: MkDocs
 (`mkdocs.yml`), Sphinx (a `conf.py` that sets Sphinx up), Docusaurus (`docusaurus.config.js`, `.ts`, `.mjs`, `.cjs`),
 mdBook (`book.toml`), Hugo (`hugo.toml`, `.yaml`, `.json`), Jekyll (a `_config.yml` beside `_posts/`, `_layouts/` or

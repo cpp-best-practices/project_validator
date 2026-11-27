@@ -1,5 +1,7 @@
 # Bazel
 
+Learn more: [Bazel](https://bazel.build/).
+
 A format: the project's Bazel files (`BUILD.bazel`, `MODULE.bazel`, `WORKSPACE`, `WORKSPACE.bzlmod` and `*.bzl`
 macros), Starlark judged beside the language it builds. Bazel as the build system of C, C++ and Swift (its test
 rules, compilation modes and `.bazelrc` options) is read for those profiles; what is asked of the files themselves is

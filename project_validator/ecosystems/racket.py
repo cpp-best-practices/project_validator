@@ -159,6 +159,7 @@ def _test_packages(project: Project) -> frozenset[str]:
 
 RACKET_ECOSYSTEM = Ecosystem(
     label="Racket",
+    links={"Racket": "https://racket-lang.org/"},
     languages=RACKET,
     build_systems=(RACO_PKG,),
     test_units=_test_packages,

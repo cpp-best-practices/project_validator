@@ -1,5 +1,7 @@
 # Clojure
 
+Learn more: [Clojure](https://clojure.org/).
+
 Recognised by `.clj`, `.cljs` and `.cljc` sources and by the build files: `deps.edn` (the Clojure CLI), `project.clj`
 (Leiningen), `bb.edn` (Babashka) and `shadow-cljs.edn`; once the project is known to be Clojure, Babashka `.bb`
 scripts are Clojure too, and EDN data files belong to the ecosystem with no language of their own. `.cpcache`,

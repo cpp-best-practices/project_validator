@@ -54,6 +54,7 @@ def graphql_project(project: Project) -> frozenset[str]:
 
 GRAPHQL_ECOSYSTEM = Ecosystem(
     label="GraphQL",
+    links={"GraphQL": "https://graphql.org/"},
     kind="format",
     languages=GRAPHQL_ONLY,
     source_suffixes={".graphqls": GRAPHQL},

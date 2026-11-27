@@ -1,5 +1,8 @@
 # Data
 
+Learn more: [JSON](https://www.json.org/), [TOML](https://toml.io/), [XML](https://www.w3.org/XML/),
+[YAML](https://yaml.org/).
+
 The formats a project's data and configuration are written in: JSON (`.json`, `.jsonc`), TOML (`.toml`), YAML
 (`.yaml`, `.yml`) and XML (`.xml`, `.xsd`, `.xsl`, `.xslt`). A format, not a language: it has no toolchain, tests,
 coverage or dependencies, so none of those checks applies, and its files make no language the project's (a C++ project

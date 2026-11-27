@@ -892,11 +892,12 @@ def _ci_test_packages(project: Project, facts: Facts) -> dict[str, tuple[str, ..
     }
 
 
-def ecmascript_ecosystem(language: str, suffixes: tuple[str, ...]) -> Ecosystem:
-    """The ecosystem of JavaScript or TypeScript (`language`, recognised by its `suffixes`): separate languages, which
-    share package.json, Deno, their runtimes and their tools (this profile's components)."""
+def ecmascript_ecosystem(language: str, link: str, suffixes: tuple[str, ...]) -> Ecosystem:
+    """The ecosystem of JavaScript or TypeScript (`language`, whose page is `link`, recognised by its `suffixes`):
+    separate languages, which share package.json, Deno, their runtimes and their tools (this profile's components)."""
     return Ecosystem(
         label=language,
+        links={language: link},
         languages=frozenset({language}),
         build_systems=(NPM, DENO),
         source_suffixes=dict.fromkeys(suffixes, language),
@@ -919,6 +920,8 @@ def ecmascript_ecosystem(language: str, suffixes: tuple[str, ...]) -> Ecosystem:
     )
 
 
-JAVASCRIPT_ECOSYSTEM = ecmascript_ecosystem(JAVASCRIPT, JS_SUFFIXES)
+JAVASCRIPT_ECOSYSTEM = ecmascript_ecosystem(
+    JAVASCRIPT, "https://developer.mozilla.org/en-US/docs/Web/JavaScript", JS_SUFFIXES
+)
 
 RUNTIME_AXIS = versions_axis("runtime version", "JavaScript runtime", JS_LANGUAGES)

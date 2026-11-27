@@ -1,5 +1,7 @@
 # SQL
 
+Learn more: [SQL](https://en.wikipedia.org/wiki/SQL).
+
 Recognised by intent, not by `.sql` files alone: nearly every service has a `schema.sql` or a migrations directory,
 which stay invisible (a stray `schema.sql` in a Python project adds no SQL column). `.sql` files count once the project
 shows it works in SQL: a dbt project (`dbt_project.yml`, its one build system); SQL tooling configured (`.sqlfluff` or a

@@ -25,6 +25,7 @@ from datetime import UTC, datetime
 
 from project_validator.analysis import Analysis, file_url, folder_url
 from project_validator.core import Placed, Status
+from project_validator.ecosystems import link
 from project_validator.explanations import why
 from project_validator.facts import as_dict
 from project_validator.facts.jobs import Job
@@ -210,8 +211,15 @@ def table(headers: Sequence[str], rows: Iterable[Sequence[str]]) -> str:
     return f'<div class="table-wrap"><table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>'
 
 
+def _linked_name(name: str) -> str:
+    """A language or format's name, linked to its official page when an ecosystem links one (upstream #411)."""
+    strong = f"<strong>{e(name)}</strong>"
+    url = link(name)
+    return f'<a href="{e(url)}">{strong}</a>' if url else strong
+
+
 def _languages_card(analysis: Analysis) -> str:
-    rows = ((f"<strong>{e(label)}</strong>", e(signals)) for label, signals in ecosystems(analysis))
+    rows = ((_linked_name(label), e(signals)) for label, signals in ecosystems(analysis))
     found = unrecognised(analysis)
     extra = f'<p class="muted">Not recognised: {e(found)}</p>' if found else ""
     listed = table(("Language or format", "Recognised by"), rows)

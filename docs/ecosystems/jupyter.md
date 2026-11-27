@@ -1,5 +1,7 @@
 # Jupyter
 
+Learn more: [Jupyter](https://jupyter.org/).
+
 A format, recognised by `.ipynb` notebooks. Notebooks in a Python project make it use both ecosystems; their results
 are combined and labelled like any other mixed project's. A CI job works with the ecosystem when it runs `jupyter`,
 `papermill`, `nbqa` or `nbstripout`.

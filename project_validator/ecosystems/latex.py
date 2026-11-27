@@ -47,6 +47,7 @@ def latex_project(project: Project) -> frozenset[str]:
 
 LATEX_ECOSYSTEM = Ecosystem(
     label="LaTeX",
+    links={"LaTeX": "https://www.latex-project.org/"},
     languages=LATEX_ONLY,
     # The sources count once a document is found: a `.tex` alone may be a fragment another project includes.
     # l3build's tests are `.lvt` (`.pvt` for PDF output) files, checked against the `.tlg` logs beside them.

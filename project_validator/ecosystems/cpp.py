@@ -6,4 +6,4 @@ from __future__ import annotations
 
 from project_validator.ecosystems.c import CXX_SOURCES, CXX_TEMPLATES, c_family_ecosystem
 
-CXX = c_family_ecosystem("C++", CXX_SOURCES, CXX_TEMPLATES)
+CXX = c_family_ecosystem("C++", "https://isocpp.org/", CXX_SOURCES, CXX_TEMPLATES)

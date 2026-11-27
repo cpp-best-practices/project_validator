@@ -1,5 +1,8 @@
 # BEAM
 
+Learn more: [BEAM](https://en.wikipedia.org/wiki/BEAM_(Erlang_virtual_machine)), [Elixir](https://elixir-lang.org/),
+[Erlang](https://www.erlang.org/).
+
 Elixir and Erlang, recognised by `.ex`, `.exs`, `.erl` and `.hrl` sources and by their build tools: Mix (`mix.exs`; an
 umbrella's `apps_path` applications are units of their own), rebar3 (`rebar.config`) and erlang.mk (a committed
 `erlang.mk` that the Makefile includes; the `rebar.config` it writes beside it, for Hex, is its artifact, not rebar3's).

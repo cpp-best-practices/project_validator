@@ -328,6 +328,7 @@ _RUNNER_SYSTEMS = {"linux": "x86_64-linux", "macos": "aarch64-darwin"}
 
 NIX_ECOSYSTEM = Ecosystem(
     label="Nix",
+    links={"Nix": "https://nixos.org/"},
     languages=NIX,
     build_systems=(FLAKE, EXPRESSIONS),
     source_suffixes={".nix": NIX_LANGUAGE},

@@ -371,16 +371,17 @@ thing. Why each check matters, and its category, is in `project_validator/explan
 
 ## Profiles
 
-A profile (`project_validator/ecosystems/<module>`) is everything the validator knows about one ecosystem:
-recognition (its build systems with the files they are recognised by, its source suffixes, a content probe, how CI
-names its toolchain's versions and the programs that show a job uses it), and its components, found rather than
-listed. A profile of more than a few hundred lines is a package laid out as the scaffold writes one: `__init__.py`
-recognises the ecosystem (build systems, toolchain, package managers, outputs), `tools.py` holds its tools and their
-settings readers, `practices.py` its practices. A profile's fixtures (`tests/fixtures/well_configured_<module>`,
-`bare_<module>`), test layouts (`tests/layouts/<module>.py`) and documentation page (`docs/ecosystems/<module>.md`)
-are named after its module, and the ecosystem contract (`tests/test_ecosystem_contract.py`) checks that each
-profile has them and that its well-configured fixture passes every check that applies to it.
-`python -m project_validator.scaffold` starts one with everything the contract asks for.
+A profile (`project_validator/ecosystems/<module>`) is everything the validator knows about one ecosystem: recognition
+(its build systems with the files they are recognised by, its source suffixes, a content probe, how CI names its
+toolchain's versions and the programs that show a job uses it), and its components, found rather than listed. A profile
+of more than a few hundred lines is a package laid out as the scaffold writes one: `__init__.py` recognises the
+ecosystem (build systems, toolchain, package managers, outputs), `tools.py` holds its tools and their settings readers,
+`practices.py` its practices. A profile's fixtures (`tests/fixtures/well_configured_<module>`, `bare_<module>`), test
+layouts (`tests/layouts/<module>.py`) and documentation page (`docs/ecosystems/<module>.md`) are named after its module,
+and the ecosystem contract (`tests/test_ecosystem_contract.py`) checks that each profile has them and that its
+well-configured fixture passes every check that applies to it. Each ecosystem links the official page, or a Wikipedia
+entry, of each of its languages or formats (`Ecosystem.links`), which its documentation page and the HTML report link
+to. `python -m project_validator.scaffold` starts one with everything the contract asks for.
 
 Separate languages that share their build systems and tools are separate profiles of one **family**
 (`Ecosystem.family`): C and C++ (what they share is the `project_validator/c_family` package, each judged by its own

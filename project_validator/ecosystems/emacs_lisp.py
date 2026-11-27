@@ -236,6 +236,7 @@ _EMACS_VERSION = r"(\d+\.\d+(?:\.\d+)?|snapshot|release-snapshot)"
 
 ELISP_ECOSYSTEM = Ecosystem(
     label="Emacs Lisp",
+    links={"Emacs Lisp": "https://www.gnu.org/software/emacs/manual/html_node/elisp/"},
     languages=ELISP,
     build_systems=(EASK, CASK, PACKAGE_EL),
     source_suffixes={".el": "Emacs Lisp"},

@@ -1,5 +1,7 @@
 # PHP
 
+Learn more: [PHP](https://www.php.net/).
+
 Recognised by `.php` sources and Composer (`composer.json`). The Composer scripts CI runs (`composer test`) count as
 CI configuration.
 

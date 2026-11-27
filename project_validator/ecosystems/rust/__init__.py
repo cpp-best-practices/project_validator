@@ -199,6 +199,7 @@ CLIPPY_ACTIONS = tuple(
 
 RUST = Ecosystem(
     label="Rust",
+    links={"Rust": "https://www.rust-lang.org/"},
     languages=RUST_LANGUAGE,
     build_systems=(CARGO,),
     source_suffixes={".rs": "Rust"},

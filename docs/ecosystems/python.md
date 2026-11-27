@@ -1,5 +1,7 @@
 # Python
 
+Learn more: [Python](https://www.python.org/).
+
 Recognised by `.py` sources, `pyproject.toml` or `setup.py`.
 
 ## `tests-run`

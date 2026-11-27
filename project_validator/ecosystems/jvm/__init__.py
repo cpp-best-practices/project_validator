@@ -309,6 +309,12 @@ TEST_JDK = re.compile(
 
 JVM = Ecosystem(
     label="JVM",
+    links={
+        "JVM": "https://en.wikipedia.org/wiki/Java_virtual_machine",
+        "Groovy": "https://groovy-lang.org/",
+        "Java": "https://dev.java/",
+        "Kotlin": "https://kotlinlang.org/",
+    },
     languages=JVM_LANGUAGES,
     build_systems=(MAVEN, GRADLE),
     source_suffixes={".java": JAVA, ".kt": KOTLIN, ".groovy": GROOVY},

@@ -1,5 +1,7 @@
 # OCaml
 
+Learn more: [OCaml](https://ocaml.org/).
+
 Recognised by `.ml` and `.mli` sources (and, once the project is known to be OCaml, ocamllex `.mll` and Menhir `.mly`
 grammars, Eliom modules, cram tests `.t` and odoc pages `.mld`), and by its build systems: dune (`dune-project`, the
 `dune` files, `dune-workspace`) and opam (`*.opam`, or an `opam` file). `_build` beside `dune-project` and a local

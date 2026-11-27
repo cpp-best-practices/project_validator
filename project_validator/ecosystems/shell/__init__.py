@@ -38,6 +38,10 @@ def shebang_scripts(project: Project) -> Iterator[tuple[str, str]]:
 
 SHELL_ECOSYSTEM = Ecosystem(
     label="Shell",
+    links={
+        "PowerShell": "https://learn.microsoft.com/en-us/powershell/",
+        "Shell": "https://en.wikipedia.org/wiki/Unix_shell",
+    },
     languages=SHELL_LANGUAGES,
     source_suffixes={
         ".sh": SHELL,

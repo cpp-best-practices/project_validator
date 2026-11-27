@@ -1,5 +1,7 @@
 # Go
 
+Learn more: [Go](https://go.dev/).
+
 Recognised by `.go` sources and Go modules (`go.mod`).
 
 ## `tests-run`

@@ -520,6 +520,11 @@ _BEAM_VERSIONS = (
 
 BEAM = Ecosystem(
     label="BEAM",
+    links={
+        "BEAM": "https://en.wikipedia.org/wiki/BEAM_(Erlang_virtual_machine)",
+        "Elixir": "https://elixir-lang.org/",
+        "Erlang": "https://www.erlang.org/",
+    },
     languages=BEAM_LANGUAGES,
     build_systems=(MIX, REBAR3, ERLANG_MK),
     source_suffixes={".ex": ELIXIR, ".exs": ELIXIR, ".erl": ERLANG, ".hrl": ERLANG},

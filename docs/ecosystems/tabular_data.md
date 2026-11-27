@@ -1,5 +1,7 @@
 # Tabular data
 
+Learn more: [Data Package](https://datapackage.org/).
+
 A format, Data Package, recognised by intent: a Frictionless Data Package descriptor (`datapackage.json`,
 `datapackage.yaml`), a Table Schema (`tableschema.json`), or a JSON or YAML file whose `$schema` or `profile` names
 a Data Package profile (datapackage.org, frictionlessdata.io, `tabular-data-package`) makes the project a tabular

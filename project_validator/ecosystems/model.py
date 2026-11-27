@@ -9,7 +9,7 @@ from __future__ import annotations
 import re
 import tomllib
 from collections.abc import Callable, Iterable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 from project_validator.build_systems.model import C_FAMILY, BuildSystem
@@ -225,6 +225,9 @@ class Ecosystem:
     # other depends on and that CI runs only by its test scripts): a unit of tests too, with the units it tests (the
     # packages it depends on; none: every unit).
     ci_test_units: Callable[[Project, Facts], Mapping[str, tuple[str, ...]]] | None = None
+    # The official page, or a Wikipedia entry, of each of its languages or formats, and of the ecosystem itself when
+    # its label names something else (BEAM, the JVM): name -> https URL (upstream #411).
+    links: Mapping[str, str] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         if self.kind == "format" and self.toolchain is not None:

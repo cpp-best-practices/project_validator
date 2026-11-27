@@ -7,4 +7,4 @@ from __future__ import annotations
 
 from project_validator.ecosystems.javascript import TS_SUFFIXES, TYPESCRIPT, ecmascript_ecosystem
 
-TYPESCRIPT_ECOSYSTEM = ecmascript_ecosystem(TYPESCRIPT, TS_SUFFIXES)
+TYPESCRIPT_ECOSYSTEM = ecmascript_ecosystem(TYPESCRIPT, "https://www.typescriptlang.org/", TS_SUFFIXES)

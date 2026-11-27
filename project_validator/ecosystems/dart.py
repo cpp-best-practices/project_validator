@@ -299,6 +299,7 @@ def _flutter_platforms(project: Project) -> frozenset[str]:
 
 DART_ECOSYSTEM = Ecosystem(
     label="Dart",
+    links={"Dart": "https://dart.dev/"},
     languages=DART,
     build_systems=(PUB,),
     source_suffixes={".dart": "Dart"},

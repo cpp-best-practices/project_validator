@@ -101,6 +101,12 @@ XML_PARSER = Parser(format=XML, parse=_parse_xml)
 
 DATA = Ecosystem(
     label="Data",
+    links={
+        "JSON": "https://www.json.org/",
+        "TOML": "https://toml.io/",
+        "XML": "https://www.w3.org/XML/",
+        "YAML": "https://yaml.org/",
+    },
     kind="format",
     languages=DATA_FORMATS,
     source_suffixes={

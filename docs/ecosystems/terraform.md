@@ -1,5 +1,7 @@
 # Terraform
 
+Learn more: [Terraform](https://www.terraform.io/).
+
 Recognised by `.tf`, `.tofu` and `.tfvars` files; `.hcl` files (the tests, `*.tftest.hcl`, and the lockfile,
 `.terraform.lock.hcl`) are Terraform's once the project is known to be. OpenTofu reads the same configuration with the
 same commands, so `tofu` counts wherever `terraform` does. A configuration has no build system: it is a directory of

@@ -233,6 +233,7 @@ def _setup_neovim(inputs: Mapping[str, str]) -> str | None:
 
 LUA_ECOSYSTEM = Ecosystem(
     label="Lua",
+    links={"Lua": "https://www.lua.org/"},
     languages=LUA,
     build_systems=(LUAROCKS,),
     # Teal's `.tl` sources are Lua with types.

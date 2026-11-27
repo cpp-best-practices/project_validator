@@ -49,6 +49,8 @@ from project_validator.ecosystems.model import Ecosystem, toolchain_patterns
 
 {constant} = Ecosystem(
     label="{label}",
+    # The official page, or a Wikipedia entry, of the language: fill it in, and link it from the documentation too.
+    links={{"{label}": ""}},
     languages={constant}_LANGUAGE,
     source_suffixes={source_suffixes},
     # How a CI job names the toolchain's version, or shows it uses one; guessed from the module name: check each.
@@ -90,6 +92,8 @@ LAYOUTS = (
 '''
 
 _PAGE = """# {label}
+
+Learn more: [{label}]().
 
 Recognised by {suffixes} sources.
 

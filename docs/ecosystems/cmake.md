@@ -1,5 +1,7 @@
 # CMake
 
+Learn more: [CMake](https://cmake.org/).
+
 A format: the project's CMake code (`CMakeLists.txt`, `*.cmake`), judged beside the language it builds. CMake as the
 build system of C and C++ (its flags, targets, presets and build types) is read for those profiles; what is asked of
 the CMake code itself is hygiene. A CI job works with it when it runs `cmake`, `ctest`, gersemi, cmake-format,

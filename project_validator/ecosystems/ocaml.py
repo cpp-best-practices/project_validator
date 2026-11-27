@@ -309,6 +309,7 @@ _OCAML_VERSION = r"(\d+\.\d+(?:\.(?:\d+|x))?)"
 
 OCAML_ECOSYSTEM = Ecosystem(
     label="OCaml",
+    links={"OCaml": "https://ocaml.org/"},
     languages=OCAML,
     build_systems=(DUNE, OPAM),
     source_suffixes={".ml": "OCaml", ".mli": "OCaml"},

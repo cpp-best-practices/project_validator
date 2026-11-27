@@ -86,6 +86,7 @@ def kubernetes_project(project: Project) -> frozenset[str]:
 
 KUBERNETES_ECOSYSTEM = Ecosystem(
     label="Kubernetes",
+    links={"Kubernetes": "https://kubernetes.io/"},
     kind="format",
     languages=KUBERNETES_ONLY,
     # A chart's named templates (`_helpers.tpl`) belong to it without being a format of their own.

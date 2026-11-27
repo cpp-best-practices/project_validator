@@ -452,6 +452,9 @@ class HtmlTests(unittest.TestCase):
         self.assertIn("<div>lib</div>", document)
         self.assertNotIn("by unit", self.document)
 
+    def test_each_language_links_to_its_page(self) -> None:
+        self.assertIn('<a href="https://isocpp.org/"><strong>C++</strong></a>', self.document)
+
     def test_a_checkout_links_its_files_and_commit(self) -> None:
         from project_validator.analysis import Git
 

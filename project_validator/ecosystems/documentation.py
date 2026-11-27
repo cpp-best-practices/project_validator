@@ -124,6 +124,16 @@ def site_configurations(project: Project) -> Iterator[tuple[str, str]]:
 
 DOCUMENTATION = Ecosystem(
     label="Documentation site",
+    links={
+        "Docusaurus": "https://docusaurus.io/",
+        "Hugo": "https://gohugo.io/",
+        "Jekyll": "https://jekyllrb.com/",
+        "Markdown documentation": "https://commonmark.org/",
+        "MkDocs": "https://www.mkdocs.org/",
+        "Sphinx": "https://www.sphinx-doc.org/",
+        "VitePress": "https://vitepress.dev/",
+        "mdBook": "https://rust-lang.github.io/mdBook/",
+    },
     kind="format",
     companion=re.compile("|".join(pattern.pattern for pattern in _CONFIGURATION.values())),
     languages=PROSE,

@@ -1,5 +1,7 @@
 # Julia
 
+Learn more: [Julia](https://julialang.org/).
+
 Recognised by `.jl` sources and by Pkg's `Project.toml` (or `JuliaProject.toml`) naming a package or its
 dependencies; another file so named declares no language.
 

@@ -395,6 +395,7 @@ _PERL_VERSION = r"(5\.\d+(?:\.\d+)?|latest)"
 
 PERL_ECOSYSTEM = Ecosystem(
     label="Perl",
+    links={"Perl": "https://www.perl.org/"},
     languages=PERL,
     build_systems=(MAKEMAKER, MODULE_BUILD, DIST_ZILLA, CPANFILE),
     source_suffixes={".pm": "Perl"},
