@@ -3,6 +3,7 @@ check, which limits C and C++ function length when clang-tidy runs with a line o
 
 from __future__ import annotations
 
+import re
 from collections.abc import Iterator, Mapping, Sequence
 from fnmatch import fnmatchcase
 
@@ -11,6 +12,7 @@ from project_validator.ecosystems.model import C_FAMILY
 from project_validator.facts import Fact, Facts, Setting
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.settings import SettingsReader, yaml_settings
+from project_validator.facts.suppressions import GLOBAL, Disabler, Marker
 from project_validator.tools.limits import function_length_limiters
 
 CLANG_TIDY_CHECK = "readability-function-size"
@@ -22,6 +24,45 @@ def _read_clang_tidy(path: str, text: str) -> Iterator[Fact]:
 
 
 CLANG_TIDY_SETTINGS = SettingsReader(name="clang-tidy", files=(".clang-tidy",), read=_read_clang_tidy)
+
+
+def _clang_tidy_disabled(setting: Setting) -> Iterator[tuple[str, str]]:
+    """The checks `Checks` turns off: each `-name` glob, and every check when `-*` is not followed by one enabled."""
+    if setting.key != "Checks":
+        return
+    globs = check_globs(setting.value)
+    for at, glob in enumerate(globs):
+        if glob == "-*" and not any(not later.startswith("-") for later in globs[at + 1 :]):
+            yield "*", GLOBAL
+        elif glob.startswith("-") and glob != "-*":
+            yield glob.removeprefix("-"), GLOBAL
+
+
+CLANG_TIDY_DISABLED = Disabler(
+    tool="clang-tidy",
+    settings="clang-tidy",
+    disabled=_clang_tidy_disabled,
+    blanket=("*",),
+    key=("bugprone-*", "cert-*", "clang-analyzer-*", "concurrency-*"),
+)
+NOLINT = Marker(
+    tool="clang-tidy",
+    languages=C_FAMILY,
+    pattern=re.compile(r"\bNOLINT(?:NEXTLINE|BEGIN)?\b(?:\((?P<codes>[^)]*)\))?(?P<reason>[^\n]*)"),
+)
+CPPCHECK_SUPPRESS = Marker(
+    tool="cppcheck",
+    languages=C_FAMILY,
+    pattern=re.compile(r"cppcheck-suppress\s+(?P<codes>\S+)(?P<reason>[^\n]*)"),
+)
+PRAGMA_IGNORED = Marker(
+    tool="compiler",
+    languages=C_FAMILY,
+    pattern=re.compile(
+        r'#\s*pragma\s+(?:(?:GCC|clang)\s+diagnostic\s+ignored\s+"(?P<codes>[^"]+)"|warning\s*\(\s*disable\s*:[^)]*\))'
+        r"(?P<reason>[^\n]*)"
+    ),
+)
 
 
 def check_globs(checks: object) -> tuple[str, ...]:

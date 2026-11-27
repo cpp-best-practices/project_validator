@@ -18,6 +18,7 @@ from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, matched_settings, settings, toml_settings
 from project_validator.facts.shell import split_words
+from project_validator.facts.suppressions import GLOBAL, Disabler, Marker
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by, either, starts, when
 from project_validator.tools.audits import multi_ecosystem_audits
@@ -309,4 +310,25 @@ CLIPPY = analyzer(
     analyses=_clippy,
     rules=defined_by(settings=("clippy",)),
     reads=("clippy",),
+)
+
+
+def _clippy_disabled(setting: Setting) -> Iterator[tuple[str, str]]:
+    """The lints `[lints.clippy]` allows (`name = "allow"`, or a table whose `level` is `"allow"`)."""
+    if str(setting.value) == "allow":
+        yield setting.key.partition(".")[0], GLOBAL
+
+
+# clippy's groups and lints that find bugs, not style.
+CLIPPY_DISABLED = Disabler(
+    tool="clippy",
+    settings="clippy",
+    disabled=_clippy_disabled,
+    key=("correctness", "suspicious", "*unwrap*", "*panic*", "indexing_slicing", "cast_*", "unsafe*"),
+)
+ALLOW_ATTRIBUTE = Marker(
+    tool="clippy",
+    languages=RUST_LANGUAGE,
+    pattern=re.compile(r"#!?\[allow\((?P<codes>[^)]*)\)\](?P<reason>[^\n]*)"),
+    blanket=re.compile(r"#!\[allow\(\s*warnings\s*\)\]"),
 )

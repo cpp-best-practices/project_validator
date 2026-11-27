@@ -19,6 +19,7 @@ from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, matched_settings, settings, yaml_settings
+from project_validator.facts.suppressions import Marker
 from project_validator.facts.testing import TestFile, TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, combined, defined_by, either, starts, when
 from project_validator.tools.audits import multi_ecosystem_audits
@@ -434,4 +435,10 @@ STEEP = type_checker(
     checks=_type_checks(("steep", "check"), "Steep"),
     configuration=defined_by(files=("Steep",)),
     reads=("Steep",),
+)
+
+RUBOCOP_DISABLE = Marker(
+    tool="RuboCop",
+    languages=RUBY_ONLY,
+    pattern=re.compile(r"#\s*rubocop:(?:disable|todo)\s+(?P<codes>[\w/]+(?:\s*,\s*[\w/]+)*)(?P<reason>[^\n]*)"),
 )

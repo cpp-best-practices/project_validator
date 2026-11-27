@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import posixpath
 import re
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from pathlib import PurePosixPath
 
 from project_validator.ecosystems.javascript import (
@@ -24,6 +24,7 @@ from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, json_settings, matched_settings
+from project_validator.facts.suppressions import GLOBAL, Disabler, Marker
 from project_validator.facts.tools import ANCHORED, Run, Scoping, combined, defined_by, starts
 from project_validator.includes import Chain, follow
 from project_validator.limits import TSCONFIG_EXTENDS
@@ -229,3 +230,34 @@ MAX_LINES_PER_FUNCTION = limiter(
     reads=("eslint rules",),
 )
 FUNCTION_LENGTH_LIMITERS = (MAX_LINES_PER_FUNCTION, *function_length_limiters(JS_LANGUAGES))
+
+# The flags `strict` turns on, which tsconfig may turn off one by one: each lets bugs through.
+STRICT_FLAGS = (
+    *("noImplicitAny", "strictNullChecks", "strictFunctionTypes", "strictBindCallApply"),
+    *("strictPropertyInitialization", "noImplicitThis", "alwaysStrict", "useUnknownInCatchVariables"),
+)
+
+
+def _tsc_disabled(setting: Setting) -> Iterator[tuple[str, str]]:
+    """A strict flag tsconfig turns off (`"strictNullChecks": false`)."""
+    name = setting.key.removeprefix("compilerOptions.")
+    if setting.key.startswith("compilerOptions.") and name in STRICT_FLAGS and setting.value is False:
+        yield name, GLOBAL
+
+
+TSC_DISABLED = Disabler(tool="tsc", settings="TypeScript", disabled=_tsc_disabled, key=STRICT_FLAGS)
+ESLINT_DISABLE = Marker(
+    tool="eslint",
+    languages=JS_LANGUAGES,
+    pattern=re.compile(
+        r"eslint-disable(?:-next-line|-line)?\b(?P<codes>[ \t]+[\w@/,\t -]+?)?(?:\s--(?P<reason>[^\n*]*))?(?:\*/|$)",
+        re.MULTILINE,
+    ),
+    blanket=re.compile(r"/\*\s*eslint-disable\s*\*/"),
+)
+TS_IGNORE = Marker(
+    tool="tsc",
+    languages=frozenset({TYPESCRIPT}),
+    pattern=re.compile(r"@ts-(?:ignore|expect-error)(?P<codes>)(?P<reason>[^\n]*)"),
+    blanket=re.compile(r"@ts-nocheck"),
+)

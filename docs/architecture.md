@@ -254,6 +254,17 @@ does excluding what an outside generator wrote, which its first lines say (`Sour
 bison, flex, re2c, moc, uic, Cython, Thrift, FlatBuffers, Cap'n Proto, gperf). Code a generator of the project's own
 wrote is product code: excluding it lowers the share.
 
+What a project turns off in its tools is recorded too (`facts/suppressions.py`, upstream #295), for the score to weigh
+a tool's strength by: each diagnostic a tool's configuration disables (`Disabled`, read by a `Disabler` beside each
+settings reader: clang-tidy's `-check` globs, ruff's and flake8's ignores and per-file ignores, pylint's `disable`,
+mypy's `disable_error_code` and `ignore_errors`, tsconfig's strict flags turned off, clippy's allowed lints, and the
+compiler warnings a CI command line turns off), with its kind (blanket, key or stylistic), its scope (global or per
+file) and whether a comment on its line, or the line above, says why; and the suppressions written in the product's
+code, counted per file and tool (`Suppressions`, found by a `Marker`: `NOLINT`, `cppcheck-suppress`, `#pragma ...
+diagnostic ignored`, `# noqa`, `# type: ignore`, `# pylint: disable`, `eslint-disable`, `@ts-ignore`, `#[allow]`,
+`//nolint`, `# rubocop:disable`, `@phpstan-ignore`, `@SuppressWarnings`), with how many say why: any text or link
+after one justifies it.
+
 A **settings reader** (`SettingsReader`, `project_validator/facts/settings.py`) reads one tool's settings from the
 files it reads by default and from the configuration files CI commands name; each file read is a
 `ConfigurationFile` fact, each setting a `Setting`, flagged `heuristic` when matched in code. Readers find files by

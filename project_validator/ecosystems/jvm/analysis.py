@@ -28,6 +28,7 @@ from project_validator.facts.settings import (
     xml_root,
     yaml_settings,
 )
+from project_validator.facts.suppressions import Marker
 from project_validator.facts.tools import Claim, Definition, Run, Tool, defined_by, either
 from project_validator.tools.limits import function_length_limiters
 from project_validator.tools.scanners import multi_language_scanners
@@ -288,4 +289,10 @@ SECURITY_SCANNERS = (
         reads=("Maven", "Gradle", "JVM security rules"),
     ),
     *multi_language_scanners(JVM_LANGUAGES),
+)
+
+SUPPRESS_WARNINGS = Marker(
+    tool="Error Prone",
+    languages=frozenset({JAVA}),
+    pattern=re.compile(r"@SuppressWarnings\s*\((?P<codes>[^)]*)\)(?P<reason>[^\n]*)"),
 )

@@ -33,6 +33,7 @@ from project_validator.facts.practices import (
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, json_settings, toml_settings, yaml_settings
 from project_validator.facts.shell import split_words
+from project_validator.facts.suppressions import Marker
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Definition, Run, all_of, defined_by, either, starts, when, with_option
 from project_validator.text import pattern
@@ -497,3 +498,8 @@ GO = Ecosystem(
 )
 
 GO_VERSIONS = versions_axis("Go version", "Go", GO_LANGUAGE)
+NOLINT_GO = Marker(
+    tool="golangci-lint",
+    languages=GO_LANGUAGE,
+    pattern=re.compile(r"//\s*nolint(?::(?P<codes>[\w,-]+))?(?P<reason>[^\n]*)"),
+)

@@ -26,6 +26,7 @@ from project_validator.facts.settings import (
     settings,
     xml_root,
 )
+from project_validator.facts.suppressions import Marker
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Run, defined_by, either, starts, when
 from project_validator.tools.audits import multi_ecosystem_audits
@@ -417,4 +418,10 @@ SECURITY_SCANNERS = (
     ),
     # CodeQL does not analyse PHP.
     *multi_language_scanners(PHP_ONLY),
+)
+
+PHPSTAN_IGNORE = Marker(
+    tool="PHPStan",
+    languages=PHP_ONLY,
+    pattern=re.compile(r"@phpstan-ignore(?:-line|-next-line)?(?P<codes>[ \t]+[\w.,-]+)?(?P<reason>[^\n]*)"),
 )
