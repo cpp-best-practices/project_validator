@@ -2793,7 +2793,7 @@
         [
           ".",
           "src",
-          false
+          "anchored"
         ]
       ],
       "job": ".github/workflows/ci.yml:test[0]",
@@ -3086,7 +3086,7 @@
         [
           ".",
           "src",
-          false
+          "anchored"
         ]
       ],
       "job": ".github/workflows/ci.yml:test[1]",
@@ -3379,7 +3379,7 @@
         [
           ".",
           "src",
-          false
+          "anchored"
         ]
       ],
       "job": ".github/workflows/ci.yml:test[2]",
@@ -3672,7 +3672,7 @@
         [
           ".",
           "src",
-          false
+          "anchored"
         ]
       ],
       "job": ".github/workflows/ci.yml:test[3]",
@@ -3965,7 +3965,7 @@
         [
           ".",
           "src",
-          false
+          "anchored"
         ]
       ],
       "job": ".github/workflows/ci.yml:test[4]",
@@ -4258,7 +4258,7 @@
         [
           ".",
           "src",
-          false
+          "anchored"
         ]
       ],
       "job": ".github/workflows/ci.yml:test[5]",

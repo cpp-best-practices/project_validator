@@ -132,9 +132,9 @@ class ToolRun(Fact):
     # The project paths (folders, files, globs) its command names, which it alone reaches; none: all of its scope.
     paths: tuple[str, ...] = ()
     # What the tool's own settings exclude, and include alone (see `Scoping`): (the settings file's directory, the
-    # pattern, whether it is a regular expression).
-    excluded: tuple[tuple[str, str, bool], ...] = ()
-    included: tuple[tuple[str, str, bool], ...] = ()
+    # pattern, how it matches: `GLOB`, `ANCHORED` or `REGEX`).
+    excluded: tuple[tuple[str, str, str], ...] = ()
+    included: tuple[tuple[str, str, str], ...] = ()
 
     def reaches(self, path: str) -> bool:
         """Whether the run reaches the project file `path`, by the paths its command names and its settings."""
@@ -151,32 +151,37 @@ class ToolRun(Fact):
         return any(within(unit, scope) or unit == owner(scope, units) for scope in self.scope)
 
 
-def _matches(path: str, base: str, pattern: str, regex: bool) -> bool:
-    """Whether a tool's settings pattern, read from a file in `base`, matches the project file `path`: a regular
-    expression searched in the path below `base`, or a glob matched against it, a folder above it, or one of their
-    names (ruff's `exclude = ["build"]` excludes every build/)."""
+# How a tool's settings pattern matches a path (see `Scoping`): a glob that matches the path, a folder above it, or,
+# alone, any one of their names (ruff's `exclude = ["build"]` excludes every build/); a glob anchored where the settings
+# file is (tsconfig's `"exclude": ["types/"]` excludes ./types alone); a regular expression (mypy's `exclude`).
+GLOB, ANCHORED, REGEX = "glob", "anchored", "regex"
+
+
+def _matches(path: str, base: str, pattern: str, how: str) -> bool:
+    """Whether a tool's settings pattern, read from a file in `base`, matches the project file `path` (see `GLOB`)."""
     if base not in (".", "") and not within(path, base):
         return False
     relative = str(PurePosixPath(path).relative_to(base)) if base not in (".", "") else path
-    if regex:
+    if how == REGEX:
         return re.search(pattern, relative) is not None
     pattern = pattern.removeprefix("./").rstrip("/")
     parts = PurePosixPath(relative).parts
     prefixes = ["/".join(parts[: end + 1]) for end in range(len(parts))]
-    return any(fnmatchcase(found, pattern) for found in (*prefixes, *parts))
+    names = parts if how == GLOB else ()
+    return any(fnmatchcase(found, pattern) for found in (*prefixes, *names))
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Scoping:
     """Where a tool's own settings say it looks (upstream #333): the keys of the `settings` (a settings reader's name)
-    that exclude paths from the runs of `tools`, and that name the only paths they check; globs, or regular
-    expressions (`regex`, mypy's `exclude`), relative to the settings file."""
+    that exclude paths from the runs of `tools`, and that name the only paths they check, relative to the settings file;
+    `how` they match (see `GLOB`)."""
 
     tools: tuple[str, ...]
     settings: str
     excludes: tuple[str, ...] = ()
     includes: tuple[str, ...] = ()
-    regex: bool = False
+    how: str = GLOB
 
 
 def _patterns(value: object, *, regex: bool) -> tuple[str, ...]:
@@ -186,20 +191,24 @@ def _patterns(value: object, *, regex: bool) -> tuple[str, ...]:
     return tuple(str(item) for item in value) if isinstance(value, tuple | list) else ()
 
 
-def _scoped(tool: str, facts: Facts) -> tuple[tuple[tuple[str, str, bool], ...], tuple[tuple[str, str, bool], ...]]:
+type _Patterns = tuple[tuple[str, str, str], ...]
+
+
+def _scoped(tool: str, facts: Facts) -> tuple[_Patterns, _Patterns]:
     """What the settings of `tool` exclude from its runs, and include alone (see `Scoping`)."""
-    excluded: list[tuple[str, str, bool]] = []
-    included: list[tuple[str, str, bool]] = []
+    excluded: list[tuple[str, str, str]] = []
+    included: list[tuple[str, str, str]] = []
     for scoping in known(Scoping):
         if tool not in scoping.tools:
             continue
         for setting in facts.where(Setting, tool=scoping.settings):
             base = str(PurePosixPath(setting.path).parent)
-            found = [(base, pattern, scoping.regex) for pattern in _patterns(setting.value, regex=scoping.regex)]
+            patterns = _patterns(setting.value, regex=scoping.how == REGEX)
+            found = [(base, pattern, scoping.how) for pattern in patterns]
             if setting.key in scoping.excludes:
                 excluded += found
             elif setting.key in scoping.includes:
-                included += [(base, pattern, False) for base, pattern, _ in found]
+                included += found
     return tuple(excluded), tuple(included)
 
 
@@ -456,6 +465,9 @@ def provided(aspect: str, *levels: str | None, read: Iterable[Setting | str] = (
 
 
 __all__ = [
+    "ANCHORED",
+    "GLOB",
+    "REGEX",
     "Claim",
     "Condition",
     "Definition",

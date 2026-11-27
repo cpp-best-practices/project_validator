@@ -164,3 +164,20 @@ class ExcludeTests(unittest.TestCase):
         config = {"plugins/ruff.toml": 'exclude = ["extra.py", "__init__.py"]\n'}
         result = _configured(config, "ruff check .")
         self.assertEqual(result.share, 0.75, result)  # app/__init__.py is not below plugins/
+
+    def test_a_name_alone_matches_anywhere_for_ruff_but_only_where_it_is_for_tsconfig(self) -> None:
+        """ruff's `exclude = ["build"]` excludes every build/, but `plugins/x` that one; tsconfig's `"exclude":
+        ["types/"]` excludes ./types alone (prettier's src/language-js/types/ is still checked)."""
+        nested = {"app/plugins/deep.py": LINES * 10, "ruff.toml": 'exclude = ["plugins"]\n'}
+        self.assertEqual(_configured(nested, "ruff check .").share, 0.6)  # both plugins/ folders
+        anchored = {**nested, "ruff.toml": 'exclude = ["app/plugins"]\n'}
+        self.assertEqual(_configured(anchored, "ruff check .").share, 0.8)  # only app/plugins/
+        files = {
+            "package.json": '{"name": "app", "main": "src/index.ts"}',
+            "src/index.ts": "export const a = 1;\n" * 30,
+            "src/types/estree.d.ts": "export type A = 1;\n" * 10,
+            "types/vendor.d.ts": "export type B = 1;\n" * 10,
+            "tsconfig.json": '{"exclude": ["types/"]}',
+        }
+        result = _run("npx tsc --noEmit", files=files, check=type_checking)
+        self.assertEqual(result.share, 0.8, result)
