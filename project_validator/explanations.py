@@ -11,11 +11,18 @@ from dataclasses import dataclass
 
 from project_validator.core import Check
 from project_validator.ecosystems import applies_to
-from project_validator.score import LEVEL_NAMES, UNSCORED, level_of
+from project_validator.score import COSMETIC, FINDINGS, LEVEL_NAMES, level_of
 from project_validator.support_matrix import support_matrix
 
 # The categories the reports group the checks by, in order.
 CATEGORIES = ("Build", "Tests", "Analysis", "Security", "CI", "Dependencies", "Repository", "Data and schemas")
+
+
+# How a finding (`score.FINDINGS`) is scored, and why.
+FINDING_NOTE = (
+    "a defect it finds takes points away, but finding none earns nothing: the validator finds these itself, and only "
+    "the processes a project puts in place earn points"
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -269,6 +276,8 @@ class Explanation:
         if self.why:
             lines.append(f"Why it matters: {self.why}")
         scored = "" if self.scored else "; reported but not scored"
+        if self.name in FINDINGS:
+            scored = f"; {FINDING_NOTE}"
         lines += [
             f"Category: {self.category}. Needed for {level}{scored}.",
             f"Applies to: {', '.join(self.applies_to) or 'every project'}.",
@@ -298,7 +307,7 @@ def explain(found: Check, every_check: tuple[Check, ...]) -> Explanation:
         why=reason.why if reason else "",
         category=reason.category if reason else "Other",
         level=level_of(found.name),
-        scored=found.name not in UNSCORED,
+        scored=found.name not in COSMETIC,
         applies_to=applies_to(found),
         tools=tools,
     )

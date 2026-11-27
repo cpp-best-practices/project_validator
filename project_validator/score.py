@@ -9,8 +9,9 @@ check's result there is a *slot*); the gates of the whole project (a licence, CI
 - **Weight.** A language's core slots weigh its share of its unit's product lines (`sizes`), at least `FLOOR`
   (upstream #331); the levels still ask every language for every gate. Auxiliary code (`--auxiliary`) weighs half,
   and is not asked for the gates of the product alone
-  (`NOT_FOR_AUXILIARY`: fuzzing tests, measuring their coverage, ...). Cosmetic checks (`UNSCORED`) are reported, not
-  scored.
+  (`NOT_FOR_AUXILIARY`: fuzzing tests, measuring their coverage, ...). Cosmetic checks (`COSMETIC`) are reported, not
+  scored. The defects the validator finds itself (`FINDINGS`) only take points away: only the processes a project
+  puts in place earn them.
 - **Pooled.** `percent = 100 * filled / slots`: a folder of data files with one gate weighs one slot.
 - **Extra credit**, only for gates where more tools find more (`EXTRA_CREDIT`: analysers, scanners, auditors,
   fuzzers, sanitizers, type checkers): a second distinct tool in a slot earns a quarter slot more, a third a tenth;
@@ -35,7 +36,8 @@ from project_validator.judging import NOT_FOR_AUXILIARY
 from project_validator.runner import Report
 
 # 2: each language's slots weigh its share of its unit's code (upstream #331).
-SCORE_VERSION = "2"
+# 3: what the validator finds itself (`FINDINGS`) earns nothing.
+SCORE_VERSION = "3"
 
 # The checks each level's core and project slots must pass, in order; every other check belongs to the top level.
 LEVELS: Mapping[int, tuple[str, ...]] = {
@@ -55,7 +57,14 @@ TOP_LEVEL = 4
 LEVEL_NAMES: Mapping[int, str] = {0: "Getting started", 1: "Foundations", 2: "Analysis", 3: "Hardening", 4: "Complete"}
 
 # Reported, never scored: what a README shows is not a quality gate.
-UNSCORED = frozenset({"status-badges"})
+COSMETIC = frozenset({"status-badges"})
+# Defects the validator finds itself, in the files: a check of them passes because none was found, not because the
+# project put a process in place, so it can take points away but never add them. Passing, it is no slot; warning or
+# failing, it is a slot that nothing fills (and a next step). The processes that keep the defects out are scored on
+# their own: file-soundness, vcs-ignore, ci-lint, ...
+FINDINGS = frozenset({"data-wellformed", "repository-hygiene", "committed-artifacts", "large-files", "ci-current"})
+# The checks that never earn points: the cosmetic ones are not scored at all.
+UNSCORED = COSMETIC | FINDINGS
 # The gates where each more tool finds more: two analysers are stronger than one; two formatters are not.
 EXTRA_CREDIT = frozenset(
     {
@@ -118,7 +127,8 @@ class Cell:
 
     @property
     def fill(self) -> float:
-        return _FILLS.get(self.status, 0.0) * self.share
+        """How much of the slot is filled: a finding's (`FINDINGS`) slot, there only when it found a defect, never."""
+        return 0.0 if self.check in FINDINGS else _FILLS.get(self.status, 0.0) * self.share
 
     @property
     def filled(self) -> float:
@@ -346,7 +356,7 @@ def _report_cells(report: Report, sizes_: Sizes) -> Iterator[Cell]:
     """The report's slots: one per place that does not skip, or one for a check of the whole project; auxiliary
     places of the product's own gates, and unscored checks, are left out."""
     name, level = report.check.name, level_of(report.check.name)
-    if name in UNSCORED:
+    if name in COSMETIC or (name in FINDINGS and report.result.status is Status.PASS):
         return
     result = report.result
     if not result.places:
@@ -357,6 +367,8 @@ def _report_cells(report: Report, sizes_: Sizes) -> Iterator[Cell]:
         tier = AUXILIARY if place.auxiliary else CORE
         if place.result.status is Status.SKIP or (tier == AUXILIARY and name in NOT_FOR_AUXILIARY):
             continue
+        if name in FINDINGS and place.result.status is Status.PASS:
+            continue  # no defect found here: nothing to take away
         cell = _cell(name, level, place.ecosystem, place.unit, tier, place.result, place.tools)
         yield replace(cell, size=sizes_.get((place.ecosystem, place.unit), 1.0))
 
@@ -462,7 +474,9 @@ def shortfalls(found: Score, *, min_level: int | None = None, min_completeness: 
 
 
 __all__ = [
+    "COSMETIC",
     "EXTRA_CREDIT",
+    "FINDINGS",
     "FLOOR",
     "LEVELS",
     "LEVEL_NAMES",

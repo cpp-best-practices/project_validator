@@ -38,6 +38,12 @@ class ExplanationTests(unittest.TestCase):
         self.assertIn("reported but not scored", "\n".join(lines))
         self.assertIn("Applies to: every project.", lines)
 
+    def test_a_finding_says_it_only_takes_points_away(self) -> None:
+        checks = discover().checks
+        lines = "\n".join(explain(next(c for c in checks if c.name == "data-wellformed"), checks).lines())
+        self.assertIn("a defect it finds takes points away, but finding none earns nothing", lines)
+        self.assertNotIn("reported but not scored", lines)
+
     def test_a_check_without_a_rationale_says_what_it_looks_for_only(self) -> None:
         found = Explanation(
             name="x", description="looks", why="", category="Other", level=4, scored=True, applies_to=(), tools={}
