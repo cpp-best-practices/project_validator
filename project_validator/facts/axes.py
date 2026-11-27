@@ -45,6 +45,9 @@ class ToolchainAxis:
     # Whether the OS is an axis of the platforms too. A database project's is not: its platforms are the engine
     # versions it is tested against, whatever runs the tests.
     operating_systems: bool = True
+    # Whether the axis is the project's, for an axis of only some of its languages' projects (JavaScript that runs in
+    # the browser: its engines, not its runtime versions); None for the axis of every one.
+    applies: Callable[[Facts], bool] | None = None
 
     def plural(self) -> str:
         return f"{self.noun}s"
@@ -68,8 +71,11 @@ def known_axes() -> tuple[ToolchainAxis, ...]:
     return known(ToolchainAxis)
 
 
-def axis_of(language: str) -> ToolchainAxis | None:
-    return next((axis for axis in known_axes() if language in axis.languages), None)
+def axis_of(language: str, facts: Facts) -> ToolchainAxis | None:
+    """The language's axis in the project: one that applies to it, else the one of every project."""
+    axes = [axis for axis in known_axes() if language in axis.languages]
+    applying = (axis for axis in axes if axis.applies is not None and axis.applies(facts))
+    return next(applying, None) or next((axis for axis in axes if axis.applies is None), None)
 
 
 def handled(*, compiled: bool = False) -> Callable[[], frozenset[str]]:

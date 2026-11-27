@@ -110,6 +110,11 @@
       "reader": "eslint rules"
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
+      "reader": "browser targets"
+    },
+    {
       "kind": "HostAccess",
       "origin": ".git/config",
       "reason": "the source-control host is not asked offline (--offline)"

@@ -77,7 +77,7 @@ def _of_language(job: Job, language: str, axis: ToolchainAxis, facts: Facts) -> 
 def platform_answer(language: str, facts: Facts) -> PlatformAnswer | None:
     """Where CI runs `language`, in the language's own jobs; None when no axis covers it. No CI at all is the answer
     NO."""
-    axis = axis_of(language)
+    axis = axis_of(language, facts)
     if axis is None:
         return None
     jobs = tuple(job for job in facts.of(Job) if _of_language(job, language, axis, facts))

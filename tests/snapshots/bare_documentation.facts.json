@@ -66,6 +66,11 @@
       "reader": "mkdocs plugins"
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": "site/index.html",
+      "reader": "browser targets"
+    },
+    {
       "kind": "HostAccess",
       "origin": ".git/config",
       "reason": "the source-control host is not asked offline (--offline)"
