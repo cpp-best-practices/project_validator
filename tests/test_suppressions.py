@@ -39,8 +39,61 @@ class DisabledTests(unittest.TestCase):
                 ("clang-tidy", "readability-magic-numbers", STYLISTIC, GLOBAL, False),
             ],
         )
+        memory = "-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-type-reinterpret-cast"
+        memory += ",-cppcoreguidelines-pro-type-union-access,-hicpp-no-array-decay,-hicpp-signed-bitwise"
+        memory += ",-cppcoreguidelines-pro-type-vararg"
+        self.assertEqual(
+            [(found[1], found[2]) for found in _disabled({**files, ".clang-tidy": f"Checks: '*,{memory}'\n"})],
+            [
+                ("cppcoreguidelines-pro-bounds-pointer-arithmetic", KEY),  # the checks against memory bugs
+                ("cppcoreguidelines-pro-type-reinterpret-cast", KEY),
+                ("cppcoreguidelines-pro-type-union-access", KEY),
+                ("hicpp-no-array-decay", KEY),
+                ("hicpp-signed-bitwise", KEY),
+                ("cppcoreguidelines-pro-type-vararg", STYLISTIC),
+            ],
+        )
         everything = {**files, ".clang-tidy": "Checks: 'bugprone-*,-*'\n"}
         self.assertEqual(_disabled(everything), [("clang-tidy", "*", BLANKET, GLOBAL, False)])
+
+    def test_clang_tidys_checks_against_undefined_behaviour_say_what_they_guard_against(self) -> None:
+        checks = (
+            *("cppcoreguidelines-pro-bounds-pointer-arithmetic", "cppcoreguidelines-pro-type-reinterpret-cast"),
+            *("cppcoreguidelines-pro-type-union-access", "hicpp-no-array-decay", "hicpp-signed-bitwise"),
+        )
+        listed = ",".join(f"-{check}" for check in (*checks, "bugprone-use-after-move", "readability-magic-numbers"))
+        files = {"main.cpp": "int main() {}\n", ".clang-tidy": f"Checks: '*,{listed}'\n"}
+        found = {fact.diagnostic: fact.why for fact in _facts(files).of(Disabled)}
+        guards = "it guards against undefined behaviour: "
+        self.assertEqual(
+            found,
+            {
+                checks[0]: guards + "reads and writes out of bounds",
+                checks[1]: guards + "accesses that break the strict aliasing rule",
+                checks[2]: guards + "reads of a union's inactive member",
+                checks[3]: guards
+                + "arrays decayed to pointers, which lose their length and invite out-of-bounds access",
+                checks[4]: guards + "shifts of negative numbers or into the sign bit (undefined before C++20)",
+                "bugprone-use-after-move": "",
+                "readability-magic-numbers": "",
+            },
+        )
+
+    def test_a_comment_naming_a_glob_justifies_each_check_it_covers(self) -> None:
+        # As nlohmann/json's .clang-tidy says why, in a block of comments above its checks.
+        files = {
+            "main.cpp": "int main() {}\n",
+            ".clang-tidy": (
+                "# Constructs the library needs on purpose:\n"
+                "#   cppcoreguidelines-pro-bounds-* (parsers, serializers)\n"
+                "\n"
+                "Checks: '*,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-type-vararg'\n"
+            ),
+        }
+        self.assertEqual(
+            [(found[1], found[4]) for found in _disabled(files)],
+            [("cppcoreguidelines-pro-bounds-pointer-arithmetic", True), ("cppcoreguidelines-pro-type-vararg", False)],
+        )
 
     def test_ruff_ignores_globally_and_per_file_and_a_comment_justifies_one(self) -> None:
         pyproject = (

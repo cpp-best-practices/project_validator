@@ -38,7 +38,7 @@ from project_validator.strength import COVERED, TurnedOff
 
 # 2: each language's slots weigh its share of its unit's code (upstream #331).
 # 3: what the validator finds itself (`FINDINGS`) earns nothing; 4: tools' strength weighs their slots.
-SCORE_VERSION = "4"
+SCORE_VERSION = "5"
 
 # The checks each level's core and project slots must pass, in order; every other check belongs to the top level.
 LEVELS: Mapping[int, tuple[str, ...]] = {
@@ -509,7 +509,8 @@ def _reenabled(cells: Sequence[Cell], slots: float, turned: Iterable[TurnedOff])
                 needed_for=None,
                 completes=False,
                 message=f"re-enable {off.diagnostic} in {off.path} ({off.tool})",
-                hint=f"re-enable {off.diagnostic} in {off.path} and fix what {off.tool} finds",
+                hint=f"re-enable {off.diagnostic} in {off.path} and fix what {off.tool} finds"
+                + (f"; {off.why}" if off.why else ""),
             )
 
 
