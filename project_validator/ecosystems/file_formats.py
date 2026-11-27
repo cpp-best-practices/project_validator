@@ -395,8 +395,6 @@ def _parse_ini(path: str, data: bytes) -> None:
     except configparser.ParsingError as error:
         line = error.errors[0][0] - (PurePosixPath(path).name not in _SECTIONED)
         raise ParseError(f"not INI at line {line}", line) from error
-    except configparser.Error as error:
-        raise ParseError(str(error).splitlines()[0]) from error
 
 
 def _delimited(delimiter: str) -> Callable[[str, bytes], None]:

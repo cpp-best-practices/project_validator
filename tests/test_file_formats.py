@@ -217,6 +217,22 @@ class UnsoundFileTests(unittest.TestCase):
         fmt = b"fmt " + struct.pack("<I", 16) + bytes(16)
         self._says("beep.wav", b"RIFF" + struct.pack("<I", 4 + len(fmt)) + b"WAVE" + fmt, "no data chunk")
 
+    def test_each_structures_own_problems(self) -> None:
+        self._says("photo.jpg", JPEG[:-2], "truncated: no end of image")
+        self._says("anim.gif", PNG, "not a GIF file: it is a PNG file")
+        control = b"\x21\xf9\x04\x00\x00\x00\x00\x00"  # a graphic control extension before the image
+        self.assertIsNone(_problem("anim.gif", GIF[:19] + control + GIF[19:]))
+        self._says("anim.gif", GIF[:19] + b"\x99" + GIF[19:], "an unknown block at byte 19")
+        self._says("image.webp", _wav(), "not a WebP file")
+        chunk = b"VP8L" + struct.pack("<I", 1000) + _VP8L
+        self._says("image.webp", b"RIFF" + struct.pack("<I", 4 + len(chunk)) + b"WEBP" + chunk, "truncated in the VP8L")
+        self._says("source.tar", PNG + bytes(600), "not a tar archive: it is a PNG file")
+        self._says("source.tar", b"x" * 1024, "a broken tar archive")
+        self._says("source.tar", bytes(512) + b"x" * 512, "a broken tar archive: no member could be read")
+        self._says("cache.sqlite", b"SQLite format 3\x00" + b"\xff" * 200, "its integrity check fails")
+        self._says("tox.ini", b"[tox]\n= value\n", "not INI at line 2")
+        self._says(".editorconfig", b"root = true\n= value\n", "not INI at line 2")
+
     def test_a_riff_file_shorter_than_it_says(self) -> None:
         longer = WEBP[:4] + struct.pack("<I", len(WEBP) + 100) + WEBP[8:]
         self._says("image.webp", longer, "truncated: it says it holds")
