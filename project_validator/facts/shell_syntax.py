@@ -566,17 +566,25 @@ class _WordReader:
 
     def bounded(self, reader: Callable[[int], None], position: int) -> None:
         """Read a quoted part with `reader`; when it is never closed, report it, and read it again to the end of the
-        line it opened on, where it is taken to close."""
+        line it opened on, where it is taken to close. Read already to that end (inside another such part), it is not
+        read again: that would read the same, and each level of nesting would double the work."""
         lexer, kept = self.lexer, (len(self.parts), list(self.literal), len(self.lexer.errors), self.quoted)
+        newline = self.text.find("\n", position, lexer.end)
+        line_end = lexer.end if newline < 0 else newline
         try:
             reader(position)
             return
         except _Unclosed as error:
-            del self.parts[kept[0] :], lexer.errors[kept[2] :]
-            self.literal, self.quoted = kept[1], kept[3]
+            inner = lexer.errors[kept[2] :]
+            del lexer.errors[kept[2] :]
             lexer.errors.append(error)
-        newline = self.text.find("\n", position, lexer.end)
-        whole, lexer.end = lexer.end, lexer.end if newline < 0 else newline
+            if line_end == lexer.end:
+                lexer.errors.extend(inner)
+                lexer.position = lexer.end
+                return
+            del self.parts[kept[0] :]
+            self.literal, self.quoted = kept[1], kept[3]
+        whole, lexer.end = lexer.end, line_end
         try:
             reader(position)
         except _Unclosed:
