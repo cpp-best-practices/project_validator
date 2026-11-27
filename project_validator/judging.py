@@ -16,7 +16,7 @@ from project_validator.ecosystems import Ecosystem, ecosystems_for, registered
 from project_validator.facts import Facts
 from project_validator.facts.auxiliary import as_given
 from project_validator.facts.roles import AUXILIARY_UNITS
-from project_validator.facts.structure import SourceFile, Unit
+from project_validator.facts.structure import SourceFile, Unit, host_built
 from project_validator.facts.tools import handling
 from project_validator.policy import Judge
 from project_validator.questions import AdvisedTools, LanguageAnswers, RanTools, UnitAnswer
@@ -139,6 +139,20 @@ NOT_FOR_AUXILIARY = frozenset(
         "security-scanning",
         # A template's or a test's migrations change no deployed database (koyo's blueprints).
         "migration-safety",
+    }
+)
+
+# The checks of a C or C++ build of its own, which C and C++ code another ecosystem's build compiles skips (upstream
+# #186): that build is judged as its ecosystem's.
+OF_A_NATIVE_BUILD = frozenset(
+    {
+        "ci-build-types",
+        "compiler-extensions",
+        "out-of-source-build",
+        "compile-commands",
+        "top-level-guard",
+        "vcs-ignore",
+        "platform-matrix",
     }
 )
 
@@ -294,6 +308,38 @@ def _asked[A: UnitAnswer](
     return asked
 
 
+def _hosted[A: UnitAnswer](judge: Judge[A], facts: Facts) -> Judge[A]:
+    """`judge`, but for C and C++ code another ecosystem's build compiles, which it skips (see `OF_A_NATIVE_BUILD`)."""
+    hosts = host_built(facts)
+
+    def judging(answer: A, *, allow_unknown: bool) -> Result:
+        if (host := hosts.get((answer.unit, answer.language))) is not None:
+            return Result.skipped(f"built by its {host} build, not a C or C++ build of its own")
+        return judge(answer, allow_unknown=allow_unknown)
+
+    return judging
+
+
+def _runner[A: UnitAnswer](
+    name: str,
+    handled: Callable[[], frozenset[str]],
+    answers: Callable[[str, Facts], LanguageAnswers[A]],
+    judge: Judge[A],
+) -> Callable[[Context], Result]:
+    """How an answered check runs: each ecosystem's languages it handles judged by `judge` (C and C++ code another
+    ecosystem's build compiles skipped, for the checks of a native build)."""
+
+    def run(context: Context) -> Result:
+        now = handled()
+        by_ecosystem_ = {e: e.languages & now for e in registered() if e.languages & now}
+        judging = _hosted(judge, context.facts) if name in OF_A_NATIVE_BUILD else judge
+        return check_each_ecosystem(
+            context, by_ecosystem_, lambda judged_languages, found: judged(judged_languages, found, answers, judging)
+        )
+
+    return run
+
+
 def answered_check[A: UnitAnswer](
     *,
     name: str,
@@ -314,20 +360,13 @@ def answered_check[A: UnitAnswer](
             raise TypeError("answered_check needs an aspect or languages")
         languages = handling(aspect)
     handled = component_cache(languages)
-    asked = _asked(name, answers, auxiliary_unit)
-
-    def run(context: Context) -> Result:
-        now = handled()
-        by_ecosystem_ = {e: e.languages & now for e in registered() if e.languages & now}
-        return check_each_ecosystem(
-            context, by_ecosystem_, lambda judged_languages, found: judged(judged_languages, found, asked, judge)
-        )
-
+    run = _runner(name, handled, _asked(name, answers, auxiliary_unit), judge)
     return Check(name=name, description=description, run=run, languages_from=handled, aspect=aspect, aliases=aliases)
 
 
 __all__ = [
     "NOT_FOR_AUXILIARY",
+    "OF_A_NATIVE_BUILD",
     "answered_check",
     "auxiliary_unit_roles",
     "by_ecosystem",

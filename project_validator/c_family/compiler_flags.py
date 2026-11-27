@@ -9,7 +9,7 @@ from project_validator.ecosystems.model import C_FAMILY
 from project_validator.facts import Facts
 from project_validator.facts.flags import errors_requirements, flag_requirements, warning_requirements
 from project_validator.facts.jobs import Job
-from project_validator.facts.practices import Practice, PracticeName, Requirement, Wording
+from project_validator.facts.practices import Practice, PracticeName, Requirement, Wording, requirement_reader
 from project_validator.tools.toolchains import (
     FHARDENED,
     GCC_HARDENING,
@@ -20,8 +20,20 @@ from project_validator.tools.toolchains import (
     warnings_as_errors_flag,
 )
 
+# The flags another ecosystem's build passes to the native code it compiles (upstream #186): an R package's Makevars,
+# a gem's extconf.rb (mkmf), read for the flags GCC and Clang take, as that code is compiled with them.
+NATIVE_FLAGS_FILES = ("Makevars", "Makevars.in", "Makevars.win", "Makevars.ucrt", "extconf.rb")
+NATIVE_BUILD_FLAGS = requirement_reader(
+    "native build flags",
+    NATIVE_FLAGS_FILES,
+    (
+        *warning_requirements(warning_flags("gcc"), C_FAMILY),
+        *errors_requirements(warnings_as_errors_flag("gcc"), C_FAMILY),
+        *flag_requirements(hardening_flags("gcc"), C_FAMILY),
+    ),
+)
 # The readers of the build files whose options the compiler flags are found among.
-BUILD_FILES = ("CMake", "Meson")
+BUILD_FILES = ("CMake", "Meson", NATIVE_BUILD_FLAGS.name)
 PRESET_FILES = ("CMakePresets.json", "CMakeUserPresets.json")
 
 
