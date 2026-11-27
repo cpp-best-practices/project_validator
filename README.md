@@ -24,10 +24,12 @@ The validator itself is pure Python and has no build step; it only inspects
 (and, with `--build`, configures and builds) the project it is pointed at.
 
 To try it without installing anything, [run it in your
-browser](https://cpp-best-practices.github.io/project_validator/app/): pick a project's folder, and the validator runs
-there, under [Pyodide](https://pyodide.org), and shows its HTML report. The folder never leaves your computer, the
-source-control host is not asked (as with `--offline`), and nothing is built. The page is `web/`, published with the
-site; `project_validator.web.report` is what it calls.
+browser](https://cpp-best-practices.github.io/project_validator/app/): pick a project's folder, or name a public GitHub
+repository (`owner/name@ref`, linkable as `app/?repo=owner/name@ref`), and the validator runs there, under
+[Pyodide](https://pyodide.org), and shows its HTML report. A folder never leaves your computer; a repository is read at
+the commit its ref names (two GitHub API requests a run: 60 an hour without a token, so the page takes an optional
+one). The source-control host's settings are not asked (as with `--offline`), and nothing is built. The page is `web/`,
+published with the site; `project_validator.web.report` is what it calls.
 
 ## Installing
 
