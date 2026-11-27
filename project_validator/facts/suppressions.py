@@ -147,9 +147,20 @@ COMPILER_KEY = (
 )
 
 
+# The C and C++ compilers' programs, whose command lines say which warnings they turn off.
+COMPILERS = re.compile(
+    r"^(?:.*/)?(?:gcc|g\+\+|cc|c\+\+|clang|clang\+\+|clang-cl|cl|icc|icpc|icx|icpx|nvcc|emcc|em\+\+)"
+    r"(?:-\d+(?:\.\d+)*)?(?:\.exe)?$",
+    re.IGNORECASE,
+)
+
+
 def compiler_disabled(commands: Iterable[Command]) -> Iterator[Disabled]:
-    """The compiler warnings CI's compiler command lines turn off, every one (`-w`) or each (`-Wno-shadow`)."""
+    """The compiler warnings CI's compiler command lines turn off, every one (`-w`) or each (`-Wno-shadow`): `-w`
+    means something else to other programs (`grep -w`, Go's `-ldflags "-s -w"`)."""
     for command in commands:
+        if not command.argv or not COMPILERS.match(command.argv[0]):
+            continue
         for word in command.argv[1:]:
             found = _COMPILER_OFF.match(word)
             if found is None:

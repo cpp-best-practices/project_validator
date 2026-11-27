@@ -95,6 +95,47 @@ class DisabledTests(unittest.TestCase):
         self.assertIn(("clippy", "module_name_repetitions", STYLISTIC, GLOBAL, False), found)
         self.assertNotIn("pedantic", [fact[1] for fact in found])
 
+    def test_only_the_codes_of_bug_finding_plugins_are_key(self) -> None:
+        """Bandit's S101, not flake8-simplify's SIM102; pyflakes' F401, not flynt's FLY002; bugbear's B008, not
+        flake8-blind-except's BLE001."""
+        ruff = {"ruff.toml": 'ignore = ["S101", "SIM102", "F401", "FLY002", "B008", "BLE001", "B"]\n', "app.py": ""}
+        kinds = {diagnostic: kind for _, diagnostic, kind, _, _ in _disabled(ruff)}
+        self.assertEqual(
+            kinds,
+            {
+                "S101": KEY,
+                "SIM102": STYLISTIC,
+                "F401": KEY,
+                "FLY002": STYLISTIC,
+                "B008": KEY,
+                "BLE001": STYLISTIC,
+                "B": KEY,
+            },
+        )
+
+    def test_only_clippys_correctness_lints_are_key(self) -> None:
+        files = {
+            "Cargo.toml": '[package]\nname = "a"\n[lints.clippy]\nmap_unwrap_or = "allow"\n'
+            'missing_panics_doc = "allow"\ncast_possible_truncation = "allow"\ncorrectness = "allow"\n'
+            'unwrap_used = "allow"\n',
+            "src/lib.rs": "",
+        }
+        kinds = {diagnostic: kind for _, diagnostic, kind, _, _ in _disabled(files)}
+        self.assertEqual(
+            kinds,
+            {
+                "map_unwrap_or": STYLISTIC,
+                "missing_panics_doc": STYLISTIC,
+                "cast_possible_truncation": STYLISTIC,
+                "correctness": KEY,
+                "unwrap_used": KEY,
+            },
+        )
+
+    def test_a_w_is_a_compilers_only_on_a_compilers_command_line(self) -> None:
+        files = {"main.go": "", **github_job("ubuntu-latest", 'go build -ldflags "-s -w" .', "grep -w main main.go")}
+        self.assertEqual(_disabled(files), [])
+
     def test_compiler_warnings_turned_off_on_a_command_line(self) -> None:
         files = {
             "main.c": "",

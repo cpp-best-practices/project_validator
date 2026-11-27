@@ -319,12 +319,20 @@ def _clippy_disabled(setting: Setting) -> Iterator[tuple[str, str]]:
         yield setting.key.partition(".")[0], GLOBAL
 
 
-# clippy's groups and lints that find bugs, not style.
+# clippy's groups that find bugs, and the restriction lints against panics: not its pedantic lints (casts, docs).
 CLIPPY_DISABLED = Disabler(
     tool="clippy",
     settings="clippy",
     disabled=_clippy_disabled,
-    key=("correctness", "suspicious", "*unwrap*", "*panic*", "indexing_slicing", "cast_*", "unsafe*"),
+    key=(
+        "correctness",
+        "suspicious",
+        "unwrap_used",
+        "expect_used",
+        "panic",
+        "indexing_slicing",
+        "undocumented_unsafe_blocks",
+    ),
 )
 ALLOW_ATTRIBUTE = Marker(
     tool="clippy",

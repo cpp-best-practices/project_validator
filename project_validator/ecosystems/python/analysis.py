@@ -53,8 +53,9 @@ MYPY_SETTINGS = SettingsReader(
 )
 MYPY_SCOPE = Scoping(tools=("mypy",), settings="mypy", excludes=("exclude",), how=REGEX)
 MYPY_FILES = Scoping(tools=("mypy",), settings="mypy", includes=("files",), how=ANCHORED)
-# Codes that find bugs: pyflakes' (undefined names), bugbear's, bandit's, and syntax errors.
-_PYTHON_KEY = ("F*", "B*", "S*", "E9*")
+# Codes that find bugs: pyflakes' (undefined names), bugbear's, bandit's (each a letter and digits, or the letter alone
+# for the whole plugin: not flynt's FLY, flake8-simplify's SIM, flake8-blind-except's BLE), and syntax errors.
+_PYTHON_KEY = ("F", "F[0-9]*", "B", "B[0-9]*", "S", "S[0-9]*", "E9*")
 _RUFF_PER_FILE = (
     "per-file-ignores",
     "lint.per-file-ignores",
