@@ -11,7 +11,7 @@ from project_validator.facts import Facts, Origin
 from project_validator.facts.structure import SourceFile
 from project_validator.facts.suppressions import BLANKET, FILE, GLOBAL, KEY, STYLISTIC, Disabled, Suppressions
 from project_validator.score import score
-from project_validator.strength import COVERED, strengths
+from project_validator.strength import COVERED, TurnedOff, strengths, turned_off
 from tests.support import make_context, temp_project
 from tests.test_score import place, report
 
@@ -100,3 +100,56 @@ class ScoreTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ReenableTests(unittest.TestCase):
+    """The best next step the score can give: turn back on a diagnostic that finds bugs, and fix what it finds."""
+
+    def test_turned_off_lists_what_finds_bugs_heaviest_first(self) -> None:
+        facts = Facts(
+            (
+                _disabled(STYLISTIC),
+                Disabled(origin=Origin(path=".clang-tidy"), tool="clang-tidy", diagnostic="bugprone-a", kind=KEY),
+                Disabled(origin=Origin(path="CMakeLists.txt"), tool="clang-tidy", diagnostic="*", kind=BLANKET),
+            )
+        )
+        self.assertEqual(
+            [(found.diagnostic, found.path, found.weight) for found in turned_off(facts)],
+            [("*", "CMakeLists.txt", 1.0), ("bugprone-a", ".clang-tidy", 0.25)],
+        )
+
+    def test_re_enabling_a_diagnostic_is_a_step_worth_what_it_restores(self) -> None:
+        off = TurnedOff(tool="clang-tidy", diagnostic="bugprone-a", path=".clang-tidy", weight=0.25)
+        reports = [report("static-analysis", PASS, place(PASS, "clang-tidy")), report("tests-run", PASS, place(PASS))]
+        blocked = score(reports, strengths={"clang-tidy": 0.4}, turned_off=(off,))
+        [step] = [step for step in blocked.next_steps if step.message.startswith("re-enable")]
+        self.assertEqual(step.message, "re-enable bugprone-a in .clang-tidy (clang-tidy)")
+        self.assertEqual(step.hint, "re-enable bugprone-a in .clang-tidy and fix what clang-tidy finds")
+        self.assertEqual(
+            step.describe(),
+            "static-analysis (C++): +50 points; re-enable bugprone-a in .clang-tidy and fix what clang-tidy finds",
+        )
+        self.assertAlmostEqual(step.points, 50.0)  # it fills the slot again: half the points
+        unblocked = score(reports, strengths={"clang-tidy": 0.75}, turned_off=(off,))
+        self.assertFalse([step for step in unblocked.next_steps if step.message.startswith("re-enable")])
+
+    def test_a_gain_too_small_to_show_is_no_step(self) -> None:
+        """Extra credit restored by a hair: not worth a tenth of a point, so not a step (the board shows tenths)."""
+        off = TurnedOff(tool="clang-tidy", diagnostic="bugprone-a", path=".clang-tidy", weight=0.001)
+        reports = [report("static-analysis", PASS, place(PASS, "clang-tidy", "cppcheck"))]
+        found = score(reports, strengths={"clang-tidy": 0.6}, turned_off=(off,))
+        self.assertFalse([step for step in found.next_steps if step.message.startswith("re-enable")])
+
+    def test_it_restores_its_own_tool_alone(self) -> None:
+        off = TurnedOff(tool="clang-tidy", diagnostic="bugprone-a", path=".clang-tidy", weight=0.15)
+        reports = [report("static-analysis", PASS, place(PASS, "clang-tidy", "cppcheck"))]
+        found = score(reports, strengths={"clang-tidy": 0.3, "cppcheck": 0.4}, turned_off=(off,))
+        self.assertFalse([step for step in found.next_steps if step.message.startswith("re-enable")])  # 0.45: not yet
+
+    def test_from_a_project(self) -> None:
+        files = {"main.cpp": "int main() {}\n", ".clang-tidy": "Checks: 'bugprone-*,-bugprone-narrowing-conversions'\n"}
+        with temp_project(files) as root:
+            [found] = turned_off(make_context(root).facts)
+        self.assertEqual(
+            (found.tool, found.diagnostic, found.path), ("clang-tidy", "bugprone-narrowing-conversions", ".clang-tidy")
+        )

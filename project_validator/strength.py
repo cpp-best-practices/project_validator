@@ -13,6 +13,7 @@ file."""
 from __future__ import annotations
 
 from collections.abc import Mapping
+from dataclasses import dataclass
 
 from project_validator.facts import Facts
 from project_validator.facts.structure import SourceFile
@@ -65,6 +66,32 @@ def _densities(facts: Facts) -> dict[str, float]:
     return densities
 
 
+@dataclass(frozen=True, slots=True, kw_only=True)
+class TurnedOff:
+    """A diagnostic that finds bugs, turned off for `tool` in the file at `path`, and what it weighs: turning it back
+    on, and fixing what it finds, is a next step worth the strength it restores."""
+
+    tool: str
+    diagnostic: str
+    path: str
+    weight: float
+
+
+def turned_off(facts: Facts) -> tuple[TurnedOff, ...]:
+    """What the tools' configuration turns off that finds bugs (blanket or key), the heaviest first."""
+    found = (
+        TurnedOff(
+            tool=disabled.tool,
+            diagnostic=disabled.diagnostic,
+            path=disabled.origin.path,
+            weight=WEIGHTS[disabled.kind, disabled.scope, disabled.justified],
+        )
+        for disabled in facts.of(Disabled)
+        if disabled.kind in (BLANKET, KEY)
+    )
+    return tuple(sorted(found, key=lambda off: -off.weight))
+
+
 def strengths(facts: Facts) -> dict[str, float]:
     """The strength of each tool something turns off (a tool nothing turns off is at full strength, 1)."""
     weights, densities = _weights(facts), _densities(facts)
@@ -74,4 +101,4 @@ def strengths(facts: Facts) -> dict[str, float]:
     }
 
 
-__all__ = ["COVERED", "DENSITY", "JUSTIFIED_DENSITY", "MOST_DENSITY", "WEIGHTS", "strengths"]
+__all__ = ["COVERED", "DENSITY", "JUSTIFIED_DENSITY", "MOST_DENSITY", "WEIGHTS", "TurnedOff", "strengths", "turned_off"]
