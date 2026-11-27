@@ -34,10 +34,11 @@ from project_validator.core import Result, Status
 from project_validator.facts import Facts
 from project_validator.judging import NOT_FOR_AUXILIARY
 from project_validator.runner import Report
+from project_validator.strength import COVERED
 
 # 2: each language's slots weigh its share of its unit's code (upstream #331).
-# 3: what the validator finds itself (`FINDINGS`) earns nothing.
-SCORE_VERSION = "3"
+# 3: what the validator finds itself (`FINDINGS`) earns nothing; 4: tools' strength weighs their slots.
+SCORE_VERSION = "4"
 
 # The checks each level's core and project slots must pass, in order; every other check belongs to the top level.
 LEVELS: Mapping[int, tuple[str, ...]] = {
@@ -120,6 +121,24 @@ class Cell:
     share: float = 1.0
     # The language's share of its unit's product lines (see `sizes`), which a core slot weighs, at least `FLOOR`.
     size: float = 1.0
+    # Each of its tools' strength (see `project_validator.strength`), in the order of `tools`: none when nothing weakens
+    # them.
+    strengths: tuple[float, ...] = ()
+
+    @property
+    def strength(self) -> float:
+        """Its strongest tool's strength: the slot is filled only when it is at least `COVERED`."""
+        return max(self.strengths, default=1.0)
+
+    @property
+    def passes(self) -> bool:
+        """Whether the gate is in place: it passes, and its strongest tool is strong enough (see `COVERED`)."""
+        return self.status is Status.PASS and self.strength >= COVERED
+
+    @property
+    def power(self) -> float:
+        """Its tools' mean strength, by which its extra credit is scaled."""
+        return sum(self.strengths) / len(self.strengths) if self.strengths else 1.0
 
     @property
     def weight(self) -> float:
@@ -127,8 +146,11 @@ class Cell:
 
     @property
     def fill(self) -> float:
-        """How much of the slot is filled: a finding's (`FINDINGS`) slot, there only when it found a defect, never."""
-        return 0.0 if self.check in FINDINGS else _FILLS.get(self.status, 0.0) * self.share
+        """How much of the slot is filled: a finding's (`FINDINGS`) slot, there only when it found a defect, never; nor
+        one whose strongest tool is turned off more than half (see `COVERED`)."""
+        if self.check in FINDINGS or self.strength < COVERED:
+            return 0.0
+        return _FILLS.get(self.status, 0.0) * self.share
 
     @property
     def filled(self) -> float:
@@ -144,7 +166,7 @@ class Cell:
         more tools find more."""
         if self.check not in EXTRA_CREDIT or not self.fill:
             return 0.0
-        return sum(EXTRA[: max(0, len(self.families) - 1)]) * self.weight * self.fill
+        return sum(EXTRA[: max(0, len(self.families) - 1)]) * self.weight * self.fill * self.power
 
     def as_dict(self) -> dict[str, object]:
         return {
@@ -158,6 +180,7 @@ class Cell:
             "weight": self.weight,
             "filled": self.filled,
             "extra": _number(self.extra),
+            "strength": _number(self.strength),
         }
 
 
@@ -394,7 +417,7 @@ def _blocking(cells: Iterable[Cell], level: int) -> list[Cell]:
     return [
         cell
         for cell in cells
-        if cell.status is not Status.PASS and (level == TOP_LEVEL or (cell.level <= level and cell.tier != AUXILIARY))
+        if not cell.passes and (level == TOP_LEVEL or (cell.level <= level and cell.tier != AUXILIARY))
     ]
 
 
@@ -416,6 +439,10 @@ def _rank(step: NextStep) -> tuple[bool, bool, int, bool, float, str]:
     return (step.needed_for is None, not step.completes, step.level, step.tier == AUXILIARY, -step.points, step.check)
 
 
+_WEAKENED = "its tools are turned off more than half (strength {strength:.2f})"
+_WEAKENED_HINT = "turn back on what their configuration and the code's suppressions turn off, and fix what they find"
+
+
 def _next_steps(cells: Sequence[Cell], slots: float, level: int, *, complete_run: bool) -> tuple[NextStep, ...]:
     blocking = _blocking(cells, level + 1) if level < TOP_LEVEL and complete_run else []
     steps = (
@@ -429,22 +456,38 @@ def _next_steps(cells: Sequence[Cell], slots: float, level: int, *, complete_run
             points=100.0 * (cell.weight - cell.filled) / slots,
             needed_for=level + 1 if cell in blocking else None,
             completes=blocking == [cell],
-            message=cell.message,
-            hint=cell.hint,
+            message=cell.message if cell.status is not Status.PASS else _WEAKENED.format(strength=cell.strength),
+            hint=cell.hint if cell.status is not Status.PASS else _WEAKENED_HINT,
         )
         for cell in cells
-        if cell.status is not Status.PASS
+        if not cell.passes
     )
     return tuple(sorted(steps, key=_rank))
 
 
-def score(reports: Iterable[Report], every_check: Iterable[str] = (), sizes: Sizes | None = None) -> Score:
+def _weighed(cells: Iterable[Cell], strengths: Mapping[str, float]) -> tuple[Cell, ...]:
+    """The cells, each with its tools' `strengths` (a tool not given is at full strength)."""
+    return tuple(
+        replace(cell, strengths=tuple(strengths.get(tool, 1.0) for tool in cell.tools))
+        if any(tool in strengths for tool in cell.tools)
+        else cell
+        for cell in cells
+    )
+
+
+def score(
+    reports: Iterable[Report],
+    every_check: Iterable[str] = (),
+    sizes: Sizes | None = None,
+    strengths: Mapping[str, float] | None = None,
+) -> Score:
     """The score of a run, from its reports. A level is reached only when each of its checks ran, and the top level
     only when `every_check` (the names of every check there is) ran too: a run narrowed by `--only` or `--skip`
     reaches no level past the checks it left out. Each language's core slots weigh its `sizes` share (see `sizes`),
-    at least `FLOOR`; a language with no share given weighs in full."""
+    at least `FLOOR`; a language with no share given weighs in full. Each tool's `strengths` (see
+    `project_validator.strength`) weigh the slots it fills: a tool not given is at full strength."""
     reports = list(reports)
-    cells = tuple(cell for report in reports for cell in _report_cells(report, sizes or {}))
+    cells = _weighed((cell for report in reports for cell in _report_cells(report, sizes or {})), strengths or {})
     ran = frozenset(report.check.name for report in reports)
     everything = frozenset(every_check)
     level = _level(cells, ran, everything)

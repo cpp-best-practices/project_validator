@@ -22,6 +22,7 @@ from project_validator.facts.structure import SourceFile
 from project_validator.plugins import discover
 from project_validator.runner import Report, run_checks
 from project_validator.score import score, sizes
+from project_validator.strength import strengths
 from project_validator.views.html import render as html_report
 
 # The key of a result that holds its HTML report, which `write` puts beside the JSON rather than in it.
@@ -122,9 +123,10 @@ def evaluate(
     if (failure := context.extraction_error) is not None:
         result["error"] = str(failure).replace(str(directory.resolve()), "<checkout>")
     shares = sizes(context.facts) if context.extraction_error is None else {}
+    strong = strengths(context.facts) if context.extraction_error is None else {}
     if context.extraction_error is None:
         result["lines"] = _lines(context)
-    result["score"] = score(judged, every_check, shares).as_dict()
+    result["score"] = score(judged, every_check, shares, strong).as_dict()
     result[REPORT] = html_report(from_reports(context, judged, every_check))
     return result
 
