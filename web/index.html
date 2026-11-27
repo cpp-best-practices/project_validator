@@ -13,6 +13,10 @@
             cursor: pointer; font-weight: 600; }
   .choose input { display: none; }
   #status { margin: .8rem 0; color: #59636e; }
+  .or { margin: 0 .8rem; color: #59636e; }
+  #github { display: inline-flex; gap: .4rem; }
+  #github input, #github button { font: inherit; padding: .45rem .6rem; border: 1px solid #d0d7de; border-radius: 6px; }
+  #repository { width: 16rem; }
   #download { margin-left: 1rem; }
   #report { width: 100%; height: 80vh; border: 1px solid #d0d7de; border-radius: 6px; background: #fff; }
   @media (prefers-color-scheme: dark) {
@@ -24,16 +28,24 @@
 <body>
 <header>
   <h1>project_validator in your browser</h1>
-  <div>Pick a project's folder: the validator runs here, in your browser, and the folder never leaves your
-    computer. The first run loads Python (about 13 MB); later runs reuse it.
+  <div>Pick a project's folder, or name a public GitHub repository: the validator runs here, in your browser. A
+    folder never leaves your computer; a repository is read from GitHub at the commit its ref names. The first run
+    loads Python (about 13 MB); later runs reuse it.
     <a href="../">About project_validator</a></div>
 </header>
 <main>
   <label class="choose">Choose a folder…<input id="folder" type="file" webkitdirectory></label>
+  <span class="or">or</span>
+  <form id="github">
+    <input id="repository" placeholder="owner/name@ref" aria-label="A GitHub repository, as owner/name@ref" required>
+    <input id="token" type="password" placeholder="token (optional)" aria-label="A GitHub token, for the API limit">
+    <button name="go" type="submit">Validate</button>
+  </form>
   <a id="download" download="project_validator-report.html" hidden>Download the report</a>
   <div id="status" role="status">No folder chosen yet.</div>
   <iframe id="report" title="The report" sandbox="allow-scripts" hidden></iframe>
 </main>
+<script src="github.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
