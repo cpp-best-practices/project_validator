@@ -116,6 +116,12 @@ class ParseTests(unittest.TestCase):
                 parse(text)
             self.assertIn(message, str(raised.exception))
 
+    def test_a_lenient_read_takes_a_missing_kind_as_a_library(self) -> None:
+        (entry,) = parse('[[project]]\nname = "o/r"\nlanguage = "Go"\nconsent = "seed"\n', lenient=True)
+        self.assertEqual(entry.kind, "library")
+        with self.assertRaises(ManifestError):
+            parse('[[project]]\nname = "o/r"\nkind = "tool"\nconsent = "seed"\n', lenient=True)
+
     def test_by_name_needs_every_name_listed(self) -> None:
         with self.assertRaisesRegex(KeyError, "not on the leaderboard: x/y"):
             by_name(["x/y"], [ENTRY])
@@ -814,6 +820,21 @@ class CommandTests(unittest.TestCase):
         self.assertEqual(output, preview + "\n")
         self.assertIn("`consent` must link", preview)
         asked.assert_called_once_with("o/r", mock.ANY)
+
+    def test_check_reads_a_base_from_before_kinds(self) -> None:
+        """The base branch's manifest may be older than a field the pull request's needs (`kind`): it is read as far
+        as it goes, so the entries it held are still told from the new."""
+        with _directory() as root:
+            entry = '[[project]]\nname = "o/r"\nlanguage = "Python"\nconsent = "seed"\n'
+            (root / "base.toml").write_text(entry)
+            (root / "projects.toml").write_text(entry.replace("consent", 'kind = "library"\nconsent'))
+            with mock.patch("leaderboard.__main__.github_repository", return_value=PUBLIC):
+                code, output, _ = self._run(
+                    *("--manifest", str(root / "projects.toml"), "check"),
+                    *("--base", str(root / "base.toml"), "--out", str(root / "out" / "preview.md")),
+                )
+        self.assertEqual(code, 0, output)
+        self.assertIn("No entry is added or changed.", output)
 
     def test_evaluate_writes_an_unscored_result_for_a_project_that_can_not_be_fetched(self) -> None:
         with _directory() as root:

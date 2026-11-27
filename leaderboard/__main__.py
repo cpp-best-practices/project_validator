@@ -135,7 +135,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     else:
         base_text = arguments.base.read_text(encoding="utf-8") if arguments.base.is_file() else ""
         ok, preview = check(
-            parse(base_text),
+            parse(base_text, lenient=True),
             listed,
             lambda name: github_repository(name, token()),
             lambda entry: _evaluated(entry, arguments.cache, arguments.validator),

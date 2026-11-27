@@ -27,6 +27,7 @@ MANIFEST = ROOT / "projects.toml"
 SEED = "seed"
 # What a project is, as its entry declares: projects are ranked against those of their kind.
 KINDS = ("library", "application", "tool")
+LIBRARY = KINDS[0]
 _NAME = re.compile(r"^[\w.-]+/[\w.-]+$")
 
 
@@ -37,7 +38,7 @@ class Entry:
     name: str
     language: str
     consent: str
-    kind: str = "library"
+    kind: str = LIBRARY
     branch: str | None = None
     auxiliary: tuple[str, ...] = ()
     exclude: tuple[str, ...] = ()
@@ -63,7 +64,7 @@ class ManifestError(ValueError):
     pass
 
 
-def _entry(listed: dict[str, object]) -> Entry:
+def _entry(listed: dict[str, object], *, lenient: bool = False) -> Entry:
     unknown = sorted(set(listed) - _FIELDS)
     if unknown:
         raise ManifestError(f"{listed.get('name', '?')}: unknown field(s) {', '.join(unknown)}")
@@ -71,7 +72,7 @@ def _entry(listed: dict[str, object]) -> Entry:
         return Entry(
             name=str(listed["name"]),
             language=str(listed["language"]),
-            kind=str(listed["kind"]),
+            kind=str(listed["kind"] if "kind" in listed or not lenient else LIBRARY),
             consent=str(listed["consent"]),
             branch=str(listed["branch"]) if "branch" in listed else None,
             auxiliary=tuple(str(item) for item in _list(listed.get("auxiliary", []))),
@@ -88,13 +89,14 @@ def _list(value: object) -> list[object]:
     return value
 
 
-def parse(text: str) -> list[Entry]:
-    """The entries a manifest's text lists."""
+def parse(text: str, *, lenient: bool = False) -> list[Entry]:
+    """The entries a manifest's text lists. `lenient` reads one from before a field was required (the base branch's,
+    which a pull request's check compares with): a missing `kind` is a library's."""
     try:
         listed = tomllib.loads(text)
     except tomllib.TOMLDecodeError as error:
         raise ManifestError(f"projects.toml does not parse: {error}") from None
-    return [_entry(entry) for entry in listed.get("project", [])]
+    return [_entry(entry, lenient=lenient) for entry in listed.get("project", [])]
 
 
 def entries(manifest: Path = MANIFEST) -> list[Entry]:
