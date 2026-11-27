@@ -1,5 +1,7 @@
 # Ansible
 
+Learn more: [Ansible](https://docs.ansible.com/).
+
 A format, recognised by content: a collection (`galaxy.yml`), a role (`meta/main.yml` with `galaxy_info`), an
 `ansible.cfg`, a molecule scenario (`molecule/<scenario>/molecule.yml`), or a playbook (YAML whose plays name
 `hosts` and `tasks` or `roles`). Its files are YAML, the Data format's, so `data-wellformed` judges them as YAML; a

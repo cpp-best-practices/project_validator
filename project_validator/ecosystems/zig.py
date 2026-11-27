@@ -195,6 +195,7 @@ _ZIG_VERSION = r"(\d+\.\d+\.\d+(?:-dev\.\d+\+\w+)?|master|latest)"
 
 ZIG_ECOSYSTEM = Ecosystem(
     label="Zig",
+    links={"Zig": "https://ziglang.org/"},
     languages=ZIG,
     build_systems=(ZIG_BUILD,),
     source_suffixes={".zig": "Zig"},

@@ -47,6 +47,7 @@ def xml_schema_files(project: Project) -> Iterator[tuple[str, str]]:
 
 XML_SCHEMAS_ECOSYSTEM = Ecosystem(
     label="XML schemas",
+    links={"XML Schema": "https://www.w3.org/XML/Schema", "XSLT": "https://www.w3.org/TR/xslt-30/"},
     kind="format",
     languages=XML_FORMATS,
     # RELAX NG's compact syntax and DTDs are not XML; they belong to the schemas without being formats of their own.

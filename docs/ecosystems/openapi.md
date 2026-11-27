@@ -1,5 +1,7 @@
 # OpenAPI/AsyncAPI
 
+Learn more: [AsyncAPI](https://www.asyncapi.com/), [OpenAPI](https://www.openapis.org/).
+
 Two formats recognised by intent: a YAML or JSON file whose top-level key is `openapi` (or `swagger`, the 2.0 name)
 is an OpenAPI description, one whose key is `asyncapi` an AsyncAPI description. The files stay YAML or JSON, the
 Data format's. A CI job works with the ecosystem when it runs spectral, redocly, vacuum, swagger-cli or the AsyncAPI

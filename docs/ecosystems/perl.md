@@ -1,5 +1,7 @@
 # Perl
 
+Learn more: [Perl](https://www.perl.org/).
+
 Recognised by `.pm` modules and by the build systems of a distribution: ExtUtils::MakeMaker (`Makefile.PL`),
 Module::Build (`Build.PL`), Dist::Zilla (`dist.ini`) and a `cpanfile` of dependencies. Once the project is known to be
 Perl, `.pl` scripts (Prolog's suffix too), `.t` tests and `.psgi` applications are Perl; POD and XS files belong to the
@@ -70,6 +72,6 @@ only `cover_db/` ignored.
 
 ## Not judged
 
-Perl is interpreted (`hardening`, `compiler-extensions`, `ci-build-types`) and dynamically typed (`type-checking`); no code
-security scanner, fuzzer or mutation testing tool the validator knows reads Perl; Carton's `cpanfile.snapshot` for
+Perl is interpreted (`hardening`, `compiler-extensions`, `ci-build-types`) and dynamically typed (`type-checking`); no
+code security scanner, fuzzer or mutation testing tool the validator knows reads Perl; Carton's `cpanfile.snapshot` for
 applications belongs to `dependency-management`, not judged for Perl yet.

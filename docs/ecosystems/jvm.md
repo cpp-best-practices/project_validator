@@ -1,5 +1,8 @@
 # JVM
 
+Learn more: [JVM](https://en.wikipedia.org/wiki/Java_virtual_machine), [Groovy](https://groovy-lang.org/),
+[Java](https://dev.java/), [Kotlin](https://kotlinlang.org/).
+
 Java, Kotlin and Groovy, recognised by `.java`, `.kt` and `.groovy` sources and Maven (`pom.xml`) or Gradle builds.
 Groovy is most often tests (Spock specifications); the tools that work on compiled classes (SpotBugs, JaCoCo, PIT) and
 Spotless judge it too, but javac's and kotlinc's warning options and lizard do not apply to it. The Maven or Gradle

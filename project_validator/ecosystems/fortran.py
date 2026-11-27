@@ -379,6 +379,7 @@ FORTRAN_SOURCE = re.compile(rf"(?:{'|'.join(map(re.escape, FORTRAN_SUFFIXES))})$
 
 FORTRAN_ECOSYSTEM = Ecosystem(
     label=FORTRAN,
+    links={FORTRAN: "https://fortran-lang.org/"},
     languages=FORTRAN_LANGUAGE,
     build_systems=(CMAKE, MESON, FPM),
     default_build_system=FPM,

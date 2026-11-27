@@ -1,5 +1,7 @@
 # Typst
 
+Learn more: [Typst](https://typst.app/).
+
 Recognised by `.typ` sources. A CI job uses Typst when it runs `typst`, typstyle or typstfmt, or installs it with
 `typst-community/setup-typst`.
 

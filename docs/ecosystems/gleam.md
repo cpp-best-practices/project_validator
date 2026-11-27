@@ -1,5 +1,7 @@
 # Gleam
 
+Learn more: [Gleam](https://gleam.run/).
+
 Recognised by `.gleam` sources and the `gleam` build tool (`gleam.toml`), which compiles a package to Erlang or
 JavaScript. A CI job uses Gleam when it runs `gleam` or sets up a `gleam-version` (erlef/setup-beam). A package's
 Erlang or JavaScript FFI modules beside its `.gleam` sources are judged by their own profiles.

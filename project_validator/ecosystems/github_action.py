@@ -62,6 +62,9 @@ def action_repository(project: Project) -> frozenset[str]:
 
 GITHUB_ACTION_ECOSYSTEM = Ecosystem(
     label="GitHub Action",
+    links={
+        "GitHub Action": "https://docs.github.com/en/actions/sharing-automations/creating-actions/about-custom-actions",
+    },
     kind="format",
     languages=GITHUB_ACTION_ONLY,
     detect=action_repository,

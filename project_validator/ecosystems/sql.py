@@ -401,6 +401,7 @@ ENGINE_VERSIONS = ToolchainAxis(
 
 SQL_ECOSYSTEM = Ecosystem(
     label=SQL,
+    links={SQL: "https://en.wikipedia.org/wiki/SQL"},
     languages=SQL_LANGUAGE,
     build_systems=(DBT,),
     # An extension's control file is the SQL ecosystem's, with no language of its own.

@@ -75,6 +75,7 @@ def _descriptions_in(name: str) -> Callable[[Project], Iterator[str]]:
 
 API_ECOSYSTEM = Ecosystem(
     label="OpenAPI/AsyncAPI",
+    links={"AsyncAPI": "https://www.asyncapi.com/", "OpenAPI": "https://www.openapis.org/"},
     kind="format",
     languages=API_FORMATS,
     locate=_described,

@@ -17,6 +17,7 @@ TYPST_ONLY = frozenset({TYPST})
 
 TYPST_ECOSYSTEM = Ecosystem(
     label="Typst",
+    links={"Typst": "https://typst.app/"},
     languages=TYPST_ONLY,
     source_suffixes={".typ": TYPST},
     toolchain=toolchain_patterns(

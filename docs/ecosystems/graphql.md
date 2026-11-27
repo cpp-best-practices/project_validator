@@ -1,5 +1,7 @@
 # GraphQL
 
+Learn more: [GraphQL](https://graphql.org/).
+
 A format, recognised by intent: a schema in the schema definition language makes the project a GraphQL one. A
 `.graphqls` file, a `schema.graphql`, a `.graphql` or `.gql` file holding type definitions (`type`, `interface`,
 `enum`, `input`, `scalar`, `union`, `schema`, `directive`, or an `extend` of one), or a GraphQL Config file

@@ -1,5 +1,7 @@
 # LaTeX
 
+Learn more: [LaTeX](https://www.latex-project.org/).
+
 Recognised by a document: a `.tex` that declares its class (`\documentclass`), a `.latexmkrc`, or l3build's
 `build.lua` naming its `module` (a LaTeX package). The sources (`.tex`, `.sty`, `.cls`, `.dtx`, `.ltx`; `.bib` beside
 them; l3build's `.lvt` and `.pvt` tests and their `.tlg` logs) count once one is found, so a stray `.tex` fragment makes

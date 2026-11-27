@@ -19,6 +19,7 @@ BAZEL_ONLY = frozenset({BAZEL})
 
 BAZEL_ECOSYSTEM = Ecosystem(
     label="Bazel",
+    links={"Bazel": "https://bazel.build/"},
     kind="format",
     languages=BAZEL_ONLY,
     source_suffixes={".bazel": BAZEL, ".bzl": BAZEL, ".bzlmod": BAZEL},

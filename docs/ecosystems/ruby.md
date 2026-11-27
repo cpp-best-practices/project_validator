@@ -1,5 +1,7 @@
 # Ruby
 
+Learn more: [Ruby](https://www.ruby-lang.org/).
+
 Recognised by `.rb` sources and Bundler (`Gemfile`). The Rakefile counts as CI configuration when CI runs rake.
 
 ## `tests-run`

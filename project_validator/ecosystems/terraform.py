@@ -185,6 +185,7 @@ def _version_input(name: str) -> Callable[[Mapping[str, str]], str | None]:
 
 TERRAFORM_ECOSYSTEM = Ecosystem(
     label=TERRAFORM,
+    links={TERRAFORM: "https://www.terraform.io/"},
     languages=TERRAFORM_LANGUAGE,
     source_suffixes={".tf": TERRAFORM, ".tofu": TERRAFORM, ".tfvars": TERRAFORM},
     # HCL is also Packer's and Nomad's; in a Terraform project, `.hcl` files are its tests and its lockfile.

@@ -1,5 +1,7 @@
 # Rust
 
+Learn more: [Rust](https://www.rust-lang.org/).
+
 Recognised by `.rs` sources and Cargo (`Cargo.toml`).
 
 ## `tests-run`

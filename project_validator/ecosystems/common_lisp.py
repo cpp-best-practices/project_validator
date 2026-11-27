@@ -185,6 +185,7 @@ _IMPLEMENTATION = r"((?:sbcl|ccl|ecl|abcl|clasp|clisp|cmucl|allegro|lispworks)(?
 
 LISP_ECOSYSTEM = Ecosystem(
     label="Common Lisp",
+    links={"Common Lisp": "https://common-lisp.net/"},
     languages=LISP,
     build_systems=(ASDF,),
     source_suffixes={".lisp": "Common Lisp"},

@@ -30,6 +30,7 @@ PROTOBUF_ONLY = frozenset({PROTOBUF})
 
 PROTOBUF_ECOSYSTEM = Ecosystem(
     label="Protobuf",
+    links={"Protobuf": "https://protobuf.dev/"},
     kind="format",
     languages=PROTOBUF_ONLY,
     source_suffixes={".proto": PROTOBUF},

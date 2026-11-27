@@ -100,6 +100,7 @@ _RUBY_VERSION = r"(\d+\.\d+(?:\.\d+)?|head|(?:jruby|truffleruby)(?:-[\w.]+)?)"
 
 RUBY = Ecosystem(
     label=RUBY_LANGUAGE,
+    links={RUBY_LANGUAGE: "https://www.ruby-lang.org/"},
     languages=RUBY_ONLY,
     build_systems=(BUNDLER,),
     source_suffixes={".rb": RUBY_LANGUAGE, ".rake": RUBY_LANGUAGE},

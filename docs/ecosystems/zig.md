@@ -1,5 +1,7 @@
 # Zig
 
+Learn more: [Zig](https://ziglang.org/).
+
 Recognised by `.zig` sources and by `build.zig` (with `build.zig.zon`, the manifest of the dependencies, a file of the
 ecosystem with no language of its own). `.zig-cache` (`zig-cache` before Zig 0.13) and `zig-out` beside `build.zig`
 are build trees.

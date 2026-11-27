@@ -1,5 +1,7 @@
 # Racket
 
+Learn more: [Racket](https://racket-lang.org/).
+
 Recognised by `.rkt` sources and by a package's `info.rkt`, the build system (raco pkg); once the project is known to
 be Racket, `.rktl` files are Racket too, and Scribble documents (`.scrbl`) and `.rktd` data are files of the
 ecosystem with no language of their own. `compiled/` directories are build trees.

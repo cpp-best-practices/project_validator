@@ -1,5 +1,7 @@
 # R
 
+Learn more: [R](https://www.r-project.org/).
+
 Recognised by `.R` sources (and, once the project is known to be R, `.r` files, which REBOL uses too; R Markdown,
 Quarto, Sweave, Rd and RStudio project files are files of the ecosystem with no language of their own) and by an R
 package's `DESCRIPTION` with a `Package:` field. `<package>.Rcheck` directories are build trees.

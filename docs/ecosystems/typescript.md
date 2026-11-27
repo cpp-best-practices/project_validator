@@ -1,5 +1,7 @@
 # TypeScript
 
+Learn more: [TypeScript](https://www.typescriptlang.org/).
+
 Recognised by `.ts`, `.mts`, `.cts` and `.tsx` sources (declarations, `.d.ts`, included), or `deno.json`. TypeScript
 is built on JavaScript's platform: package.json and Deno, the Node.js, Deno and Bun runtimes, and the same tools, so
 everything below but `type-checking` reads as it does for [JavaScript](javascript.md). The package scripts CI runs

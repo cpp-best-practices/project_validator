@@ -26,6 +26,7 @@ GLEAM_BUILD = BuildSystem(name="gleam", files=("gleam.toml",), languages=GLEAM_O
 
 GLEAM_ECOSYSTEM = Ecosystem(
     label="Gleam",
+    links={"Gleam": "https://gleam.run/"},
     languages=GLEAM_ONLY,
     build_systems=(GLEAM_BUILD,),
     source_suffixes={".gleam": GLEAM},

@@ -165,6 +165,11 @@ _SDK_VERSION = r"(\d+\.\d+(?:\.[\dx]+)?|\d+\.x)"
 
 DOTNET = Ecosystem(
     label=".NET",
+    links={
+        ".NET": "https://dotnet.microsoft.com/",
+        "C#": "https://learn.microsoft.com/en-us/dotnet/csharp/",
+        "F#": "https://fsharp.org/",
+    },
     languages=frozenset({CSHARP, FSHARP}),
     build_systems=(MSBUILD,),
     source_suffixes={".cs": CSHARP, ".fs": FSHARP, ".fsi": FSHARP},

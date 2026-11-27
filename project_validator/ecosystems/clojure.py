@@ -322,6 +322,7 @@ NREPL_PORT, NREPL_PORT_OF_SOURCES = (
 # toolchain. A job shows it runs Clojure by its tools.
 CLOJURE_ECOSYSTEM = Ecosystem(
     label="Clojure",
+    links={"Clojure": "https://clojure.org/"},
     languages=CLOJURE,
     build_systems=(CLOJURE_CLI, LEININGEN, BABASHKA, SHADOW_CLJS),
     source_suffixes={".clj": "Clojure", ".cljs": "Clojure", ".cljc": "Clojure"},

@@ -1,5 +1,7 @@
 # Scala
 
+Learn more: [Scala](https://www.scala-lang.org/).
+
 Recognised by `.scala` sources and the build tools: sbt (`*.sbt`), Mill (`build.mill`, `build.sc`) and scala-cli
 (`project.scala`). `.sc` scripts (Ammonite, Mill) are Scala's once the project is; `.sbt` files name no language of
 their own. The build's `target/`, `out/` and `.scala-build/` directories are build trees and are never read.

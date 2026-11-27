@@ -19,6 +19,7 @@ CMAKE_ONLY = frozenset({CMAKE})
 
 CMAKE_ECOSYSTEM = Ecosystem(
     label="CMake",
+    links={"CMake": "https://cmake.org/"},
     kind="format",
     languages=CMAKE_ONLY,
     source_suffixes={".cmake": CMAKE},

@@ -481,6 +481,7 @@ _GO_VERSION = r"(\d+\.\d+(?:\.\d+|\.x)?|stable|oldstable)"
 
 GO = Ecosystem(
     label="Go",
+    links={"Go": "https://go.dev/"},
     languages=GO_LANGUAGE,
     build_systems=(GO_MODULES,),
     source_suffixes={".go": "Go"},

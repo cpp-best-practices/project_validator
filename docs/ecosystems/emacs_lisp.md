@@ -1,5 +1,7 @@
 # Emacs Lisp
 
+Learn more: [Emacs Lisp](https://www.gnu.org/software/emacs/manual/html_node/elisp/).
+
 Recognised by `.el` sources and by a package's build files: `Eask`, `Cask`, or package.el's `<name>-pkg.el`. Eask's
 `.eask/` and Cask's `.cask/`, where the dependencies are installed, are build trees; a byte-compiled `.elc` is a file
 of the ecosystem with no language of its own.

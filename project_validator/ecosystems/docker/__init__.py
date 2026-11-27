@@ -17,6 +17,7 @@ DOCKERFILE_ONLY = frozenset({DOCKERFILE})
 
 DOCKER = Ecosystem(
     label="Docker",
+    links={"Dockerfile": "https://docs.docker.com/reference/dockerfile/"},
     kind="format",
     languages=DOCKERFILE_ONLY,
     source_suffixes={".Dockerfile": DOCKERFILE, ".dockerfile": DOCKERFILE},

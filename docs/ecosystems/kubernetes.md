@@ -1,5 +1,7 @@
 # Kubernetes
 
+Learn more: [Kubernetes](https://kubernetes.io/).
+
 A format, recognised by content: a Helm chart (`Chart.yaml`), a kustomization (`kustomization.yaml`), or manifests
 (YAML with `apiVersion`, `kind` and `metadata` at the top level) in a directory that holds them (`k8s/`,
 `manifests/`, `deploy/`, `charts/`, `kustomize/`, …). A file with those keys elsewhere may be another tool's and does

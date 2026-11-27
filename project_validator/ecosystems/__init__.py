@@ -54,6 +54,11 @@ def registered() -> tuple[Ecosystem, ...]:
     return tuple(_registered)
 
 
+def link(name: str) -> str | None:
+    """The page of the language, format or ecosystem `name` (upstream #411); None when no ecosystem links it."""
+    return next((ecosystem.links[name] for ecosystem in _registered if name in ecosystem.links), None)
+
+
 def formats() -> frozenset[str]:
     """The names of every known format: what the format ecosystems' `languages` hold."""
     return languages_of(ecosystem for ecosystem in _registered if ecosystem.kind == "format")
@@ -184,6 +189,7 @@ __all__ = [
     "is_build_tree",
     "isolated_registry",
     "languages_of",
+    "link",
     "register",
     "registered",
     "toolchain_patterns",

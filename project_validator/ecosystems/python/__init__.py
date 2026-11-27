@@ -515,6 +515,7 @@ CONDA_PACKAGES = PackageManager(
 
 PYTHON = Ecosystem(
     label="Python",
+    links={"Python": "https://www.python.org/"},
     languages=PYTHON_ONLY,
     build_systems=(PYTHON_PACKAGING,),
     source_suffixes={".py": "Python", ".pyi": "Python"},

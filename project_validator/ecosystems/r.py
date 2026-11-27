@@ -244,6 +244,7 @@ _R_VERSION = r"(\d+\.\d+(?:\.\d+)?|release|devel|next|oldrel(?:-\d+)?)"
 
 R_ECOSYSTEM = Ecosystem(
     label="R",
+    links={"R": "https://www.r-project.org/"},
     languages=R,
     build_systems=(R_PACKAGE,),
     source_suffixes={".R": "R"},

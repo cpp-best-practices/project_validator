@@ -1,5 +1,7 @@
 # Nix
 
+Learn more: [Nix](https://nixos.org/).
+
 Recognised by `flake.nix` (a flake), `default.nix` or `shell.nix` (plain expressions), and `.nix` sources. A CI job
 uses Nix when it runs `nix`, `nix-build`, `nix-shell`, one of the tools below or `cachix`, or installs it with
 `cachix/install-nix-action`, `DeterminateSystems/nix-installer-action` or `nixbuild/nix-quick-install-action`.

@@ -1,5 +1,8 @@
 # .NET
 
+Learn more: [.NET](https://dotnet.microsoft.com/), [C#](https://learn.microsoft.com/en-us/dotnet/csharp/),
+[F#](https://fsharp.org/).
+
 C# and F#, recognised by `.cs` and `.fs` sources and MSBuild project and solution files. Project files and
 `Directory.Build.props` count as CI configuration when CI builds.
 

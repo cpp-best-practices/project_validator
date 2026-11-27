@@ -1,5 +1,7 @@
 # Protobuf
 
+Learn more: [Protobuf](https://protobuf.dev/).
+
 A format, recognised by `.proto` sources: the schemas, and the gRPC services they define. `buf.yaml` is YAML, the Data
 format's, and holds buf's settings. A CI job works with the ecosystem when it runs `buf`, `protoc` (or
 `python -m grpc_tools.protoc`), or the `bufbuild/buf-action` and `bufbuild/buf-setup-action` actions.

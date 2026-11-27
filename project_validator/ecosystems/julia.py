@@ -279,6 +279,7 @@ _JULIA_VERSION = r"([~^]?\d+(?:\.\d+){0,2}|lts|pre|nightly|min)"
 
 JULIA_ECOSYSTEM = Ecosystem(
     label="Julia",
+    links={"Julia": "https://julialang.org/"},
     languages=JULIA,
     build_systems=(PKG,),
     source_suffixes={".jl": "Julia"},

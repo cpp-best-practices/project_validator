@@ -471,6 +471,7 @@ _SCALA_VERSION = r"(\d+\.\d+\.\d+(?:-\w+)?)"
 
 SCALA_ECOSYSTEM = Ecosystem(
     label="Scala",
+    links={"Scala": "https://www.scala-lang.org/"},
     languages=SCALA,
     build_systems=(SBT, MILL, SCALA_CLI),
     source_suffixes={".scala": "Scala"},

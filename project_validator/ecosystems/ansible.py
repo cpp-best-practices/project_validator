@@ -65,6 +65,7 @@ def ansible_project(project: Project) -> frozenset[str]:
 
 ANSIBLE_ECOSYSTEM = Ecosystem(
     label="Ansible",
+    links={"Ansible": "https://docs.ansible.com/"},
     kind="format",
     languages=ANSIBLE_ONLY,
     # A role's Jinja templates (`templates/*.j2`) belong to it without being a format of their own.

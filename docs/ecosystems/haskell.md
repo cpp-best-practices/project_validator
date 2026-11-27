@@ -1,5 +1,7 @@
 # Haskell
 
+Learn more: [Haskell](https://www.haskell.org/).
+
 Recognised by `.hs`, `.lhs`, `.hs-boot` and `.hsc` sources (and Alex, Happy and c2hs files once the project is known
 to be Haskell), and by its build systems: Cabal (`*.cabal` package descriptions and `cabal.project`), Stack
 (`stack.yaml`) and hpack (a `package.yaml` with hpack's keys). The packages a `cabal.project` or `stack.yaml` lists
