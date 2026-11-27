@@ -8,6 +8,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "XML",
       "lines": 15,
@@ -16,6 +17,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "Java",
       "lines": 11,

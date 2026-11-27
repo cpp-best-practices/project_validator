@@ -131,6 +131,17 @@ class ToolRun(Fact):
     advisory: str = ""
     # The project paths (folders, files, globs) its command names, which it alone reaches; none: all of its scope.
     paths: tuple[str, ...] = ()
+    # What the tool's own settings exclude, and include alone (see `Scoping`): (the settings file's directory, the
+    # pattern, whether it is a regular expression).
+    excluded: tuple[tuple[str, str, bool], ...] = ()
+    included: tuple[tuple[str, str, bool], ...] = ()
+
+    def reaches(self, path: str) -> bool:
+        """Whether the run reaches the project file `path`, by the paths its command names and its settings."""
+        named = not self.paths or any(within(path, found) or fnmatchcase(path, found) for found in self.paths)
+        if not named or any(_matches(path, *found) for found in self.excluded):
+            return False
+        return not self.included or any(_matches(path, *found) for found in self.included)
 
     def covers(self, unit: str, units: Iterable[str] = (".",)) -> bool:
         """Whether the run covers the code of `unit`, one of the project's `units`: a run covers the units at or below
@@ -138,6 +149,58 @@ class ToolRun(Fact):
         but a run in a workspace member covers only that member)."""
         units = tuple(units)
         return any(within(unit, scope) or unit == owner(scope, units) for scope in self.scope)
+
+
+def _matches(path: str, base: str, pattern: str, regex: bool) -> bool:
+    """Whether a tool's settings pattern, read from a file in `base`, matches the project file `path`: a regular
+    expression searched in the path below `base`, or a glob matched against it, a folder above it, or one of their
+    names (ruff's `exclude = ["build"]` excludes every build/)."""
+    if base not in (".", "") and not within(path, base):
+        return False
+    relative = str(PurePosixPath(path).relative_to(base)) if base not in (".", "") else path
+    if regex:
+        return re.search(pattern, relative) is not None
+    pattern = pattern.removeprefix("./").rstrip("/")
+    parts = PurePosixPath(relative).parts
+    prefixes = ["/".join(parts[: end + 1]) for end in range(len(parts))]
+    return any(fnmatchcase(found, pattern) for found in (*prefixes, *parts))
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class Scoping:
+    """Where a tool's own settings say it looks (upstream #333): the keys of the `settings` (a settings reader's name)
+    that exclude paths from the runs of `tools`, and that name the only paths they check; globs, or regular
+    expressions (`regex`, mypy's `exclude`), relative to the settings file."""
+
+    tools: tuple[str, ...]
+    settings: str
+    excludes: tuple[str, ...] = ()
+    includes: tuple[str, ...] = ()
+    regex: bool = False
+
+
+def _patterns(value: object, *, regex: bool) -> tuple[str, ...]:
+    """A setting's patterns: a list, or a string (a comma-separated list, but for one regular expression)."""
+    if isinstance(value, str):
+        return (value,) if regex else tuple(part.strip() for part in value.split(",") if part.strip())
+    return tuple(str(item) for item in value) if isinstance(value, tuple | list) else ()
+
+
+def _scoped(tool: str, facts: Facts) -> tuple[tuple[tuple[str, str, bool], ...], tuple[tuple[str, str, bool], ...]]:
+    """What the settings of `tool` exclude from its runs, and include alone (see `Scoping`)."""
+    excluded: list[tuple[str, str, bool]] = []
+    included: list[tuple[str, str, bool]] = []
+    for scoping in known(Scoping):
+        if tool not in scoping.tools:
+            continue
+        for setting in facts.where(Setting, tool=scoping.settings):
+            base = str(PurePosixPath(setting.path).parent)
+            found = [(base, pattern, scoping.regex) for pattern in _patterns(setting.value, regex=scoping.regex)]
+            if setting.key in scoping.excludes:
+                excluded += found
+            elif setting.key in scoping.includes:
+                included += [(base, pattern, False) for base, pattern, _ in found]
+    return tuple(excluded), tuple(included)
 
 
 def owner(directory: str, units: Iterable[str]) -> str:
@@ -353,6 +416,7 @@ def tool_runs(facts: Facts, tools: Iterable[Tool]) -> Iterator[ToolRun | Unknown
     (in its settings) does not split into words."""
     tools = tuple(tools)
     sources = _Sources(facts)
+    scopes = functools.cache(lambda name: _scoped(name, facts))
     for command in facts.of(Command):
         for tool in tools:
             run = _claimed(tool, command, facts)
@@ -373,6 +437,8 @@ def tool_runs(facts: Facts, tools: Iterable[Tool]) -> Iterator[ToolRun | Unknown
                     heuristic=run.heuristic or (command.directory or "").startswith("$"),
                     advisory=command.advisory or run.advisory,
                     paths=sources.named(command, tool.languages),
+                    excluded=scopes(tool.name)[0],
+                    included=scopes(tool.name)[1],
                 )
 
 
@@ -395,6 +461,7 @@ __all__ = [
     "Definition",
     "Levels",
     "Run",
+    "Scoping",
     "Tool",
     "ToolRun",
     "all_of",

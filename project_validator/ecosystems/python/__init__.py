@@ -27,7 +27,7 @@ from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, ini_settings, toml_settings
 from project_validator.facts.shell import split_words
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
-from project_validator.facts.tools import Claim, Run, defined_by, either, starts, when
+from project_validator.facts.tools import Claim, Run, Scoping, defined_by, either, starts, when
 from project_validator.text import Pattern
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.scanners import multi_language_scanners
@@ -49,6 +49,11 @@ def _read_ruff(path: str, text: str) -> Iterator[Fact]:
 
 
 RUFF_SETTINGS = SettingsReader(name="ruff", files=("ruff.toml", ".ruff.toml", "pyproject.toml"), read=_read_ruff)
+RUFF_SCOPE = Scoping(
+    tools=("ruff check", "ruff format"),
+    settings="ruff",
+    excludes=("exclude", "extend-exclude", "lint.exclude", "lint.extend-exclude", "format.exclude"),
+)
 BLACK_SETTINGS = SettingsReader(
     name="black",
     files=("pyproject.toml",),

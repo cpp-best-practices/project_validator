@@ -8,6 +8,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "Bazel",
       "lines": 1,

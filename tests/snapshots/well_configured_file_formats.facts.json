@@ -2,6 +2,7 @@
   "facts": [
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 6,
@@ -10,6 +11,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 9,
@@ -18,6 +20,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 7,
@@ -26,6 +29,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 6,
@@ -34,6 +38,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "PNG",
       "lines": 0,
@@ -42,6 +47,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "CSV",
       "lines": 3,
@@ -50,6 +56,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "PDF",
       "lines": 0,

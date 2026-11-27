@@ -2,6 +2,7 @@
   "facts": [
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "INI",
       "lines": 15,
@@ -10,6 +11,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 6,
@@ -18,6 +20,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 9,
@@ -26,6 +29,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 30,
@@ -34,6 +38,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 6,
@@ -42,6 +47,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "PowerShell",
       "lines": 26,
@@ -50,6 +56,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "Shell",
       "lines": 20,
@@ -58,6 +65,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "PowerShell",
       "lines": 23,
@@ -66,6 +74,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "Shell",
       "lines": 25,
@@ -82,6 +91,7 @@
     },
     {
       "ambiguous": true,
+      "generator": "",
       "kind": "SourceFile",
       "language": null,
       "lines": 8,
@@ -986,7 +996,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
@@ -1011,7 +1023,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:test[0]",
       "kind": "ToolRun",
       "languages": [
@@ -1037,7 +1051,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
@@ -1062,7 +1078,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:test[1]",
       "kind": "ToolRun",
       "languages": [
@@ -1088,7 +1106,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
       "languages": [
@@ -1110,7 +1130,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
       "languages": [
@@ -1135,7 +1157,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:powershell[0]",
       "kind": "ToolRun",
       "languages": [
@@ -1157,7 +1181,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:powershell[0]",
       "kind": "ToolRun",
       "languages": [
@@ -1186,7 +1212,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:powershell[1]",
       "kind": "ToolRun",
       "languages": [
@@ -1208,7 +1236,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:powershell[1]",
       "kind": "ToolRun",
       "languages": [

@@ -10,6 +10,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 4,
@@ -18,6 +19,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 3,
@@ -26,6 +28,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "JSON",
       "lines": 1,
@@ -42,6 +45,7 @@
     },
     {
       "ambiguous": true,
+      "generator": "",
       "kind": "SourceFile",
       "language": "SQL",
       "lines": 1,
@@ -50,6 +54,7 @@
     },
     {
       "ambiguous": true,
+      "generator": "",
       "kind": "SourceFile",
       "language": "SQL",
       "lines": 1,

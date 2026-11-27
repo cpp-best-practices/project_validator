@@ -2,6 +2,7 @@
   "facts": [
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 6,
@@ -10,6 +11,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 9,
@@ -18,6 +20,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 16,
@@ -26,6 +29,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 6,
@@ -34,6 +38,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 2,
@@ -50,6 +55,7 @@
     },
     {
       "ambiguous": true,
+      "generator": "",
       "kind": "SourceFile",
       "language": "GraphQL",
       "lines": 7,
@@ -58,6 +64,7 @@
     },
     {
       "ambiguous": true,
+      "generator": "",
       "kind": "SourceFile",
       "language": "GraphQL",
       "lines": 15,
@@ -633,7 +640,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:validate",
       "kind": "ToolRun",
       "languages": [
@@ -659,7 +668,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:validate",
       "kind": "ToolRun",
       "languages": [
@@ -685,7 +696,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:validate",
       "kind": "ToolRun",
       "languages": [
@@ -711,7 +724,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:breaking",
       "kind": "ToolRun",
       "languages": [

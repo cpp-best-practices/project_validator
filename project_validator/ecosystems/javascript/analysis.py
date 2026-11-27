@@ -24,7 +24,7 @@ from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.limits import Rule, limiter
 from project_validator.facts.security import scanned, scanner
 from project_validator.facts.settings import SettingsReader, file_reader, json_settings, matched_settings
-from project_validator.facts.tools import Run, combined, defined_by, starts
+from project_validator.facts.tools import Run, Scoping, combined, defined_by, starts
 from project_validator.includes import Chain, follow
 from project_validator.limits import TSCONFIG_EXTENDS
 from project_validator.tools.limits import function_length_limiters
@@ -39,6 +39,7 @@ TYPESCRIPT_SETTINGS = SettingsReader(
     files=(*TSCONFIG_FILES, "tsconfig.*.json"),
     read=lambda path, text: () if is_json_schema(text) else json_settings("TypeScript", path, text, comments=True),
 )
+TYPESCRIPT_SCOPE = Scoping(tools=("tsc",), settings="TypeScript", excludes=("exclude",), includes=("include", "files"))
 DENO_SETTINGS = SettingsReader(
     name="Deno", files=DENO_CONFIG_FILES, read=lambda path, text: json_settings("Deno", path, text, comments=True)
 )

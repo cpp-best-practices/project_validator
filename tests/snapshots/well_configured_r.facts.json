@@ -10,6 +10,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 6,
@@ -18,6 +19,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 9,
@@ -26,6 +28,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 58,
@@ -34,6 +37,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 6,
@@ -42,6 +46,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 7,
@@ -50,6 +55,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "R",
       "lines": 21,
@@ -58,6 +64,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "R",
       "lines": 4,
@@ -66,6 +73,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "R",
       "lines": 8,
@@ -1329,7 +1337,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:R-CMD-check[0]",
       "kind": "ToolRun",
       "languages": [
@@ -1351,7 +1361,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:R-CMD-check[1]",
       "kind": "ToolRun",
       "languages": [
@@ -1373,7 +1385,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:R-CMD-check[2]",
       "kind": "ToolRun",
       "languages": [
@@ -1395,7 +1409,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:R-CMD-check[3]",
       "kind": "ToolRun",
       "languages": [
@@ -1417,7 +1433,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:R-CMD-check[4]",
       "kind": "ToolRun",
       "languages": [
@@ -1439,7 +1457,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:coverage",
       "kind": "ToolRun",
       "languages": [
@@ -1462,7 +1482,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
       "languages": [
@@ -1484,7 +1506,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
       "languages": [
@@ -1508,7 +1532,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/function-limits.yml:function-limits",
       "kind": "ToolRun",
       "languages": [

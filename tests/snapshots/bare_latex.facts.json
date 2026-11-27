@@ -10,6 +10,7 @@
     },
     {
       "ambiguous": true,
+      "generator": "",
       "kind": "SourceFile",
       "language": "LaTeX",
       "lines": 4,
