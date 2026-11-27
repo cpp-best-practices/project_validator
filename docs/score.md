@@ -2,7 +2,7 @@
 
 The console and HTML reports always show the score; `python -m project_validator --score path/to/project` adds it to
 the plain text, markdown and JSON outputs too. The statuses and the exit code do not change. The design is upstream
-issue #295; this is **version 3**.
+issue #295; this is **version 4**.
 
 > **87% · Level 2 Analysis · 41 of 47 gates in place**
 
@@ -47,6 +47,31 @@ weights only the percent: the levels still ask every language for every gate of 
 
 The views break the score down by language, and, in a project of several units (a monorepo), by unit too: how much of
 each part's gates is in place. The headline stays the one score of the whole project.
+
+## Strength
+
+A tool that is turned off counts for less (score version 4). A tool's **strength**, from 0 to 1, is what is left
+after what its configuration turns off and the suppressions written in the code:
+
+```text
+strength = max(0, 1 - the weights of what is turned off - the density of the suppressions)
+```
+
+| Turned off | Everywhere | In one file |
+| --- | --- | --- |
+| Everything (clang-tidy's `-*` with nothing enabled after it, ruff's `ALL`, `-w`, mypy's `ignore_errors`) | the tool counts as not run | 0.5 |
+| A diagnostic that finds bugs (`bugprone-*`, `-Wconversion`, bugbear `B`, bandit `S`, mypy's error codes, tsconfig's strict flags), no reason given | 0.25 | 0.05 |
+| The same, with a comment saying why on its line or the line above | 0.12 | 0.02 |
+| Any other diagnostic | 0.02 | 0 |
+
+The suppressions in the product's code (`NOLINT`, `# noqa`, `# type: ignore`, `eslint-disable`, `#[allow]`,
+`//nolint`, `@SuppressWarnings`, ...) weigh 0.02 each per thousand lines of the tool's languages, 0.005 when text or a
+link after one says why, at most 0.5 together; a file turned off whole (`# mypy: ignore-errors`,
+`/* eslint-disable */`) weighs as everything turned off for one file.
+
+**A gate counts only when its strongest tool is at least half strong.** Below that, its slot is not filled, it holds
+its level back, and it is a next step: turn back on what is turned off, and fix what the tool finds. A gate's extra
+credit is scaled by its tools' mean strength. Each slot's `strength` is in `--format json --score`.
 
 ## Extra credit
 

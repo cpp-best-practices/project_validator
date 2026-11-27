@@ -27,6 +27,7 @@ from project_validator.hosting import remote_of
 from project_validator.project_map import ProjectStructure
 from project_validator.runner import Report, run_checks
 from project_validator.score import Score, score, sizes
+from project_validator.strength import strengths
 
 # How many directories a role summary names.
 ROLE_DIRECTORIES = 5
@@ -256,7 +257,9 @@ def _finished(
         structure=None if error is not None else context.structure,
         facts=facts,
         reports=reports,
-        score=score(reports, score_of, sizes(facts)) if score_of is not None and error is None else None,
+        score=score(reports, score_of, sizes(facts), strengths(facts))
+        if score_of is not None and error is None
+        else None,
         stages=stages,
         roles=roles(facts, selectors(facts).roles if error is None else ()),
         seconds=time.perf_counter() - started,
