@@ -2,7 +2,8 @@
 Pages, one board per language.
 
 `projects.toml` lists each project: its GitHub `owner/repo`, the board it appears on (`language`, an ecosystem label
-of the support matrix), and its maintainers' `consent` (a link to their approval, or `"seed"` for the seed list until
+of the support matrix), its `kind` (a library, an application or a tool: projects are ranked against their kind and
+their size too), and its maintainers' `consent` (a link to their approval, or `"seed"` for the seed list until
 a maintainer confirms). It may name a `branch` (else the default branch), `auxiliary` and `exclude` (as the CLI
 takes them) and a `license` when GitHub can not tell which it is. Unlike the corpus, entries are not pinned: each
 night evaluates the branch as it is, so the board follows the projects.
@@ -24,6 +25,9 @@ from pathlib import Path
 ROOT = Path(__file__).parent
 MANIFEST = ROOT / "projects.toml"
 SEED = "seed"
+# What a project is, as its entry declares: projects are ranked against those of their kind.
+KINDS = ("library", "application", "tool")
+LIBRARY = KINDS[0]
 _NAME = re.compile(r"^[\w.-]+/[\w.-]+$")
 
 
@@ -34,6 +38,7 @@ class Entry:
     name: str
     language: str
     consent: str
+    kind: str = LIBRARY
     branch: str | None = None
     auxiliary: tuple[str, ...] = ()
     exclude: tuple[str, ...] = ()
@@ -59,7 +64,7 @@ class ManifestError(ValueError):
     pass
 
 
-def _entry(listed: dict[str, object]) -> Entry:
+def _entry(listed: dict[str, object], *, lenient: bool = False) -> Entry:
     unknown = sorted(set(listed) - _FIELDS)
     if unknown:
         raise ManifestError(f"{listed.get('name', '?')}: unknown field(s) {', '.join(unknown)}")
@@ -67,6 +72,7 @@ def _entry(listed: dict[str, object]) -> Entry:
         return Entry(
             name=str(listed["name"]),
             language=str(listed["language"]),
+            kind=str(listed["kind"] if "kind" in listed or not lenient else LIBRARY),
             consent=str(listed["consent"]),
             branch=str(listed["branch"]) if "branch" in listed else None,
             auxiliary=tuple(str(item) for item in _list(listed.get("auxiliary", []))),
@@ -83,13 +89,14 @@ def _list(value: object) -> list[object]:
     return value
 
 
-def parse(text: str) -> list[Entry]:
-    """The entries a manifest's text lists."""
+def parse(text: str, *, lenient: bool = False) -> list[Entry]:
+    """The entries a manifest's text lists. `lenient` reads one from before a field was required (the base branch's,
+    which a pull request's check compares with): a missing `kind` is a library's."""
     try:
         listed = tomllib.loads(text)
     except tomllib.TOMLDecodeError as error:
         raise ManifestError(f"projects.toml does not parse: {error}") from None
-    return [_entry(entry) for entry in listed.get("project", [])]
+    return [_entry(entry, lenient=lenient) for entry in listed.get("project", [])]
 
 
 def entries(manifest: Path = MANIFEST) -> list[Entry]:

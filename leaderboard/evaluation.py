@@ -18,6 +18,7 @@ from pathlib import Path, PurePosixPath
 from leaderboard import Entry
 from project_validator.analysis import from_reports
 from project_validator.core import Context, Options, Project, Status
+from project_validator.facts.structure import SourceFile
 from project_validator.plugins import discover
 from project_validator.runner import Report, run_checks
 from project_validator.score import score, sizes
@@ -55,6 +56,29 @@ def fetch(entry: Entry, cache: Path, url: str | None = None) -> tuple[Path, str]
     return directory, _git(directory, "rev-parse", "HEAD").stdout.strip()
 
 
+def remote_head(entry: Entry, url: str | None = None) -> str | None:
+    """The commit at the head of the project's branch (the default branch unless the entry names one), asked of the
+    remote without fetching; None when it can not be told."""
+    git = shutil.which("git")
+    if git is None:  # pragma: no cover - git is installed wherever this runs
+        return None
+    asked = subprocess.run(  # noqa: S603 - argv list, no shell
+        [git, "ls-remote", url or f"{entry.url}.git", entry.branch or "HEAD"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    words = asked.stdout.split()
+    return words[0] if asked.returncode == 0 and words else None
+
+
+def _lines(context: Context) -> int:
+    """The lines of the product's code (its languages' sources; formats, tests, tooling and vendored code apart)."""
+    languages = context.structure.languages
+    found = context.facts.of(SourceFile)
+    return sum(source.lines for source in found if source.role == "product" and source.language in languages)
+
+
 def _judged(entry: Entry, directory: Path) -> tuple[list[Report], list[Report], Context, list[str]]:
     """Every check's report on the checkout, judged strictly and with `--allow-unknown` (the facts are extracted
     once), the context, and the name of every check."""
@@ -70,6 +94,7 @@ def _stamp(entry: Entry, validator: str, now: datetime | None) -> dict[str, obje
     return {
         "name": entry.name,
         "language": entry.language,
+        "kind": entry.kind,
         "seed": entry.seed,
         "validator": validator,
         "evaluated": (now or datetime.now(UTC)).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -97,6 +122,8 @@ def evaluate(
     if (failure := context.extraction_error) is not None:
         result["error"] = str(failure).replace(str(directory.resolve()), "<checkout>")
     shares = sizes(context.facts) if context.extraction_error is None else {}
+    if context.extraction_error is None:
+        result["lines"] = _lines(context)
     result["score"] = score(judged, every_check, shares).as_dict()
     result[REPORT] = html_report(from_reports(context, judged, every_check))
     return result

@@ -1,6 +1,7 @@
 # The leaderboard: open-source projects scored every night with `--score` and published to GitHub Pages, one board
 # per language (see leaderboard/README.md). Each entry names its GitHub `owner/repo`, the board it appears on
-# (`language`: an ecosystem label of the support matrix) and its maintainers' `consent`: a link to their approval,
+# (`language`: an ecosystem label of the support matrix), its `kind` (library, application or tool: projects are
+# ranked against their kind and their size too) and its maintainers' `consent`: a link to their approval,
 # or "seed" for the seed list until a maintainer confirms. Optional: `branch` (else the default branch),
 # `auxiliary` and `exclude` (as the CLI takes them), and `license` when GitHub can not tell which it is.
 #
@@ -15,158 +16,189 @@
 [[project]]
 name = "serilog/serilog"
 language = ".NET"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "gleam-lang/stdlib"
 language = "BEAM"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "uber/h3"
 language = "C"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "catchorg/Catch2"
 language = "C++"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "cpp-best-practices/cmake_template"
 language = "C++"
+kind = "tool"
 consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
 
 [[project]]
 name = "lefticus/cpp_weekly"
 language = "C++"
+kind = "application"
 consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
 
 [[project]]
 name = "lefticus/cpp_box"
 language = "C++"
+kind = "application"
 consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
 
 [[project]]
 name = "lefticus/json2cpp"
 language = "C++"
+kind = "tool"
 consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
 
 [[project]]
 name = "lefticus/6502-cpp"
 language = "C++"
+kind = "tool"
 consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
 
 [[project]]
 name = "lefticus/constexpr_all_the_things"
 language = "C++"
+kind = "library"
 consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
 
 [[project]]
 name = "lefticus/tools"
 language = "C++"
+kind = "library"
 consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
 
 [[project]]
 name = "lefticus/cpp_weekly_game_project"
 language = "C++"
+kind = "application"
 consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
 
 [[project]]
 name = "lefticus/cons_expr"
 language = "C++"
+kind = "library"
 consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
 
 [[project]]
 name = "lefticus/lambda_coroutines"
 language = "C++"
+kind = "library"
 consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
 
 [[project]]
 name = "metosin/malli"
 language = "Clojure"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "edicl/cl-ppcre"
 language = "Common Lisp"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "felangel/bloc"
 language = "Dart"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "magit/magit"
 language = "Emacs Lisp"
+kind = "application"
 consent = "seed"
 
 [[project]]
 name = "fortran-lang/stdlib"
 language = "Fortran"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "spf13/cobra"
 language = "Go"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "haskell/cabal"
 language = "Haskell"
+kind = "tool"
 consent = "seed"
 license = "BSD-3-Clause"
 
 [[project]]
 name = "expressjs/express"
 language = "JavaScript"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "jump-dev/JuMP.jl"
 language = "Julia"
+kind = "library"
 consent = "seed"
 license = "MPL-2.0"
 
 [[project]]
 name = "apache/commons-lang"
 language = "JVM"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "lunarmodules/Penlight"
 language = "Lua"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "lefticus/cppstdmd"
 language = "Lua"
+kind = "tool"
 consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
 
 [[project]]
 name = "ocaml-community/yojson"
 language = "OCaml"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "mojolicious/mojo"
 language = "Perl"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "Seldaek/monolog"
 language = "PHP"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "psf/requests"
 language = "Python"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "cpp-best-practices/project_validator"
 language = "Python"
+kind = "tool"
 consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
 # Its own test fixtures (deliberately bare projects) and vendored assets, as its self-validation excludes them.
 exclude = ["tests/fixtures", "project_validator/views/assets"]
@@ -174,48 +206,57 @@ exclude = ["tests/fixtures", "project_validator/views/assets"]
 [[project]]
 name = "tidyverse/ggplot2"
 language = "R"
+kind = "library"
 consent = "seed"
 license = "MIT"
 
 [[project]]
 name = "jackfirth/rebellion"
 language = "Racket"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "sinatra/sinatra"
 language = "Ruby"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "starship/starship"
 language = "Rust"
+kind = "application"
 consent = "seed"
 
 [[project]]
 name = "com-lihaoyi/os-lib"
 language = "Scala"
+kind = "library"
 consent = "seed"
 license = "MIT"
 
 [[project]]
 name = "acmesh-official/acme.sh"
 language = "Shell"
+kind = "tool"
 consent = "seed"
 
 [[project]]
 name = "cpp-best-practices/setup-cpp"
 language = "Shell"
+kind = "tool"
 consent = "https://github.com/cpp-best-practices/project_validator/pull/321"
 
 [[project]]
 name = "Alamofire/Alamofire"
 language = "Swift"
+kind = "library"
 consent = "seed"
 
 [[project]]
 name = "compiler-explorer/compiler-explorer"
 language = "TypeScript"
+kind = "application"
 consent = "seed"
 # Its examples/ and test inputs hold programs in about 100 languages, which would otherwise count as its own code
 # (upstream #182).
@@ -224,4 +265,5 @@ auxiliary = ["example", "test"]
 [[project]]
 name = "zigtools/zls"
 language = "Zig"
+kind = "tool"
 consent = "seed"

@@ -1,6 +1,7 @@
 """The leaderboard's commands, as the workflows run them (see leaderboard/README.md).
 
-python -m leaderboard matrix                         the names, as JSON, for a job matrix
+python -m leaderboard matrix [--changed DATA]        the names, as JSON, for a job matrix (with --changed, only
+                                                     those with something new to score since DATA's results)
 python -m leaderboard evaluate OUT [NAME...]         fetch and score projects (default: all) into OUT/<slug>.json
 python -m leaderboard record RESULTS DATA --date D   add a night's results to the data directory
 python -m leaderboard check --base BASE.toml --out PREVIEW.md
@@ -18,8 +19,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from leaderboard import MANIFEST, Entry, ManifestError, by_name, entries, parse
-from leaderboard.evaluation import evaluate, failed, fetch, write
-from leaderboard.history import record
+from leaderboard.evaluation import evaluate, failed, fetch, remote_head, write
+from leaderboard.history import changed_since, record
 from leaderboard.rules import Repository, changed, duplicates, github_repository, problems, token
 from project_validator.score import SCORE_VERSION
 
@@ -32,7 +33,10 @@ def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="python -m leaderboard", description="Score the leaderboard's projects.")
     parser.add_argument("--manifest", type=Path, default=MANIFEST, help="the project list (default: projects.toml)")
     commands = parser.add_subparsers(dest="command", required=True)
-    commands.add_parser("matrix", help="print the projects' names as JSON")
+    listing = commands.add_parser("matrix", help="print the projects' names as JSON")
+    listing.add_argument(
+        "--changed", type=Path, metavar="DATA", help="only the projects with a new commit since DATA's last results"
+    )
     evaluating = commands.add_parser("evaluate", help="fetch and score projects")
     evaluating.add_argument("out", type=Path, help="the directory to write each result to")
     evaluating.add_argument("names", nargs="*", help="the projects (default: every one)")
@@ -92,8 +96,11 @@ def check(
     new = changed(base, head)
     if not new:
         lines += ["No entry is added or changed.", ""]
+    seeds = {entry.name for entry in base if entry.seed}
     for entry in new:
         found = problems(entry, repository(entry.name))
+        if entry.seed and entry.name not in seeds:  # entries others add need the maintainers' consent
+            found.insert(0, 'only the seed list may say `consent = "seed"`: link to the maintainers\' approval')
         ok = ok and not found
         lines += _preview_lines(entry, found, None if found else evaluated(entry))
     lines.append(
@@ -101,6 +108,13 @@ def check(
         "applies in place."
     )
     return ok, "\n".join(lines) + "\n"
+
+
+def _matrix(listed: Sequence[Entry], changed: Path | None) -> list[str]:
+    """The names to score: every one, or with `changed` (the data directory), those with something new since."""
+    if changed is None:
+        return [entry.name for entry in listed]
+    return changed_since(listed, changed, lambda name: remote_head(by_name([name], listed)[0]))
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -111,7 +125,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"leaderboard: {error}", file=sys.stderr)
         return 1
     if arguments.command == "matrix":
-        print(json.dumps([entry.name for entry in listed]))
+        print(json.dumps(_matrix(listed, arguments.changed)))
     elif arguments.command == "evaluate":
         for entry in by_name(arguments.names, listed) if arguments.names else listed:
             print(write(_evaluated(entry, arguments.cache, arguments.validator), arguments.out))
@@ -121,7 +135,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     else:
         base_text = arguments.base.read_text(encoding="utf-8") if arguments.base.is_file() else ""
         ok, preview = check(
-            parse(base_text),
+            parse(base_text, lenient=True),
             listed,
             lambda name: github_repository(name, token()),
             lambda entry: _evaluated(entry, arguments.cache, arguments.validator),
