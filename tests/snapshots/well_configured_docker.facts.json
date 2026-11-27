@@ -584,6 +584,11 @@
       "reader": "license links"
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": "site/index.html",
+      "reader": "browser targets"
+    },
+    {
       "advisory": "",
       "heuristic": false,
       "job": ".github/workflows/ci.yml:lint",
