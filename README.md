@@ -362,6 +362,11 @@ To run them locally:
 | `copy-paste-detection` | `npx --yes jscpd@4.3.0` (settings in `.jscpd.json`) |
 | `function-limits` | `lizard --length 30 --warnings_only project_validator tests` |
 | `mutation testing` | `mapfile -t p < <(python tests/changed_mutants.py origin/main...HEAD) && mutmut run "${p[@]}"`: the mutants of the functions a pull request changes (settings in `[tool.mutmut]`; with no patterns, `mutmut run` would mutate everything); `mutmut results` lists survivors. mutmut copies the tree into `mutants/`, which the self-referential tests need to be a git repository: `git -C mutants init && git -C mutants add -A` after a first run. CI caches the verdicts between runs (`python tests/mutation_cache.py save\|restore DIR`, which keeps a verdict only while its function and the tests covering it are unchanged), and a push to `main` collects the map of tests to functions a new pull request starts from. A weekly run (`mutation-full.yml`) mutates the whole package in eight shards (`python tests/changed_mutants.py --shard 3/8`), each continuing from its own cache, and lists the survivors that are new. Under `pytest -x`, as mutmut runs it, a test stops at its first failing subtest (`tests/conftest.py`) |
+| `javascript` | `npm ci`, then `npm run format`, `npm run lint`, `npm run typecheck` and `npm test`: the JavaScript of the browser page (`web/`) and of the HTML report (`project_validator/views/assets`), with the tools `package.json` pins (prettier, ESLint with eslint-plugin-security and warnings failing it, tsc checking the scripts from their JSDoc, `node --test` in jsdom under c8, failing below every line and branch covered). The report tests render reports with the package of this checkout (`$PYTHON`, else `python3`) |
+| `browsers` | `npx playwright install chromium firefox webkit && npm run test:browsers`: the page and the report in each browser engine (Playwright), Pyodide and GitHub stood in for |
+| `stryker` | `npm run mutate`: the JavaScript's mutants (StrykerJS, `stryker.config.json`), incremental from `reports/stryker-incremental.json`, which CI caches between runs |
+| `fuzzing (repository input)` | `npm run fuzz`: what the page makes of a visitor's repository input (Jazzer.js) |
+| `npm audit` | `npm audit`: the JavaScript tools `package-lock.json` pins (none ships) |
 | `pages` | `python tests/build_site.py _site` (needs `Markdown`): the documentation site, written to `_site/`; CI publishes it to GitHub Pages from `main` and only builds it on a pull request that changes the builder or its workflow |
 | `corpus` | `python -m corpus record out/head` then `python -m corpus diff out/base out/head`: the [project corpus](corpus/README.md), real repositories pinned to a commit, validated and compared between two versions of the validator (CI compares a pull request with its base branch); about 5 GB of shallow checkouts, cached in `~/.cache/project_validator/corpus` |
 | `fuzzing` | `python tests/fuzz/fuzz_<parser>.py fuzz-corpus tests/fuzz/corpus/<parser> -max_total_time=60` for each of the six parsers (atheris), in its own workflow (`fuzzing.yml`, ten minutes a target weekly). Each target's corpus is cached between runs under a key of the target and the modules it imports (`python tests/fuzz/fingerprint.py <parser>`), and pruned with `-merge=1` before it is saved; the committed seeds are always read. The unit tests replay the seeds and the crash inputs of fixed crashes ([`tests/fuzz/crashes/`](tests/fuzz/crashes/README.md)) on every OS. Locally, write new corpus entries to a temp directory first: `python tests/fuzz/fuzz_<parser>.py "$(mktemp -d)" tests/fuzz/corpus/<parser> -max_total_time=60` |
@@ -406,6 +411,8 @@ with as little setup as possible. To keep it that way:
   `[project.optional-dependencies]` extra.
 - Plugins (checks) must not add dependencies that the rest of the validator
   doesn't already have.
+- **The JavaScript tools are for development only.** `package.json` pins the tools that check the browser page's
+  and the report's scripts; nothing of npm ships in the package or the page.
 
 ### Current Dependencies
 

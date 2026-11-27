@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "mutate": ["web/*.js", "project_validator/views/assets/*.js"],
+  "testRunner": "command",
+  "commandRunner": { "command": "node --test tests/web/*.test.mjs" },
+  "ignorePatterns": ["/*", "!/web", "!/tests", "!/project_validator", "!/pyproject.toml", "!/package.json"],
+  "reporters": ["clear-text", "progress", "html", "json"],
+  "incrementalFile": "reports/stryker-incremental.json",
+  "thresholds": { "high": 90, "low": 80, "break": 80 },
+  "timeoutMS": 20000
+}

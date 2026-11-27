@@ -111,6 +111,81 @@ jobs:
       - name: Detect duplicated code
         run: npx --yes jscpd@4.3.0
 
+  # The JavaScript of the browser page (web/) and of the HTML report (project_validator/views/assets), with the
+  # tools package.json pins: formatted, linted (warnings fail), type-checked from its JSDoc, and tested in jsdom with
+  # every line and branch covered.
+  javascript:
+    name: javascript
+    runs-on: ubuntu-latest
+    env:
+      PYTHON: python
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "lts/*"
+          cache: npm
+
+      # The report tests render reports with the package of this checkout.
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Install the package's dependencies
+        run: python -m pip install --require-hashes -r .github/requirements/test.txt
+
+      - name: Install the JavaScript tools
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test
+
+  # The page and the report in each browser engine, as visitors run them: browser code never runs on Node, so its
+  # platforms are the engines, whatever the OS.
+  browsers:
+    name: browsers (Chromium, Firefox, WebKit)
+    runs-on: ubuntu-latest
+    env:
+      PYTHON: python
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "lts/*"
+          cache: npm
+
+      # The report tests render reports with the package of this checkout.
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Install the package's dependencies
+        run: python -m pip install --require-hashes -r .github/requirements/test.txt
+
+      - name: Install the JavaScript tools
+        run: npm ci
+
+      - name: Install the browsers
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Test in each browser
+        run: npm run test:browsers
+
   documentation:
     name: documentation
     runs-on: ubuntu-latest
@@ -255,10 +330,8 @@ jobs:
       # the job summary first; the strict run decides the step.
       - name: Validate project_validator with itself
         run: |
-          # The HTML report's script (views/assets) and the browser page's (web/) are JavaScript without a JavaScript
-          # toolchain of their own yet: they are left out until they have one, rather than hidden from the validator.
-          # build/ is what `pip install .` left (a copy of the package, that script included).
-          exclude=(--exclude tests/fixtures --exclude project_validator/views/assets --exclude web --exclude build)
+          # build/ is what `pip install .` left (a copy of the package, the report's scripts included).
+          exclude=(--exclude tests/fixtures --exclude build)
           project_validator --format markdown "${exclude[@]}" . >> "$GITHUB_STEP_SUMMARY" || true
           project_validator --strict "${exclude[@]}" .
 

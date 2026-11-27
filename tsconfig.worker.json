@@ -1,0 +1,6 @@
+{
+  // The script that runs in the page's Web Worker, with what it imports.
+  "extends": "./tsconfig.json",
+  "compilerOptions": { "lib": ["es2022", "webworker"] },
+  "files": ["web/worker.js", "web/github.js"]
+}

@@ -2,154 +2,241 @@
 // a link to a result opens it, and the facts (JSON in #facts-data) are browsed by kind and searched.
 "use strict";
 
+/**
+ * A fact as the report writes it: its kind, its origin, a link to the origin if it has one, and its fields.
+ * @typedef {{ k: string, o: string, u: string | null, f: Record<string, unknown> }} Fact
+ * @typedef {{ facts: Fact[], kinds: [string, number, string][] }} FactData
+ */
+
+/**
+ * @param {string} tag
+ * @param {string} [cls]
+ * @param {string} [text]
+ */
 function element(tag, cls, text) {
-  var node = document.createElement(tag);
+  const node = document.createElement(tag);
   if (cls) node.className = cls;
   if (text !== undefined) node.textContent = text;
   return node;
 }
 
+/**
+ * The report's elements `selector` finds (each an HTML element).
+ * @param {string} selector
+ * @param {ParentNode} [root]
+ * @returns {HTMLElement[]}
+ */
+function all(selector, root = document) {
+  return /** @type {HTMLElement[]} */ (Array.from(root.querySelectorAll(selector)));
+}
+
+/**
+ * The report's element of `id`, as the type it is.
+ * @template {HTMLElement} T
+ * @param {string} id
+ * @returns {T}
+ */
+function byId(id) {
+  return /** @type {T} */ (document.getElementById(id));
+}
+
 function followSections() {
-  var links = Array.prototype.slice.call(document.querySelectorAll(".topbar nav a"));
-  var sections = links.map(function (a) { return document.querySelector(a.getAttribute("href")); });
+  const links = all(".topbar nav a");
+  const sections = links.map((a) => document.querySelector(/** @type {string} */ (a.getAttribute("href"))));
   function spy() {
-    var current = 0;
-    sections.forEach(function (s, i) { if (s && s.getBoundingClientRect().top < 120) current = i; });
-    links.forEach(function (a, i) { a.classList.toggle("active", i === current); });
+    let current = 0;
+    sections.forEach((s, i) => {
+      if (s && s.getBoundingClientRect().top < 120) current = i;
+    });
+    links.forEach((a, i) => a.classList.toggle("active", i === current));
   }
   document.addEventListener("scroll", spy, { passive: true });
   spy();
 }
 
-function visible(node) { return node.style.display !== "none"; }
+/** @param {HTMLElement} node */
+function visible(node) {
+  return node.style.display !== "none";
+}
 
+/**
+ * @param {Map<string, boolean>} shown
+ * @param {HTMLInputElement} search
+ */
 function filterResults(shown, search) {
-  var text = (search && search.value || "").toLowerCase();
-  document.querySelectorAll("details.check").forEach(function (d) {
-    var ok = shown[d.dataset.status] !== false && (!text || d.dataset.search.indexOf(text) >= 0);
+  const text = search.value.toLowerCase();
+  all("details.check").forEach((d) => {
+    const ok =
+      shown.get(/** @type {string} */ (d.dataset.status)) !== false &&
+      (!text || /** @type {string} */ (d.dataset.search).indexOf(text) >= 0);
     d.style.display = ok ? "" : "none";
   });
-  document.querySelectorAll(".category").forEach(function (c) {
-    var checks = c.querySelectorAll("details.check");
-    c.style.display = Array.prototype.some.call(checks, visible) ? "" : "none";
+  all(".category").forEach((c) => {
+    c.style.display = all("details.check", c).some(visible) ? "" : "none";
   });
 }
 
 function setUpFilters() {
-  var shown = {}, search = document.getElementById("result-search");
-  var buttons = document.querySelectorAll(".filter");
-  buttons.forEach(function (b) { shown[b.dataset.filter] = b.getAttribute("aria-pressed") === "true"; });
-  buttons.forEach(function (b) {
-    b.addEventListener("click", function () {
-      shown[b.dataset.filter] = !shown[b.dataset.filter];
-      b.setAttribute("aria-pressed", String(shown[b.dataset.filter]));
+  /** @type {Map<string, boolean>} */
+  const shown = new Map();
+  /** @type {HTMLInputElement} */
+  const search = byId("result-search");
+  const buttons = all(".filter");
+  const filter = (/** @type {HTMLElement} */ b) => /** @type {string} */ (b.dataset.filter);
+  buttons.forEach((b) => {
+    shown.set(filter(b), b.getAttribute("aria-pressed") === "true");
+  });
+  buttons.forEach((b) => {
+    b.addEventListener("click", () => {
+      shown.set(filter(b), !shown.get(filter(b)));
+      b.setAttribute("aria-pressed", String(shown.get(filter(b))));
       filterResults(shown, search);
     });
   });
-  if (search) search.addEventListener("input", function () { filterResults(shown, search); });
+  search.addEventListener("input", () => filterResults(shown, search));
   filterResults(shown, search);
 }
 
 function openLinkedResult() {
-  var target = location.hash && document.getElementById(location.hash.slice(1));
-  if (target && target.tagName === "DETAILS") { target.open = true; target.style.display = ""; }
+  const target = location.hash && document.getElementById(location.hash.slice(1));
+  if (target instanceof HTMLDetailsElement) {
+    target.open = true;
+    target.style.display = "";
+  }
 }
 
-function FactBrowser(data) {
-  this.data = data;
-  this.kinds = document.getElementById("fact-kinds");
-  this.list = document.getElementById("fact-list");
-  this.doc = document.getElementById("fact-doc");
-  this.page = document.getElementById("fact-page");
-  this.search = document.getElementById("fact-search");
-  this.kind = null;
-  this.offset = 0;
-  this.size = 50;
-  this.docs = {};
+class FactBrowser {
+  /** @param {FactData} data */
+  constructor(data) {
+    this.data = data;
+    this.kinds = byId("fact-kinds");
+    this.list = byId("fact-list");
+    this.doc = byId("fact-doc");
+    this.page = byId("fact-page");
+    /** @type {HTMLInputElement} */
+    this.search = byId("fact-search");
+    /** @type {HTMLButtonElement} */
+    this.previous = byId("fact-prev");
+    /** @type {HTMLButtonElement} */
+    this.next = byId("fact-next");
+    /** @type {string | null} */
+    this.kind = null;
+    this.offset = 0;
+    this.size = 50;
+    /** @type {Map<string, string>} */
+    this.docs = new Map();
+  }
+
+  /**
+   * @param {string} name
+   * @param {number} count
+   * @param {string} title
+   * @param {string | null} kind
+   */
+  kindButton(name, count, title, kind) {
+    const button = element("button", kind === null ? "active" : "");
+    button.appendChild(element("span", "", name));
+    button.appendChild(element("span", "n", String(count)));
+    if (title) button.title = title;
+    button.addEventListener("click", () => this.pick(kind, button));
+    this.kinds.appendChild(button);
+  }
+
+  /**
+   * @param {string | null} kind
+   * @param {HTMLElement} button
+   */
+  pick(kind, button) {
+    this.kind = kind;
+    this.offset = 0;
+    all("button", this.kinds).forEach((b) => b.classList.toggle("active", b === button));
+    this.render();
+  }
+
+  matching() {
+    const kind = this.kind;
+    const text = this.search.value.toLowerCase();
+    return this.data.facts.filter((f) => {
+      if (kind && f.k !== kind) return false;
+      return !text || (f.k + " " + f.o + " " + JSON.stringify(f.f)).toLowerCase().indexOf(text) >= 0;
+    });
+  }
+
+  /** @param {Fact} fact */
+  item(fact) {
+    const item = element("div", "fact");
+    const head = element("div");
+    const fields = element("dl");
+    head.appendChild(element("strong", "", fact.k));
+    head.appendChild(document.createTextNode(" "));
+    if (fact.u) {
+      const origin = /** @type {HTMLAnchorElement} */ (element("a", "origin", fact.o));
+      origin.href = fact.u;
+      origin.target = "_blank";
+      origin.rel = "noopener";
+      head.appendChild(origin);
+    } else {
+      head.appendChild(element("span", "origin muted", fact.o));
+    }
+    Object.entries(fact.f).forEach(([key, value]) => {
+      if (value === null || value === "" || value === false || (Array.isArray(value) && !value.length)) return;
+      fields.appendChild(element("dt", "", key));
+      fields.appendChild(element("dd", "", typeof value === "string" ? value : JSON.stringify(value)));
+    });
+    item.appendChild(head);
+    item.appendChild(fields);
+    return item;
+  }
+
+  render() {
+    const found = this.matching();
+    const last = Math.min(this.offset + this.size, found.length);
+    this.doc.textContent = this.kind
+      ? /** @type {string} */ (this.docs.get(this.kind))
+      : "Every fact, in the order the stages found them.";
+    this.list.textContent = "";
+    found.slice(this.offset, last).forEach((fact) => this.list.appendChild(this.item(fact)));
+    this.page.textContent = found.length ? this.offset + 1 + " to " + last + " of " + found.length : "No fact matches.";
+    this.previous.disabled = this.offset === 0;
+    this.next.disabled = last >= found.length;
+  }
+
+  start() {
+    this.kindButton("All facts", this.data.facts.length, "", null);
+    this.data.kinds.forEach((entry) => {
+      this.docs.set(entry[0], entry[2]);
+      this.kindButton(entry[0], entry[1], entry[2], entry[0]);
+    });
+    this.previous.addEventListener("click", () => {
+      this.offset = Math.max(0, this.offset - this.size);
+      this.render();
+    });
+    this.next.addEventListener("click", () => {
+      this.offset += this.size;
+      this.render();
+    });
+    this.search.addEventListener("input", () => {
+      this.offset = 0;
+      this.render();
+    });
+    this.render();
+  }
 }
-
-FactBrowser.prototype.kindButton = function (name, count, title, kind) {
-  var self = this, button = element("button", kind === null ? "active" : "");
-  button.appendChild(element("span", "", name));
-  button.appendChild(element("span", "n", String(count)));
-  if (title) button.title = title;
-  button.addEventListener("click", function () { self.pick(kind, button); });
-  this.kinds.appendChild(button);
-};
-
-FactBrowser.prototype.pick = function (kind, button) {
-  this.kind = kind;
-  this.offset = 0;
-  this.kinds.querySelectorAll("button").forEach(function (b) { b.classList.toggle("active", b === button); });
-  this.render();
-};
-
-FactBrowser.prototype.matching = function () {
-  var kind = this.kind, text = (this.search.value || "").toLowerCase();
-  return this.data.facts.filter(function (f) {
-    if (kind && f.k !== kind) return false;
-    return !text || (f.k + " " + f.o + " " + JSON.stringify(f.f)).toLowerCase().indexOf(text) >= 0;
-  });
-};
-
-FactBrowser.prototype.item = function (fact) {
-  var item = element("div", "fact"), head = element("div"), fields = element("dl");
-  head.appendChild(element("strong", "", fact.k));
-  head.appendChild(document.createTextNode(" "));
-  var origin = element(fact.u ? "a" : "span", fact.u ? "origin" : "origin muted", fact.o);
-  if (fact.u) { origin.href = fact.u; origin.target = "_blank"; origin.rel = "noopener"; }
-  head.appendChild(origin);
-  Object.keys(fact.f).forEach(function (key) {
-    var value = fact.f[key];
-    if (value === null || value === "" || value === false || (Array.isArray(value) && !value.length)) return;
-    fields.appendChild(element("dt", "", key));
-    fields.appendChild(element("dd", "", typeof value === "string" ? value : JSON.stringify(value)));
-  });
-  item.appendChild(head);
-  item.appendChild(fields);
-  return item;
-};
-
-FactBrowser.prototype.render = function () {
-  var self = this, found = this.matching(), last = Math.min(this.offset + this.size, found.length);
-  this.doc.textContent = this.kind ? this.docs[this.kind] || "" : "Every fact, in the order the stages found them.";
-  this.list.textContent = "";
-  found.slice(this.offset, last).forEach(function (fact) { self.list.appendChild(self.item(fact)); });
-  this.page.textContent = found.length ? (this.offset + 1) + " to " + last + " of " + found.length : "No fact matches.";
-  document.getElementById("fact-prev").disabled = this.offset === 0;
-  document.getElementById("fact-next").disabled = last >= found.length;
-};
-
-FactBrowser.prototype.start = function () {
-  var self = this;
-  this.kindButton("All facts", this.data.facts.length, "", null);
-  this.data.kinds.forEach(function (entry) {
-    self.docs[entry[0]] = entry[2];
-    self.kindButton(entry[0], entry[1], entry[2], entry[0]);
-  });
-  document.getElementById("fact-prev").addEventListener("click", function () {
-    self.offset = Math.max(0, self.offset - self.size);
-    self.render();
-  });
-  document.getElementById("fact-next").addEventListener("click", function () { self.offset += self.size; self.render(); });
-  this.search.addEventListener("input", function () { self.offset = 0; self.render(); });
-  this.render();
-};
 
 // Trees open and close with the arrow keys, as they do elsewhere: on a focused summary, Right opens its details
 // and Left closes them, or, already closed, moves to the summary of the details around it.
 function walkTreesWithArrows() {
-  document.addEventListener("keydown", function (event) {
-    var summary = event.target;
-    if (!summary || summary.tagName !== "SUMMARY") return;
-    var details = summary.parentElement;
+  document.addEventListener("keydown", (event) => {
+    const summary = event.target;
+    if (!(summary instanceof HTMLElement) || summary.tagName !== "SUMMARY") return;
+    const details = /** @type {HTMLDetailsElement} */ (summary.parentElement);
     if (event.key === "ArrowRight" && !details.open) {
       details.open = true;
       event.preventDefault();
     } else if (event.key === "ArrowLeft") {
-      var outer = details.parentElement && details.parentElement.closest("details");
+      const outer = details.parentElement && details.parentElement.closest("details");
       if (details.open) details.open = false;
-      else if (outer) outer.querySelector("summary").focus();
+      else if (outer) /** @type {HTMLElement} */ (outer.querySelector("summary")).focus();
       event.preventDefault();
     }
   });
@@ -160,4 +247,4 @@ walkTreesWithArrows();
 setUpFilters();
 window.addEventListener("hashchange", openLinkedResult);
 openLinkedResult();
-new FactBrowser(JSON.parse(document.getElementById("facts-data").textContent)).start();
+new FactBrowser(JSON.parse(/** @type {string} */ (byId("facts-data").textContent))).start();

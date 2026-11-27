@@ -23,3 +23,11 @@ updates:
       interval: "weekly"
     cooldown:
       default-days: 7
+
+  # The JavaScript tools package.json pins.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
