@@ -10,6 +10,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "JSON",
       "lines": 5,
@@ -18,6 +19,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "Perl",
       "lines": 5,
@@ -26,6 +28,7 @@
     },
     {
       "ambiguous": true,
+      "generator": "",
       "kind": "SourceFile",
       "language": null,
       "lines": 2,

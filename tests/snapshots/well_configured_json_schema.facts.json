@@ -2,6 +2,7 @@
   "facts": [
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 6,
@@ -10,6 +11,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 9,
@@ -18,6 +20,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 12,
@@ -26,6 +29,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 6,
@@ -34,6 +38,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "JSON",
       "lines": 4,
@@ -42,6 +47,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "JSON",
       "lines": 3,
@@ -50,6 +56,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "JSON",
       "lines": 4,
@@ -58,6 +65,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "JSON",
       "lines": 14,
@@ -734,7 +742,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:validate",
       "kind": "ToolRun",
       "languages": [
@@ -758,7 +768,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:validate",
       "kind": "ToolRun",
       "languages": [
@@ -785,7 +797,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:validate",
       "kind": "ToolRun",
       "languages": [
@@ -812,7 +826,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:validate",
       "kind": "ToolRun",
       "languages": [
@@ -836,7 +852,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:validate",
       "kind": "ToolRun",
       "languages": [

@@ -10,6 +10,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "TOML",
       "lines": 7,
@@ -18,6 +19,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "Rust",
       "lines": 3,
@@ -26,6 +28,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "Rust",
       "lines": 1,

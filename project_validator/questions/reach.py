@@ -1,7 +1,7 @@
 """How much of a language's code the runs of a gate's tools reach (upstream #333): a run reaches the paths its command
 names, or all of its scope when it names none. Only the product's code counts: a run that skips tests, tooling or
 examples misses none of it, nor one that skips a build file written in a language (Package.swift, project.clj) or a
-tool's configuration (vitest.config.ts).
+tool's configuration (vitest.config.ts), nor what an outside generator wrote (protoc's, SWIG's).
 Weighed by lines."""
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ from project_validator.facts import Facts
 from project_validator.facts.analysis import ANALYSIS, TYPE_CHECK
 from project_validator.facts.formatting import FORMAT
 from project_validator.facts.structure import BuildFile, SourceFile, Unit
-from project_validator.facts.tools import ToolRun, owner, within
+from project_validator.facts.tools import ToolRun, owner
 
 # The aspects a run provides for the files it is given: formatting and analysing them.
 PATHED = frozenset({FORMAT, ANALYSIS, TYPE_CHECK})
@@ -42,10 +42,6 @@ def _configuration(path: str) -> bool:
     return any(fnmatchcase(name, pattern) for pattern in _CONFIGURATION)
 
 
-def _reaches(run: ToolRun, path: str) -> bool:
-    return not run.paths or any(within(path, named) or fnmatchcase(path, named) for named in run.paths)
-
-
 def _place(path: str, unit: str) -> str:
     """Where a missed file is, for findings: the folder it is in below its unit, or the file itself."""
     relative = PurePosixPath(path).relative_to(unit) if unit != "." else PurePosixPath(path)
@@ -69,6 +65,7 @@ def _product_files(language: str, unit: str, facts: Facts) -> list[SourceFile]:
         and source.role == "product"
         and source.path not in builds
         and not _configuration(source.path)
+        and not source.generator  # an outside generator's output is not the project's to check
         and owner(str(PurePosixPath(source.path).parent), units) == unit
     ]
 
@@ -80,7 +77,7 @@ def reach(language: str, unit: str, facts: Facts, runs: Iterable[ToolRun]) -> Re
     total = sum(source.lines for source in files)
     missed: dict[str, int] = {}
     for source in files:
-        if not any(_reaches(run, source.path) for run in runs):
+        if not any(run.reaches(source.path) for run in runs):
             place = _place(source.path, unit)
             missed[place] = missed.get(place, 0) + source.lines
     lost = sum(missed.values())

@@ -10,6 +10,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "Clojure",
       "lines": 2,
@@ -18,6 +19,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "Clojure",
       "lines": 3,

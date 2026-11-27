@@ -10,6 +10,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "Scala",
       "lines": 4,
@@ -18,6 +19,7 @@
     },
     {
       "ambiguous": true,
+      "generator": "",
       "kind": "SourceFile",
       "language": null,
       "lines": 3,

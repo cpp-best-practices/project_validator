@@ -10,6 +10,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "Fortran",
       "lines": 5,
@@ -18,6 +19,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "TOML",
       "lines": 5,
@@ -26,6 +28,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "Fortran",
       "lines": 10,
@@ -34,6 +37,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "Fortran",
       "lines": 0,

@@ -245,6 +245,15 @@ written in the language (`Package.swift`) and tools' configuration (`vitest.conf
 passes on part of the code is filled by that share in the score, and names the folders no run reaches. Source files
 record their lines for this (`SourceFile.lines`).
 
+A tool's own settings scope its runs too (`Scoping`, beside each settings reader): the keys that exclude paths (ruff's
+`exclude` and `extend-exclude`, mypy's `exclude` regular expressions, tsconfig's `exclude`) and those that name the only
+paths it checks (mypy's `files`, tsconfig's `include` and `files`), relative to the settings file (a name alone matches
+at any depth for ruff, as ruff reads it, and only where the settings file is for tsconfig and mypy's `files`)
+(`ToolRun.excluded`, `ToolRun.included`, `ToolRun.reaches`). Excluding auxiliary code takes nothing off, as above; nor
+does excluding what an outside generator wrote, which its first lines say (`SourceFile.generator`: protoc, gRPC, SWIG,
+bison, flex, re2c, moc, uic, Cython, Thrift, FlatBuffers, Cap'n Proto, gperf). Code a generator of the project's own
+wrote is product code: excluding it lowers the share.
+
 A **settings reader** (`SettingsReader`, `project_validator/facts/settings.py`) reads one tool's settings from the
 files it reads by default and from the configuration files CI commands name; each file read is a
 `ConfigurationFile` fact, each setting a `Setting`, flagged `heuristic` when matched in code. Readers find files by

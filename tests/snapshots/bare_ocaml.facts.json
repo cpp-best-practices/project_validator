@@ -18,6 +18,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "OCaml",
       "lines": 1,

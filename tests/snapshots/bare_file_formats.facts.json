@@ -2,6 +2,7 @@
   "facts": [
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "PNG",
       "lines": 0,
@@ -10,6 +11,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "CSV",
       "lines": 2,

@@ -8,6 +8,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 6,
@@ -16,6 +17,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 9,
@@ -24,6 +26,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 10,
@@ -32,6 +35,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
       "lines": 6,
@@ -40,6 +44,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "CMake",
       "lines": 4,
@@ -48,6 +53,7 @@
     },
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "CMake",
       "lines": 3,
@@ -511,7 +517,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
       "languages": [
@@ -535,7 +543,9 @@
     },
     {
       "advisory": "",
+      "excluded": [],
       "heuristic": false,
+      "included": [],
       "job": ".github/workflows/ci.yml:lint",
       "kind": "ToolRun",
       "languages": [

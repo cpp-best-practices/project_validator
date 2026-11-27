@@ -11,7 +11,7 @@ from project_validator.facts.analysis import Strictness, analysed, analyzer, typ
 from project_validator.facts.arguments import has_option, program
 from project_validator.facts.expansion import Action, from_hook
 from project_validator.facts.settings import Read, SettingsReader, ini_settings, json_settings, toml_settings
-from project_validator.facts.tools import Run, defined_by, starts
+from project_validator.facts.tools import ANCHORED, REGEX, Run, Scoping, defined_by, starts
 from project_validator.tools.limits import function_length_limiters
 
 PYTHON = frozenset({"Python"})
@@ -49,6 +49,8 @@ MYPY_SETTINGS = SettingsReader(
     files=("mypy.ini", ".mypy.ini", "setup.cfg", "pyproject.toml"),
     read=_reads("mypy", tables=("mypy",), section="mypy"),
 )
+MYPY_SCOPE = Scoping(tools=("mypy",), settings="mypy", excludes=("exclude",), how=REGEX)
+MYPY_FILES = Scoping(tools=("mypy",), settings="mypy", includes=("files",), how=ANCHORED)
 PYRIGHT_SETTINGS = SettingsReader(
     name="pyright",
     files=("pyrightconfig.json", "pyproject.toml"),

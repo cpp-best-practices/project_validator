@@ -2,6 +2,7 @@
   "facts": [
     {
       "ambiguous": false,
+      "generator": "",
       "kind": "SourceFile",
       "language": "Typst",
       "lines": 6,
