@@ -183,15 +183,36 @@ class UnknownCommandTests(unittest.TestCase):
             ],
         )
 
-    # upstream #273: telling an unread composite action that does the job from one that runs nothing of the project's
-    # (release-drafter) needs its action.yml, which the opt-in --fetch-remote reads (#248).
-    @unittest.expectedFailure
     def test_an_unknown_composite_action_that_is_the_whole_job_is_unknown(self) -> None:
         """A job that is one composite action the validator does not know (as terraform-aws-modules' pre-commit job
-        was, before clowdhaus' action was known); telling it from the many actions that run nothing of the project's
-        (checkout, setup-*) is still open."""
-        facts = _facts_of(github_steps("uses: some-org/composite-actions/lint@v1"))
-        self.assertTrue([unknown for unknown in facts.of(Unknown) if unknown.hides == "commands"])
+        was, before clowdhaus' action was known) may run any tool: what it runs is unknown, and --fetch-remote reads
+        it (upstream #273)."""
+        for steps in (
+            ("uses: some-org/composite-actions/lint@v1",),
+            ("uses: actions/checkout@v4", "uses: some-org/composite-actions/lint@v1"),
+        ):
+            with self.subTest(steps=steps):
+                unknowns = list(_facts_of(github_steps(*steps)).of(Unknown))
+                self.assertEqual(
+                    [(unknown.subject, unknown.hides) for unknown in unknowns],
+                    [("the action some-org/composite-actions/lint@v1", "commands")],
+                )
+                self.assertIn("--fetch-remote reads it", unknowns[0].reason)
+
+    def test_an_action_beside_the_jobs_own_commands_or_one_the_validator_knows_is_no_unknown(self) -> None:
+        """A job with commands of its own runs what they say; an action the validator models, an official one, or a
+        toolchain's setup action is known."""
+        for steps in (
+            ("uses: some-org/composite-actions/lint@v1", "run: echo built"),
+            ("uses: golangci/golangci-lint-action@v8",),
+            ("uses: actions/upload-pages-artifact@v3",),
+            ("uses: dtolnay/rust-toolchain@stable",),
+            ("uses: docker://alpine:3.20",),
+            ("uses: release-drafter/release-drafter@v6",),  # in the curated list of those that run nothing of it
+            ("uses: actions/checkout@v4", "uses: step-security/harden-runner@v2", "uses: dessant/lock-threads@v5"),
+        ):
+            with self.subTest(steps=steps):
+                self.assertEqual(list(_facts_of(github_steps(*steps)).of(Unknown)), [])
 
 
 class EnvironmentTests(unittest.TestCase):
