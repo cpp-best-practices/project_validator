@@ -34,7 +34,7 @@ from project_validator.core import Result, Status
 from project_validator.facts import Facts
 from project_validator.judging import NOT_FOR_AUXILIARY
 from project_validator.runner import Report
-from project_validator.strength import COVERED
+from project_validator.strength import COVERED, TurnedOff
 
 # 2: each language's slots weigh its share of its unit's code (upstream #331).
 # 3: what the validator finds itself (`FINDINGS`) earns nothing; 4: tools' strength weighs their slots.
@@ -475,11 +475,50 @@ def _weighed(cells: Iterable[Cell], strengths: Mapping[str, float]) -> tuple[Cel
     )
 
 
+# The fewest points a re-enabling step is worth: a tenth, the least the score shows.
+SMALLEST_STEP = 0.05
+
+
+def _restored(cell: Cell, off: TurnedOff) -> Cell:
+    """`cell` with what `off` turns off of its tool turned back on."""
+    found = cell.strengths or (1.0,) * len(cell.tools)
+    strengths = (
+        min(1.0, strength + off.weight) if tool == off.tool else strength
+        for tool, strength in zip(cell.tools, found, strict=True)
+    )
+    return replace(cell, strengths=tuple(strengths))
+
+
+def _reenabled(cells: Sequence[Cell], slots: float, turned: Iterable[TurnedOff]) -> Iterator[NextStep]:
+    """A next step for each diagnostic that finds bugs a tool's configuration turns off, where turning it back on
+    restores points: the slots of the tool's gates filled again, or their extra credit."""
+    for off in turned:
+        found = [cell for cell in cells if off.tool in cell.tools and cell.status is Status.PASS]
+        restored = (_restored(cell, off) for cell in found)
+        gained = sum(new.filled + new.extra - old.filled - old.extra for old, new in zip(found, restored, strict=True))
+        points = 100.0 * gained / slots
+        if points >= SMALLEST_STEP:
+            yield NextStep(
+                check=found[0].check,
+                ecosystem=found[0].ecosystem,
+                unit=found[0].unit,
+                tier=found[0].tier,
+                status=found[0].status,
+                level=found[0].level,
+                points=points,
+                needed_for=None,
+                completes=False,
+                message=f"re-enable {off.diagnostic} in {off.path} ({off.tool})",
+                hint=f"re-enable {off.diagnostic} in {off.path} and fix what {off.tool} finds",
+            )
+
+
 def score(
     reports: Iterable[Report],
     every_check: Iterable[str] = (),
     sizes: Sizes | None = None,
     strengths: Mapping[str, float] | None = None,
+    turned_off: Iterable[TurnedOff] = (),
 ) -> Score:
     """The score of a run, from its reports. A level is reached only when each of its checks ran, and the top level
     only when `every_check` (the names of every check there is) ran too: a run narrowed by `--only` or `--skip`
@@ -493,13 +532,14 @@ def score(
     level = _level(cells, ran, everything)
     slots = sum(cell.weight for cell in cells)
     complete_run = level == TOP_LEVEL or _ran_all(level + 1, ran, everything)
+    steps = _next_steps(cells, slots, level, complete_run=complete_run)
     return Score(
         level=level,
         filled=sum(cell.filled for cell in cells),
         slots=slots,
         extra_slots=sum(cell.extra for cell in cells),
         cells=cells,
-        next_steps=_next_steps(cells, slots, level, complete_run=complete_run),
+        next_steps=tuple(sorted((*steps, *_reenabled(cells, slots, turned_off)), key=_rank)),
     )
 
 

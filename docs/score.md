@@ -73,6 +73,11 @@ link after one says why, at most 0.5 together; a file turned off whole (`# mypy:
 its level back, and it is a next step: turn back on what is turned off, and fix what the tool finds. A gate's extra
 credit is scaled by its tools' mean strength. Each slot's `strength` is in `--format json --score`.
 
+Each diagnostic that finds bugs a tool's configuration turns off is a next step of its own, where turning it back on
+restores points: `re-enable bugprone-narrowing-conversions in .clang-tidy (clang-tidy)`, and fix what the tool finds.
+It is worth the slots it fills again, or the extra credit it restores; a small, local task that improves the code
+rather than adding a tool.
+
 ## Extra credit
 
 Some gates find more with each tool: two static analysers, a scanner beside CodeQL, a second fuzzing engine, more
