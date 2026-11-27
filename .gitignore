@@ -34,3 +34,11 @@ _site/
 
 # Local patch-coverage reports
 .patchcov.*
+
+# JavaScript: the tools' installs and what they write (at the root only: the fixtures commit a coverage/ on purpose)
+node_modules/
+/coverage/
+/reports/
+/.stryker-tmp/
+/test-results/
+/playwright-report/

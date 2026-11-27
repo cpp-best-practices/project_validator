@@ -1,0 +1,13 @@
+{
+  // The page's and the report's scripts, type-checked from their JSDoc: those that run in a page.
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "target": "es2022",
+    "lib": ["es2022", "dom", "dom.iterable"],
+    "types": []
+  },
+  "files": ["web/app.js", "web/github.js", "project_validator/views/assets/report.js", "project_validator/views/assets/theme.js"]
+}

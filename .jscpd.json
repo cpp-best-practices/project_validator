@@ -1,9 +1,9 @@
 {
   "threshold": 0,
   "reporters": ["console"],
-  "format": ["python"],
+  "format": ["python", "javascript"],
   "gitignore": true,
-  "ignore": ["**/__pycache__/**", "**/.venv/**", "**/*.egg-info/**"],
+  "ignore": ["**/__pycache__/**", "**/.venv/**", "**/*.egg-info/**", "**/node_modules/**"],
   "ignorePattern": ["from [\\w.]+ import \\([^)]*\\)", "from [\\w.]+ import [\\w, ]+"],
-  "path": ["project_validator", "tests", "leaderboard"]
+  "path": ["project_validator", "tests", "leaderboard", "web"]
 }

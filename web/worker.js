@@ -8,19 +8,43 @@
 const PYODIDE = "https://cdn.jsdelivr.net/pyodide/v314.0.8/full/";
 importScripts(PYODIDE + "pyodide.js", "github.js");
 
+/**
+ * What the worker uses of Pyodide (https://pyodide.org/en/stable/usage/api/js-api.html).
+ * @typedef {{
+ *   mkdirTree(path: string): void, writeFile(path: string, bytes: Uint8Array): void,
+ *   truncate(path: string, size: number): void, analyzePath(path: string): { exists: boolean },
+ *   readdir(path: string): string[], stat(path: string): { mode: number }, isDir(mode: number): boolean,
+ *   rmdir(path: string): void, unlink(path: string): void,
+ * }} FileSystem
+ * @typedef {{
+ *   FS: FileSystem, loadPackage(names: string[]): Promise<void>,
+ *   pyimport(name: string): { install(requirements: string[]): Promise<void> },
+ *   runPython(code: string): { toJs(): [number, string] },
+ * }} Pyodide
+ */
+
+/** pyodide.js's loader, a global of the worker once imported. */
+/** @type {(options: { indexURL: string }) => Promise<Pyodide>} */
+const loadPython = /** @type {any} */ (globalThis).loadPyodide;
+
+/** @type {Promise<Pyodide> | null} */
 let ready = null;
 
 async function start() {
   postMessage({ kind: "progress", text: "Loading Python (about 13 MB, cached after the first time)" });
-  const pyodide = await loadPyodide({ indexURL: PYODIDE });
+  const pyodide = await loadPython({ indexURL: PYODIDE });
   await pyodide.loadPackage(["pyyaml", "micropip"]);
   postMessage({ kind: "progress", text: "Installing the validator" });
-  const wheel = (await (await fetch("wheel.txt")).text()).trim();
+  const wheel = await (await fetch("wheel.txt")).text(); // a URL ignores the spaces around it
   const micropip = pyodide.pyimport("micropip");
   await micropip.install([new URL(wheel, self.location.href).href, "pathspec"]);
   return pyodide;
 }
 
+/**
+ * @param {Pyodide} pyodide
+ * @param {ProjectFile[]} files
+ */
 function write(pyodide, files) {
   const fs = pyodide.FS;
   for (const file of files) {
@@ -36,8 +60,10 @@ function write(pyodide, files) {
 }
 
 // A run replaces the project of the run before.
+/** @param {Pyodide} pyodide */
 function removeProject(pyodide) {
   const fs = pyodide.FS;
+  /** @param {string} path */
   const remove = (path) => {
     for (const name of fs.readdir(path)) {
       if (name === "." || name === "..") continue;
@@ -61,7 +87,7 @@ self.onmessage = async (event) => {
     if (repository) {
       const { owner, name, ref } = repository;
       postMessage({ kind: "progress", text: `Reading ${owner}/${name}@${ref}` });
-      const progress = (text) => postMessage({ kind: "progress", text });
+      const progress = (/** @type {string} */ text) => postMessage({ kind: "progress", text });
       ({ root, files, commit } = await readRepository(repository, token, progress));
     }
     const pyodide = await ready;
@@ -70,9 +96,9 @@ self.onmessage = async (event) => {
     write(pyodide, files);
     postMessage({ kind: "progress", text: "Validating" });
     root = "/project/" + root;
-    const [code, html] = pyodide.runPython(
-      `from project_validator.web import report\nreport(${JSON.stringify(root)})`
-    ).toJs();
+    const [code, html] = pyodide
+      .runPython(`from project_validator.web import report\nreport(${JSON.stringify(root)})`)
+      .toJs();
     postMessage({ kind: "report", code, html, commit });
   } catch (error) {
     postMessage({ kind: "failed", text: String(error) });

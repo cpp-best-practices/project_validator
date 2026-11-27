@@ -1,16 +1,13 @@
 """The browser page (upstream #127): the validator runs in the visitor's browser under Pyodide, on a folder they pick,
 and shows its HTML report. `project_validator.web` is what the page calls; the page's files are checked to agree with
-it, and with each other."""
+it, and with each other. The page's scripts have tests of their own (tests/web, run by `npm test` and in each browser
+by `npm run test:browsers`)."""
 
 from __future__ import annotations
 
-import json
 import re
-import shutil
-import subprocess
 import unittest
 from pathlib import Path
-from typing import Any, ClassVar
 
 from project_validator import web
 from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS
@@ -66,78 +63,3 @@ class PageTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
-
-_READ = r"""
-const { parseRepository, readRepository } = require(process.argv[1]);
-const tree = [
-  { path: "README.md", type: "blob", mode: "100644", size: 6 },
-  { path: "src/a b.py", type: "blob", mode: "100644", size: 4 },
-  { path: "big.bin", type: "blob", mode: "100644", size: 2000000 },
-  { path: "link", type: "blob", mode: "120000", size: 4 },
-  { path: "src", type: "tree", mode: "040000" },
-];
-const asked = [];
-let flaky = 1;
-global.fetch = async (url, options) => {
-  asked.push(url);
-  const ok = (body) => ({ ok: true, status: 200, json: async () => body, arrayBuffer: async () => Buffer.from(body) });
-  const token = options && options.headers.Authorization === "Bearer t";
-  if (url.includes("/commits/")) return token ? ok({ sha: "c0ffee" }) : { ok: false, status: 403 };
-  if (url.includes("/git/trees/")) return ok({ tree });
-  const raw = url.includes("raw.githubusercontent.com");
-  if (raw && url.endsWith("README.md") && flaky-- > 0) return { ok: false, status: 501 };
-  if (raw && url.includes("a%20b.py")) return { ok: false, status: 404 };
-  return ok(url.includes("README") ? "readme" : "code");
-};
-(async () => {
-  const parsed = ["o/r", "o/r@v1.2", "o/r.git@feature/x", "nope"].map(parseRepository);
-  const read = await readRepository(parseRepository("o/r@main"), "t", () => {});
-  let limit = "";
-  try { await readRepository(parseRepository("o/r"), null, () => {}); } catch (error) { limit = String(error); }
-  const files = read.files.map((f) => [f.path, f.size, f.bytes ? Buffer.from(f.bytes).toString() : null]);
-  console.log(JSON.stringify({ parsed, root: read.root, commit: read.commit, files, asked, limit }));
-})();
-"""
-
-
-@unittest.skipUnless(shutil.which("node"), "node is not installed")
-class GitHubTests(unittest.TestCase):
-    """The page reads a repository through GitHub's API and raw.githubusercontent.com (github.js, run in node with
-    GitHub's answers stubbed)."""
-
-    read: ClassVar[dict[str, Any]]
-
-    @classmethod
-    def setUpClass(cls) -> None:
-        node = shutil.which("node") or "node"
-        done = subprocess.run(  # noqa: S603 - a fixed script, run by node
-            [node, "-e", _READ, str(PAGE / "github.js")], capture_output=True, text=True, check=True, timeout=60
-        )
-        cls.read = json.loads(done.stdout)
-
-    def test_a_repository_is_written_owner_name_and_a_ref(self) -> None:
-        self.assertEqual(
-            self.read["parsed"],
-            [
-                {"owner": "o", "name": "r", "ref": "HEAD"},
-                {"owner": "o", "name": "r", "ref": "v1.2"},
-                {"owner": "o", "name": "r", "ref": "feature/x"},
-                None,
-            ],
-        )
-
-    def test_every_file_of_the_commit_is_read_but_links_and_large_ones(self) -> None:
-        self.assertEqual((self.read["root"], self.read["commit"]), ("r", "c0ffee"))
-        self.assertEqual(
-            self.read["files"],
-            [["r/README.md", 6, "readme"], ["r/src/a b.py", 4, "code"], ["r/big.bin", 2000000, None]],
-        )
-
-    def test_a_failed_fetch_is_tried_again_then_read_from_jsdelivr(self) -> None:
-        readme = [url for url in self.read["asked"] if url.endswith("README.md")]
-        self.assertEqual(readme, ["https://raw.githubusercontent.com/o/r/c0ffee/README.md"] * 2)
-        self.assertIn("https://cdn.jsdelivr.net/gh/o/r@c0ffee/src/a%20b.py", self.read["asked"])
-
-    def test_the_api_limit_says_what_to_do(self) -> None:
-        self.assertIn("add a token, or try later", self.read["limit"])
