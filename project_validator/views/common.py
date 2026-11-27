@@ -18,6 +18,7 @@ from project_validator.facts import PartlyRead
 from project_validator.hosting import HostAccess, HostSettings
 from project_validator.project_map import LanguageFiles, Place
 from project_validator.runner import Report
+from project_validator.score import Score
 from project_validator.words import counted, folder
 
 # How each status is shown, in words and as a symbol, worst first.
@@ -62,6 +63,32 @@ def place_label(place: Placed) -> str:
     unit = "" if place.unit in ("", ".") else f" in {place.unit}"
     auxiliary = f" (auxiliary: {', '.join(place.auxiliary)})" if place.auxiliary else ""
     return f"{place.ecosystem}{unit}{auxiliary}"
+
+
+# A row of the score's breakdown: (name, percent, filled, slots).
+ScoreRow = tuple[str, float, float, float]
+
+
+def _part_name(name: str) -> str:
+    return {"": "the whole project", ".": ". (the root)"}.get(name, name)
+
+
+def score_parts(scored: Score) -> list[tuple[str, list[ScoreRow]]]:
+    """The score broken down as the views show it: by language, and by unit when there are several (upstream #295),
+    each part's rows sorted by name."""
+    parts = [("language", scored.breakdown())]
+    if scored.several_units:
+        parts.append(("unit", scored.units()))
+    return [
+        (
+            heading,
+            [
+                (_part_name(name), 100.0 * filled / slots if slots else 100.0, filled, slots)
+                for name, (filled, slots) in sorted(found.items())
+            ],
+        )
+        for heading, found in parts
+    ]
 
 
 def judged_places(report: Report) -> list[Placed]:

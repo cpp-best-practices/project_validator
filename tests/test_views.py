@@ -20,10 +20,12 @@ from unittest import mock
 from project_validator import hosting
 from project_validator.analysis import Analysis, analyse
 from project_validator.cli import EXIT_FAILURE, EXIT_USAGE
-from project_validator.core import ExtractionError, Progress, Result, Status
+from project_validator.core import Check, ExtractionError, Placed, Progress, Result, Status
 from project_validator.facts import Origin
 from project_validator.hosting import HostAccess, HostSettings
 from project_validator.plugins import discover
+from project_validator.runner import Report
+from project_validator.score import Score, score
 from project_validator.views import common, html, text, tui
 from project_validator.views import console as console_view
 from project_validator.views.common import LanguageView, language_views
@@ -41,6 +43,23 @@ MIXED = {
     "third_party/lib/lib.c": "",
     "README.md": "<script>alert('readme')</script>",
 }
+
+
+TESTS_RUN = Check(name="tests-run", description="", run=lambda _: Result.passed(""))
+
+
+def _units_score(**units: Status) -> Score:
+    """The score of tests-run in C++ in each of `units` (unit -> status), and of a project-wide licence."""
+    places = tuple(
+        Placed(ecosystem="C++", unit=unit, result=Result(status=status, message="")) for unit, status in units.items()
+    )
+    tests_run = Report(check=TESTS_RUN, result=Result(status=Status.FAIL, message="", places=places))
+    return score([tests_run, Report(check=dataclasses.replace(TESTS_RUN, name="license"), result=Result.passed(""))])
+
+
+def _units_analysis() -> Analysis:
+    """The analysis of MIXED, scored as if its C++ were in two units: lib, which passes its tests, and app."""
+    return dataclasses.replace(_analysis(), score=_units_score(lib=Status.PASS, app=Status.FAIL))
 
 
 def _analysis(files: dict[str, str] | None = None, *, fixture: str | None = None) -> Analysis:
@@ -83,6 +102,23 @@ class _Tags(HTMLParser):
 
 
 class CommonTests(unittest.TestCase):
+    def test_the_score_is_broken_down_by_language_and_by_unit_when_there_are_several(self) -> None:
+        units = _units_score(lib=Status.PASS, app=Status.FAIL)
+        rounded = {
+            heading: [(name, round(percent), filled, slots) for name, percent, filled, slots in rows]
+            for heading, rows in common.score_parts(units)
+        }
+        self.assertEqual(
+            rounded,
+            {
+                "language": [("the whole project", 100, 1, 1), ("C++", 50, 1, 2)],
+                "unit": [("the whole project", 100, 1, 1), ("app", 0, 0, 1), ("lib", 100, 1, 1)],
+            },
+        )
+        root = _units_score(**{".": Status.PASS, "lib": Status.PASS})
+        self.assertIn((". (the root)", 100.0, 1.0, 1.0), dict(common.score_parts(root))["unit"])
+        self.assertEqual([heading for heading, _ in common.score_parts(score([]))], ["language"])
+
     def test_a_place_is_named_by_language_unit_and_what_named_it_auxiliary(self) -> None:
         from project_validator.core import Placed
 
@@ -257,6 +293,13 @@ class TextTests(unittest.TestCase):
         self.assertIn("Score: ", text.render(analysis, scored=True))
         self.assertIn("Next steps:", text.render(analysis, scored=True))
 
+    def test_several_units_are_scored_each(self) -> None:
+        lines = text.render(_units_analysis(), scored=True).splitlines()
+        self.assertIn("By unit:", lines)
+        self.assertIn("  - app: 0% (0 of 1 slots)", lines)
+        self.assertIn("  - lib: 100% (1 of 1 slots)", lines)
+        self.assertNotIn("By unit:", text.render(_analysis(), scored=True))
+
     def test_repeated_details_are_said_once(self) -> None:
         from project_validator.core import Check
         from project_validator.runner import Report
@@ -288,6 +331,12 @@ class ConsoleTests(unittest.TestCase):
             with self.subTest(expected=expected):
                 self.assertIn(expected, output)
         self.assertRegex(output, r"\d+% +Level \d")
+
+    def test_several_units_are_scored_each(self) -> None:
+        output = self._render(_units_analysis())
+        self.assertRegex(output, r"By unit\n.*\napp +\S+ +0% +0 of 1 slots")
+        self.assertRegex(output, r"lib +\S+ +100% +1 of 1 slots")
+        self.assertNotIn("By unit", self._render(_analysis()))
 
     def test_the_host_is_shown_with_what_was_detected(self) -> None:
         self.assertRegex(self._render(_analysis()), r"Host +not read: the source-control host is not asked offline")
@@ -397,6 +446,12 @@ class HtmlTests(unittest.TestCase):
         self.assertIn("100% means every quality gate", self.document)
         self.assertIn("--auxiliary test would judge it as auxiliary", self.document)
 
+    def test_several_units_are_scored_each(self) -> None:
+        document = html.render(_units_analysis())
+        self.assertIn("<h3>Gates in place, by unit</h3>", document)
+        self.assertIn("<div>lib</div>", document)
+        self.assertNotIn("by unit", self.document)
+
     def test_a_checkout_links_its_files_and_commit(self) -> None:
         from project_validator.analysis import Git
 
@@ -447,6 +502,12 @@ class TuiPageTests(unittest.TestCase):
         report = next(report for report in analysis.reports if report.check.name == "static-analysis")
         self.assertIn("static-analysis", tui.report_page(report))
         self.assertIn("Static analysers find", tui.report_page(report))
+
+    def test_several_units_are_scored_each(self) -> None:
+        overview = tui.overview(_units_analysis())
+        self.assertIn("By unit", overview)
+        self.assertRegex(overview, r"lib +.* 100%")
+        self.assertNotIn("By unit", tui.overview(_analysis()))
 
     def test_the_facts_are_listed_by_kind_and_searched(self) -> None:
         analysis = _analysis()

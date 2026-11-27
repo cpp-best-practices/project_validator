@@ -25,7 +25,7 @@ A next step is every slot not filled, with the points filling it is worth and th
 from __future__ import annotations
 
 import math
-from collections.abc import Iterable, Iterator, Mapping, Sequence
+from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass, field, replace
 from pathlib import PurePosixPath
 
@@ -240,7 +240,7 @@ class Score:
 
     def summary(self) -> str:
         """`87% · Level 1 Foundations · 41 of 47 gates in place`."""
-        head = f"{_floor(self.percent)}% · Level {self.level} {self.level_name}"
+        head = f"{floor_percent(self.percent)}% · Level {self.level} {self.level_name}"
         if self.complete:
             gates = f"all {len(self.cells)} gates in place"
             return f"{head} · {gates}, +{_credit(self.extra)} extra credit" if self.extra else f"{head} · {gates}"
@@ -248,13 +248,26 @@ class Score:
         held = f" (+{_credit(self.held)} extra credit held until every gate is in place)" if self.held else ""
         return f"{head} · {gates}{held}"
 
-    def breakdown(self) -> dict[str, tuple[float, float]]:
-        """Language -> (filled, slots); the whole project's own gates are under ""."""
+    def _tally(self, key: Callable[[Cell], str]) -> dict[str, tuple[float, float]]:
+        """`key` of each slot -> (filled, slots)."""
         found: dict[str, tuple[float, float]] = {}
         for cell in self.cells:
-            filled, slots = found.get(cell.ecosystem, (0.0, 0.0))
-            found[cell.ecosystem] = (filled + cell.filled, slots + cell.weight)
+            filled, slots = found.get(key(cell), (0.0, 0.0))
+            found[key(cell)] = (filled + cell.filled, slots + cell.weight)
         return found
+
+    def breakdown(self) -> dict[str, tuple[float, float]]:
+        """Language -> (filled, slots); the whole project's own gates are under ""."""
+        return self._tally(lambda cell: cell.ecosystem)
+
+    def units(self) -> dict[str, tuple[float, float]]:
+        """Unit -> (filled, slots), for a project of several (upstream #295); the whole project's own gates are under
+        ""."""
+        return self._tally(lambda cell: cell.unit)
+
+    @property
+    def several_units(self) -> bool:
+        return len({cell.unit for cell in self.cells} - {""}) > 1
 
     def as_dict(self) -> dict[str, object]:
         return {
@@ -269,6 +282,7 @@ class Score:
             "slots": _number(self.slots),
             "summary": self.summary(),
             "breakdown": {name: [_number(a), _number(b)] for name, (a, b) in self.breakdown().items()},
+            "units": {name: [_number(a), _number(b)] for name, (a, b) in self.units().items()},
             "cells": [cell.as_dict() for cell in self.cells],
             "next_steps": [step.as_dict() for step in self.next_steps],
         }
@@ -278,13 +292,14 @@ def _number(value: float) -> float | int:
     return int(value) if float(value).is_integer() else round(value, 2)
 
 
-def _floor(value: float) -> int:
+def floor_percent(value: float) -> int:
+    """A percent as the score shows it: whole points, rounded down (99.9999999 is 100)."""
     return math.floor(round(value, 6))
 
 
 def _credit(value: float) -> str:
     """Extra credit, in percent: a tenth below one point, whole points above."""
-    return f"{value:.1f}" if value < 1 else str(_floor(value))
+    return f"{value:.1f}" if value < 1 else str(floor_percent(value))
 
 
 def _points(value: float) -> str:
@@ -459,6 +474,7 @@ __all__ = [
     "NextStep",
     "Score",
     "family",
+    "floor_percent",
     "level_of",
     "score",
     "shortfalls",

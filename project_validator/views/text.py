@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from project_validator.analysis import Analysis
 from project_validator.runner import Report
-from project_validator.score import Score
+from project_validator.score import Score, floor_percent
 from project_validator.views.common import (
     ci_summary,
     dedupe,
@@ -17,6 +17,7 @@ from project_validator.views.common import (
     reading,
     role_judgement,
     role_line,
+    score_parts,
     summary,
     units,
     unrecognised,
@@ -56,6 +57,12 @@ def report_lines(reports: list[Report]) -> list[str]:
 def score_lines(scored: Score, *, markdown: bool = False, steps: int = NEXT_STEPS) -> list[str]:
     title = "Score:"
     lines = [f"**{title}** {scored.summary()}" if markdown else f"{title} {scored.summary()}"]
+    for heading, rows in score_parts(scored)[1:]:
+        lines.append(f"By {heading}:")
+        lines.extend(
+            f"  - {name}: {floor_percent(percent)}% ({filled:g} of {slots:g} slots)"
+            for name, percent, filled, slots in rows
+        )
     if scored.next_steps:
         lines.append("Next steps:")
         lines.extend(f"  - {step.describe()}" for step in scored.next_steps[:steps])
