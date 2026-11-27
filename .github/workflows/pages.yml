@@ -1,7 +1,8 @@
 name: pages
 
 # The documentation site: the README, docs/ and the generated support matrix, as HTML, built from main on every push
-# and published to GitHub Pages, with the leaderboard from its nightly results (the `leaderboard-data` branch; the
+# and published to GitHub Pages, with the browser page (app/: the validator under Pyodide, on a folder the visitor
+# picks, upstream #127) and the leaderboard from its nightly results (the `leaderboard-data` branch; the
 # leaderboard workflow calls this one after each night). Each page says which commit it was built from.
 on:
   push:
@@ -12,6 +13,7 @@ on:
       - .github/requirements/pages.txt
       - tests/build_site.py
       - leaderboard/**
+      - web/**
   workflow_call:
   workflow_dispatch:
 
@@ -56,6 +58,18 @@ jobs:
         run: |
           python tests/build_site.py _site --repository "$REPOSITORY" --ref "$REF" --revision "$REVISION" \
             --leaderboard "${RUNNER_TEMP}/leaderboard"
+
+      # The browser page and the validator's wheel, which it installs into Pyodide; built without isolation from the
+      # hash-locked setuptools, as a release is.
+      - name: Install the build tools
+        run: python -m pip install --require-hashes -r .github/requirements/release.txt
+
+      - name: Add the browser page
+        run: |
+          mkdir -p _site/app
+          python -m build --no-isolation --wheel --outdir _site/app .
+          cp web/* _site/app/
+          find _site/app -maxdepth 1 -name '*.whl' -printf '%f\n' > _site/app/wheel.txt
 
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
