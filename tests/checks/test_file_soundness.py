@@ -37,7 +37,7 @@ class FileSoundnessTests(unittest.TestCase):
     def test_a_kind_no_tool_checks_warns_naming_it(self) -> None:
         result = _run({"docs/logo.png": "", "docs/guide.pdf": ""}, "pngcheck docs/*.png")
         self.assertEqual(result.status, Status.WARN)
-        self.assertEqual(result.message, "no tool checks the PDF files (docs/guide.pdf)")
+        self.assertEqual(result.message, "no tool checks the PDF document files (docs/guide.pdf)")
         self.assertEqual(_run({"docs/LOGO.PNG": ""}).message, "no tool checks the image files (docs/LOGO.PNG)")
         many = {f"docs/{name}.png": "" for name in "abcde"}
         self.assertEqual(

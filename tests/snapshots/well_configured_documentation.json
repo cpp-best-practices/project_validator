@@ -279,6 +279,24 @@
     "wellformed": [
       {
         "auxiliary": {},
+        "language": "INI",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "INI",
+            "parsed": [
+              ".vale.ini"
+            ],
+            "problems": [],
+            "test_data": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
         "language": "MkDocs",
         "units": [
           {
@@ -385,7 +403,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "6 YAML files parse",
+      "message": "Data: 6 YAML files parse; File formats: 1 INI file parses",
       "status": "PASS"
     },
     "dependency-audit": {

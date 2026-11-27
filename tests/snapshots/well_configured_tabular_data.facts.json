@@ -35,6 +35,14 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "CSV",
+      "lines": 4,
+      "origin": "data/countries.csv",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "JSON",
       "lines": 23,
       "origin": "datapackage.json",
@@ -59,6 +67,7 @@
     {
       "build_systems": [],
       "formats": [
+        "CSV",
         "Data Package",
         "JSON",
         "YAML"
@@ -105,6 +114,16 @@
       "kind": "DataFile",
       "line": null,
       "origin": ".github/workflows/copy-paste-detection.yml",
+      "problem": null,
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "CSV",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "data/countries.csv",
       "problem": null,
       "role": "product",
       "unread": null
@@ -586,6 +605,9 @@
         ".json files",
         ".yml files"
       ],
+      "File formats": [
+        ".csv files"
+      ],
       "Tabular data": [
         "content"
       ]
@@ -601,7 +623,19 @@
             "role": "product"
           }
         ],
-        "share": 0.8
+        "share": 0.6667
+      },
+      {
+        "files": 1,
+        "language": "CSV",
+        "places": [
+          {
+            "directory": "data",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.1667
       },
       {
         "files": 1,
@@ -613,10 +647,11 @@
             "role": "product"
           }
         ],
-        "share": 0.2
+        "share": 0.1667
       }
     ],
     "formats": [
+      "CSV",
       "Data Package",
       "JSON",
       "YAML"
@@ -627,6 +662,7 @@
         "build_systems": [],
         "directory": ".",
         "formats": [
+          "CSV",
           "Data Package",
           "JSON",
           "YAML"

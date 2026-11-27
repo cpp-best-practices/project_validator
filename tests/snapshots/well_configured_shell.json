@@ -1266,6 +1266,24 @@
     "wellformed": [
       {
         "auxiliary": {},
+        "language": "INI",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "INI",
+            "parsed": [
+              ".editorconfig"
+            ],
+            "problems": [],
+            "test_data": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
         "language": "YAML",
         "units": [
           {
@@ -1357,7 +1375,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "4 YAML files parse",
+      "message": "Data: 4 YAML files parse; File formats: 1 INI file parses",
       "status": "PASS"
     },
     "dependency-audit": {

@@ -912,6 +912,24 @@
     "wellformed": [
       {
         "auxiliary": {},
+        "language": "INI",
+        "units": [
+          {
+            "answer": "yes",
+            "language": "INI",
+            "parsed": [
+              ".editorconfig"
+            ],
+            "problems": [],
+            "test_data": [],
+            "test_problems": [],
+            "unit": ".",
+            "unread": {}
+          }
+        ]
+      },
+      {
+        "auxiliary": {},
         "language": "JSON",
         "units": [
           {
@@ -1027,7 +1045,7 @@
     },
     "data-wellformed": {
       "details": [],
-      "message": "JSON: 2 JSON files parse; YAML: 5 YAML files parse",
+      "message": "Data: JSON: 2 JSON files parse; YAML: 5 YAML files parse; File formats: 1 INI file parses",
       "status": "PASS"
     },
     "dependency-audit": {

@@ -27,6 +27,14 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "INI",
+      "lines": 5,
+      "origin": ".editorconfig",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "YAML",
       "lines": 6,
       "origin": ".github/dependabot.yml",
@@ -133,6 +141,7 @@
         "MSBuild"
       ],
       "formats": [
+        "INI",
         "JSON",
         "YAML"
       ],
@@ -143,6 +152,16 @@
       "origin": ".",
       "role": "product",
       "tests": []
+    },
+    {
+      "column": null,
+      "format": "INI",
+      "kind": "DataFile",
+      "line": null,
+      "origin": ".editorconfig",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "column": null,
@@ -3822,6 +3841,9 @@
       "Data": [
         ".json files",
         ".yml files"
+      ],
+      "File formats": [
+        ".editorconfig files"
       ]
     },
     "files": [
@@ -3835,7 +3857,7 @@
             "role": "product"
           }
         ],
-        "share": 0.4167
+        "share": 0.3846
       },
       {
         "files": 4,
@@ -3862,7 +3884,7 @@
             "role": "test"
           }
         ],
-        "share": 0.3333
+        "share": 0.3077
       },
       {
         "files": 3,
@@ -3884,10 +3906,23 @@
             "role": "test"
           }
         ],
-        "share": 0.25
+        "share": 0.2308
+      },
+      {
+        "files": 1,
+        "language": "INI",
+        "places": [
+          {
+            "directory": ".",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.0769
       }
     ],
     "formats": [
+      "INI",
       "JSON",
       "YAML"
     ],
@@ -3901,6 +3936,7 @@
         ],
         "directory": ".",
         "formats": [
+          "INI",
           "JSON",
           "YAML"
         ],

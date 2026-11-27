@@ -11,6 +11,14 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "gzip",
+      "lines": 0,
+      "origin": "dist/bare-0.1.tar.gz",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "TOML",
       "lines": 3,
       "origin": "pyproject.toml",
@@ -37,7 +45,8 @@
         "Python packaging"
       ],
       "formats": [
-        "TOML"
+        "TOML",
+        "gzip"
       ],
       "kind": "Unit",
       "languages": [
@@ -46,6 +55,16 @@
       "origin": ".",
       "role": "product",
       "tests": []
+    },
+    {
+      "column": null,
+      "format": "gzip",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "dist/bare-0.1.tar.gz",
+      "problem": "empty, not a gzip stream",
+      "role": "product",
+      "unread": null
     },
     {
       "column": null,
@@ -159,6 +178,9 @@
       "Data": [
         ".toml files"
       ],
+      "File formats": [
+        ".gz files"
+      ],
       "Python": [
         "build file pyproject.toml",
         ".py files"
@@ -175,7 +197,7 @@
             "role": "product"
           }
         ],
-        "share": 0.5
+        "share": 0.3333
       },
       {
         "files": 1,
@@ -187,11 +209,24 @@
             "role": "product"
           }
         ],
-        "share": 0.5
+        "share": 0.3333
+      },
+      {
+        "files": 1,
+        "language": "gzip",
+        "places": [
+          {
+            "directory": "dist",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.3333
       }
     ],
     "formats": [
-      "TOML"
+      "TOML",
+      "gzip"
     ],
     "languages": [
       "Python"
@@ -203,7 +238,8 @@
         ],
         "directory": ".",
         "formats": [
-          "TOML"
+          "TOML",
+          "gzip"
         ],
         "languages": [
           "Python"

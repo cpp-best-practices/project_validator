@@ -37,6 +37,8 @@ class Parser:
 
     format: str
     parse: Parse
+    # Whether the format's files are binary (an image, an archive): one is never a template, whatever its bytes hold.
+    binary: bool = False
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -85,7 +87,7 @@ def _parsed(project: Project, parser: Parser, found: DataFile) -> DataFile:
     try:
         parser.parse(found.path, data)
     except ParseError as error:
-        if _PLACEHOLDER.search(data):
+        if not parser.binary and _PLACEHOLDER.search(data):
             return replace(found, unread="a template (its @NAME@ placeholders are substituted before it is read)")
         return replace(found, problem=error.message, line=error.line, column=error.column)
     except RecursionError:

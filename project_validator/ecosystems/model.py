@@ -228,6 +228,12 @@ class Ecosystem:
     # The official page, or a Wikipedia entry, of each of its languages or formats, and of the ecosystem itself when
     # its label names something else (BEAM, the JVM): name -> https URL (upstream #411).
     links: Mapping[str, str] = field(default_factory=dict)
+    # Its formats whose files hold no lines (an image, an archive): their size never weighs a language's share of the
+    # code (see `project_validator.score.sizes`).
+    unlined: frozenset[str] = frozenset()
+    # Set when its files are ones any project may commit beside its code (an image, an archive, an INI file): they say
+    # nothing of which build wrote the directory that holds them (see `project_validator.facts.repository`).
+    incidental: bool = False
 
     def __post_init__(self) -> None:
         if self.kind == "format" and self.toolchain is not None:

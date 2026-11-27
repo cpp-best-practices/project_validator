@@ -3,6 +3,14 @@
     {
       "ambiguous": false,
       "kind": "SourceFile",
+      "language": "CSV",
+      "lines": 4,
+      "origin": "data/countries.csv",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
       "language": "JSON",
       "lines": 21,
       "origin": "datapackage.json",
@@ -27,6 +35,7 @@
     {
       "build_systems": [],
       "formats": [
+        "CSV",
         "Data Package",
         "JSON"
       ],
@@ -35,6 +44,16 @@
       "origin": ".",
       "role": "product",
       "tests": []
+    },
+    {
+      "column": null,
+      "format": "CSV",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "data/countries.csv",
+      "problem": null,
+      "role": "product",
+      "unread": null
     },
     {
       "column": null,
@@ -89,11 +108,26 @@
       "Data": [
         ".json files"
       ],
+      "File formats": [
+        ".csv files"
+      ],
       "Tabular data": [
         "content"
       ]
     },
     "files": [
+      {
+        "files": 1,
+        "language": "CSV",
+        "places": [
+          {
+            "directory": "data",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      },
       {
         "files": 1,
         "language": "JSON",
@@ -104,10 +138,11 @@
             "role": "product"
           }
         ],
-        "share": 1.0
+        "share": 0.5
       }
     ],
     "formats": [
+      "CSV",
       "Data Package",
       "JSON"
     ],
@@ -117,6 +152,7 @@
         "build_systems": [],
         "directory": ".",
         "formats": [
+          "CSV",
           "Data Package",
           "JSON"
         ],

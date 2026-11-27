@@ -1,0 +1,123 @@
+{
+  "facts": [
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "PNG",
+      "lines": 0,
+      "origin": "assets/logo.png",
+      "role": "product"
+    },
+    {
+      "ambiguous": false,
+      "kind": "SourceFile",
+      "language": "CSV",
+      "lines": 2,
+      "origin": "data/prices.csv",
+      "role": "product"
+    },
+    {
+      "implied": [],
+      "kind": "AuxiliaryCode",
+      "named": [],
+      "origin": ".",
+      "primary": [],
+      "stray": []
+    },
+    {
+      "build_systems": [],
+      "formats": [
+        "CSV",
+        "PNG"
+      ],
+      "kind": "Unit",
+      "languages": [],
+      "origin": ".",
+      "role": "product",
+      "tests": []
+    },
+    {
+      "column": null,
+      "format": "PNG",
+      "kind": "DataFile",
+      "line": null,
+      "origin": "assets/logo.png",
+      "problem": "truncated in the IHDR chunk",
+      "role": "product",
+      "unread": null
+    },
+    {
+      "column": null,
+      "format": "CSV",
+      "kind": "DataFile",
+      "line": 2,
+      "origin": "data/prices.csv",
+      "problem": "line 2 has 3 fields, the header 2",
+      "role": "product",
+      "unread": null
+    },
+    {
+      "kind": "HostAccess",
+      "origin": ".git/config",
+      "reason": "the source-control host is not asked offline (--offline)"
+    }
+  ],
+  "map": {
+    "build_systems": [],
+    "ci": {
+      "files": [],
+      "jobs": [],
+      "providers": []
+    },
+    "ecosystems": {
+      "File formats": [
+        ".csv files",
+        ".png files"
+      ]
+    },
+    "files": [
+      {
+        "files": 1,
+        "language": "CSV",
+        "places": [
+          {
+            "directory": "data",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      },
+      {
+        "files": 1,
+        "language": "PNG",
+        "places": [
+          {
+            "directory": "assets",
+            "files": 1,
+            "role": "product"
+          }
+        ],
+        "share": 0.5
+      }
+    ],
+    "formats": [
+      "CSV",
+      "PNG"
+    ],
+    "languages": [],
+    "units": [
+      {
+        "build_systems": [],
+        "directory": ".",
+        "formats": [
+          "CSV",
+          "PNG"
+        ],
+        "languages": [],
+        "role": "product"
+      }
+    ],
+    "unrecognised_suffixes": []
+  }
+}
