@@ -8,7 +8,8 @@ navigation and style: each page's source by site path (a title heading, then HTM
     leaderboard/data/latest.json               every project's numbers, for anyone to use
 
 Boards rank by the score's percent (100%: every quality gate that applies is in place; extra credit above), then
-level. Everything the projects supply is escaped.
+level, and divide by language, by kind (the entry's) and by size (`SIZES`, by the product's lines of code): the tabs
+filter the board, and the ranks count within what they show. Everything the projects supply is escaped.
 """
 
 from __future__ import annotations
@@ -25,8 +26,18 @@ from project_validator.score import SCORE_VERSION
 from project_validator.views.html import bar, e, pill, ring, table
 
 NEXT_STEPS = 10
+# The sizes a project's product code is ranked within, by its lines: under each bound, that size; past the last, large.
+SIZES = ((10_000, "small"), (100_000, "medium"))
+LARGE = "large"
 SPARKLINE_NIGHTS = 60
 _BADGE_COLORS = ("red", "orange", "yellow", "yellowgreen", "brightgreen")
+
+
+def size(lines: object) -> str:
+    """The size a project of `lines` lines of product code is ranked within; "" when it was never measured."""
+    if not isinstance(lines, int):
+        return ""
+    return next((name for bound, name in SIZES if lines < bound), LARGE)
 
 
 def percent(value: object) -> str:
@@ -64,39 +75,54 @@ def _score_cell(scored: Mapping[str, object] | None) -> str:
     return f'<div class="scorebar">{bar(_number(scored["percent"]))}<strong>{percent(scored["percent"])}</strong></div>'
 
 
-def _row(position: int, result: Mapping[str, object], changes: Sequence[str]) -> str:
+def _row(position: int, result: Mapping[str, object], changes: Sequence[str], kind: str) -> str:
     name, language, scored = str(result["name"]), str(result["language"]), _score(result)
     seed = ' <span class="chip">seed</span>' if result.get("seed") else ""
     if scored is None:
         status = f'<span class="pill s-ERROR">error</span> <span class="muted">{e(result.get("error", ""))}</span>'
     else:
         status = f'<span class="muted">{e(", ".join(changes) or "-")}</span>'
+    lines, sized = result.get("lines"), size(result.get("lines"))
+    measured = f'{e(sized)} <span class="muted">{lines:,} lines</span>' if isinstance(lines, int) else ""
     return (
-        f'<tr data-language="{e(language)}"><td class="rank">{position}</td>'
+        f'<tr data-language="{e(language)}" data-kind="{e(kind)}" data-size="{e(sized)}">'
+        f'<td class="rank">{position}</td>'
         f'<td><a href="projects/{e(_slug(name))}.html"><strong>{e(name)}</strong></a>{seed}</td>'
-        f"<td>{e(language)}</td><td>{_score_cell(scored)}</td>"
+        f"<td>{e(language)}</td><td>{e(kind)}</td><td>{measured}</td><td>{_score_cell(scored)}</td>"
         f"<td>{_level(scored) if scored else ''}</td><td>{status}</td></tr>"
     )
 
 
-def _tabs(results: Sequence[Mapping[str, object]]) -> str:
-    languages = sorted({str(result["language"]) for result in results}, key=str.lower)
+def _tab_group(name: str, everything: str, values: Sequence[str]) -> str:
+    """A row of tabs that filters the board by `name` (language, kind, size): one for every project, one per value."""
     buttons = [
-        f'<button class="tab active" data-language="">All languages <span class="n">{len(results)}</span></button>'
+        f'<button class="tab active" data-filter="{name}" data-value="">{everything} <span class="n">{len(values)}'
+        "</span></button>"
     ]
-    for language in languages:
-        count = sum(1 for result in results if result["language"] == language)
+    for value in sorted(set(values), key=str.lower):
         buttons.append(
-            f'<button class="tab" data-language="{e(language)}">{e(language)} <span class="n">{count}</span></button>'
+            f'<button class="tab" data-filter="{name}" data-value="{e(value)}">{e(value)} '
+            f'<span class="n">{values.count(value)}</span></button>'
         )
     return f'<div class="tabs" role="tablist">{"".join(buttons)}</div>'
 
 
+def _tabs(results: Sequence[Mapping[str, object]], kinds: Mapping[str, str]) -> str:
+    sized = [size(result.get("lines")) for result in results]
+    return (
+        _tab_group("language", "All languages", [str(result["language"]) for result in results])
+        + _tab_group("kind", "All kinds", [kinds[str(result["name"])] for result in results])
+        + _tab_group("size", "All sizes", [found for found in sized if found])
+    )
+
+
+# The tabs filter the rows by every group at once, and the ranks count what is shown.
 BOARD_SCRIPT = (
-    "<script>document.querySelectorAll('.tabs .tab').forEach(function(t){t.addEventListener('click',function(){"
-    "var l=t.dataset.language,n=0;document.querySelectorAll('.tabs .tab').forEach(function(b){"
-    "b.classList.toggle('active',b===t)});document.querySelectorAll('.ranking tbody tr').forEach(function(r){"
-    "var ok=!l||r.dataset.language===l;r.style.display=ok?'':'none';if(ok){n+=1;"
+    "<script>var f={};document.querySelectorAll('.tabs .tab').forEach(function(t){t.addEventListener('click',"
+    "function(){var g=t.dataset.filter,n=0;f[g]=t.dataset.value;document.querySelectorAll('.tabs .tab').forEach("
+    "function(b){if(b.dataset.filter===g)b.classList.toggle('active',b===t)});"
+    "document.querySelectorAll('.ranking tbody tr').forEach(function(r){var ok=Object.keys(f).every(function(k){"
+    "return !f[k]||r.dataset[k]===f[k]});r.style.display=ok?'':'none';if(ok){n+=1;"
     "r.querySelector('.rank').textContent=n}})})});</script>"
 )
 
@@ -123,12 +149,15 @@ def index(
             f'# Leaderboard\n\n{INTRO}\n\n<div class="board"><h2>No nightly results yet</h2>'
             f'<div class="grid three">{cards}</div></div>\n'
         )
+    kinds = {entry.name: entry.kind for entry in listed}
     rows = "".join(
-        _row(position, result, changes[str(result["name"])]) for position, result in enumerate(ranked(shown), 1)
+        _row(position, result, changes[str(result["name"])], kinds[str(result["name"])])
+        for position, result in enumerate(ranked(shown), 1)
     )
-    head = "".join(f"<th>{name}</th>" for name in ("#", "Project", "Language", "Score", "Level", "Since last night"))
+    columns = ("#", "Project", "Language", "Kind", "Size", "Score", "Level", "Last change")
+    head = "".join(f"<th>{name}</th>" for name in columns)
     return (
-        f'# Leaderboard\n\n{INTRO}\n\n<div class="board">{_tabs(shown)}'
+        f'# Leaderboard\n\n{INTRO}\n\n<div class="board">{_tabs(shown, kinds)}'
         f'<div class="card table-wrap"><table class="ranking"><thead><tr>{head}</tr></thead><tbody>{rows}</tbody>'
         f"</table></div>{BOARD_SCRIPT}</div>\n"
     )
@@ -257,7 +286,7 @@ def project_page(
         f'<div class="card project-hero">{ring(value, f"score {value:.0f} percent")}<div>'
         f'<div class="chips">{_level(scored)}<span class="chip">{e(_gates(scored))}</span></div>{facts}</div></div>'
         f'<div class="grid two" style="margin-top:1rem"><div class="card"><h3>The score, night by night</h3>'
-        f'{_history(history)}</div><div class="card"><h3>Since last night</h3><ul>{since}</ul></div></div>'
+        f'{_history(history)}</div><div class="card"><h3>Since it was last scored</h3><ul>{since}</ul></div></div>'
         f'<h2>Next steps</h2><div class="card">{_next_steps(scored)}</div>'
         f'<h2>Every gate</h2><div class="card">{_cells(scored)}</div>{_badge_section(badge_url)}\n'
     )
@@ -278,11 +307,14 @@ def badge(result: Mapping[str, object]) -> dict[str, object]:
     return {"schemaVersion": 1, "label": "project_validator", "message": message, "color": _BADGE_COLORS[level]}
 
 
-def _summary(result: Mapping[str, object]) -> dict[str, object]:
+def _summary(result: Mapping[str, object], kind: str) -> dict[str, object]:
     scored = _score(result) or {}
     return {
         "name": result["name"],
         "language": result["language"],
+        "kind": kind,
+        "lines": result.get("lines"),
+        "size": size(result.get("lines")),
         "commit": result.get("commit"),
         "evaluated": result.get("evaluated"),
         **{key: scored.get(key) for key in ("version", "percent", "level", "level_name", "filled", "slots")},
@@ -311,9 +343,9 @@ def build(listed: Sequence[Entry], data: Path | None, pages_url: str) -> tuple[d
             by_name[name], result, history, changes[name], badge_url, report=f"leaderboard/reports/{slug}.html" in files
         )
         files[f"leaderboard/badges/{slug}.json"] = json.dumps(badge(result), sort_keys=True) + "\n"
-    summaries = [_summary(result) for result in ranked(list(current.values()))]
+    summaries = [_summary(result, by_name[str(result["name"])].kind) for result in ranked(list(current.values()))]
     files["leaderboard/data/latest.json"] = json.dumps(summaries, indent=2, sort_keys=True) + "\n"
     return pages, files
 
 
-__all__ = ["badge", "build", "index", "percent", "project_page", "sparkline"]
+__all__ = ["badge", "build", "index", "percent", "project_page", "size", "sparkline"]

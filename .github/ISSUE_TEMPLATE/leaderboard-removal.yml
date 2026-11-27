@@ -1,0 +1,19 @@
+name: Remove a project from the leaderboard
+description: Take your project off the leaderboard (seed or not); no reason needed.
+title: "Leaderboard: remove "
+body:
+  - type: input
+    id: project
+    attributes:
+      label: Project
+      description: The GitHub owner/repo, as leaderboard/projects.toml lists it.
+      placeholder: owner/repo
+    validations:
+      required: true
+  - type: checkboxes
+    id: maintainer
+    attributes:
+      label: Maintainer
+      options:
+        - label: I am one of the project's maintainers.
+          required: true

@@ -13,9 +13,10 @@ movement says so, and the change is for the validator's developers to look at.
 from __future__ import annotations
 
 import json
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 
+from leaderboard import Entry
 from project_validator.score import SCORE_VERSION
 
 SCORED = ("version", "percent", "level", "filled", "slots")
@@ -126,6 +127,21 @@ def movement(before: Mapping[str, object] | None, after: Mapping[str, object]) -
     if changes and before.get("commit") == after.get("commit"):
         changes.append("same commit: the validator changed")
     return changes
+
+
+def changed_since(listed: Sequence[Entry], data: Path, head: Callable[[str], str | None]) -> list[str]:
+    """The names of the listed projects with something new to score since `data`'s results: a commit at the head of
+    the branch (`head(name)`, None when it can not be told) that is not the last scored, no result yet, or a result of
+    an earlier version of the score."""
+    recorded = latest(data) if (data / "latest").is_dir() else {}
+    return [
+        entry.name
+        for entry in listed
+        if (result := recorded.get(entry.name)) is None
+        or scored(result) is None
+        or (commit := head(entry.name)) is None
+        or commit != result.get("commit")
+    ]
 
 
 def ranked(results: Sequence[Mapping[str, object]]) -> list[Mapping[str, object]]:

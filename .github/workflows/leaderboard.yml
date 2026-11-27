@@ -1,12 +1,14 @@
 name: leaderboard
 
-# The leaderboard (leaderboard/README.md): every night, each project on leaderboard/projects.toml is fetched at the
-# head of its branch and scored by this validator, the results are added to the `leaderboard-data` branch, and the
-# site is published with the boards. Evaluating runs no project code (the validator only parses), with read-only
+# The leaderboard (leaderboard/README.md): every night, each project on leaderboard/projects.toml with a new commit
+# (or never scored by this version of the score) is fetched at the head of its branch and scored by this validator,
+# the results are added to the `leaderboard-data` branch, and the site is published with the boards. Every Sunday,
+# and on demand, every project is scored, so that the validator's own changes reach them all. Evaluating runs no project code (the validator only parses), with read-only
 # permissions and no secrets; only the job that records the results writes, and only to the data branch.
 on:
   schedule:
-    - cron: "17 3 * * *"
+    - cron: "17 3 * * 1-6"
+    - cron: "17 3 * * 0"
   workflow_dispatch:
 
 # One night at a time; a run is never cancelled halfway through recording.
@@ -35,13 +37,25 @@ jobs:
       - name: Install PyYAML and pathspec
         run: python -m pip install --require-hashes -r .github/requirements/test.txt
 
+      # The last results, read-only (the repository is public): a night scores only the projects that changed since.
       - id: list
         name: List the projects
-        run: echo "projects=$(python -m leaderboard matrix)" >> "$GITHUB_OUTPUT"
+        env:
+          WEEKLY: ${{ github.event_name == 'workflow_dispatch' || github.event.schedule == '17 3 * * 0' }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          if [ "$WEEKLY" = true ]; then
+            echo "projects=$(python -m leaderboard matrix)" >> "$GITHUB_OUTPUT"
+          else
+            git clone --quiet --depth 1 --branch leaderboard-data "https://github.com/${REPOSITORY}.git" \
+              "${RUNNER_TEMP}/data" || mkdir -p "${RUNNER_TEMP}/data"
+            echo "projects=$(python -m leaderboard matrix --changed "${RUNNER_TEMP}/data")" >> "$GITHUB_OUTPUT"
+          fi
 
   evaluate:
     name: score ${{ matrix.project }}
     needs: list
+    if: ${{ needs.list.outputs.projects != '[]' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
@@ -79,9 +93,9 @@ jobs:
 
   record:
     name: record the night
-    needs: evaluate
-    # Record whatever was scored, even when a project's job failed or timed out.
-    if: ${{ !cancelled() }}
+    needs: [list, evaluate]
+    # Record whatever was scored, even when a project's job failed or timed out; a night with nothing new records none.
+    if: ${{ !cancelled() && needs.list.outputs.projects != '[]' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write

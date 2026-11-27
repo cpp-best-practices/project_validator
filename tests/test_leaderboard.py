@@ -5,6 +5,7 @@ evaluation runs on projects made on the spot, and GitHub's answers are passed in
 from __future__ import annotations
 
 import contextlib
+import dataclasses
 import io
 import json
 import math
@@ -23,10 +24,10 @@ import yaml
 
 from leaderboard import SEED, Entry, ManifestError, by_name, entries, parse
 from leaderboard.__main__ import PREVIEW_MARKER, check, main
-from leaderboard.evaluation import REPORT, evaluate, failed, fetch, write
-from leaderboard.history import movement, ranked, read_history, record
+from leaderboard.evaluation import REPORT, evaluate, failed, fetch, remote_head, write
+from leaderboard.history import changed_since, movement, ranked, read_history, record
 from leaderboard.rules import BOARDS, MOST_KB, Repository, changed, duplicates, problems
-from leaderboard.site import badge, build, sparkline
+from leaderboard.site import badge, build, size, sparkline
 from project_validator.core import Context, ExtractionError
 from project_validator.score import LEVEL_NAMES, SCORE_VERSION
 from tests.support import FIXTURES
@@ -65,6 +66,10 @@ class ManifestTests(unittest.TestCase):
             with self.subTest(entry=entry.name):
                 self.assertTrue(entry.seed or entry.consent.startswith("https://github.com/"), entry.consent)
 
+    def test_every_entry_declares_its_kind(self) -> None:
+        text = (Path(__file__).resolve().parent.parent / "leaderboard" / "projects.toml").read_text(encoding="utf-8")
+        self.assertEqual(text.count("\nkind = "), len(self.entries))
+
     def test_entries_are_sorted_by_language(self) -> None:
         languages = [entry.language.lower() for entry in self.entries]
         self.assertEqual(languages, sorted(languages))
@@ -73,7 +78,7 @@ class ManifestTests(unittest.TestCase):
 class ParseTests(unittest.TestCase):
     def test_every_field(self) -> None:
         (entry,) = parse(
-            '[[project]]\nname = "o/r"\nlanguage = "Go"\nconsent = "seed"\nbranch = "dev"\n'
+            '[[project]]\nname = "o/r"\nlanguage = "Go"\nkind = "tool"\nconsent = "seed"\nbranch = "dev"\n'
             'auxiliary = ["scripts/"]\nexclude = ["testdata"]\nlicense = "MIT"\n'
         )
         self.assertEqual(
@@ -81,6 +86,7 @@ class ParseTests(unittest.TestCase):
             Entry(
                 name="o/r",
                 language="Go",
+                kind="tool",
                 consent=SEED,
                 branch="dev",
                 auxiliary=("scripts/",),
@@ -95,11 +101,14 @@ class ParseTests(unittest.TestCase):
 
     def test_mistakes_are_named(self) -> None:
         cases = {
-            '[[project]]\nname = "o/r"\nlanguage = "Go"\n': "o/r: missing consent",
-            '[[project]]\nname = "o/r"\nlanguage = "Go"\nconsent = "seed"\nbranches = "x"\n': (
+            '[[project]]\nname = "o/r"\nlanguage = "Go"\nkind = "tool"\n': "o/r: missing consent",
+            '[[project]]\nname = "o/r"\nlanguage = "Go"\nconsent = "seed"\n': "o/r: missing kind",
+            '[[project]]\nname = "o/r"\nlanguage = "Go"\nkind = "tool"\nconsent = "seed"\nbranches = "x"\n': (
                 "unknown field(s) branches"
             ),
-            '[[project]]\nname = "o/r"\nlanguage = "Go"\nconsent = "seed"\nexclude = "x"\n': "expected a list",
+            '[[project]]\nname = "o/r"\nlanguage = "Go"\nkind = "tool"\nconsent = "seed"\nexclude = "x"\n': (
+                "expected a list"
+            ),
             "[[project]\n": "does not parse",
         }
         for text, message in cases.items():
@@ -121,6 +130,11 @@ class EntryRuleTests(unittest.TestCase):
             (Entry(name="not a name", language="Rust", consent=SEED), PUBLIC, "is not a GitHub owner/repo"),
             (Entry(name="o/r", language="Klingon", consent=SEED), PUBLIC, "`Klingon` is not a board"),
             (Entry(name="o/r", language="Rust", consent="yes please"), PUBLIC, "`consent` must link"),
+            (
+                Entry(name="o/r", language="Rust", kind="gadget", consent=SEED),
+                PUBLIC,
+                "`gadget` is not a kind: library, application or tool",
+            ),
             (ENTRY, Repository(found=False), "is not a public repository"),
             (ENTRY, Repository(found=True, private=True), "is not a public repository"),
             (ENTRY, Repository(found=True, archived=True, license="MIT"), "is archived"),
@@ -135,7 +149,8 @@ class EntryRuleTests(unittest.TestCase):
                 self.assertIn(message, found[0])
 
     def test_a_missing_repository_is_not_checked_further(self) -> None:
-        self.assertEqual(len(problems(Entry(name="o/r", language="?", consent="x"), Repository(found=False))), 3)
+        unlisted = Entry(name="o/r", language="?", kind="?", consent="x")
+        self.assertEqual(len(problems(unlisted, Repository(found=False))), 4)
 
     def test_an_entry_names_its_licence_when_github_can_not_tell(self) -> None:
         named = Entry(name="o/r", language="Rust", consent=SEED, license="MPL-2.0")
@@ -176,6 +191,7 @@ def _result(name: str, level: int, percent: float, **extra: object) -> dict[str,
         "commit": extra.pop("commit", "a" * 40),
         "validator": "v" * 40,
         "evaluated": "2026-11-18T03:17:00Z",
+        "lines": extra.pop("lines", 1_200),
         "score": {
             "version": SCORE_VERSION,
             "percent": percent,
@@ -189,6 +205,17 @@ def _result(name: str, level: int, percent: float, **extra: object) -> dict[str,
         },
         **extra,
     }
+
+
+def _product_lines(root: Path) -> int:
+    """The lines of the product's code in `root`, as the validator counts them (its formats' and tests' apart)."""
+    from project_validator.facts.structure import SourceFile
+    from tests.support import make_context
+
+    context = make_context(root)
+    languages = context.structure.languages
+    found = context.facts.of(SourceFile)
+    return sum(source.lines for source in found if source.role == "product" and source.language in languages)
 
 
 def _line(date: str, commit: str, level: int, percent: float) -> dict[str, object]:
@@ -245,6 +272,8 @@ class EvaluationTests(unittest.TestCase):
         self.assertGreaterEqual(scored["level"], 1)
         self.assertIn({"check": "license", "status": "PASS", "message": "the project is licensed under MIT"}, checks)
         self.assertNotIn("error", result)
+        self.assertEqual(result["kind"], "library")
+        self.assertEqual(result["lines"], _product_lines(FIXTURES / "well_configured_python"))
 
     def test_the_full_html_report_is_written_beside_the_result(self) -> None:
         with _directory() as root:
@@ -291,6 +320,7 @@ class EvaluationTests(unittest.TestCase):
             {
                 "name": "o/well",
                 "language": "Python",
+                "kind": "library",
                 "seed": True,
                 "validator": "v",
                 "evaluated": "2026-11-18T03:17:00Z",
@@ -465,7 +495,7 @@ class EarlierScoreVersionTests(unittest.TestCase):
 class SiteTests(unittest.TestCase):
     LISTED = (
         Entry(name="o/first", language="Rust", consent=SEED),
-        Entry(name="o/second", language="Go", consent="https://example.org/ok"),
+        Entry(name="o/second", language="Go", kind="tool", consent="https://example.org/ok"),
         Entry(name="o/broken", language="Go", consent=SEED),
     )
 
@@ -485,7 +515,7 @@ class SiteTests(unittest.TestCase):
     )
 
     def _data(self, data: Path) -> None:
-        second = _result("o/second", 1, 50, language="Go")
+        second = _result("o/second", 1, 50, language="Go", lines=250_000)
         with _directory() as results:
             write(_result("o/first", 1, 50), results)
             write(second, results)
@@ -527,7 +557,35 @@ class SiteTests(unittest.TestCase):
         self.assertIn('data-language="Go"', second)
         self.assertIn('error</span> <span class="muted">git fetch failed', broken)
         self.assertNotIn("gone/away", board)
-        self.assertIn('<button class="tab" data-language="Go">Go <span class="n">2</span></button>', board)
+        self.assertIn(
+            '<button class="tab" data-filter="language" data-value="Go">Go <span class="n">2</span></button>', board
+        )
+
+    def test_the_boards_divide_by_kind_and_size(self) -> None:
+        """Projects are ranked against their own kind and size too (upstream #295, decision 8): a tab per kind and per
+        size, and each row says which it is."""
+        with _directory() as data:
+            self._data(data)
+            pages, files = build(self.LISTED, data, "https://o.github.io/p/")
+        board = pages["leaderboard/index.html"]
+        rows = re.findall(r"<tr data-language=.*?</tr>", board)
+        self.assertIn('data-kind="library" data-size="small"', rows[0])
+        self.assertIn('<td>library</td><td>small <span class="muted">1,200 lines</span></td>', rows[0])
+        self.assertIn('data-kind="tool" data-size="large"', rows[1])
+        self.assertIn('large <span class="muted">250,000 lines</span>', rows[1])
+        self.assertIn('data-kind="library" data-size=""', rows[2])  # never scored: no size
+        for tab in (
+            '<button class="tab" data-filter="kind" data-value="tool">tool <span class="n">1</span></button>',
+            '<button class="tab" data-filter="size" data-value="large">large <span class="n">1</span></button>',
+        ):
+            self.assertIn(tab, board)
+        latest = json.loads(files["leaderboard/data/latest.json"])
+        self.assertEqual({row["name"]: (row["kind"], row["size"]) for row in latest}["o/second"], ("tool", "large"))
+
+    def test_sizes(self) -> None:
+        sizes = [size(lines) for lines in (0, 9_999, 10_000, 99_999, 100_000)]
+        self.assertEqual(sizes, ["small", "small", "medium", "medium", "large"])
+        self.assertEqual(size(None), "")
 
     def test_a_project_page(self) -> None:
         with _directory() as data:
@@ -633,6 +691,19 @@ class PreviewTests(unittest.TestCase):
         _, preview = check([], [self.NEW], lambda _: PUBLIC, complete)
         self.assertIn("**99% · Level 3 Hardening**\n\nScored by", preview)
 
+    def test_only_the_seed_list_is_seeded(self) -> None:
+        """Entries others add need the maintainers' consent (upstream #295, decision 6): a new entry, or one that
+        had consent, can not call itself a seed."""
+        seeded = Entry(name="new/one", language="Rust", consent=SEED)
+        message = 'only the seed list may say `consent = "seed"`: link to the maintainers\' approval'
+        for base in ([], [self.NEW]):
+            with self.subTest(base=base):
+                ok, preview = check(base, [seeded], lambda _: PUBLIC, self._scored)
+                self.assertFalse(ok)
+                self.assertIn(message, preview)
+        ok, _ = check([seeded], [dataclasses.replace(seeded, branch="dev")], lambda _: PUBLIC, self._scored)
+        self.assertTrue(ok)
+
     def test_nothing_changed(self) -> None:
         self.assertIn("No entry is added or changed.", check([ENTRY], [ENTRY], lambda _: PUBLIC, self._scored)[1])
 
@@ -648,6 +719,45 @@ class CommandTests(unittest.TestCase):
         code, output, _ = self._run("matrix")
         self.assertEqual(code, 0)
         self.assertEqual(json.loads(output), [entry.name for entry in entries()])
+
+    def test_the_nightly_matrix_lists_only_the_projects_with_new_commits(self) -> None:
+        """Re-scored nightly only when there is something new to score (upstream #295, decision 7): a new commit, a
+        project never recorded, or one an earlier version of the score scored; the weekly run scores every one."""
+        listed = [
+            Entry(name="o/same", language="Go", consent=SEED),
+            Entry(name="o/moved", language="Go", consent=SEED),
+            Entry(name="o/new", language="Go", consent=SEED),
+            Entry(name="o/old-score", language="Go", consent=SEED),
+            Entry(name="o/unread", language="Go", consent=SEED),
+        ]
+        older = _result("o/old-score", 1, 50, commit="a" * 40)
+        older["score"] = {**older["score"], "version": "0"}  # type: ignore[dict-item]
+        heads = {"o/same": "a" * 40, "o/moved": "b" * 40, "o/new": "c" * 40, "o/old-score": "a" * 40, "o/unread": None}
+        with _directory() as data:
+            with _directory() as results:
+                for name in ("o/same", "o/moved", "o/unread"):
+                    write(_result(name, 1, 50, commit="a" * 40), results)
+                write(older, results)
+                record(results, data, "2026-11-17")
+            self.assertEqual(changed_since(listed, data, heads.get), ["o/moved", "o/new", "o/old-score", "o/unread"])
+            self.assertEqual(changed_since(listed, data / "absent", heads.get), [entry.name for entry in listed])
+
+    def test_matrix_changed_asks_git_for_each_head(self) -> None:
+        with _directory() as root:
+            origin = root / "origin"
+            origin.mkdir()
+            _git(origin, "init", "--quiet", "-b", "main")
+            (origin / "README.md").write_text("x\n")
+            _git(origin, "add", ".")
+            _git(origin, "commit", "--quiet", "-m", "x")
+            head = _git(origin, "rev-parse", "HEAD")
+            self.assertEqual(remote_head(Entry(name="o/r", language="Go", consent=SEED), url=str(origin)), head)
+            missing = Entry(name="o/r", language="Go", consent=SEED, branch="nope")
+            self.assertIsNone(remote_head(missing, url=str(origin)))
+            code, output, _ = self._run(
+                "--manifest", str(self._manifest(root, origin)), "matrix", "--changed", str(root / "data")
+            )
+        self.assertEqual((code, json.loads(output)), (0, ["o/r"]))
 
     def test_record_adds_the_results(self) -> None:
         with _directory() as root:
@@ -665,7 +775,9 @@ class CommandTests(unittest.TestCase):
 
     def _manifest(self, root: Path, origin: Path) -> Path:
         """A one-entry manifest whose checkout in `root / "cache"` fetches from `origin`."""
-        (root / "projects.toml").write_text('[[project]]\nname = "o/r"\nlanguage = "Python"\nconsent = "seed"\n')
+        (root / "projects.toml").write_text(
+            '[[project]]\nname = "o/r"\nlanguage = "Python"\nkind = "library"\nconsent = "seed"\n'
+        )
         (root / "cache" / "o--r").mkdir(parents=True)
         _git(root / "cache" / "o--r", "init", "--quiet")
         _git(root / "cache" / "o--r", "remote", "add", "origin", origin.as_uri())
@@ -689,7 +801,9 @@ class CommandTests(unittest.TestCase):
 
     def test_check_writes_the_preview_and_fails_on_a_problem(self) -> None:
         with _directory() as root:
-            (root / "projects.toml").write_text('[[project]]\nname = "o/r"\nlanguage = "Python"\nconsent = "no"\n')
+            (root / "projects.toml").write_text(
+                '[[project]]\nname = "o/r"\nlanguage = "Python"\nkind = "library"\nconsent = "no"\n'
+            )
             with mock.patch("leaderboard.__main__.github_repository", return_value=PUBLIC) as asked:
                 code, output, _ = self._run(
                     *("--manifest", str(root / "projects.toml"), "check"),
@@ -703,7 +817,9 @@ class CommandTests(unittest.TestCase):
 
     def test_evaluate_writes_an_unscored_result_for_a_project_that_can_not_be_fetched(self) -> None:
         with _directory() as root:
-            (root / "projects.toml").write_text('[[project]]\nname = "o/r"\nlanguage = "Go"\nconsent = "seed"\n')
+            (root / "projects.toml").write_text(
+                '[[project]]\nname = "o/r"\nlanguage = "Go"\nkind = "library"\nconsent = "seed"\n'
+            )
             (root / "cache" / "o--r").mkdir(parents=True)
             _git(root / "cache" / "o--r", "init", "--quiet")
             _git(root / "cache" / "o--r", "remote", "add", "origin", (root / "missing").as_uri())
@@ -740,6 +856,17 @@ class WorkflowTests(unittest.TestCase):
 
     def test_it_runs_nightly_and_on_demand(self) -> None:
         self.assertEqual(_triggers("leaderboard.yml"), {"schedule", "workflow_dispatch"})
+
+    def test_nights_score_what_changed_and_the_week_scores_everything(self) -> None:
+        workflow = _workflow("leaderboard.yml")
+        crons = [entry["cron"] for entry in workflow.get("on", workflow.get(True))["schedule"]]
+        self.assertEqual(crons, ["17 3 * * 1-6", "17 3 * * 0"])
+        text = (WORKFLOWS / "leaderboard.yml").read_text(encoding="utf-8")
+        self.assertIn("python -m leaderboard matrix --changed", text)
+        self.assertIn("github.event.schedule == '17 3 * * 0'", text)
+        jobs = workflow["jobs"]
+        for name in ("evaluate", "record"):
+            self.assertIn("needs.list.outputs.projects != '[]'", jobs[name].get("if", ""))
 
     def test_no_checkout_keeps_its_credentials(self) -> None:
         for name in ("leaderboard.yml", "leaderboard-check.yml", "pages.yml"):

@@ -15,7 +15,7 @@ import urllib.request
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 
-from leaderboard import _NAME, Entry
+from leaderboard import _NAME, KINDS, Entry
 from project_validator.ecosystems import BUILT_IN
 
 MOST_KB = 2_000_000  # GitHub's `size`, in KiB: the whole history; a shallow clone is much smaller
@@ -49,6 +49,8 @@ def problems(entry: Entry, repository: Repository) -> list[str]:
         found.append(f"`{entry.name}` is not a GitHub owner/repo")
     if entry.language not in BOARDS:
         found.append(f"`{entry.language}` is not a board: use an ecosystem label of the support matrix")
+    if entry.kind not in KINDS:
+        found.append(f"`{entry.kind}` is not a kind: {', '.join(KINDS[:-1])} or {KINDS[-1]}")
     if not (entry.seed or entry.consent.startswith("https://")):
         found.append("`consent` must link to the maintainers' approval (an issue, a comment or a pull request)")
     if not repository.found or repository.private:
