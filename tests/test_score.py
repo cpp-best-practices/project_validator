@@ -13,6 +13,7 @@ from project_validator.cli import EXIT_FAILURE, EXIT_SUCCESS, EXIT_USAGE, main
 from project_validator.core import Check, Placed, Result, Status
 from project_validator.runner import Report
 from project_validator.score import (
+    FINDINGS,
     FLOOR,
     LEVEL_NAMES,
     LEVELS,
@@ -126,6 +127,28 @@ class PercentTests(unittest.TestCase):
         self.assertIn("status-badges", UNSCORED)
         reports = [report("tests-run", PASS, place(PASS)), project_wide("status-badges", WARN)]
         self.assertEqual(scored(reports).percent, 100)
+
+    def test_what_the_validator_finds_itself_can_take_points_away_but_never_add_them(self) -> None:
+        """Only processes the project puts in place earn points. A check that passes because the validator found no
+        defect itself (every data file parses, nothing large or built is committed) is no slot; one that finds a
+        defect is a slot nothing fills, so it costs its share and is a next step."""
+        self.assertEqual(
+            FINDINGS,
+            {"data-wellformed", "repository-hygiene", "committed-artifacts", "large-files", "ci-current"},
+        )
+        for name in FINDINGS:
+            with self.subTest(check=name):
+                passing = scored(report("tests-run", FAIL, place(FAIL)), report(name, PASS, place(PASS)))
+                self.assertEqual((passing.filled, passing.slots), (0, 1))
+                for status in (WARN, FAIL):
+                    found = scored(report("tests-run", PASS, place(PASS)), report(name, status, place(status)))
+                    self.assertEqual((found.filled, found.slots), (1, 2))
+                    self.assertEqual([step.check for step in found.next_steps], [name])
+                low = scored(report("tests-run", FAIL, place(FAIL)), report(name, WARN, place(WARN)))
+                self.assertEqual(low.filled, 0)  # a warning never adds, even to a low score
+        project = scored(report("tests-run", PASS, place(PASS)), project_wide("ci-current", FAIL))
+        self.assertEqual((project.filled, project.slots), (1, 2))
+        self.assertEqual(scored(report("tests-run", PASS, place(PASS)), project_wide("ci-current", PASS)).slots, 1)
 
     def test_project_wide_checks_are_one_slot_each(self) -> None:
         reports = [report("tests-run", PASS, place(PASS)), project_wide("license", FAIL)]
@@ -309,7 +332,7 @@ class SummaryTests(unittest.TestCase):
     def test_as_json(self) -> None:
         data = scored(foundations()).as_dict()
         self.assertEqual(data["version"], SCORE_VERSION)
-        self.assertEqual(SCORE_VERSION, "2")  # 2: weighted by size (upstream #331)
+        self.assertEqual(SCORE_VERSION, "3")  # 2: weighted by size (upstream #331); 3: findings only take away
         self.assertEqual(data["percent"], 100)
         self.assertEqual((data["level"], data["level_name"]), (1, "Foundations"))
         self.assertEqual((data["filled"], data["slots"], data["extra"], data["held"]), (7, 7, 0, 0))

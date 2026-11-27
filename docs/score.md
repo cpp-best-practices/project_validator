@@ -2,7 +2,7 @@
 
 The console and HTML reports always show the score; `python -m project_validator --score path/to/project` adds it to
 the plain text, markdown and JSON outputs too. The statuses and the exit code do not change. The design is upstream
-issue #295; this is **version 1**.
+issue #295; this is **version 3**.
 
 > **87% · Level 2 Analysis · 41 of 47 gates in place**
 
@@ -32,8 +32,13 @@ percent = 100 * filled / slots
   of the product alone: coverage, fuzzing, mutation testing, sanitizers, hardening, dependency audit, the platform
   matrix, build types and security scanning.
 - **Not scored:** `status-badges` is reported, but a README badge is not a quality gate.
-- A language the validator has no tools for adds no slot for the gates it can not judge: that gap is the validator's to
-  fix, not the project's.
+- **Defects the validator finds itself only take points away** (score version 3). `data-wellformed`,
+  `repository-hygiene`, `committed-artifacts`, `large-files` and `ci-current` pass because no defect was found, not
+  because the project put a process in place, so passing they are no slot and earn nothing. Finding a defect (a file
+  that does not parse, a committed build output), warning or failing, they are a slot nothing fills: it costs its
+  share, keeps the project from 100%, and is a next step. **Only the processes a project puts in place earn points:**
+  a CI step that checks the files (`file-soundness`, `schema-validation`), configuration that keeps outputs out
+  (`vcs-ignore`), a check of CI itself (`ci-lint`).
 
 So 100% is reachable, and means exactly that: every gate that applies to each part of the project is in place. Size
 weights only the percent: the levels still ask every language for every gate of theirs.
