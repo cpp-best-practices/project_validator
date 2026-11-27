@@ -4,6 +4,7 @@ sound and text file of a format it reads is sound: whole, not truncated, and of 
 from __future__ import annotations
 
 import bz2
+import contextlib
 import gzip
 import io
 import lzma
@@ -90,11 +91,11 @@ def _tar(*members: tuple[str, bytes], mode: str = "w") -> bytes:
 
 
 def _sqlite() -> bytes:
-    connection = sqlite3.connect(":memory:")
-    connection.execute("create table t (x)")
-    connection.executemany("insert into t values (?)", [(i,) for i in range(200)])
-    connection.commit()
-    return connection.serialize()
+    with contextlib.closing(sqlite3.connect(":memory:")) as connection:
+        connection.execute("create table t (x)")
+        connection.executemany("insert into t values (?)", [(i,) for i in range(200)])
+        connection.commit()
+        return connection.serialize()
 
 
 def _wav(frames: int = 8) -> bytes:
