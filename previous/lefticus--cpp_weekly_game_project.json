@@ -1,0 +1,945 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "1 of 1 actions are pinned to a tag rather than a commit",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "2 of 2 OS/compiler combination(s) do not build Debug and Release, each with and without sanitizers",
+      "status": "FAIL"
+    },
+    {
+      "check": "ci-current",
+      "message": "1 CI configuration is defunct: Travis CI",
+      "status": "FAIL"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI does not lint its GitHub Actions configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for AppVeyor, GitHub Actions",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": "CMake: .cmake-format.yaml is defined but CI does not run gersemi or cmake-format; C++: .clang-format is defined but CI does not run clang-format",
+      "status": "WARN"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "compile_commands.json is exported with set(CMAKE_EXPORT_COMPILE_COMMANDS ON)",
+      "status": "PASS"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "C++ compiler extensions are never disabled",
+      "status": "FAIL"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "strict compiler warning flags are enabled: -Wall -Wextra -Wpedantic -Wshadow -Wconversion for gcc; /W4 /permissive- for msvc",
+      "status": "PASS"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "no branch coverage measurement found in what CI runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "5 YAML files parse",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
+    {
+      "check": "dependency-management",
+      "message": "no dependencies are declared",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    {
+      "check": "file-soundness",
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
+    {
+      "check": "function-limits",
+      "message": "CI runs clang-tidy, but its readability-function-size rule is off or has no limit; set readability-function-size with a LineThreshold or StatementThreshold in .clang-tidy",
+      "status": "FAIL"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "fuzz targets in 1 file(s), run by CTest (fuzz_test/CMakeLists.txt): fuzz_tester_run",
+      "status": "PASS"
+    },
+    {
+      "check": "hardening",
+      "message": "no hardening options found; enable _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, _GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE, /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT",
+      "status": "FAIL"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under Unlicense",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "no mutation testing runs",
+      "status": "WARN"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "in-source builds are not prevented",
+      "status": "WARN"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "CI covers 2 OS(es) (linux, windows), 2 compiler(s) (gcc, msvc), 2 combination(s); expected at least 3 OS/compiler combinations (found 2)",
+      "status": "FAIL"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "sanitizers are enabled: AddressSanitizer, UndefinedBehaviorSanitizer",
+      "status": "PASS"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-declared",
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-examples",
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-validation",
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    {
+      "check": "security-scanning",
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "static-analysis",
+      "message": "CMake: cmake-lint is configured (.cmake-format.yaml) but does not run; C++: clang-tidy (.clang-tidy) and cppcheck run",
+      "status": "WARN"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows CI (AppVeyor) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    {
+      "check": "tests-run",
+      "message": "tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call): 2 file(s), run by ctest",
+      "status": "PASS"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "nothing is guarded for use as a subproject",
+      "status": "WARN"
+    },
+    {
+      "check": "type-checking",
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "CMake: warnings are not treated as errors in CI configuration and CMakePresets.json; C++: warnings are treated as errors with -Werror, /WX",
+      "status": "FAIL"
+    }
+  ],
+  "commit": "75cecc0fddfb650a3f52f8f42559d2e90dcc1f3c",
+  "evaluated": "2026-11-27T12:25:37Z",
+  "kind": "application",
+  "language": "C++",
+  "lines": 778,
+  "name": "lefticus/cpp_weekly_game_project",
+  "score": {
+    "base": 52.06,
+    "breakdown": {
+      "": [
+        5,
+        10
+      ],
+      "C++": [
+        6.27,
+        11.34
+      ],
+      "CMake": [
+        0.28,
+        0.84
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 3,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-build-types",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "ci-current",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "CMake",
+        "extra": 0,
+        "filled": 0.14044512663085187,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.28089025326170375
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.2985418265541059,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "compile-commands",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.5970836531082118,
+        "level": 4,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "compiler-extensions",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.5970836531082118,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.5970836531082118,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [
+          "clang-tidy's readability-function-size"
+        ],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "fuzz-testing",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.5970836531082118,
+        "level": 3,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "hardening",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.2985418265541059,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "out-of-source-build",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.2985418265541059,
+        "level": 4,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "sanitizers",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.5970836531082118,
+        "level": 3,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.2985418265541059,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "CMake",
+        "extra": 0,
+        "filled": 0.14044512663085187,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.28089025326170375
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "C++",
+        "extra": 0.15,
+        "filled": 0.5970836531082118,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "clang-tidy",
+          "cppcheck"
+        ],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.5970836531082118,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "ctest"
+        ],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "top-level-guard",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.2985418265541059,
+        "level": 4,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "CMake",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.28089025326170375
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.5970836531082118,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5970836531082118
+      }
+    ],
+    "extra": 0.0,
+    "filled": 11.55,
+    "held": 0.67,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "vcs-ignore",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs",
+        "level": 1,
+        "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+        "needed_for": 1,
+        "points": 4.51,
+        "status": "FAIL",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "consider a CI job that runs clang-format --dry-run -Werror",
+        "level": 1,
+        "message": ".clang-format is defined but CI does not run clang-format",
+        "needed_for": 1,
+        "points": 1.35,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "CMake",
+        "hint": "",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration and CMakePresets.json",
+        "needed_for": 1,
+        "points": 1.27,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "CMake",
+        "hint": "consider a CI job that runs gersemi --check . (or cmake-format --check CMakeLists.txt)",
+        "level": 1,
+        "message": ".cmake-format.yaml is defined but CI does not run gersemi or cmake-format",
+        "needed_for": 1,
+        "points": 0.63,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "",
+        "level": 2,
+        "message": "no branch coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 2.69,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "CMake",
+        "hint": "consider running cmake-lint CMakeLists.txt or cmakelint CMakeLists.txt in CI",
+        "level": 2,
+        "message": "cmake-lint is configured (.cmake-format.yaml) but does not run",
+        "needed_for": null,
+        "points": 0.63,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "action-pinning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "pin each action to the full commit of its release, e.g. actions/checkout@<40-character SHA> # v4.2.2; Dependabot and Renovate keep such pins up to date",
+        "level": 3,
+        "message": "1 of 1 actions are pinned to a tag rather than a commit",
+        "needed_for": null,
+        "points": 2.25,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "mutation-testing",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "consider running mull-runner or dextool mutate in CI",
+        "level": 3,
+        "message": "no mutation testing runs",
+        "needed_for": null,
+        "points": 1.35,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "consider running in CI: CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.35,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-current",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "remove a CI configuration the project no longer runs, or bring it back to life: one that does not run misleads its readers about what is tested",
+        "level": 4,
+        "message": "1 CI configuration is defunct: Travis CI",
+        "needed_for": null,
+        "points": 4.51,
+        "status": "FAIL",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "ci-build-types",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "",
+        "level": 4,
+        "message": "2 of 2 OS/compiler combination(s) do not build Debug and Release, each with and without sanitizers",
+        "needed_for": null,
+        "points": 2.69,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-extensions",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "",
+        "level": 4,
+        "message": "C++ compiler extensions are never disabled",
+        "needed_for": null,
+        "points": 2.69,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "",
+        "level": 4,
+        "message": "CI runs clang-tidy, but its readability-function-size rule is off or has no limit; set readability-function-size with a LineThreshold or StatementThreshold in .clang-tidy",
+        "needed_for": null,
+        "points": 2.69,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "hardening",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "enable -fhardened (GCC 14+) or _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, _GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE; for MSVC /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT",
+        "level": 4,
+        "message": "no hardening options found; enable _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, _GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE, /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT",
+        "needed_for": null,
+        "points": 2.69,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "platform-matrix",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "",
+        "level": 4,
+        "message": "CI covers 2 OS(es) (linux, windows), 2 compiler(s) (gcc, msvc), 2 combination(s); expected at least 3 OS/compiler combinations (found 2)",
+        "needed_for": null,
+        "points": 2.69,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-lint",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "",
+        "level": 4,
+        "message": "CI does not lint its GitHub Actions configuration",
+        "needed_for": null,
+        "points": 2.25,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 2.25,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "dependency-updates",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)",
+        "level": 4,
+        "message": "no automated dependency updates configured",
+        "needed_for": null,
+        "points": 2.25,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 2.25,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "security-policy",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)",
+        "level": 4,
+        "message": "no security policy",
+        "needed_for": null,
+        "points": 2.25,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "out-of-source-build",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "compare CMAKE_SOURCE_DIR with CMAKE_BINARY_DIR and message(FATAL_ERROR) when they are equal (cmake_template's PreventInSourceBuilds.cmake)",
+        "level": 4,
+        "message": "in-source builds are not prevented",
+        "needed_for": null,
+        "points": 1.35,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "top-level-guard",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "condition the tests and developer-only options on PROJECT_IS_TOP_LEVEL (Meson: meson.is_subproject()), so that the project works as a subproject through FetchContent, CPM or add_subdirectory",
+        "level": 4,
+        "message": "nothing is guarded for use as a subproject",
+        "needed_for": null,
+        "points": 1.35,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      }
+    ],
+    "percent": 52.06,
+    "slots": 22.19,
+    "summary": "52% · Level 0 Getting started · 23 of 32 gates in place (+0.7 extra credit held until every gate is in place)",
+    "units": {
+      "": [
+        5,
+        10
+      ],
+      ".": [
+        6.55,
+        12.19
+      ]
+    },
+    "version": "3"
+  },
+  "seed": false,
+  "unknowns": 12,
+  "validator": "f484d7b15d7a40db5bde6b087ebd2dac289c962e"
+}

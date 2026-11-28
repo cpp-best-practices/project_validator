@@ -1,0 +1,1446 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "all 30 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "7 of 7 OS/Rust toolchain combination(s) do not build Debug and Release, each with and without sanitizers",
+      "status": "FAIL"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI lints its configuration (GitHub Actions: zizmor)",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": "JSON Schema: CI never runs prettier or biome; its formatting is not enforced; Lua: CI never runs StyLua; its formatting is not enforced; Rust: .rustfmt.toml is defined and CI runs rustfmt; Shell: the root: CI enforces the shfmt style; docs: CI enforces the shfmt style",
+      "status": "FAIL"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "not applicable to Lua, PowerShell, Rust, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "not applicable to Lua, PowerShell, Rust, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "Lua: no Lua linters found; enable at least luacheck, selene; Rust: missing Rust lint settings: clippy::pedantic; Shell: PowerShell: no PowerShell lints found; enable at least PSScriptAnalyzer; Shell: strict shell lints are enabled: shellcheck",
+      "status": "FAIL"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "Lua: no line coverage measurement found in what CI runs; Rust: no branch coverage measurement found in what CI runs; Shell: PowerShell: no statement coverage measurement found in what CI runs; Shell: no line coverage measurement found in what CI runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "Data: JSON in the root: 3 JSON files parse; JSON in docs: 3 JSON files parse; TOML in the root: 5 TOML files parse; TOML in docs: 12 TOML files parse; YAML in the root: 13 YAML files parse; File formats: BMP in the root: 2 BMP files parse; GIF in the root: 1 GIF file parses; ICO in the root: 1 ICO file parses; PNG in the root: 16 PNG files parse; PNG in docs: 14 PNG files parse; Property list in the root: 2 Property list files parse; SVG in the root: 2 SVG files parse; SVG in docs: 1 SVG file parses",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "dependency-management",
+      "message": "dependencies are declared in Cargo.toml (Cargo) and locked in Cargo.lock",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "automated dependency updates are configured with Renovate",
+      "status": "PASS"
+    },
+    {
+      "check": "file-soundness",
+      "message": "no tool checks the image files (docs/public/icon.png, docs/public/logo-uwu.png, docs/public/logo.png and 31 more); no tool checks the font files (docs/public/nerd-font.woff2); no tool checks the audio or video files (docs/public/demo.mp4, docs/public/demo.webm)",
+      "status": "WARN"
+    },
+    {
+      "check": "function-limits",
+      "message": "function length is never limited",
+      "status": "FAIL"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "only property-based tests (src/painted.rs); no fuzz targets",
+      "status": "WARN"
+    },
+    {
+      "check": "hardening",
+      "message": "no hardening options found; enable release overflow-checks",
+      "status": "FAIL"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under ISC",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "no link check found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to Lua, PowerShell, Rust, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "no mutation testing runs",
+      "status": "WARN"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "not applicable to Lua, PowerShell, Rust, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "Lua: CI covers 0 OS(es) (none), 0 Lua version(s) (none), 0 combination(s); expected at least 2 operating systems (found 0), at least 2 Lua versions (found 0), at least 3 OS/Lua version combinations (found 0); Rust: CI covers 3 OS(es) (linux, macos, windows), 2 Rust toolchain(s) (nightly, stable), 6 combination(s)",
+      "status": "FAIL"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "no sanitizer runs in CI; run cargo +nightly miri test or build with -Zsanitizer=address",
+      "status": "FAIL"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "no check for breaking schema changes found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "schema-declared",
+      "message": "1 JSON Schema file does not declare its dialect ($schema) and $id",
+      "status": "WARN"
+    },
+    {
+      "check": "schema-examples",
+      "message": "no check of the schemas' examples found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "schema-validation",
+      "message": "no schema validation found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    {
+      "check": "security-scanning",
+      "message": "Lua: no code security scanning found in CI configuration; Rust: no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "static-analysis",
+      "message": "Documentation site: no static analyzer runs; Lua: no static analyzer runs; Rust: clippy (Cargo.toml, clippy.toml) runs; Shell: PowerShell in the root: no static analyzer runs; Shell in the root: shellcheck runs; Shell in docs: shellcheck runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows a CI badge (GitHub Actions) but no quality badge",
+      "status": "WARN"
+    },
+    {
+      "check": "tests-run",
+      "message": "Documentation site: the VitePress site's configuration: 1 file(s), run by VitePress build; Lua: no tests found (busted specs (spec/**/*_spec.lua)); Rust: #[test] functions: 132 file(s), run by cargo test; Shell: PowerShell: no tests found (Pester tests (*.Tests.ps1)); Shell: no tests found (bats tests (*.bats), zunit tests (*.zunit), urchin tests (shell scripts without a suffix under test/), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
+      "status": "FAIL"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "not applicable to Lua, PowerShell, Rust, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "type-checking",
+      "message": "no type checker runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": "Documentation site: .gitignore ignores docs/.vitepress/dist/; .gitignore ignores docs/.vitepress/cache/; Lua: .gitignore does not ignore the local rocks tree; .gitignore does not ignore luacov's output; Rust: .gitignore ignores target/",
+      "status": "WARN"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "Rust: warnings are treated as errors with -D warnings; Shell: PowerShell: warnings are not treated as errors in CI configuration; Shell: warnings are treated as errors with shellcheck, which fails on any finding",
+      "status": "FAIL"
+    }
+  ],
+  "commit": "b9432ccbf0b86e3be8598361c54450a4485e1aca",
+  "evaluated": "2026-11-28T11:51:04Z",
+  "kind": "application",
+  "language": "Rust",
+  "lines": 56068,
+  "name": "starship/starship",
+  "score": {
+    "base": 64.4,
+    "breakdown": {
+      "": [
+        7.5,
+        9
+      ],
+      "Documentation site": [
+        3,
+        4
+      ],
+      "JSON Schema": [
+        2.5,
+        5
+      ],
+      "Lua": [
+        0.1,
+        1.0
+      ],
+      "Rust": [
+        7.97,
+        14.26
+      ],
+      "Shell": [
+        2.03,
+        2.6
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-build-types",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "JSON Schema",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": "docs",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.8388343237168632,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "rustfmt"
+        ],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.026755555555555557,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "shfmt"
+        ],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "shfmt"
+        ],
+        "unit": "docs",
+        "weight": 1.0
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.4194171618584316,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "cargo-llvm-cov"
+        ],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.4194171618584316,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.8388343237168632,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "file-soundness",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "fuzz-testing",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.4194171618584316,
+        "level": 3,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "hardening",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "link-check",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": "docs",
+        "weight": 1.0
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.4194171618584316,
+        "level": 3,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.8388343237168632,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "sanitizers",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 3,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "schema-compatibility",
+        "ecosystem": "JSON Schema",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": "docs",
+        "weight": 1.0
+      },
+      {
+        "check": "schema-declared",
+        "ecosystem": "JSON Schema",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": "docs",
+        "weight": 1.0
+      },
+      {
+        "check": "schema-examples",
+        "ecosystem": "JSON Schema",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": "docs",
+        "weight": 1.0
+      },
+      {
+        "check": "schema-validation",
+        "ecosystem": "JSON Schema",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": "docs",
+        "weight": 1.0
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.05,
+        "level": 3,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.4194171618584316,
+        "level": 3,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": "docs",
+        "weight": 1.0
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.8388343237168632,
+        "level": 2,
+        "status": "PASS",
+        "strength": 0.99,
+        "tier": "core",
+        "tools": [
+          "clippy"
+        ],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "shellcheck"
+        ],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "shellcheck"
+        ],
+        "unit": "docs",
+        "weight": 1.0
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "VitePress build"
+        ],
+        "unit": "docs",
+        "weight": 1.0
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.8388343237168632,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "cargo test"
+        ],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "type-checking",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.05,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.8388343237168632,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "Rust",
+        "extra": 0,
+        "filled": 0.8388343237168632,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8388343237168632
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      }
+    ],
+    "extra": 0.0,
+    "filled": 23.1,
+    "held": 0.0,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "JSON Schema",
+        "hint": "consider a CI job that runs prettier --check . (or biome format . (or biome ci .))",
+        "level": 1,
+        "message": "CI never runs prettier or biome; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 1.39,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "docs"
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Rust",
+        "hint": "",
+        "level": 1,
+        "message": "missing Rust lint settings: clippy::pedantic",
+        "needed_for": 1,
+        "points": 1.17,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "consider a CI job that runs stylua --check .",
+        "level": 1,
+        "message": "CI never runs StyLua; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 0.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "",
+        "level": 1,
+        "message": "no Lua linters found; enable at least luacheck, selene",
+        "needed_for": 1,
+        "points": 0.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 1,
+        "message": "PowerShell: no PowerShell lints found; enable at least PSScriptAnalyzer; Shell: strict shell lints are enabled: shellcheck",
+        "needed_for": 1,
+        "points": 0.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "",
+        "level": 1,
+        "message": "no tests found (busted specs (spec/**/*_spec.lua))",
+        "needed_for": 1,
+        "points": 0.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 1,
+        "message": "PowerShell: no tests found (Pester tests (*.Tests.ps1)); Shell: no tests found (bats tests (*.bats), zunit tests (*.zunit), urchin tests (shell scripts without a suffix under test/), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
+        "needed_for": 1,
+        "points": 0.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 1,
+        "message": "PowerShell: warnings are not treated as errors in CI configuration; Shell: warnings are treated as errors with shellcheck, which fails on any finding",
+        "needed_for": 1,
+        "points": 0.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "vcs-ignore",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "consider ignoring lua_modules/ and .luarocks/ (luarocks init writes them)",
+        "level": 1,
+        "message": ".gitignore does not ignore the local rocks tree; .gitignore does not ignore luacov's output",
+        "needed_for": 1,
+        "points": 0.14,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Rust",
+        "hint": "",
+        "level": 2,
+        "message": "no branch coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 2.34,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Documentation site",
+        "hint": "consider running markdownlint-cli2 (or DavidAnson/markdownlint-cli2-action) or vale docs (or errata-ai/vale-action) in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 1.39,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "docs"
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "Rust",
+        "hint": "consider running in CI: cargo audit, cargo deny check advisories, GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 1.17,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "",
+        "level": 2,
+        "message": "no line coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 0.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 2,
+        "message": "PowerShell: no statement coverage measurement found in what CI runs; Shell: no line coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 0.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "consider running luacheck . or selene . in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 0.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 2,
+        "message": "PowerShell: no static analyzer runs; Shell: shellcheck runs",
+        "needed_for": null,
+        "points": 0.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "type-checking",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "consider running a type checker in CI: lua-language-server --check . (with LuaCATS annotations), emmylua_check . (with LuaCATS annotations), luau-analyze . or tl check <file.tl> (Teal)",
+        "level": 2,
+        "message": "no type checker runs",
+        "needed_for": null,
+        "points": 0.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "sanitizers",
+        "completes": false,
+        "ecosystem": "Rust",
+        "hint": "run cargo +nightly miri test, or build with RUSTFLAGS=-Zsanitizer=address on nightly, in CI",
+        "level": 3,
+        "message": "no sanitizer runs in CI; run cargo +nightly miri test or build with -Zsanitizer=address",
+        "needed_for": null,
+        "points": 2.34,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "fuzz-testing",
+        "completes": false,
+        "ecosystem": "Rust",
+        "hint": "consider adding cargo fuzz run <target> -- -max_total_time=60",
+        "level": 3,
+        "message": "only property-based tests (src/painted.rs); no fuzz targets",
+        "needed_for": null,
+        "points": 1.17,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "mutation-testing",
+        "completes": false,
+        "ecosystem": "Rust",
+        "hint": "consider running cargo mutants in CI",
+        "level": 3,
+        "message": "no mutation testing runs",
+        "needed_for": null,
+        "points": 1.17,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "Rust",
+        "hint": "consider running in CI: unsafe_code = \"forbid\" in [lints.rust], CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.17,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "consider running in CI: semgrep ci",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 0.14,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-build-types",
+        "completes": false,
+        "ecosystem": "Rust",
+        "hint": "",
+        "level": 4,
+        "message": "7 of 7 OS/Rust toolchain combination(s) do not build Debug and Release, each with and without sanitizers",
+        "needed_for": null,
+        "points": 2.34,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "Rust",
+        "hint": "consider running in CI: lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 2.34,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "hardening",
+        "completes": false,
+        "ecosystem": "Rust",
+        "hint": "set overflow-checks = true in [profile.release] of Cargo.toml",
+        "level": 4,
+        "message": "no hardening options found; enable release overflow-checks",
+        "needed_for": null,
+        "points": 2.34,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 1.39,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "file-soundness",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "run ClamAV (clamscan -r .) over the repository, or a tool that decodes each kind of file (magick identify -regard-warnings, pngcheck, qpdf --check, fontbakery, ffprobe -v error, gltf_validator)",
+        "level": 4,
+        "message": "no tool checks the image files (docs/public/icon.png, docs/public/logo-uwu.png, docs/public/logo.png and 31 more); no tool checks the font files (docs/public/nerd-font.woff2); no tool checks the audio or video files (docs/public/demo.mp4, docs/public/demo.webm)",
+        "needed_for": null,
+        "points": 1.39,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "link-check",
+        "completes": false,
+        "ecosystem": "Documentation site",
+        "hint": "consider running in CI: lychee --no-progress 'docs/**/*.md' (or lycheeverse/lychee-action), markdown-link-check docs/*.md (or gaurav-nelson/github-action-markdown-link-check), linkinator site --recurse, muffet http://localhost:8000 (the served site), htmltest site, htmlproofer ./_site or linkchecker site/index.html",
+        "level": 4,
+        "message": "no link check found in CI configuration",
+        "needed_for": null,
+        "points": 1.39,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "docs"
+      },
+      {
+        "check": "schema-compatibility",
+        "completes": false,
+        "ecosystem": "JSON Schema",
+        "hint": "consider running in CI: json-schema-diff <main branch's schema> <schema>",
+        "level": 4,
+        "message": "no check for breaking schema changes found in CI configuration",
+        "needed_for": null,
+        "points": 1.39,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "docs"
+      },
+      {
+        "check": "schema-declared",
+        "completes": false,
+        "ecosystem": "JSON Schema",
+        "hint": "",
+        "level": 4,
+        "message": "1 JSON Schema file does not declare its dialect ($schema) and $id",
+        "needed_for": null,
+        "points": 1.39,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "docs"
+      },
+      {
+        "check": "schema-examples",
+        "completes": false,
+        "ecosystem": "JSON Schema",
+        "hint": "consider running in CI: check-jsonschema --schemafile <schema> examples/valid/*.json, ajv test -s <schema> -d 'examples/valid/*.json' --valid (and -d 'examples/invalid/*.json' --invalid), jsonschema -i examples/valid/<document> <schema> or jv <schema> examples/valid/*.json",
+        "level": 4,
+        "message": "no check of the schemas' examples found in CI configuration",
+        "needed_for": null,
+        "points": 1.39,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "docs"
+      },
+      {
+        "check": "schema-validation",
+        "completes": false,
+        "ecosystem": "JSON Schema",
+        "hint": "consider running in CI: check-jsonschema --schemafile <schema> <documents>, ajv validate -s <schema> -d <documents> (ajv-cli), jsonschema -i <document> <schema> or jv <schema> <documents>",
+        "level": 4,
+        "message": "no schema validation found in CI configuration",
+        "needed_for": null,
+        "points": 1.39,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "docs"
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.39,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "consider running in CI: lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 0.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "platform-matrix",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "",
+        "level": 4,
+        "message": "CI covers 0 OS(es) (none), 0 Lua version(s) (none), 0 combination(s); expected at least 2 operating systems (found 0), at least 2 Lua versions (found 0), at least 3 OS/Lua version combinations (found 0)",
+        "needed_for": null,
+        "points": 0.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      }
+    ],
+    "percent": 64.4,
+    "slots": 35.86,
+    "summary": "64% · Level 0 Getting started · 35 of 53 gates in place",
+    "units": {
+      "": [
+        7.5,
+        9
+      ],
+      ".": [
+        9.1,
+        16.86
+      ],
+      "docs": [
+        6.5,
+        10
+      ]
+    },
+    "version": "5"
+  },
+  "seed": true,
+  "unknowns": 16,
+  "validator": "6256506545c84c82e19c816a37fbb2cffb8e4fec"
+}

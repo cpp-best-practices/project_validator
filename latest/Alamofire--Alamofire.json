@@ -1,0 +1,1333 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "6 of 6 actions are not pinned to a commit",
+      "status": "FAIL"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "19 of 19 OS/Swift toolchain combination(s) do not build Debug and Release, each with and without sanitizers",
+      "status": "FAIL"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI does not lint its GitHub Actions configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": "JavaScript (auxiliary: only in docs code): CI never runs prettier, deno fmt, oxfmt, dprint or biome; its formatting is not enforced; Ruby: CI never runs RuboCop, Standard or syntax_tree; its formatting is not enforced; Swift: .swiftformat is defined but CI does not run swift-format or SwiftFormat",
+      "status": "FAIL"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "not applicable to JavaScript, Ruby, Swift",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "not applicable to JavaScript, Ruby, Swift",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "JavaScript (auxiliary: only in docs code): no JavaScript linters found; enable at least eslint; Ruby: no Ruby warning settings found; enable at least Ruby warnings, RuboCop or Standard; Swift: missing Swift warning settings: SwiftLint",
+      "status": "FAIL"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "JavaScript (auxiliary: only in docs code): no branch coverage measurement found in what CI runs; Ruby: no branch coverage measurement found in what CI runs; Swift: region coverage is measured with Xcode",
+      "status": "FAIL"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "Data: JSON: 20 JSON files parse; XML: 1 XML file parses; YAML: 5 YAML files parse; File formats: GIF: 2 GIF files parse; JPEG: 1 JPEG file of test data, not judged; PNG: 10 PNG files parse; Property list: 7 Property list files parse; SVG: 2 SVG files parse; tar archive: 1 tar archive file parses",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "JavaScript (auxiliary: only in docs code): no dependency vulnerability audit found in CI configuration; Ruby: no dependency vulnerability audit found in CI configuration; Swift: no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "dependency-management",
+      "message": "JavaScript (auxiliary: only in docs code): no dependencies are declared; Ruby: dependencies are declared in Gemfile (Bundler) and locked in Gemfile.lock; Swift: no dependencies are declared",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    {
+      "check": "file-soundness",
+      "message": "no tool checks the image files (Example/Resources/Images.xcassets/Logo.imageset/Logo.png, Example/Resources/Images.xcassets/Logo.imageset/Logo@2x.png, Resources/AlamofireLogo.png and 11 more); no tool checks the archive files (docs/docsets/Alamofire.tgz)",
+      "status": "WARN"
+    },
+    {
+      "check": "function-limits",
+      "message": "JavaScript (auxiliary: only in docs code): function length is never limited; Ruby: function length is never limited; Swift: function length is never limited",
+      "status": "FAIL"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "JavaScript (auxiliary: only in docs code): no fuzz targets found (Jazzer.js fuzz targets (an exported fuzz function or .fuzz())); Swift: no fuzz targets found (libFuzzer fuzz targets (@_cdecl(\"LLVMFuzzerTestOneInput\")))",
+      "status": "FAIL"
+    },
+    {
+      "check": "hardening",
+      "message": "release builds keep Swift's runtime safety checks (no -Ounchecked)",
+      "status": "PASS"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "not applicable to JavaScript, Ruby, Swift",
+      "status": "SKIP"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to JavaScript, Ruby, Swift",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "JavaScript (auxiliary: only in docs code): no mutation testing runs; Ruby: no mutation testing runs; Swift: no mutation testing runs",
+      "status": "WARN"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "not applicable to JavaScript, Ruby, Swift",
+      "status": "SKIP"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "JavaScript (auxiliary: only in docs code): CI covers 0 OS(es) (none), 0 runtime version(s) (none), 0 combination(s); expected at least 2 operating systems (found 0), at least 2 runtime versions (found 0), at least 3 OS/runtime version combinations (found 0); Ruby: CI covers 0 OS(es) (none), 0 Ruby version(s) (none), 0 combination(s); expected at least 2 operating systems (found 0), at least 2 Ruby versions (found 0), at least 3 OS/Ruby version combinations (found 0); Swift: CI covers 3 OS(es) (linux, macos, windows), 15 Swift toolchain(s) (16.0, 16.1, 16.2, 16.3, 16.4, 26.0, 26.1, 26.2, 26.3, 26.4, 26.6, 6.0, 6.1, 6.2, 6.3), 18 combination(s); 45 job(s) run on runners of unknown OS",
+      "status": "FAIL"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "no sanitizer runs in CI; run swift test --sanitize=address",
+      "status": "FAIL"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "not applicable to JavaScript, Ruby, Swift",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-declared",
+      "message": "not applicable to JavaScript, Ruby, Swift",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-examples",
+      "message": "not applicable to JavaScript, Ruby, Swift",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-validation",
+      "message": "not applicable to JavaScript, Ruby, Swift",
+      "status": "SKIP"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    {
+      "check": "security-scanning",
+      "message": "CI scans the code for security problems with CodeQL",
+      "status": "PASS"
+    },
+    {
+      "check": "static-analysis",
+      "message": "JavaScript (auxiliary: only in docs code): no static analyzer runs; Ruby: no static analyzer runs; Swift: no static analyzer runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows no status badges",
+      "status": "FAIL"
+    },
+    {
+      "check": "tests-run",
+      "message": "JavaScript (auxiliary: only in docs code): no tests found (*.test.*, *.spec.*, __tests__/ or test/ files); Ruby: no tests found (spec/**/*_spec.rb or test/**/*_test.rb files or Cucumber features (features/**/*.feature)); Swift: XCTestCase classes or Swift Testing @Test functions: 7 file(s), run by swift test or xcodebuild test",
+      "status": "FAIL"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "not applicable to JavaScript, Ruby, Swift",
+      "status": "SKIP"
+    },
+    {
+      "check": "type-checking",
+      "message": "no type checker runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": "JavaScript: .gitignore does not ignore node_modules; Ruby: .gitignore does not ignore the installed gems; Swift: .gitignore ignores .build/; .gitignore ignores DerivedData",
+      "status": "WARN"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "JavaScript (auxiliary: only in docs code): warnings are not treated as errors in CI configuration or the package scripts it runs; Swift: warnings are not treated as errors in CI configuration, Package.swift, the Xcode build settings or Bazel's copts",
+      "status": "FAIL"
+    }
+  ],
+  "commit": "d0c82bba2866cf4e62da6e7f49c2b7f0f050c9ca",
+  "evaluated": "2026-11-28T11:51:24Z",
+  "kind": "library",
+  "language": "Swift",
+  "lines": 17584,
+  "name": "Alamofire/Alamofire",
+  "score": {
+    "base": 45.17,
+    "breakdown": {
+      "": [
+        5,
+        9
+      ],
+      "JavaScript": [
+        2,
+        4
+      ],
+      "Ruby": [
+        3.5,
+        13
+      ],
+      "Swift": [
+        8.49,
+        16.03
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 3,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-build-types",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.4713956356227548,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.4713956356227548,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.9427912712455097,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "Xcode"
+        ],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.4713956356227548,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.9427912712455097,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "file-soundness",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      },
+      {
+        "check": "fuzz-testing",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 3,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      },
+      {
+        "check": "hardening",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.9427912712455097,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 3,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.4713956356227548,
+        "level": 3,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.9427912712455097,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      },
+      {
+        "check": "sanitizers",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 3,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "CodeQL"
+        ],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.9427912712455097,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "CodeQL"
+        ],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.9427912712455097,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "swift test or xcodebuild test"
+        ],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      },
+      {
+        "check": "type-checking",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.9427912712455097,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "Swift",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9427912712455097
+      }
+    ],
+    "extra": 0.0,
+    "filled": 18.99,
+    "held": 0.0,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider a CI job that runs rubocop (or standardrb or stree check)",
+        "level": 1,
+        "message": "CI never runs RuboCop, Standard or syntax_tree; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 2.38,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "",
+        "level": 1,
+        "message": "no Ruby warning settings found; enable at least Ruby warnings, RuboCop or Standard",
+        "needed_for": 1,
+        "points": 2.38,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "",
+        "level": 1,
+        "message": "no tests found (spec/**/*_spec.rb or test/**/*_test.rb files or Cucumber features (features/**/*.feature))",
+        "needed_for": 1,
+        "points": 2.38,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "Swift",
+        "hint": "",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration, Package.swift, the Xcode build settings or Bazel's copts",
+        "needed_for": 1,
+        "points": 2.24,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "vcs-ignore",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider ignoring node_modules/ (and coverage/ and dist/)",
+        "level": 1,
+        "message": ".gitignore does not ignore node_modules",
+        "needed_for": 1,
+        "points": 1.19,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "vcs-ignore",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider ignoring .bundle/ and vendor/bundle/ (and coverage/, pkg/ and *.gem)",
+        "level": 1,
+        "message": ".gitignore does not ignore the installed gems",
+        "needed_for": 1,
+        "points": 1.19,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "Swift",
+        "hint": "consider a CI job that runs swift format lint --strict (or swiftformat --lint)",
+        "level": 1,
+        "message": ".swiftformat is defined but CI does not run swift-format or SwiftFormat",
+        "needed_for": 1,
+        "points": 1.12,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Swift",
+        "hint": "",
+        "level": 1,
+        "message": "missing Swift warning settings: SwiftLint",
+        "needed_for": 1,
+        "points": 1.12,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider a CI job that runs prettier --check . (or deno fmt --check, oxfmt --check, dprint check or biome ci)",
+        "level": 1,
+        "message": "CI never runs prettier, deno fmt, oxfmt, dprint or biome; its formatting is not enforced",
+        "needed_for": null,
+        "points": 0.59,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "",
+        "level": 1,
+        "message": "no JavaScript linters found; enable at least eslint",
+        "needed_for": null,
+        "points": 0.59,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "",
+        "level": 1,
+        "message": "no tests found (*.test.*, *.spec.*, __tests__/ or test/ files)",
+        "needed_for": null,
+        "points": 0.59,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "run eslint with --max-warnings 0 (or biome ci, deno lint or oxlint --deny-warnings), so that a lint warning fails CI",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration or the package scripts it runs",
+        "needed_for": null,
+        "points": 0.59,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "",
+        "level": 2,
+        "message": "no branch coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 2.38,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running rubocop, standardrb or reek in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 2.38,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "type-checking",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running a type checker in CI: srb tc (Sorbet) or steep check (Steep, with RBS signatures)",
+        "level": 2,
+        "message": "no type checker runs",
+        "needed_for": null,
+        "points": 2.38,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Swift",
+        "hint": "consider running swiftlint --strict (or the SwiftLint build tool plugin) in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 2.24,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running in CI: bundle audit check --update, GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 1.19,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "Swift",
+        "hint": "consider running in CI: GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 1.12,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running eslint, xo, oxlint, deno lint or biome lint in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 0.59,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "action-pinning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "pin each action to the full commit of its release, e.g. actions/checkout@<40-character SHA> # v4.2.2; Dependabot and Renovate keep such pins up to date",
+        "level": 3,
+        "message": "6 of 6 actions are not pinned to a commit",
+        "needed_for": null,
+        "points": 2.38,
+        "status": "FAIL",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "fuzz-testing",
+        "completes": false,
+        "ecosystem": "Swift",
+        "hint": "consider adding a product built with -sanitize=fuzzer, run as .build/debug/<product> -max_total_time=30",
+        "level": 3,
+        "message": "no fuzz targets found (libFuzzer fuzz targets (@_cdecl(\"LLVMFuzzerTestOneInput\")))",
+        "needed_for": null,
+        "points": 2.24,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "sanitizers",
+        "completes": false,
+        "ecosystem": "Swift",
+        "hint": "run swift test --sanitize=address (or thread) in CI (Xcode: -enableAddressSanitizer YES)",
+        "level": 3,
+        "message": "no sanitizer runs in CI; run swift test --sanitize=address",
+        "needed_for": null,
+        "points": 2.24,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "mutation-testing",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running mutant run in CI",
+        "level": 3,
+        "message": "no mutation testing runs",
+        "needed_for": null,
+        "points": 1.19,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "mutation-testing",
+        "completes": false,
+        "ecosystem": "Swift",
+        "hint": "consider running muter in CI",
+        "level": 3,
+        "message": "no mutation testing runs",
+        "needed_for": null,
+        "points": 1.12,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running in CI: rubocop or lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 2.38,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "platform-matrix",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "",
+        "level": 4,
+        "message": "CI covers 0 OS(es) (none), 0 Ruby version(s) (none), 0 combination(s); expected at least 2 operating systems (found 0), at least 2 Ruby versions (found 0), at least 3 OS/Ruby version combinations (found 0)",
+        "needed_for": null,
+        "points": 2.38,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-build-types",
+        "completes": false,
+        "ecosystem": "Swift",
+        "hint": "",
+        "level": 4,
+        "message": "19 of 19 OS/Swift toolchain combination(s) do not build Debug and Release, each with and without sanitizers",
+        "needed_for": null,
+        "points": 2.24,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "Swift",
+        "hint": "consider running in CI: swiftlint --strict or lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 2.24,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-lint",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "",
+        "level": 4,
+        "message": "CI does not lint its GitHub Actions configuration",
+        "needed_for": null,
+        "points": 1.19,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 1.19,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "dependency-updates",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)",
+        "level": 4,
+        "message": "no automated dependency updates configured",
+        "needed_for": null,
+        "points": 1.19,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "file-soundness",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "run ClamAV (clamscan -r .) over the repository, or a tool that decodes each kind of file (magick identify -regard-warnings, pngcheck, qpdf --check, fontbakery, ffprobe -v error, gltf_validator)",
+        "level": 4,
+        "message": "no tool checks the image files (Example/Resources/Images.xcassets/Logo.imageset/Logo.png, Example/Resources/Images.xcassets/Logo.imageset/Logo@2x.png, Resources/AlamofireLogo.png and 11 more); no tool checks the archive files (docs/docsets/Alamofire.tgz)",
+        "needed_for": null,
+        "points": 1.19,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.19,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "security-policy",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)",
+        "level": 4,
+        "message": "no security policy",
+        "needed_for": null,
+        "points": 1.19,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running in CI: eslint with max-lines-per-function on or lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 0.59,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      }
+    ],
+    "percent": 45.17,
+    "slots": 42.03,
+    "summary": "45% · Level 0 Getting started · 31 of 46 gates in place",
+    "units": {
+      "": [
+        5,
+        9
+      ],
+      ".": [
+        13.99,
+        33.03
+      ]
+    },
+    "version": "5"
+  },
+  "seed": true,
+  "unknowns": 0,
+  "validator": "6256506545c84c82e19c816a37fbb2cffb8e4fec"
+}

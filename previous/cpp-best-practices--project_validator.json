@@ -1,0 +1,580 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "all 43 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": "pyproject.toml is defined and CI runs ruff format",
+      "status": "PASS"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "strict Python warning settings are enabled: warnings as errors",
+      "status": "PASS"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "CI runs copy-paste detection with jscpd",
+      "status": "PASS"
+    },
+    {
+      "check": "coverage",
+      "message": "branch coverage is gated with coverage.py",
+      "status": "PASS"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "JSON: 1 JSON file parses; TOML: 2 TOML files parse; YAML: 14 YAML files parse",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "CI audits the dependencies with pip-audit",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-management",
+      "message": "dependencies are declared in pyproject.toml (Python packages) and locked in .github/requirements/audit.txt, .github/requirements/ci-lint.txt, .github/requirements/coverage.txt and 8 more",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    {
+      "check": "file-soundness",
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
+    {
+      "check": "function-limits",
+      "message": "function length is limited with lizard",
+      "status": "PASS"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "fuzz targets in 6 file(s), run by atheris",
+      "status": "PASS"
+    },
+    {
+      "check": "hardening",
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under Unlicense",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "CI checks the documentation's links with lychee",
+      "status": "PASS"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "mutmut (pyproject.toml) runs; on the pull request's changes only (bonus)",
+      "status": "PASS"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 3 Python version(s) (3.12, 3.14, 3.x), 7 combination(s)",
+      "status": "PASS"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-declared",
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-examples",
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-validation",
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "secrets are scanned for with TruffleHog",
+      "status": "PASS"
+    },
+    {
+      "check": "security-policy",
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    {
+      "check": "security-scanning",
+      "message": "CI scans the code for security problems with ruff's bandit rules",
+      "status": "PASS"
+    },
+    {
+      "check": "static-analysis",
+      "message": "Documentation site: markdownlint (.markdownlint-cli2.yaml) runs; Python: ruff check (pyproject.toml) runs",
+      "status": "PASS"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    {
+      "check": "tests-run",
+      "message": "test_*.py, *_test.py or tests/*_tests.py files: 204 file(s), run by pytest and unittest",
+      "status": "PASS"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "type-checking",
+      "message": "mypy (pyproject.toml) runs; strict mode bonus: mypy (pyproject.toml)",
+      "status": "PASS"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": ".gitignore ignores __pycache__/",
+      "status": "PASS"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "not applicable to Python",
+      "status": "SKIP"
+    }
+  ],
+  "commit": "f484d7b15d7a40db5bde6b087ebd2dac289c962e",
+  "evaluated": "2026-11-27T12:26:34Z",
+  "kind": "tool",
+  "language": "Python",
+  "lines": 50570,
+  "name": "cpp-best-practices/project_validator",
+  "score": {
+    "base": 100.0,
+    "breakdown": {
+      "": [
+        8,
+        8
+      ],
+      "Documentation site": [
+        2,
+        2
+      ],
+      "Python": [
+        13.56,
+        13.56
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 3,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.9686254980079682,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "ruff format"
+        ],
+        "unit": ".",
+        "weight": 0.9686254980079682
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.9686254980079682,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9686254980079682
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.9686254980079682,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "coverage.py"
+        ],
+        "unit": ".",
+        "weight": 0.9686254980079682
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.9686254980079682,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "pip-audit"
+        ],
+        "unit": ".",
+        "weight": 0.9686254980079682
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.9686254980079682,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9686254980079682
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.9686254980079682,
+        "level": 4,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "lizard"
+        ],
+        "unit": ".",
+        "weight": 0.9686254980079682
+      },
+      {
+        "check": "fuzz-testing",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.9686254980079682,
+        "level": 3,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "atheris"
+        ],
+        "unit": ".",
+        "weight": 0.9686254980079682
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "link-check",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "lychee"
+        ],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.9686254980079682,
+        "level": 3,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "mutmut"
+        ],
+        "unit": ".",
+        "weight": 0.9686254980079682
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.9686254980079682,
+        "level": 4,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9686254980079682
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.9686254980079682,
+        "level": 3,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "ruff's bandit rules"
+        ],
+        "unit": ".",
+        "weight": 0.9686254980079682
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "markdownlint"
+        ],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.9686254980079682,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "ruff check"
+        ],
+        "unit": ".",
+        "weight": 0.9686254980079682
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.9686254980079682,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "pytest",
+          "unittest"
+        ],
+        "unit": ".",
+        "weight": 0.9686254980079682
+      },
+      {
+        "check": "type-checking",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.9686254980079682,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "mypy"
+        ],
+        "unit": ".",
+        "weight": 0.9686254980079682
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.9686254980079682,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9686254980079682
+      }
+    ],
+    "extra": 0.0,
+    "filled": 23.56,
+    "held": 0.0,
+    "level": 4,
+    "level_name": "Complete",
+    "next_steps": [],
+    "percent": 100.0,
+    "slots": 23.56,
+    "summary": "100% · Level 4 Complete · all 24 gates in place",
+    "units": {
+      "": [
+        8,
+        8
+      ],
+      ".": [
+        15.56,
+        15.56
+      ]
+    },
+    "version": "3"
+  },
+  "seed": false,
+  "unknowns": 0,
+  "validator": "f484d7b15d7a40db5bde6b087ebd2dac289c962e"
+}

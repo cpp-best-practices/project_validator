@@ -1,0 +1,1204 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "6 of 6 actions are pinned to a tag rather than a commit",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI does not lint its GitHub Actions configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": ".rubocop.yml is defined but CI does not run RuboCop, Standard or syntax_tree",
+      "status": "WARN"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "missing Ruby warning settings: RuboCop or Standard",
+      "status": "WARN"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "no branch coverage measurement found in what CI runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "Data: the root: 3 YAML files parse; sinatra-contrib: 7 YAML files of test data, not judged; File formats: ICO: 1 ICO file of test data, not judged; PNG: 2 PNG files parse",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "dependency-management",
+      "message": "the root: dependencies are declared in Gemfile, sinatra.gemspec (Bundler); rack-protection: dependencies are declared in rack-protection/Gemfile, rack-protection/rack-protection.gemspec (Bundler); sinatra-contrib: dependencies are declared in sinatra-contrib/Gemfile, sinatra-contrib/sinatra-contrib.gemspec (Bundler)",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    {
+      "check": "file-soundness",
+      "message": "no tool checks the image files (lib/sinatra/images/404.png, lib/sinatra/images/500.png, test/public/favicon.ico)",
+      "status": "WARN"
+    },
+    {
+      "check": "function-limits",
+      "message": "function length is never limited",
+      "status": "FAIL"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
+    {
+      "check": "hardening",
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "no mutation testing runs",
+      "status": "WARN"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "CI covers 1 OS(es) (linux), 12 Ruby version(s) (2.7, 3.0, 3.1, 3.2, 3.3, 3.4, 4.0, 4.1.0, jruby, jruby-head, truffleruby, truffleruby-head), 12 combination(s); expected at least 2 operating systems (found 1)",
+      "status": "FAIL"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-declared",
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-examples",
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-validation",
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    {
+      "check": "security-scanning",
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "static-analysis",
+      "message": "RuboCop is configured (.rubocop.yml) but does not run",
+      "status": "WARN"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows a CI badge (GitHub Actions) but no quality badge",
+      "status": "WARN"
+    },
+    {
+      "check": "tests-run",
+      "message": "the root: spec/**/*_spec.rb or test/**/*_test.rb files: 42 file(s), run by rspec, rake test or rails test; rack-protection: spec/**/*_spec.rb or test/**/*_test.rb files: 18 file(s), run by rspec, rake test or rails test; sinatra-contrib: spec/**/*_spec.rb or test/**/*_test.rb files: 16 file(s), run by rspec, rake test or rails test",
+      "status": "PASS"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    },
+    {
+      "check": "type-checking",
+      "message": "no type checker runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": ".gitignore ignores .bundle",
+      "status": "PASS"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "not applicable to Ruby",
+      "status": "SKIP"
+    }
+  ],
+  "commit": "2e3f79139154b8bfdaad7ad516f35dcb0e70446a",
+  "evaluated": "2026-11-27T12:26:40Z",
+  "kind": "library",
+  "language": "Ruby",
+  "lines": 7832,
+  "name": "sinatra/sinatra",
+  "score": {
+    "base": 50.14,
+    "breakdown": {
+      "": [
+        6,
+        9
+      ],
+      "Ruby": [
+        14.33,
+        31.54
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 3,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.4438343269532476,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8876686539064952
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": "rack-protection",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": "sinatra-contrib",
+        "weight": 1.0
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.4438343269532476,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8876686539064952
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [
+          "SimpleCov"
+        ],
+        "unit": ".",
+        "weight": 0.8876686539064952
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [
+          "SimpleCov"
+        ],
+        "unit": "rack-protection",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [
+          "SimpleCov"
+        ],
+        "unit": "sinatra-contrib",
+        "weight": 1.0
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.4438343269532476,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8876686539064952
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": "rack-protection",
+        "weight": 1.0
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": "sinatra-contrib",
+        "weight": 1.0
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.8876686539064952,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8876686539064952
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": "rack-protection",
+        "weight": 1.0
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": "sinatra-contrib",
+        "weight": 1.0
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "file-soundness",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8876686539064952
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": "rack-protection",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": "sinatra-contrib",
+        "weight": 1.0
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.4438343269532476,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8876686539064952
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": "rack-protection",
+        "weight": 1.0
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": "sinatra-contrib",
+        "weight": 1.0
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8876686539064952
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.4438343269532476,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8876686539064952
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": "rack-protection",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": "sinatra-contrib",
+        "weight": 1.0
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.4438343269532476,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8876686539064952
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": "rack-protection",
+        "weight": 1.0
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": "sinatra-contrib",
+        "weight": 1.0
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.8876686539064952,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "rspec, rake test or rails test"
+        ],
+        "unit": ".",
+        "weight": 0.8876686539064952
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "rspec, rake test or rails test"
+        ],
+        "unit": "rack-protection",
+        "weight": 1.0
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "rspec, rake test or rails test"
+        ],
+        "unit": "sinatra-contrib",
+        "weight": 1.0
+      },
+      {
+        "check": "type-checking",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8876686539064952
+      },
+      {
+        "check": "type-checking",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": "rack-protection",
+        "weight": 1.0
+      },
+      {
+        "check": "type-checking",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": "sinatra-contrib",
+        "weight": 1.0
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Ruby",
+        "extra": 0,
+        "filled": 0.8876686539064952,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8876686539064952
+      }
+    ],
+    "extra": 0.0,
+    "filled": 20.33,
+    "held": 0.0,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider a CI job that runs rubocop (or standardrb or stree check)",
+        "level": 1,
+        "message": ".rubocop.yml is defined but CI does not run RuboCop, Standard or syntax_tree",
+        "needed_for": 1,
+        "points": 1.23,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "rack-protection"
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider a CI job that runs rubocop (or standardrb or stree check)",
+        "level": 1,
+        "message": ".rubocop.yml is defined but CI does not run RuboCop, Standard or syntax_tree",
+        "needed_for": 1,
+        "points": 1.23,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "sinatra-contrib"
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider a CI job that runs rubocop (or standardrb or stree check)",
+        "level": 1,
+        "message": ".rubocop.yml is defined but CI does not run RuboCop, Standard or syntax_tree",
+        "needed_for": 1,
+        "points": 1.09,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "",
+        "level": 1,
+        "message": "missing Ruby warning settings: RuboCop or Standard",
+        "needed_for": 1,
+        "points": 1.09,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "",
+        "level": 2,
+        "message": "no branch coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 2.47,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "rack-protection"
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "",
+        "level": 2,
+        "message": "no branch coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 2.47,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "sinatra-contrib"
+      },
+      {
+        "check": "type-checking",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running a type checker in CI: srb tc (Sorbet) or steep check (Steep, with RBS signatures)",
+        "level": 2,
+        "message": "no type checker runs",
+        "needed_for": null,
+        "points": 2.47,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "rack-protection"
+      },
+      {
+        "check": "type-checking",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running a type checker in CI: srb tc (Sorbet) or steep check (Steep, with RBS signatures)",
+        "level": 2,
+        "message": "no type checker runs",
+        "needed_for": null,
+        "points": 2.47,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "sinatra-contrib"
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "",
+        "level": 2,
+        "message": "no branch coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 2.19,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "type-checking",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running a type checker in CI: srb tc (Sorbet) or steep check (Steep, with RBS signatures)",
+        "level": 2,
+        "message": "no type checker runs",
+        "needed_for": null,
+        "points": 2.19,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running in CI: bundle audit check --update, GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 1.23,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "rack-protection"
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running in CI: bundle audit check --update, GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 1.23,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "sinatra-contrib"
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running rubocop, standardrb or reek in CI",
+        "level": 2,
+        "message": "RuboCop is configured (.rubocop.yml) but does not run",
+        "needed_for": null,
+        "points": 1.23,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "rack-protection"
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running rubocop, standardrb or reek in CI",
+        "level": 2,
+        "message": "RuboCop is configured (.rubocop.yml) but does not run",
+        "needed_for": null,
+        "points": 1.23,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "sinatra-contrib"
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running in CI: bundle audit check --update, GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 1.09,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running rubocop, standardrb or reek in CI",
+        "level": 2,
+        "message": "RuboCop is configured (.rubocop.yml) but does not run",
+        "needed_for": null,
+        "points": 1.09,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "action-pinning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "pin each action to the full commit of its release, e.g. actions/checkout@<40-character SHA> # v4.2.2; Dependabot and Renovate keep such pins up to date",
+        "level": 3,
+        "message": "6 of 6 actions are pinned to a tag rather than a commit",
+        "needed_for": null,
+        "points": 1.23,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "mutation-testing",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running mutant run in CI",
+        "level": 3,
+        "message": "no mutation testing runs",
+        "needed_for": null,
+        "points": 1.23,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "rack-protection"
+      },
+      {
+        "check": "mutation-testing",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running mutant run in CI",
+        "level": 3,
+        "message": "no mutation testing runs",
+        "needed_for": null,
+        "points": 1.23,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "sinatra-contrib"
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running in CI: brakeman, rubocop, CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.23,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "rack-protection"
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running in CI: brakeman, rubocop, CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.23,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "sinatra-contrib"
+      },
+      {
+        "check": "mutation-testing",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running mutant run in CI",
+        "level": 3,
+        "message": "no mutation testing runs",
+        "needed_for": null,
+        "points": 1.09,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running in CI: brakeman, rubocop, CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.09,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running in CI: rubocop or lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 2.47,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "rack-protection"
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running in CI: rubocop or lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 2.47,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "sinatra-contrib"
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "consider running in CI: rubocop or lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 2.19,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "platform-matrix",
+        "completes": false,
+        "ecosystem": "Ruby",
+        "hint": "",
+        "level": 4,
+        "message": "CI covers 1 OS(es) (linux), 12 Ruby version(s) (2.7, 3.0, 3.1, 3.2, 3.3, 3.4, 4.0, 4.1.0, jruby, jruby-head, truffleruby, truffleruby-head), 12 combination(s); expected at least 2 operating systems (found 1)",
+        "needed_for": null,
+        "points": 2.19,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-lint",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "",
+        "level": 4,
+        "message": "CI does not lint its GitHub Actions configuration",
+        "needed_for": null,
+        "points": 1.23,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 1.23,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "dependency-updates",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)",
+        "level": 4,
+        "message": "no automated dependency updates configured",
+        "needed_for": null,
+        "points": 1.23,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "file-soundness",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "run ClamAV (clamscan -r .) over the repository, or a tool that decodes each kind of file (magick identify -regard-warnings, pngcheck, qpdf --check, fontbakery, ffprobe -v error, gltf_validator)",
+        "level": 4,
+        "message": "no tool checks the image files (lib/sinatra/images/404.png, lib/sinatra/images/500.png, test/public/favicon.ico)",
+        "needed_for": null,
+        "points": 1.23,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.23,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      }
+    ],
+    "percent": 50.14,
+    "slots": 40.54,
+    "summary": "50% · Level 0 Getting started · 32 of 42 gates in place",
+    "units": {
+      "": [
+        6,
+        9
+      ],
+      ".": [
+        5.33,
+        11.54
+      ],
+      "rack-protection": [
+        4.5,
+        10
+      ],
+      "sinatra-contrib": [
+        4.5,
+        10
+      ]
+    },
+    "version": "3"
+  },
+  "seed": true,
+  "unknowns": 0,
+  "validator": "f484d7b15d7a40db5bde6b087ebd2dac289c962e"
+}

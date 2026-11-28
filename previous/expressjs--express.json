@@ -1,0 +1,692 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "all 19 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI does not lint its GitHub Actions configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": "CI never runs prettier, deno fmt, oxfmt, dprint or biome; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "strict JavaScript linters are enabled: eslint",
+      "status": "PASS"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "branch coverage is reported with nyc",
+      "status": "PASS"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "Data: JSON: 1 JSON file parses; YAML: 7 YAML files parse; File formats: 1 INI file parses",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "dependency-management",
+      "message": "dependencies are declared in package.json (npm packages) but not locked",
+      "status": "WARN"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    {
+      "check": "file-soundness",
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
+    {
+      "check": "function-limits",
+      "message": "CI runs eslint, but its max-lines-per-function rule is off or has no limit; set max-lines-per-function on in the eslint configuration",
+      "status": "FAIL"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "no fuzz targets found (Jazzer.js fuzz targets (an exported fuzz function or .fuzz()))",
+      "status": "FAIL"
+    },
+    {
+      "check": "hardening",
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "no mutation testing runs",
+      "status": "WARN"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "CI covers 2 OS(es) (linux, windows), 12 runtime version(s) (16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, lts/*), 23 combination(s)",
+      "status": "PASS"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-declared",
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-examples",
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-validation",
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    {
+      "check": "security-scanning",
+      "message": "CI scans the code for security problems with CodeQL",
+      "status": "PASS"
+    },
+    {
+      "check": "static-analysis",
+      "message": "eslint (.eslintrc.yml) runs",
+      "status": "PASS"
+    },
+    {
+      "check": "status-badges",
+      "message": "Readme.md shows CI (GitHub Actions) and quality (Coveralls, OpenSSF Scorecard) badges",
+      "status": "PASS"
+    },
+    {
+      "check": "tests-run",
+      "message": "*.test.*, *.spec.*, __tests__/ or test/ files: 71 file(s), but no CI configuration runs jest, vitest, mocha, node --test, deno test, bun test or playwright (or npm test)",
+      "status": "WARN"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "type-checking",
+      "message": "not applicable to JavaScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": ".gitignore ignores node_modules",
+      "status": "PASS"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "warnings are not treated as errors in CI configuration or the package scripts it runs",
+      "status": "FAIL"
+    }
+  ],
+  "commit": "43fca52d28a422c8be48fd489cbd4f2d6152bab6",
+  "evaluated": "2026-11-27T12:26:04Z",
+  "kind": "library",
+  "language": "JavaScript",
+  "lines": 2776,
+  "name": "expressjs/express",
+  "score": {
+    "base": 64.45,
+    "breakdown": {
+      "": [
+        6,
+        8
+      ],
+      "JavaScript": [
+        6.6,
+        11.56
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 3,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8254534641688969
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.8254534641688969,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8254534641688969
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.8254534641688969,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "nyc"
+        ],
+        "unit": ".",
+        "weight": 0.8254534641688969
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.41272673208444843,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8254534641688969
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.41272673208444843,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8254534641688969
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [
+          "eslint's max-lines-per-function"
+        ],
+        "unit": ".",
+        "weight": 0.8254534641688969
+      },
+      {
+        "check": "fuzz-testing",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 3,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8254534641688969
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.41272673208444843,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8254534641688969
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.8254534641688969,
+        "level": 4,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8254534641688969
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.8254534641688969,
+        "level": 3,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "CodeQL"
+        ],
+        "unit": ".",
+        "weight": 0.8254534641688969
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.8254534641688969,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "eslint"
+        ],
+        "unit": ".",
+        "weight": 0.8254534641688969
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.41272673208444843,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8254534641688969
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.8254534641688969,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8254534641688969
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8254534641688969
+      }
+    ],
+    "extra": 0.0,
+    "filled": 12.6,
+    "held": 0.0,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider a CI job that runs prettier --check . (or deno fmt --check, oxfmt --check, dprint check or biome ci)",
+        "level": 1,
+        "message": "CI never runs prettier, deno fmt, oxfmt, dprint or biome; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 4.22,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "run eslint with --max-warnings 0 (or biome ci, deno lint or oxlint --deny-warnings), so that a lint warning fails CI",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration or the package scripts it runs",
+        "needed_for": 1,
+        "points": 4.22,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "",
+        "level": 1,
+        "message": "*.test.*, *.spec.*, __tests__/ or test/ files: 71 file(s), but no CI configuration runs jest, vitest, mocha, node --test, deno test, bun test or playwright (or npm test)",
+        "needed_for": 1,
+        "points": 2.11,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running in CI: npm audit, pnpm audit, yarn npm audit, bun audit, yarn audit, GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 2.11,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-management",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "commit the package manager's lockfile (package-lock.json, pnpm-lock.yaml, yarn.lock, bun.lock or deno.lock) and install from it in CI (npm ci, pnpm install --frozen-lockfile, yarn install --immutable)",
+        "level": 2,
+        "message": "dependencies are declared in package.json (npm packages) but not locked",
+        "needed_for": null,
+        "points": 2.11,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "fuzz-testing",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider adding npx jazzer <target> -- -max_total_time=30 (or jest with JAZZER_FUZZ=1)",
+        "level": 3,
+        "message": "no fuzz targets found (Jazzer.js fuzz targets (an exported fuzz function or .fuzz()))",
+        "needed_for": null,
+        "points": 4.22,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "mutation-testing",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running stryker run in CI",
+        "level": 3,
+        "message": "no mutation testing runs",
+        "needed_for": null,
+        "points": 2.11,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "",
+        "level": 4,
+        "message": "CI runs eslint, but its max-lines-per-function rule is off or has no limit; set max-lines-per-function on in the eslint configuration",
+        "needed_for": null,
+        "points": 4.22,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-lint",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "",
+        "level": 4,
+        "message": "CI does not lint its GitHub Actions configuration",
+        "needed_for": null,
+        "points": 2.56,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 2.56,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 2.56,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "security-policy",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)",
+        "level": 4,
+        "message": "no security policy",
+        "needed_for": null,
+        "points": 2.56,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      }
+    ],
+    "percent": 64.45,
+    "slots": 19.56,
+    "summary": "64% · Level 0 Getting started · 18 of 22 gates in place",
+    "units": {
+      "": [
+        6,
+        8
+      ],
+      ".": [
+        6.6,
+        11.56
+      ]
+    },
+    "version": "3"
+  },
+  "seed": true,
+  "unknowns": 0,
+  "validator": "f484d7b15d7a40db5bde6b087ebd2dac289c962e"
+}

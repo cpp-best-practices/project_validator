@@ -1,0 +1,589 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-lint",
+      "message": "no CI configuration",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-present",
+      "message": "no CI configuration found (looked for AppVeyor, Azure Pipelines, CircleCI, Cirrus CI, Google Cloud Build, GitHub Actions, GitLab CI, Jenkins, Buildkite, Drone, Bitbucket Pipelines, Woodpecker, pre-commit.ci, Read the Docs, Travis CI)",
+      "status": "FAIL"
+    },
+    {
+      "check": "code-formatting",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "no Lisp compiler lints found; enable at least sblint",
+      "status": "FAIL"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "no branch coverage measurement found in what CI runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "dependency-management",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    {
+      "check": "file-soundness",
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
+    {
+      "check": "function-limits",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "hardening",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under BSD-2-Clause",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "no CI configuration found",
+      "status": "FAIL"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-declared",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-examples",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-validation",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    {
+      "check": "security-scanning",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "static-analysis",
+      "message": "no static analyzer runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows no status badges",
+      "status": "FAIL"
+    },
+    {
+      "check": "tests-run",
+      "message": "FiveAM, Parachute, Rove, Prove or RT tests (tests/*.lisp): 1 file(s), but no CI configuration runs sbcl --non-interactive --eval \"(asdf:test-system :shop)\" (or rove shop.asd, 40ants/run-tests)",
+      "status": "WARN"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "type-checking",
+      "message": "not applicable to Common Lisp",
+      "status": "SKIP"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+      "status": "FAIL"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "warnings are not treated as errors in CI configuration, the system definitions and the Lisp sources",
+      "status": "FAIL"
+    }
+  ],
+  "commit": "a2ea581c23fdc184168423adbd4b4c1f48d42743",
+  "evaluated": "2026-11-28T11:50:18Z",
+  "kind": "library",
+  "language": "Common Lisp",
+  "lines": 7541,
+  "name": "edicl/cl-ppcre",
+  "score": {
+    "base": 26.92,
+    "breakdown": {
+      "": [
+        3,
+        7
+      ],
+      "Common Lisp": [
+        0.5,
+        6
+      ]
+    },
+    "cells": [
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Common Lisp",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Common Lisp",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "Common Lisp",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Common Lisp",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Common Lisp",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "Common Lisp",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      }
+    ],
+    "extra": 0.0,
+    "filled": 3.5,
+    "held": 0.0,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "ci-present",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "",
+        "level": 1,
+        "message": "no CI configuration found (looked for AppVeyor, Azure Pipelines, CircleCI, Cirrus CI, Google Cloud Build, GitHub Actions, GitLab CI, Jenkins, Buildkite, Drone, Bitbucket Pipelines, Woodpecker, pre-commit.ci, Read the Docs, Travis CI)",
+        "needed_for": 1,
+        "points": 7.69,
+        "status": "FAIL",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Common Lisp",
+        "hint": "",
+        "level": 1,
+        "message": "no Lisp compiler lints found; enable at least sblint",
+        "needed_for": 1,
+        "points": 7.69,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "vcs-ignore",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding a .gitignore (or your version control system's equivalent) that ignores build outputs",
+        "level": 1,
+        "message": "no version control ignore file found (.gitignore, .hgignore, .bzrignore, .fossil-settings/ignore-glob); build outputs can be committed by accident",
+        "needed_for": 1,
+        "points": 7.69,
+        "status": "FAIL",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "Common Lisp",
+        "hint": "",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration, the system definitions and the Lisp sources",
+        "needed_for": 1,
+        "points": 7.69,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "Common Lisp",
+        "hint": "",
+        "level": 1,
+        "message": "FiveAM, Parachute, Rove, Prove or RT tests (tests/*.lisp): 1 file(s), but no CI configuration runs sbcl --non-interactive --eval \"(asdf:test-system :shop)\" (or rove shop.asd, 40ants/run-tests)",
+        "needed_for": 1,
+        "points": 3.85,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Common Lisp",
+        "hint": "",
+        "level": 2,
+        "message": "no branch coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 7.69,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Common Lisp",
+        "hint": "consider running sblint shop.asd in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 7.69,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "platform-matrix",
+        "completes": false,
+        "ecosystem": "Common Lisp",
+        "hint": "",
+        "level": 4,
+        "message": "no CI configuration found",
+        "needed_for": null,
+        "points": 7.69,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 3.85,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "dependency-updates",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)",
+        "level": 4,
+        "message": "no automated dependency updates configured",
+        "needed_for": null,
+        "points": 3.85,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 3.85,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "security-policy",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)",
+        "level": 4,
+        "message": "no security policy",
+        "needed_for": null,
+        "points": 3.85,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      }
+    ],
+    "percent": 26.92,
+    "slots": 13,
+    "summary": "26% · Level 0 Getting started · 6 of 13 gates in place",
+    "units": {
+      "": [
+        3,
+        7
+      ],
+      ".": [
+        0.5,
+        6
+      ]
+    },
+    "version": "5"
+  },
+  "seed": true,
+  "unknowns": 0,
+  "validator": "6256506545c84c82e19c816a37fbb2cffb8e4fec"
+}

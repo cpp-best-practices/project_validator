@@ -1,0 +1,1322 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "11 of 11 actions are pinned to a tag rather than a commit",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "4 of 4 OS/compiler combination(s) do not build Debug and Release, each with and without sanitizers",
+      "status": "FAIL"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI does not lint its GitHub Actions configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for AppVeyor, GitHub Actions",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": "Bazel: CI never runs buildifier; its formatting is not enforced; CMake: CI never runs gersemi or cmake-format; its formatting is not enforced; C++: .clang-format is defined but CI does not run clang-format; Python (auxiliary: only in a few stray files, only in benchmark code, only in test code, only in tooling code): CI never runs ruff format, black, autopep8 or yapf; its formatting is not enforced; Shell: CI never runs shfmt; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "compile_commands.json is exported with CMAKE_EXPORT_COMPILE_COMMANDS ON in a preset, Meson, which writes it",
+      "status": "PASS"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "C++ compiler extensions are disabled with CMAKE_CXX_EXTENSIONS OFF in a preset",
+      "status": "PASS"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "C++: missing compiler warning flags: -Wconversion for appleclang and clang and gcc; Python (auxiliary: only in a few stray files, only in benchmark code, only in test code, only in tooling code): no Python warning settings found; enable at least warnings as errors; Shell: PowerShell: no PowerShell lints found; enable at least PSScriptAnalyzer; Shell: no shell lints found; enable at least shellcheck",
+      "status": "FAIL"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "C++: no branch coverage measurement found in what CI runs; Python (auxiliary: only in a few stray files, only in benchmark code, only in test code, only in tooling code): no branch coverage measurement found in what CI runs; Shell: PowerShell: no statement coverage measurement found in what CI runs; Shell: no line coverage measurement found in what CI runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "Data: JSON: 3 JSON files parse; YAML: 12 YAML files parse; File formats: 4 SVG files parse",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "Python (auxiliary: only in a few stray files, only in benchmark code, only in test code, only in tooling code): no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "dependency-management",
+      "message": "third-party code is committed (third_party/); C++: dependencies are declared in conanfile.py (Conan); Python (auxiliary: only in a few stray files, only in benchmark code, only in test code, only in tooling code): no dependencies are declared",
+      "status": "WARN"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    {
+      "check": "file-soundness",
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
+    {
+      "check": "function-limits",
+      "message": "C++: CI runs clang-tidy, but its readability-function-size rule is off or has no limit; set readability-function-size with a LineThreshold or StatementThreshold in .clang-tidy; Python (auxiliary: only in a few stray files, only in benchmark code, only in test code, only in tooling code): function length is never limited",
+      "status": "FAIL"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "C++: fuzz targets in 3 file(s), but no CI configuration runs a fuzz target binary with -max_total_time= (or ClusterFuzzLite or CIFuzz) or afl-fuzz -i <corpus> -o <findings> -- <target>; Python (auxiliary: only in a few stray files, only in benchmark code, only in test code, only in tooling code): no fuzz targets found (atheris fuzz targets (atheris.Setup or atheris.Fuzz))",
+      "status": "WARN"
+    },
+    {
+      "check": "hardening",
+      "message": "no hardening options found; enable _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, _GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE, /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT",
+      "status": "FAIL"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under BSL-1.0",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "no link check found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to C++, PowerShell, Python, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "C++: no mutation testing runs; Python (auxiliary: only in a few stray files, only in benchmark code, only in test code, only in tooling code): no mutation testing runs",
+      "status": "WARN"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "in-source builds are prevented by a check that the source and binary directories differ, Meson, which builds out of source",
+      "status": "PASS"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "C++: CI covers 3 OS(es) (linux, macos, windows), 4 compiler(s) (appleclang, clang, gcc, msvc), 4 combination(s); Python (auxiliary: only in a few stray files, only in benchmark code, only in test code, only in tooling code): CI covers 1 OS(es) (linux), 1 Python version(s) (3.7), 1 combination(s); expected at least 2 operating systems (found 1), at least 2 Python versions (found 1), at least 3 OS/Python version combinations (found 1)",
+      "status": "WARN"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "no sanitizers found; enable AddressSanitizer, UndefinedBehaviorSanitizer",
+      "status": "FAIL"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "not applicable to C++, PowerShell, Python, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-declared",
+      "message": "not applicable to C++, PowerShell, Python, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-examples",
+      "message": "not applicable to C++, PowerShell, Python, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-validation",
+      "message": "not applicable to C++, PowerShell, Python, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    {
+      "check": "security-scanning",
+      "message": "C++: no code security scanning found in CI configuration; Python (auxiliary: only in a few stray files, only in benchmark code, only in test code, only in tooling code): no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "static-analysis",
+      "message": "Bazel: no static analyzer runs; CMake: no static analyzer runs; C++: clang-tidy (.clang-tidy) runs; Documentation site: no static analyzer runs; Python (auxiliary: only in a few stray files, only in benchmark code, only in test code, only in tooling code): no static analyzer runs; Shell: PowerShell: no static analyzer runs; Shell: no static analyzer runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows CI (AppVeyor, GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    {
+      "check": "tests-run",
+      "message": "C++: tests defined by Bazel test rules (cc_test, swift_test, sh_test, …) in BUILD files, tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call) and tests registered with Meson's test() in meson.build: 6 file(s), run by ctest and meson test; Python (auxiliary: only in a few stray files, only in benchmark code, only in test code, only in tooling code): no tests found (test_*.py, *_test.py or tests/*_tests.py files); Shell: PowerShell: no tests found (Pester tests (*.Tests.ps1)); Shell: no tests found (bats tests (*.bats), zunit tests (*.zunit), urchin tests (shell scripts without a suffix under test/), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
+      "status": "FAIL"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "developer-only settings are guarded by CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME",
+      "status": "PASS"
+    },
+    {
+      "check": "type-checking",
+      "message": "Python (auxiliary: only in a few stray files, only in benchmark code, only in test code, only in tooling code): no type checker runs",
+      "status": "WARN"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": "C++: .gitignore ignores Build; Python: .gitignore ignores *.pyc",
+      "status": "PASS"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "CMake: warnings are not treated as errors in CI configuration and CMakePresets.json; C++: warnings are treated as errors with -Werror, /WX; Shell: PowerShell: warnings are not treated as errors in CI configuration; Shell: warnings are not treated as errors in CI configuration",
+      "status": "FAIL"
+    }
+  ],
+  "commit": "35d98071b9871d8be82c136e7e4f223be5261ffc",
+  "evaluated": "2026-11-27T12:25:28Z",
+  "kind": "library",
+  "language": "C++",
+  "lines": 57889,
+  "name": "catchorg/Catch2",
+  "score": {
+    "base": 50.43,
+    "breakdown": {
+      "": [
+        6,
+        9
+      ],
+      "Bazel": [
+        0,
+        0.2
+      ],
+      "C++": [
+        10.72,
+        17.7
+      ],
+      "CMake": [
+        0,
+        0.3
+      ],
+      "Documentation site": [
+        1,
+        2
+      ],
+      "Python": [
+        1.6,
+        3.1
+      ],
+      "Shell": [
+        0,
+        6
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 3,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-build-types",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Bazel",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "CMake",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.46590414119089485,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "compile-commands",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.9318082823817897,
+        "level": 4,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "compiler-extensions",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.9318082823817897,
+        "level": 4,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.46590414119089485,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 2,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [
+          "clang-tidy's readability-function-size"
+        ],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 4,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "fuzz-testing",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.46590414119089485,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "hardening",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "link-check",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.46590414119089485,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "out-of-source-build",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.9318082823817897,
+        "level": 4,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.9318082823817897,
+        "level": 4,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "sanitizers",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 3,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.46590414119089485,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Bazel",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "CMake",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.9318082823817897,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "clang-tidy"
+        ],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 2,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.9318082823817897,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "ctest",
+          "meson test"
+        ],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "top-level-guard",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.9318082823817897,
+        "level": 4,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "type-checking",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 2,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.9318082823817897,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "CMake",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.9318082823817897,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9318082823817897
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      }
+    ],
+    "extra": 0.0,
+    "filled": 19.32,
+    "held": 0.0,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "consider a CI job that runs shfmt -d .",
+        "level": 1,
+        "message": "CI never runs shfmt; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 2.61,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 1,
+        "message": "PowerShell: no PowerShell lints found; enable at least PSScriptAnalyzer; Shell: no shell lints found; enable at least shellcheck",
+        "needed_for": 1,
+        "points": 2.61,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 1,
+        "message": "PowerShell: no tests found (Pester tests (*.Tests.ps1)); Shell: no tests found (bats tests (*.bats), zunit tests (*.zunit), urchin tests (shell scripts without a suffix under test/), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
+        "needed_for": 1,
+        "points": 2.61,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 1,
+        "message": "PowerShell: warnings are not treated as errors in CI configuration; Shell: warnings are not treated as errors in CI configuration",
+        "needed_for": 1,
+        "points": 2.61,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "consider a CI job that runs clang-format --dry-run -Werror",
+        "level": 1,
+        "message": ".clang-format is defined but CI does not run clang-format",
+        "needed_for": 1,
+        "points": 1.22,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "",
+        "level": 1,
+        "message": "missing compiler warning flags: -Wconversion for appleclang and clang and gcc",
+        "needed_for": 1,
+        "points": 1.22,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "Bazel",
+        "hint": "consider a CI job that runs buildifier -mode=check -r .",
+        "level": 1,
+        "message": "CI never runs buildifier; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 0.26,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "CMake",
+        "hint": "consider a CI job that runs gersemi --check . (or cmake-format --check CMakeLists.txt)",
+        "level": 1,
+        "message": "CI never runs gersemi or cmake-format; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 0.26,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "CMake",
+        "hint": "",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration and CMakePresets.json",
+        "needed_for": 1,
+        "points": 0.26,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "Python",
+        "hint": "consider a CI job that runs ruff format --check (or black --check, autopep8 --diff --exit-code or yapf --diff)",
+        "level": 1,
+        "message": "CI never runs ruff format, black, autopep8 or yapf; its formatting is not enforced",
+        "needed_for": null,
+        "points": 0.65,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Python",
+        "hint": "",
+        "level": 1,
+        "message": "no Python warning settings found; enable at least warnings as errors",
+        "needed_for": null,
+        "points": 0.65,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "Python",
+        "hint": "",
+        "level": 1,
+        "message": "no tests found (test_*.py, *_test.py or tests/*_tests.py files)",
+        "needed_for": null,
+        "points": 0.65,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 2,
+        "message": "PowerShell: no statement coverage measurement found in what CI runs; Shell: no line coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 2.61,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 2,
+        "message": "PowerShell: no static analyzer runs; Shell: no static analyzer runs",
+        "needed_for": null,
+        "points": 2.61,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "",
+        "level": 2,
+        "message": "no branch coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 2.43,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-management",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "fetch third-party code with the ecosystem's package manager instead of committing a copy of it",
+        "level": 2,
+        "message": "third-party code is committed (third_party/); C++: dependencies are declared in conanfile.py (Conan); Python (auxiliary: only in a few stray files, only in benchmark code, only in test code, only in tooling code): no dependencies are declared",
+        "needed_for": null,
+        "points": 1.31,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Documentation site",
+        "hint": "consider running markdownlint-cli2 (or DavidAnson/markdownlint-cli2-action) or vale docs (or errata-ai/vale-action) in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 1.31,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Bazel",
+        "hint": "consider running buildifier -lint=warn -mode=check -r . in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 0.26,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "CMake",
+        "hint": "consider running cmake-lint CMakeLists.txt or cmakelint CMakeLists.txt in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 0.26,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Python",
+        "hint": "consider running ruff check, pylint or flake8 in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 0.65,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "type-checking",
+        "completes": false,
+        "ecosystem": "Python",
+        "hint": "consider running a type checker in CI: mypy, pyright (or basedpyright), pyrefly check or ty check",
+        "level": 2,
+        "message": "no type checker runs",
+        "needed_for": null,
+        "points": 0.65,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "sanitizers",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "",
+        "level": 3,
+        "message": "no sanitizers found; enable AddressSanitizer, UndefinedBehaviorSanitizer",
+        "needed_for": null,
+        "points": 2.43,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "action-pinning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "pin each action to the full commit of its release, e.g. actions/checkout@<40-character SHA> # v4.2.2; Dependabot and Renovate keep such pins up to date",
+        "level": 3,
+        "message": "11 of 11 actions are pinned to a tag rather than a commit",
+        "needed_for": null,
+        "points": 1.31,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "fuzz-testing",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "",
+        "level": 3,
+        "message": "fuzz targets in 3 file(s), but no CI configuration runs a fuzz target binary with -max_total_time= (or ClusterFuzzLite or CIFuzz) or afl-fuzz -i <corpus> -o <findings> -- <target>",
+        "needed_for": null,
+        "points": 1.22,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "mutation-testing",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "consider running mull-runner or dextool mutate in CI",
+        "level": 3,
+        "message": "no mutation testing runs",
+        "needed_for": null,
+        "points": 1.22,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "consider running in CI: CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.22,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-build-types",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "",
+        "level": 4,
+        "message": "4 of 4 OS/compiler combination(s) do not build Debug and Release, each with and without sanitizers",
+        "needed_for": null,
+        "points": 2.43,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "",
+        "level": 4,
+        "message": "CI runs clang-tidy, but its readability-function-size rule is off or has no limit; set readability-function-size with a LineThreshold or StatementThreshold in .clang-tidy",
+        "needed_for": null,
+        "points": 2.43,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "hardening",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "enable -fhardened (GCC 14+) or _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, _GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE; for MSVC /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT",
+        "level": 4,
+        "message": "no hardening options found; enable _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, _GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE, /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT",
+        "needed_for": null,
+        "points": 2.43,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-lint",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "",
+        "level": 4,
+        "message": "CI does not lint its GitHub Actions configuration",
+        "needed_for": null,
+        "points": 1.31,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 1.31,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "dependency-updates",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)",
+        "level": 4,
+        "message": "no automated dependency updates configured",
+        "needed_for": null,
+        "points": 1.31,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "link-check",
+        "completes": false,
+        "ecosystem": "Documentation site",
+        "hint": "consider running in CI: lychee --no-progress 'docs/**/*.md' (or lycheeverse/lychee-action), markdown-link-check docs/*.md (or gaurav-nelson/github-action-markdown-link-check), linkinator site --recurse, muffet http://localhost:8000 (the served site), htmltest site, htmlproofer ./_site or linkchecker site/index.html",
+        "level": 4,
+        "message": "no link check found in CI configuration",
+        "needed_for": null,
+        "points": 1.31,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.31,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "Python",
+        "hint": "consider running in CI: lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 0.65,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      }
+    ],
+    "percent": 50.43,
+    "slots": 38.3,
+    "summary": "50% · Level 0 Getting started · 32 of 48 gates in place",
+    "units": {
+      "": [
+        6,
+        9
+      ],
+      ".": [
+        13.32,
+        29.3
+      ]
+    },
+    "version": "3"
+  },
+  "seed": true,
+  "unknowns": 15,
+  "validator": "f484d7b15d7a40db5bde6b087ebd2dac289c962e"
+}

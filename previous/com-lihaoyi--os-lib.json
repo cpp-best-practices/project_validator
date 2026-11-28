@@ -1,0 +1,1185 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "3 of 3 actions are pinned to a tag rather than a commit",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "not applicable to Java, Scala, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI does not lint its GitHub Actions configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": "JVM: CI never runs Spotless, fmt-maven-plugin or google-java-format; its formatting is not enforced; Scala: .scalafmt.conf is defined and CI runs scalafmt; Shell (auxiliary: only in a few stray files): .editorconfig is defined but CI does not run shfmt",
+      "status": "FAIL"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "not applicable to Java, Scala, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "not applicable to Java, Scala, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "JVM: no JVM compiler warnings found; enable at least -Xlint:all; Scala: no scalac warning options found; enable at least -deprecation, -feature, -Xlint or -Wunused; Shell (auxiliary: only in a few stray files): no shell lints found; enable at least shellcheck",
+      "status": "FAIL"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "JVM: no branch coverage measurement found in what CI runs; Scala: no branch coverage measurement found in what CI runs; Shell (auxiliary: only in a few stray files): no line coverage measurement found in what CI runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "Data: JSON: 1 JSON file parses; YAML: 4 YAML files parse; File formats: INI: 1 INI file parses; PNG: 1 PNG file of test data, not judged; ZIP archive: 1 ZIP archive file of test data, not judged",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "JVM: no dependency vulnerability audit found in CI configuration; Scala: no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "dependency-management",
+      "message": "no dependencies are declared",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    {
+      "check": "file-soundness",
+      "message": "no tool checks the image files (os/test/resources/test/misc/binary.png)",
+      "status": "WARN"
+    },
+    {
+      "check": "function-limits",
+      "message": "JVM: function length is never limited; Scala: function length is never limited",
+      "status": "FAIL"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "no fuzz targets found (Jazzer fuzz tests (@FuzzTest or fuzzerTestOneInput))",
+      "status": "FAIL"
+    },
+    {
+      "check": "hardening",
+      "message": "not applicable to Java, Scala, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "not applicable to Java, Scala, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to Java, Scala, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "no mutation testing runs",
+      "status": "WARN"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "not applicable to Java, Scala, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "JVM: CI covers 0 OS(es) (none), 0 JDK version(s) (none), 0 combination(s); expected at least 2 operating systems (found 0), at least 2 JDK versions (found 0), at least 3 OS/JDK version combinations (found 0); Scala: CI covers 3 OS(es) (linux, macos, windows), 1 JDK or Scala version(s) (default), 3 combination(s); expected at least 2 JDK or Scala versions (found 1)",
+      "status": "FAIL"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "2 defect(s), in test code only (fixtures kept on purpose?)",
+      "status": "WARN"
+    },
+    {
+      "check": "sanitizers",
+      "message": "not applicable to Java, Scala, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "not applicable to Java, Scala, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-declared",
+      "message": "not applicable to Java, Scala, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-examples",
+      "message": "not applicable to Java, Scala, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-validation",
+      "message": "not applicable to Java, Scala, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    {
+      "check": "security-scanning",
+      "message": "JVM: no code security scanning found in CI configuration; Scala: no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "static-analysis",
+      "message": "JVM: no static analyzer runs; Scala: no static analyzer runs; Shell (auxiliary: only in a few stray files): no static analyzer runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "status-badges",
+      "message": "Readme.adoc shows no status badges",
+      "status": "FAIL"
+    },
+    {
+      "check": "tests-run",
+      "message": "JVM: no tests found (@Test methods, JUnit 3 TestCase classes, Kotest specs or Spock specifications under src/test (or another test source set)); Scala: munit, ScalaTest, specs2, utest or ZIO Test suites under src/test/scala (or Mill's test/src): 15 file(s), run by mill __.test; Shell (auxiliary: only in a few stray files): no tests found (bats tests (*.bats), zunit tests (*.zunit), urchin tests (shell scripts without a suffix under test/), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
+      "status": "FAIL"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "not applicable to Java, Scala, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "type-checking",
+      "message": "not applicable to Java, Scala, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": "JVM: .gitignore does not ignore compiled classes; Scala: .gitignore ignores out",
+      "status": "WARN"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "JVM: warnings are not treated as errors in the Maven or Gradle build, or CI configuration; Scala: warnings are not treated as errors in the build or CI configuration; Shell (auxiliary: only in a few stray files): warnings are not treated as errors in CI configuration",
+      "status": "FAIL"
+    }
+  ],
+  "commit": "8871ab0bda9bbcc4edbef9b1a402eb4c47ef9398",
+  "evaluated": "2026-11-27T12:26:43Z",
+  "kind": "library",
+  "language": "Scala",
+  "lines": 5705,
+  "name": "com-lihaoyi/os-lib",
+  "score": {
+    "base": 46.63,
+    "breakdown": {
+      "": [
+        6,
+        10
+      ],
+      "JVM": [
+        0.3,
+        1.4
+      ],
+      "Scala": [
+        3.79,
+        10.41
+      ],
+      "Shell": [
+        1.25,
+        2.5
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 3,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "JVM",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Scala",
+        "extra": 0,
+        "filled": 0.9466437177280551,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "scalafmt"
+        ],
+        "unit": ".",
+        "weight": 0.9466437177280551
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "JVM",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Scala",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9466437177280551
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "JVM",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Scala",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9466437177280551
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "JVM",
+        "extra": 0,
+        "filled": 0.05,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "Scala",
+        "extra": 0,
+        "filled": 0.47332185886402756,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9466437177280551
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "JVM",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "file-soundness",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "JVM",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "Scala",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9466437177280551
+      },
+      {
+        "check": "fuzz-testing",
+        "ecosystem": "JVM",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 3,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "JVM",
+        "extra": 0,
+        "filled": 0.05,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "JVM",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "Scala",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9466437177280551
+      },
+      {
+        "check": "repository-hygiene",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "JVM",
+        "extra": 0,
+        "filled": 0.05,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "Scala",
+        "extra": 0,
+        "filled": 0.47332185886402756,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9466437177280551
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "JVM",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Scala",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9466437177280551
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 2,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "JVM",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Scala",
+        "extra": 0,
+        "filled": 0.9466437177280551,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "mill __.test"
+        ],
+        "unit": ".",
+        "weight": 0.9466437177280551
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "JVM",
+        "extra": 0,
+        "filled": 0.05,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Scala",
+        "extra": 0,
+        "filled": 0.9466437177280551,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9466437177280551
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "JVM",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "Scala",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9466437177280551
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      }
+    ],
+    "extra": 0.0,
+    "filled": 11.34,
+    "held": 0.0,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Scala",
+        "hint": "",
+        "level": 1,
+        "message": "no scalac warning options found; enable at least -deprecation, -feature, -Xlint or -Wunused",
+        "needed_for": 1,
+        "points": 3.89,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "Scala",
+        "hint": "add -Werror to scalacOptions, or run sbt-tpolecat in its CI mode (SBT_TPOLECAT_CI=true)",
+        "level": 1,
+        "message": "warnings are not treated as errors in the build or CI configuration",
+        "needed_for": 1,
+        "points": 3.89,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "JVM",
+        "hint": "consider a CI job that runs mvn spotless:check or gradle spotlessCheck (or mvn fmt:check or google-java-format --set-exit-if-changed)",
+        "level": 1,
+        "message": "CI never runs Spotless, fmt-maven-plugin or google-java-format; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 0.41,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "JVM",
+        "hint": "",
+        "level": 1,
+        "message": "no JVM compiler warnings found; enable at least -Xlint:all",
+        "needed_for": 1,
+        "points": 0.41,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "JVM",
+        "hint": "",
+        "level": 1,
+        "message": "no tests found (@Test methods, JUnit 3 TestCase classes, Kotest specs or Spock specifications under src/test (or another test source set))",
+        "needed_for": 1,
+        "points": 0.41,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "JVM",
+        "hint": "add -Werror to javac's compilerArgs (Kotlin: allWarningsAsErrors = true)",
+        "level": 1,
+        "message": "warnings are not treated as errors in the Maven or Gradle build, or CI configuration",
+        "needed_for": 1,
+        "points": 0.41,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "vcs-ignore",
+        "completes": false,
+        "ecosystem": "JVM",
+        "hint": "consider ignoring *.class",
+        "level": 1,
+        "message": ".gitignore does not ignore compiled classes",
+        "needed_for": 1,
+        "points": 0.21,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "consider a CI job that runs shfmt -d .",
+        "level": 1,
+        "message": ".editorconfig is defined but CI does not run shfmt",
+        "needed_for": null,
+        "points": 1.03,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 1,
+        "message": "no shell lints found; enable at least shellcheck",
+        "needed_for": null,
+        "points": 1.03,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 1,
+        "message": "no tests found (bats tests (*.bats), zunit tests (*.zunit), urchin tests (shell scripts without a suffix under test/), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
+        "needed_for": null,
+        "points": 1.03,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "run shellcheck in CI: it fails on any finding",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration",
+        "needed_for": null,
+        "points": 1.03,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Scala",
+        "hint": "",
+        "level": 2,
+        "message": "no branch coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 3.89,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Scala",
+        "hint": "consider running sbt \"scalafixAll --check\" (or mill __.fix --check) in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 3.89,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "Scala",
+        "hint": "consider running in CI: sbt dependencyCheck (OWASP dependency-check), GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml) or snyk test",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 1.95,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "JVM",
+        "hint": "",
+        "level": 2,
+        "message": "no branch coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 0.41,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "JVM",
+        "hint": "consider running SpotBugs (spotbugs-maven-plugin bound to check, or the com.github.spotbugs Gradle plugin), PMD (maven-pmd-plugin bound to check, or Gradle's pmd plugin), Checkstyle (maven-checkstyle-plugin bound to check, or Gradle's checkstyle plugin) or Error Prone (a compiler plugin, run by every build) in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 0.41,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "JVM",
+        "hint": "consider running in CI: OWASP dependency-check (dependency-check:check, or gradle dependencyCheckAnalyze), GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 0.21,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "consider running shellcheck <scripts> (or ludeeus/action-shellcheck) in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 1.03,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "action-pinning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "pin each action to the full commit of its release, e.g. actions/checkout@<40-character SHA> # v4.2.2; Dependabot and Renovate keep such pins up to date",
+        "level": 3,
+        "message": "3 of 3 actions are pinned to a tag rather than a commit",
+        "needed_for": null,
+        "points": 2.06,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "Scala",
+        "hint": "consider running in CI: GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.95,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "fuzz-testing",
+        "completes": false,
+        "ecosystem": "JVM",
+        "hint": "consider adding mvn test or gradle test with JAZZER_FUZZ=1 (or the jazzer CLI)",
+        "level": 3,
+        "message": "no fuzz targets found (Jazzer fuzz tests (@FuzzTest or fuzzerTestOneInput))",
+        "needed_for": null,
+        "points": 0.41,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "mutation-testing",
+        "completes": false,
+        "ecosystem": "JVM",
+        "hint": "consider running pitest:mutationCoverage or the pitest Gradle task in CI",
+        "level": 3,
+        "message": "no mutation testing runs",
+        "needed_for": null,
+        "points": 0.21,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "JVM",
+        "hint": "consider running in CI: Find Security Bugs (the findsecbugs-plugin of SpotBugs), PMD with category/java/security.xml, CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 0.21,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "repository-hygiene",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "",
+        "level": 4,
+        "message": "2 defect(s), in test code only (fixtures kept on purpose?)",
+        "needed_for": null,
+        "points": 4.11,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "Scala",
+        "hint": "consider running in CI: lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 3.89,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "platform-matrix",
+        "completes": false,
+        "ecosystem": "Scala",
+        "hint": "",
+        "level": 4,
+        "message": "CI covers 3 OS(es) (linux, macos, windows), 1 JDK or Scala version(s) (default), 3 combination(s); expected at least 2 JDK or Scala versions (found 1)",
+        "needed_for": null,
+        "points": 3.89,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-lint",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "",
+        "level": 4,
+        "message": "CI does not lint its GitHub Actions configuration",
+        "needed_for": null,
+        "points": 2.06,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 2.06,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "file-soundness",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "run ClamAV (clamscan -r .) over the repository, or a tool that decodes each kind of file (magick identify -regard-warnings, pngcheck, qpdf --check, fontbakery, ffprobe -v error, gltf_validator)",
+        "level": 4,
+        "message": "no tool checks the image files (os/test/resources/test/misc/binary.png)",
+        "needed_for": null,
+        "points": 2.06,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 2.06,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "security-policy",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)",
+        "level": 4,
+        "message": "no security policy",
+        "needed_for": null,
+        "points": 2.06,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "JVM",
+        "hint": "consider running in CI: Checkstyle with its MethodLength check or lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 0.41,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "platform-matrix",
+        "completes": false,
+        "ecosystem": "JVM",
+        "hint": "",
+        "level": 4,
+        "message": "CI covers 0 OS(es) (none), 0 JDK version(s) (none), 0 combination(s); expected at least 2 operating systems (found 0), at least 2 JDK versions (found 0), at least 3 OS/JDK version combinations (found 0)",
+        "needed_for": null,
+        "points": 0.41,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      }
+    ],
+    "percent": 46.63,
+    "slots": 24.31,
+    "summary": "46% · Level 0 Getting started · 24 of 40 gates in place",
+    "units": {
+      "": [
+        6,
+        10
+      ],
+      ".": [
+        5.34,
+        14.31
+      ]
+    },
+    "version": "3"
+  },
+  "seed": true,
+  "unknowns": 0,
+  "validator": "f484d7b15d7a40db5bde6b087ebd2dac289c962e"
+}

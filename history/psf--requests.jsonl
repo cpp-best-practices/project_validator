@@ -1,0 +1,10 @@
+{"commit": "3c7baaa05ab4aa49cc819ce3a819d260de19c157", "completeness": 0.7068, "date": "2026-11-19", "depth": 55, "level": 0, "validator": "63d182b6c24090673388708e53ad38404d90ed80", "version": "0"}
+{"commit": "3c7baaa05ab4aa49cc819ce3a819d260de19c157", "date": "2026-11-20", "filled": 22, "level": 0, "percent": 70.97, "slots": 31, "validator": "7672e9af7c1084e41a91f1f9cc14e52e19561eb9", "version": "1"}
+{"commit": "3c7baaa05ab4aa49cc819ce3a819d260de19c157", "date": "2026-11-21", "filled": 22, "level": 0, "percent": 70.97, "slots": 31, "validator": "6a457ee44dbce2eb16958ac1239e9fa1c1d363cc", "version": "1"}
+{"commit": "3c7baaa05ab4aa49cc819ce3a819d260de19c157", "date": "2026-11-22", "filled": 22, "level": 0, "percent": 70.97, "slots": 31, "validator": "d3dc4c2d83ecee2362bfd9ac2d6bea08f67a0ed5", "version": "1"}
+{"commit": "3c7baaa05ab4aa49cc819ce3a819d260de19c157", "date": "2026-11-23", "filled": 22, "level": 0, "percent": 70.97, "slots": 31, "validator": "5f753ed26f91095092646017fac2732c6a4fb32a", "version": "1"}
+{"commit": "3c7baaa05ab4aa49cc819ce3a819d260de19c157", "date": "2026-11-24", "filled": 23, "level": 0, "percent": 71.88, "slots": 32, "validator": "fceeceb81e14299fa6c7d8654e8924ad0132dd9c", "version": "1"}
+{"commit": "3c7baaa05ab4aa49cc819ce3a819d260de19c157", "date": "2026-11-25", "filled": 23.5, "level": 0, "percent": 73.44, "slots": 32, "validator": "79c1e97517ad38b36a03e7cb9b03733a08806a00", "version": "1"}
+{"commit": "3c7baaa05ab4aa49cc819ce3a819d260de19c157", "date": "2026-11-26", "filled": 21.79, "level": 0, "percent": 73.07, "slots": 29.82, "validator": "eafd8865989645ef7e712b7e8fd12ffba10f207c", "version": "2"}
+{"commit": "3c7baaa05ab4aa49cc819ce3a819d260de19c157", "date": "2026-11-27", "filled": 18.26, "level": 0, "percent": 68.18, "slots": 26.77, "validator": "f484d7b15d7a40db5bde6b087ebd2dac289c962e", "version": "3"}
+{"commit": "3c7baaa05ab4aa49cc819ce3a819d260de19c157", "date": "2026-11-28", "filled": 18.26, "level": 0, "percent": 68.18, "slots": 26.77, "validator": "6256506545c84c82e19c816a37fbb2cffb8e4fec", "version": "5"}

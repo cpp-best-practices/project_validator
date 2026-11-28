@@ -1,0 +1,1019 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "4 of 4 actions are pinned to a tag rather than a commit",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "not applicable to JavaScript, Perl",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI does not lint its GitHub Actions configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": "JavaScript: CI never runs prettier, deno fmt, oxfmt, dprint or biome; its formatting is not enforced; Perl: .perltidyrc is defined and CI runs perltidy",
+      "status": "FAIL"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "not applicable to JavaScript, Perl",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "not applicable to JavaScript, Perl",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "JavaScript: no JavaScript linters found; enable at least eslint; Perl: missing Perl pragmas and lints: perlcritic",
+      "status": "FAIL"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "JavaScript: no branch coverage measurement found in what CI runs; Perl: no branch coverage measurement found in what CI runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "Data: JSON: 6 JSON files of test data, not judged; YAML: 6 YAML files parse; File formats: ICO: 1 ICO file parses; PNG: 8 PNG files parse",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "JavaScript: no dependency vulnerability audit found in CI configuration; Perl: no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "dependency-management",
+      "message": "no dependencies are declared",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    {
+      "check": "file-soundness",
+      "message": "no tool checks the image files (lib/Mojolicious/resources/public/favicon.ico, lib/Mojolicious/resources/public/mojo/failraptor.png, lib/Mojolicious/resources/public/mojo/logo-white-2x.png and 6 more)",
+      "status": "WARN"
+    },
+    {
+      "check": "function-limits",
+      "message": "JavaScript: function length is never limited; Perl: function length is never limited",
+      "status": "FAIL"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "no fuzz targets found (Jazzer.js fuzz targets (an exported fuzz function or .fuzz()))",
+      "status": "FAIL"
+    },
+    {
+      "check": "hardening",
+      "message": "not applicable to JavaScript, Perl",
+      "status": "SKIP"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under Artistic-2.0",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "not applicable to JavaScript, Perl",
+      "status": "SKIP"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to JavaScript, Perl",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "no mutation testing runs",
+      "status": "WARN"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "not applicable to JavaScript, Perl",
+      "status": "SKIP"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "JavaScript: CI covers 0 OS(es) (none), 0 runtime version(s) (none), 0 combination(s); expected at least 2 operating systems (found 0), at least 2 runtime versions (found 0), at least 3 OS/runtime version combinations (found 0); Perl: CI covers 1 OS(es) (linux), 8 Perl version(s) (5.16, 5.18, 5.20, 5.22, 5.30, 5.32, 5.36, 5.40), 8 combination(s); expected at least 2 operating systems (found 1)",
+      "status": "FAIL"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "not applicable to JavaScript, Perl",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "not applicable to JavaScript, Perl",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-declared",
+      "message": "not applicable to JavaScript, Perl",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-examples",
+      "message": "not applicable to JavaScript, Perl",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-validation",
+      "message": "not applicable to JavaScript, Perl",
+      "status": "SKIP"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    {
+      "check": "security-scanning",
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "static-analysis",
+      "message": "JavaScript: no static analyzer runs; Perl: no static analyzer runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows a CI badge (GitHub Actions) but no quality badge",
+      "status": "WARN"
+    },
+    {
+      "check": "tests-run",
+      "message": "JavaScript: no tests found (*.test.*, *.spec.*, __tests__/ or test/ files); Perl: Test::More or Test2 tests in t/*.t: 110 file(s), run by prove",
+      "status": "FAIL"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "not applicable to JavaScript, Perl",
+      "status": "SKIP"
+    },
+    {
+      "check": "type-checking",
+      "message": "not applicable to JavaScript, Perl",
+      "status": "SKIP"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": "JavaScript: .gitignore does not ignore node_modules; Perl: .gitignore does not ignore Devel::Cover's database",
+      "status": "WARN"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "JavaScript: warnings are not treated as errors in CI configuration or the package scripts it runs; Perl: warnings are not treated as errors in the modules and the tests",
+      "status": "FAIL"
+    }
+  ],
+  "commit": "d232174795b0b6b019e9a1f67e8400025b073d7b",
+  "evaluated": "2026-11-27T12:26:20Z",
+  "kind": "library",
+  "language": "Perl",
+  "lines": 34230,
+  "name": "mojolicious/mojo",
+  "score": {
+    "base": 48.08,
+    "breakdown": {
+      "": [
+        6,
+        9
+      ],
+      "JavaScript": [
+        0.3,
+        1.4
+      ],
+      "Perl": [
+        3.48,
+        9.94
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 3,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Perl",
+        "extra": 0,
+        "filled": 0.9936115224903447,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "perltidy"
+        ],
+        "unit": ".",
+        "weight": 0.9936115224903447
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Perl",
+        "extra": 0,
+        "filled": 0.49680576124517234,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9936115224903447
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Perl",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9936115224903447
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.05,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "Perl",
+        "extra": 0,
+        "filled": 0.49680576124517234,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9936115224903447
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "file-soundness",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "Perl",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9936115224903447
+      },
+      {
+        "check": "fuzz-testing",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 3,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.05,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "Perl",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9936115224903447
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.05,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Perl",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9936115224903447
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Perl",
+        "extra": 0,
+        "filled": 0.9936115224903447,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "prove"
+        ],
+        "unit": ".",
+        "weight": 0.9936115224903447
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.05,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Perl",
+        "extra": 0,
+        "filled": 0.49680576124517234,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9936115224903447
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "Perl",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9936115224903447
+      }
+    ],
+    "extra": 0.0,
+    "filled": 9.78,
+    "held": 0.0,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "Perl",
+        "hint": "use warnings FATAL => 'all' in the modules, or use Test::Warnings (or Test::NoWarnings) in the tests, which fail on a warning",
+        "level": 1,
+        "message": "warnings are not treated as errors in the modules and the tests",
+        "needed_for": 1,
+        "points": 4.89,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Perl",
+        "hint": "",
+        "level": 1,
+        "message": "missing Perl pragmas and lints: perlcritic",
+        "needed_for": 1,
+        "points": 2.44,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "vcs-ignore",
+        "completes": false,
+        "ecosystem": "Perl",
+        "hint": "consider ignoring cover_db/",
+        "level": 1,
+        "message": ".gitignore does not ignore Devel::Cover's database",
+        "needed_for": 1,
+        "points": 2.44,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider a CI job that runs prettier --check . (or deno fmt --check, oxfmt --check, dprint check or biome ci)",
+        "level": 1,
+        "message": "CI never runs prettier, deno fmt, oxfmt, dprint or biome; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 0.49,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "",
+        "level": 1,
+        "message": "no JavaScript linters found; enable at least eslint",
+        "needed_for": 1,
+        "points": 0.49,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "",
+        "level": 1,
+        "message": "no tests found (*.test.*, *.spec.*, __tests__/ or test/ files)",
+        "needed_for": 1,
+        "points": 0.49,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "run eslint with --max-warnings 0 (or biome ci, deno lint or oxlint --deny-warnings), so that a lint warning fails CI",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration or the package scripts it runs",
+        "needed_for": 1,
+        "points": 0.49,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "vcs-ignore",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider ignoring node_modules/ (and coverage/ and dist/)",
+        "level": 1,
+        "message": ".gitignore does not ignore node_modules",
+        "needed_for": 1,
+        "points": 0.25,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Perl",
+        "hint": "",
+        "level": 2,
+        "message": "no branch coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 4.89,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Perl",
+        "hint": "consider running perlcritic lib t in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 4.89,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "Perl",
+        "hint": "consider running in CI: cpan-audit deps . (CPAN::Audit)",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 2.44,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "",
+        "level": 2,
+        "message": "no branch coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 0.49,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running eslint, xo, oxlint, deno lint or biome lint in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 0.49,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running in CI: npm audit, pnpm audit, yarn npm audit, bun audit, yarn audit, GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 0.25,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "action-pinning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "pin each action to the full commit of its release, e.g. actions/checkout@<40-character SHA> # v4.2.2; Dependabot and Renovate keep such pins up to date",
+        "level": 3,
+        "message": "4 of 4 actions are pinned to a tag rather than a commit",
+        "needed_for": null,
+        "points": 2.46,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "fuzz-testing",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider adding npx jazzer <target> -- -max_total_time=30 (or jest with JAZZER_FUZZ=1)",
+        "level": 3,
+        "message": "no fuzz targets found (Jazzer.js fuzz targets (an exported fuzz function or .fuzz()))",
+        "needed_for": null,
+        "points": 0.49,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "mutation-testing",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running stryker run in CI",
+        "level": 3,
+        "message": "no mutation testing runs",
+        "needed_for": null,
+        "points": 0.25,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running in CI: eslint with eslint-plugin-security, CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 0.25,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "Perl",
+        "hint": "consider running in CI: lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 4.89,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "platform-matrix",
+        "completes": false,
+        "ecosystem": "Perl",
+        "hint": "",
+        "level": 4,
+        "message": "CI covers 1 OS(es) (linux), 8 Perl version(s) (5.16, 5.18, 5.20, 5.22, 5.30, 5.32, 5.36, 5.40), 8 combination(s); expected at least 2 operating systems (found 1)",
+        "needed_for": null,
+        "points": 4.89,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-lint",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "",
+        "level": 4,
+        "message": "CI does not lint its GitHub Actions configuration",
+        "needed_for": null,
+        "points": 2.46,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 2.46,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "dependency-updates",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)",
+        "level": 4,
+        "message": "no automated dependency updates configured",
+        "needed_for": null,
+        "points": 2.46,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "file-soundness",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "run ClamAV (clamscan -r .) over the repository, or a tool that decodes each kind of file (magick identify -regard-warnings, pngcheck, qpdf --check, fontbakery, ffprobe -v error, gltf_validator)",
+        "level": 4,
+        "message": "no tool checks the image files (lib/Mojolicious/resources/public/favicon.ico, lib/Mojolicious/resources/public/mojo/failraptor.png, lib/Mojolicious/resources/public/mojo/logo-white-2x.png and 6 more)",
+        "needed_for": null,
+        "points": 2.46,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 2.46,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running in CI: eslint with max-lines-per-function on or lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 0.49,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "platform-matrix",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "",
+        "level": 4,
+        "message": "CI covers 0 OS(es) (none), 0 runtime version(s) (none), 0 combination(s); expected at least 2 operating systems (found 0), at least 2 runtime versions (found 0), at least 3 OS/runtime version combinations (found 0)",
+        "needed_for": null,
+        "points": 0.49,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      }
+    ],
+    "percent": 48.08,
+    "slots": 20.34,
+    "summary": "48% · Level 0 Getting started · 19 of 33 gates in place",
+    "units": {
+      "": [
+        6,
+        9
+      ],
+      ".": [
+        3.78,
+        11.34
+      ]
+    },
+    "version": "3"
+  },
+  "seed": true,
+  "unknowns": 0,
+  "validator": "f484d7b15d7a40db5bde6b087ebd2dac289c962e"
+}

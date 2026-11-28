@@ -1,0 +1,1097 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "8 of 8 actions are not pinned to a commit",
+      "status": "FAIL"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "not applicable to Clojure, JavaScript, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI does not lint its GitHub Actions configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": "Clojure: CI never runs cljfmt, cljstyle or zprint; its formatting is not enforced; JavaScript (auxiliary: only in test code): CI never runs prettier, deno fmt, oxfmt, dprint or biome; its formatting is not enforced; Shell: CI never runs shfmt; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "not applicable to Clojure, JavaScript, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "not applicable to Clojure, JavaScript, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "Clojure: missing Clojure lints: clj-kondo; JavaScript (auxiliary: only in test code): no JavaScript linters found; enable at least eslint; Shell: no shell lints found; enable at least shellcheck",
+      "status": "FAIL"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "Clojure: no statement coverage measurement found in what CI runs; JavaScript (auxiliary: only in test code): no branch coverage measurement found in what CI runs; Shell: no line coverage measurement found in what CI runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "Data: JSON: 2 JSON files parse; XML: 1 XML file parses; YAML: 2 YAML files parse; File formats (auxiliary: only in docs code): 15 PNG files parse",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "Clojure: no dependency vulnerability audit found in CI configuration; JavaScript (auxiliary: only in test code): no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "dependency-management",
+      "message": "JavaScript (auxiliary: only in test code): dependencies are declared in package.json (npm packages) and locked in package-lock.json",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    {
+      "check": "file-soundness",
+      "message": "no tool checks the image files (docs/img/bats-in-the-attic.png, docs/img/clj-kondo-instrumentation.png, docs/img/clj-kondo.png and 12 more)",
+      "status": "WARN"
+    },
+    {
+      "check": "function-limits",
+      "message": "JavaScript (auxiliary: only in test code): function length is never limited",
+      "status": "WARN"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "JavaScript (auxiliary: only in test code): no fuzz targets found (Jazzer.js fuzz targets (an exported fuzz function or .fuzz()))",
+      "status": "WARN"
+    },
+    {
+      "check": "hardening",
+      "message": "not applicable to Clojure, JavaScript, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under EPL-2.0",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "no link check found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to Clojure, JavaScript, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "JavaScript (auxiliary: only in test code): no mutation testing runs",
+      "status": "WARN"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "not applicable to Clojure, JavaScript, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "Clojure: CI covers 1 OS(es) (linux), 6 JDK version(s) (11, 17, 21, 25, 26, 8), 6 combination(s); expected at least 2 operating systems (found 1); JavaScript (auxiliary: only in test code): CI covers 1 OS(es) (linux), 1 runtime version(s) (16), 1 combination(s); expected at least 2 operating systems (found 1), at least 2 runtime versions (found 1), at least 3 OS/runtime version combinations (found 1)",
+      "status": "FAIL"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "not applicable to Clojure, JavaScript, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "not applicable to Clojure, JavaScript, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-declared",
+      "message": "not applicable to Clojure, JavaScript, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-examples",
+      "message": "not applicable to Clojure, JavaScript, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-validation",
+      "message": "not applicable to Clojure, JavaScript, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    {
+      "check": "security-scanning",
+      "message": "Clojure: no code security scanning found in CI configuration; JavaScript (auxiliary: only in test code): no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "static-analysis",
+      "message": "Clojure: no static analyzer runs; Documentation site: no static analyzer runs; JavaScript (auxiliary: only in test code): no static analyzer runs; Shell: no static analyzer runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows a CI badge (GitHub Actions) but no quality badge",
+      "status": "WARN"
+    },
+    {
+      "check": "tests-run",
+      "message": "Clojure: deftest (clojure.test) or describe (speclj) under test/: 34 file(s), run by clojure.test; JavaScript (auxiliary: only in test code): *.test.*, *.spec.*, __tests__/ or test/ files: 1 file(s), but no CI configuration runs jest, vitest, mocha, node --test, deno test, bun test or playwright (or npm test); Shell: no tests found (bats tests (*.bats), zunit tests (*.zunit), urchin tests (shell scripts without a suffix under test/), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
+      "status": "FAIL"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "not applicable to Clojure, JavaScript, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "type-checking",
+      "message": "not applicable to Clojure, JavaScript, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": "Clojure: .gitignore ignores .cpcache; .gitignore ignores /target; .gitignore ignores .shadow-cljs; .gitignore ignores .nrepl-port; JavaScript: .gitignore ignores node_modules",
+      "status": "PASS"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "Clojure: warnings are not treated as errors in CI configuration; JavaScript (auxiliary: only in test code): warnings are not treated as errors in CI configuration or the package scripts it runs; Shell: warnings are not treated as errors in CI configuration",
+      "status": "FAIL"
+    }
+  ],
+  "commit": "77db2206a05f05b3d591b8b9af37aa03c36258ca",
+  "evaluated": "2026-11-28T11:50:11Z",
+  "kind": "library",
+  "language": "Clojure",
+  "lines": 10411,
+  "name": "metosin/malli",
+  "score": {
+    "base": 38.77,
+    "breakdown": {
+      "": [
+        5,
+        9
+      ],
+      "Clojure": [
+        3.33,
+        9.52
+      ],
+      "Documentation site": [
+        1,
+        2
+      ],
+      "JavaScript": [
+        2.5,
+        4
+      ],
+      "Shell": [
+        0,
+        6
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 3,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Clojure",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9522546419098143
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Clojure",
+        "extra": 0,
+        "filled": 0.4761273209549072,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9522546419098143
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Clojure",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9522546419098143
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "Clojure",
+        "extra": 0,
+        "filled": 0.4761273209549072,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9522546419098143
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "file-soundness",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "link-check",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "Clojure",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9522546419098143
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "Clojure",
+        "extra": 0,
+        "filled": 0.4761273209549072,
+        "level": 3,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9522546419098143
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Clojure",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9522546419098143
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Clojure",
+        "extra": 0,
+        "filled": 0.9522546419098143,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "clojure.test"
+        ],
+        "unit": ".",
+        "weight": 0.9522546419098143
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Clojure",
+        "extra": 0,
+        "filled": 0.9522546419098143,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9522546419098143
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "Clojure",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9522546419098143
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      }
+    ],
+    "extra": 0.0,
+    "filled": 11.83,
+    "held": 0.0,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "consider a CI job that runs shfmt -d .",
+        "level": 1,
+        "message": "CI never runs shfmt; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 3.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 1,
+        "message": "no shell lints found; enable at least shellcheck",
+        "needed_for": 1,
+        "points": 3.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 1,
+        "message": "no tests found (bats tests (*.bats), zunit tests (*.zunit), urchin tests (shell scripts without a suffix under test/), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
+        "needed_for": 1,
+        "points": 3.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "run shellcheck in CI: it fails on any finding",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration",
+        "needed_for": 1,
+        "points": 3.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "Clojure",
+        "hint": "consider a CI job that runs cljfmt check (or lein cljfmt check) (or cljstyle check or zprint --check src/**/*.clj)",
+        "level": 1,
+        "message": "CI never runs cljfmt, cljstyle or zprint; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 3.12,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "Clojure",
+        "hint": "run clj-kondo in CI without --fail-level error, so that a warning fails the job (its default)",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration",
+        "needed_for": 1,
+        "points": 3.12,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Clojure",
+        "hint": "",
+        "level": 1,
+        "message": "missing Clojure lints: clj-kondo",
+        "needed_for": 1,
+        "points": 1.56,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider a CI job that runs prettier --check . (or deno fmt --check, oxfmt --check, dprint check or biome ci)",
+        "level": 1,
+        "message": "CI never runs prettier, deno fmt, oxfmt, dprint or biome; its formatting is not enforced",
+        "needed_for": null,
+        "points": 0.82,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "",
+        "level": 1,
+        "message": "no JavaScript linters found; enable at least eslint",
+        "needed_for": null,
+        "points": 0.82,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "",
+        "level": 1,
+        "message": "*.test.*, *.spec.*, __tests__/ or test/ files: 1 file(s), but no CI configuration runs jest, vitest, mocha, node --test, deno test, bun test or playwright (or npm test)",
+        "needed_for": null,
+        "points": 0.82,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "run eslint with --max-warnings 0 (or biome ci, deno lint or oxlint --deny-warnings), so that a lint warning fails CI",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration or the package scripts it runs",
+        "needed_for": null,
+        "points": 0.82,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 2,
+        "message": "no line coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 3.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "consider running shellcheck <scripts> (or ludeeus/action-shellcheck) in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 3.28,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Clojure",
+        "hint": "",
+        "level": 2,
+        "message": "no statement coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 3.12,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Clojure",
+        "hint": "consider running clj-kondo --lint src test in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 3.12,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Documentation site",
+        "hint": "consider running markdownlint-cli2 (or DavidAnson/markdownlint-cli2-action) or vale docs (or errata-ai/vale-action) in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 1.64,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "Clojure",
+        "hint": "consider running in CI: clojure -M:nvd (or lein nvd check) or clj-watson scan -p deps.edn",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 1.56,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running eslint, xo, oxlint, deno lint or biome lint in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 0.82,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "action-pinning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "pin each action to the full commit of its release, e.g. actions/checkout@<40-character SHA> # v4.2.2; Dependabot and Renovate keep such pins up to date",
+        "level": 3,
+        "message": "8 of 8 actions are not pinned to a commit",
+        "needed_for": null,
+        "points": 3.28,
+        "status": "FAIL",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "Clojure",
+        "hint": "consider running in CI: semgrep ci",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.56,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "platform-matrix",
+        "completes": false,
+        "ecosystem": "Clojure",
+        "hint": "",
+        "level": 4,
+        "message": "CI covers 1 OS(es) (linux), 6 JDK version(s) (11, 17, 21, 25, 26, 8), 6 combination(s); expected at least 2 operating systems (found 1)",
+        "needed_for": null,
+        "points": 3.12,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-lint",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "",
+        "level": 4,
+        "message": "CI does not lint its GitHub Actions configuration",
+        "needed_for": null,
+        "points": 1.64,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 1.64,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "dependency-updates",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)",
+        "level": 4,
+        "message": "no automated dependency updates configured",
+        "needed_for": null,
+        "points": 1.64,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "file-soundness",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "run ClamAV (clamscan -r .) over the repository, or a tool that decodes each kind of file (magick identify -regard-warnings, pngcheck, qpdf --check, fontbakery, ffprobe -v error, gltf_validator)",
+        "level": 4,
+        "message": "no tool checks the image files (docs/img/bats-in-the-attic.png, docs/img/clj-kondo-instrumentation.png, docs/img/clj-kondo.png and 12 more)",
+        "needed_for": null,
+        "points": 1.64,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "link-check",
+        "completes": false,
+        "ecosystem": "Documentation site",
+        "hint": "consider running in CI: lychee --no-progress 'docs/**/*.md' (or lycheeverse/lychee-action), markdown-link-check docs/*.md (or gaurav-nelson/github-action-markdown-link-check), linkinator site --recurse, muffet http://localhost:8000 (the served site), htmltest site, htmlproofer ./_site or linkchecker site/index.html",
+        "level": 4,
+        "message": "no link check found in CI configuration",
+        "needed_for": null,
+        "points": 1.64,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.64,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "security-policy",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)",
+        "level": 4,
+        "message": "no security policy",
+        "needed_for": null,
+        "points": 1.64,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running in CI: eslint with max-lines-per-function on or lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 0.82,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      }
+    ],
+    "percent": 38.77,
+    "slots": 30.52,
+    "summary": "38% · Level 0 Getting started · 22 of 34 gates in place",
+    "units": {
+      "": [
+        5,
+        9
+      ],
+      ".": [
+        6.83,
+        21.52
+      ]
+    },
+    "version": "5"
+  },
+  "seed": true,
+  "unknowns": 0,
+  "validator": "6256506545c84c82e19c816a37fbb2cffb8e4fec"
+}

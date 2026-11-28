@@ -1,0 +1,902 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "all 7 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "4 of 4 OS/Zig version combination(s) do not build Debug and Release, each with and without sanitizers",
+      "status": "FAIL"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI does not lint its GitHub Actions configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": "JSON Schema: CI never runs prettier or biome; its formatting is not enforced; Nix: CI never runs nixfmt, alejandra or nix fmt; its formatting is not enforced; Zig: CI enforces the zig fmt style",
+      "status": "FAIL"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "not applicable to Nix, Zig",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "not applicable to Nix, Zig",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "no Nix lints found; enable at least statix, deadnix",
+      "status": "FAIL"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "line coverage is reported with kcov",
+      "status": "PASS"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "Data: JSON: 2 JSON files parse; YAML: 6 YAML files parse; File formats: 2 SVG files parse",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "not applicable to Nix, Zig",
+      "status": "SKIP"
+    },
+    {
+      "check": "dependency-management",
+      "message": "not applicable to Nix, Zig",
+      "status": "SKIP"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    {
+      "check": "file-soundness",
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
+    {
+      "check": "function-limits",
+      "message": "function length is never limited",
+      "status": "FAIL"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "no fuzz targets found (std.testing.fuzz tests (or a fuzz step in build.zig))",
+      "status": "FAIL"
+    },
+    {
+      "check": "hardening",
+      "message": "hardening options are enabled: ReleaseSafe",
+      "status": "PASS"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "not applicable to Nix, Zig",
+      "status": "SKIP"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to Nix, Zig",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "not applicable to Nix, Zig",
+      "status": "SKIP"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "not applicable to Nix, Zig",
+      "status": "SKIP"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "Nix: CI covers 0 OS(es) (none), 0 system(s) (none), 0 combination(s); expected at least 2 operating systems (found 0), at least 2 systems (found 0), at least 3 OS/system combinations (found 0); Zig: CI covers 3 OS(es) (linux, macos, windows), 2 Zig version(s) (0.18.0-dev.1260+833623422, master), 4 combination(s)",
+      "status": "FAIL"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "not applicable to Nix, Zig",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "no check for breaking schema changes found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "schema-declared",
+      "message": "1 JSON Schema file does not declare its dialect ($schema) and $id",
+      "status": "FAIL"
+    },
+    {
+      "check": "schema-examples",
+      "message": "no check of the schemas' examples found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "schema-validation",
+      "message": "no schema validation found in CI configuration",
+      "status": "FAIL"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    {
+      "check": "security-scanning",
+      "message": "not applicable to Nix, Zig",
+      "status": "SKIP"
+    },
+    {
+      "check": "static-analysis",
+      "message": "no static analyzer runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    {
+      "check": "tests-run",
+      "message": "Nix: no tests found (flake checks (a checks output in flake.nix)); Zig: test blocks in .zig files: 34 file(s), run by zig build test",
+      "status": "FAIL"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "not applicable to Nix, Zig",
+      "status": "SKIP"
+    },
+    {
+      "check": "type-checking",
+      "message": "not applicable to Nix, Zig",
+      "status": "SKIP"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": "Nix: .gitignore ignores result; Zig: .gitignore ignores .zig-cache/; .gitignore ignores zig-out/",
+      "status": "PASS"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "warnings are not treated as errors in CI configuration",
+      "status": "FAIL"
+    }
+  ],
+  "commit": "37a0d59803419dda5f97133cbc8fe6c68098386d",
+  "evaluated": "2026-11-28T11:51:19Z",
+  "kind": "tool",
+  "language": "Zig",
+  "lines": 38771,
+  "name": "zigtools/zls",
+  "score": {
+    "base": 55.42,
+    "breakdown": {
+      "": [
+        5.5,
+        8
+      ],
+      "JSON Schema": [
+        1,
+        5
+      ],
+      "Nix": [
+        0.1,
+        0.7
+      ],
+      "Zig": [
+        5.89,
+        8.83
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-build-types",
+        "ecosystem": "Zig",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9813926332089458
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "JSON Schema",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Nix",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Zig",
+        "extra": 0,
+        "filled": 0.9813926332089458,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "zig fmt"
+        ],
+        "unit": ".",
+        "weight": 0.9813926332089458
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Nix",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Zig",
+        "extra": 0,
+        "filled": 0.9813926332089458,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "kcov"
+        ],
+        "unit": ".",
+        "weight": 0.9813926332089458
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "Zig",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9813926332089458
+      },
+      {
+        "check": "fuzz-testing",
+        "ecosystem": "Zig",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 3,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9813926332089458
+      },
+      {
+        "check": "hardening",
+        "ecosystem": "Zig",
+        "extra": 0,
+        "filled": 0.9813926332089458,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9813926332089458
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "Nix",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "Zig",
+        "extra": 0,
+        "filled": 0.9813926332089458,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9813926332089458
+      },
+      {
+        "check": "schema-compatibility",
+        "ecosystem": "JSON Schema",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "schema-declared",
+        "ecosystem": "JSON Schema",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "schema-examples",
+        "ecosystem": "JSON Schema",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "schema-validation",
+        "ecosystem": "JSON Schema",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Nix",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Nix",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Zig",
+        "extra": 0,
+        "filled": 0.9813926332089458,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "zig build test"
+        ],
+        "unit": ".",
+        "weight": 0.9813926332089458
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Nix",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Zig",
+        "extra": 0,
+        "filled": 0.9813926332089458,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9813926332089458
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "Nix",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      }
+    ],
+    "extra": 0.0,
+    "filled": 12.49,
+    "held": 0.0,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "JSON Schema",
+        "hint": "consider a CI job that runs prettier --check . (or biome format . (or biome ci .))",
+        "level": 1,
+        "message": "CI never runs prettier or biome; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 4.44,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "Nix",
+        "hint": "consider a CI job that runs nixfmt --check . (or alejandra --check . or nix fmt -- --check .)",
+        "level": 1,
+        "message": "CI never runs nixfmt, alejandra or nix fmt; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 0.44,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Nix",
+        "hint": "",
+        "level": 1,
+        "message": "no Nix lints found; enable at least statix, deadnix",
+        "needed_for": 1,
+        "points": 0.44,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "Nix",
+        "hint": "",
+        "level": 1,
+        "message": "no tests found (flake checks (a checks output in flake.nix))",
+        "needed_for": 1,
+        "points": 0.44,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "Nix",
+        "hint": "run statix check (which fails on any finding) and deadnix --fail in CI",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration",
+        "needed_for": 1,
+        "points": 0.44,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Nix",
+        "hint": "consider running statix check . or deadnix --fail . in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 0.44,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "fuzz-testing",
+        "completes": false,
+        "ecosystem": "Zig",
+        "hint": "consider adding zig build test --fuzz (or a fuzz step: zig build fuzz)",
+        "level": 3,
+        "message": "no fuzz targets found (std.testing.fuzz tests (or a fuzz step in build.zig))",
+        "needed_for": null,
+        "points": 4.36,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "schema-declared",
+        "completes": false,
+        "ecosystem": "JSON Schema",
+        "hint": "",
+        "level": 4,
+        "message": "1 JSON Schema file does not declare its dialect ($schema) and $id",
+        "needed_for": null,
+        "points": 4.44,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "schema-validation",
+        "completes": false,
+        "ecosystem": "JSON Schema",
+        "hint": "consider running in CI: check-jsonschema --schemafile <schema> <documents>, ajv validate -s <schema> -d <documents> (ajv-cli), jsonschema -i <document> <schema> or jv <schema> <documents>",
+        "level": 4,
+        "message": "no schema validation found in CI configuration",
+        "needed_for": null,
+        "points": 4.44,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-build-types",
+        "completes": false,
+        "ecosystem": "Zig",
+        "hint": "",
+        "level": 4,
+        "message": "4 of 4 OS/Zig version combination(s) do not build Debug and Release, each with and without sanitizers",
+        "needed_for": null,
+        "points": 4.36,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "Zig",
+        "hint": "consider running in CI: lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 4.36,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-lint",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "",
+        "level": 4,
+        "message": "CI does not lint its GitHub Actions configuration",
+        "needed_for": null,
+        "points": 2.22,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 2.22,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "dependency-updates",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)",
+        "level": 4,
+        "message": "no automated dependency updates configured",
+        "needed_for": null,
+        "points": 2.22,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "schema-compatibility",
+        "completes": false,
+        "ecosystem": "JSON Schema",
+        "hint": "consider running in CI: json-schema-diff <main branch's schema> <schema>",
+        "level": 4,
+        "message": "no check for breaking schema changes found in CI configuration",
+        "needed_for": null,
+        "points": 2.22,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "schema-examples",
+        "completes": false,
+        "ecosystem": "JSON Schema",
+        "hint": "consider running in CI: check-jsonschema --schemafile <schema> examples/valid/*.json, ajv test -s <schema> -d 'examples/valid/*.json' --valid (and -d 'examples/invalid/*.json' --invalid), jsonschema -i examples/valid/<document> <schema> or jv <schema> examples/valid/*.json",
+        "level": 4,
+        "message": "no check of the schemas' examples found in CI configuration",
+        "needed_for": null,
+        "points": 2.22,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 2.22,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "security-policy",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)",
+        "level": 4,
+        "message": "no security policy",
+        "needed_for": null,
+        "points": 2.22,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "platform-matrix",
+        "completes": false,
+        "ecosystem": "Nix",
+        "hint": "",
+        "level": 4,
+        "message": "CI covers 0 OS(es) (none), 0 system(s) (none), 0 combination(s); expected at least 2 operating systems (found 0), at least 2 systems (found 0), at least 3 OS/system combinations (found 0)",
+        "needed_for": null,
+        "points": 0.44,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      }
+    ],
+    "percent": 55.42,
+    "slots": 22.53,
+    "summary": "55% · Level 0 Getting started · 17 of 29 gates in place",
+    "units": {
+      "": [
+        5.5,
+        8
+      ],
+      ".": [
+        6.99,
+        14.53
+      ]
+    },
+    "version": "5"
+  },
+  "seed": true,
+  "unknowns": 0,
+  "validator": "6256506545c84c82e19c816a37fbb2cffb8e4fec"
+}

@@ -1,0 +1,809 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "all 46 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "not applicable to JavaScript, Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI lints its configuration (GitHub Actions: actionlint, zizmor)",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": "JavaScript: .prettierrc.json is defined and CI runs prettier; Python: pyproject.toml is defined and CI runs ruff format",
+      "status": "PASS"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "not applicable to JavaScript, Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "not applicable to JavaScript, Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "JavaScript: strict JavaScript linters are enabled: eslint; Python: strict Python warning settings are enabled: warnings as errors",
+      "status": "PASS"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "CI runs copy-paste detection with jscpd",
+      "status": "PASS"
+    },
+    {
+      "check": "coverage",
+      "message": "JavaScript: branch coverage is gated with c8; Python: branch coverage is gated with coverage.py",
+      "status": "PASS"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "JSON: 7 JSON files parse; TOML: 2 TOML files parse; YAML: 14 YAML files parse",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "JavaScript: CI audits the dependencies with npm audit; Python: CI audits the dependencies with pip-audit",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-management",
+      "message": "JavaScript: dependencies are declared in package.json (npm packages) and locked in package-lock.json; Python: dependencies are declared in pyproject.toml (Python packages) and locked in .github/requirements/audit.txt, .github/requirements/ci-lint.txt, .github/requirements/coverage.txt and 8 more",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    {
+      "check": "file-soundness",
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
+    {
+      "check": "function-limits",
+      "message": "function length is limited with lizard",
+      "status": "PASS"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "JavaScript: fuzz targets in 1 file(s), run by Jazzer.js; Python: fuzz targets in 6 file(s), run by atheris",
+      "status": "PASS"
+    },
+    {
+      "check": "hardening",
+      "message": "not applicable to JavaScript, Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under Unlicense",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "CI checks the documentation's links with lychee",
+      "status": "PASS"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to JavaScript, Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "JavaScript: StrykerJS (stryker.config.json) runs; on the pull request's changes only (bonus); Python: mutmut (pyproject.toml) runs; on the pull request's changes only (bonus)",
+      "status": "PASS"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "not applicable to JavaScript, Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "JavaScript: CI covers 3 browser engine(s) (Chromium, Firefox, WebKit), whatever the OS; Python: CI covers 3 OS(es) (linux, macos, windows), 3 Python version(s) (3.12, 3.14, 3.x), 7 combination(s)",
+      "status": "PASS"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "not applicable to JavaScript, Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "not applicable to JavaScript, Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-declared",
+      "message": "not applicable to JavaScript, Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-examples",
+      "message": "not applicable to JavaScript, Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-validation",
+      "message": "not applicable to JavaScript, Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "secrets are scanned for with TruffleHog",
+      "status": "PASS"
+    },
+    {
+      "check": "security-policy",
+      "message": "SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    {
+      "check": "security-scanning",
+      "message": "JavaScript: CI scans the code for security problems with eslint-plugin-security; Python: CI scans the code for security problems with ruff's bandit rules",
+      "status": "PASS"
+    },
+    {
+      "check": "static-analysis",
+      "message": "Documentation site: markdownlint (.markdownlint-cli2.yaml) runs; JavaScript: eslint (eslint.config.mjs) runs; Python: ruff check (pyproject.toml) runs",
+      "status": "PASS"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    {
+      "check": "tests-run",
+      "message": "JavaScript: *.test.*, *.spec.*, __tests__/ or test/ files: 5 file(s), run by a JavaScript test runner; Python: test_*.py, *_test.py or tests/*_tests.py files: 210 file(s), run by pytest and unittest",
+      "status": "PASS"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "not applicable to JavaScript, Python",
+      "status": "SKIP"
+    },
+    {
+      "check": "type-checking",
+      "message": "mypy (pyproject.toml) runs; strict mode bonus: mypy (pyproject.toml)",
+      "status": "PASS"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": "JavaScript: .gitignore ignores node_modules/; Python: .gitignore ignores __pycache__/",
+      "status": "PASS"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "warnings are treated as errors with eslint --max-warnings 0",
+      "status": "PASS"
+    }
+  ],
+  "commit": "6256506545c84c82e19c816a37fbb2cffb8e4fec",
+  "evaluated": "2026-11-28T11:50:59Z",
+  "kind": "tool",
+  "language": "Python",
+  "lines": 52086,
+  "name": "cpp-best-practices/project_validator",
+  "score": {
+    "base": 100.0,
+    "breakdown": {
+      "": [
+        8,
+        8
+      ],
+      "Documentation site": [
+        2,
+        2
+      ],
+      "JavaScript": [
+        1.4,
+        1.4
+      ],
+      "Python": [
+        12.18,
+        12.18
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "prettier"
+        ],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.8698190014802852,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "ruff format"
+        ],
+        "unit": ".",
+        "weight": 0.8698190014802852
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.8698190014802852,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8698190014802852
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "c8"
+        ],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.8698190014802852,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "coverage.py"
+        ],
+        "unit": ".",
+        "weight": 0.8698190014802852
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "npm audit"
+        ],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.8698190014802852,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "pip-audit"
+        ],
+        "unit": ".",
+        "weight": 0.8698190014802852
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.8698190014802852,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8698190014802852
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "eslint's max-lines-per-function",
+          "lizard"
+        ],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.8698190014802852,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "lizard"
+        ],
+        "unit": ".",
+        "weight": 0.8698190014802852
+      },
+      {
+        "check": "fuzz-testing",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "Jazzer.js"
+        ],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "fuzz-testing",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.8698190014802852,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "atheris"
+        ],
+        "unit": ".",
+        "weight": 0.8698190014802852
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "link-check",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "lychee"
+        ],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "StrykerJS"
+        ],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.8698190014802852,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "mutmut"
+        ],
+        "unit": ".",
+        "weight": 0.8698190014802852
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.8698190014802852,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8698190014802852
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "eslint-plugin-security"
+        ],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.8698190014802852,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "ruff's bandit rules"
+        ],
+        "unit": ".",
+        "weight": 0.8698190014802852
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "markdownlint"
+        ],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "eslint"
+        ],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.8698190014802852,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1.0,
+        "tier": "core",
+        "tools": [
+          "ruff check"
+        ],
+        "unit": ".",
+        "weight": 0.8698190014802852
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "a JavaScript test runner"
+        ],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.8698190014802852,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "pytest",
+          "unittest"
+        ],
+        "unit": ".",
+        "weight": 0.8698190014802852
+      },
+      {
+        "check": "type-checking",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.8698190014802852,
+        "level": 2,
+        "status": "PASS",
+        "strength": 0.99,
+        "tier": "core",
+        "tools": [
+          "mypy"
+        ],
+        "unit": ".",
+        "weight": 0.8698190014802852
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.8698190014802852,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.8698190014802852
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.1,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      }
+    ],
+    "extra": 0.0,
+    "filled": 23.58,
+    "held": 0.0,
+    "level": 4,
+    "level_name": "Complete",
+    "next_steps": [],
+    "percent": 100.0,
+    "slots": 23.58,
+    "summary": "100% · Level 4 Complete · all 38 gates in place",
+    "units": {
+      "": [
+        8,
+        8
+      ],
+      ".": [
+        15.58,
+        15.58
+      ]
+    },
+    "version": "5"
+  },
+  "seed": false,
+  "unknowns": 0,
+  "validator": "6256506545c84c82e19c816a37fbb2cffb8e4fec"
+}

@@ -1,0 +1,619 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "87 of 87 actions are pinned to a tag rather than a commit",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI does not lint its GitHub Actions configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": "CI enforces the shfmt style",
+      "status": "PASS"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "compile-commands",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "strict shell lints are enabled: shellcheck",
+      "status": "PASS"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "no line coverage measurement found in what CI runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "Data: 34 YAML files parse; Docker: 1 Dockerfile file parses",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "dependency-management",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    {
+      "check": "file-soundness",
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
+    {
+      "check": "function-limits",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "hardening",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under GPL-3.0",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-declared",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-examples",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-validation",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    {
+      "check": "security-scanning",
+      "message": "no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "static-analysis",
+      "message": "Docker: no static analyzer runs; Shell: shellcheck runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows a CI badge (GitHub Actions) but no quality badge",
+      "status": "WARN"
+    },
+    {
+      "check": "tests-run",
+      "message": "no tests found (bats tests (*.bats), zunit tests (*.zunit), urchin tests (shell scripts without a suffix under test/), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
+      "status": "FAIL"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "type-checking",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": "not applicable to Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "warnings are treated as errors with shellcheck, which fails on any finding",
+      "status": "PASS"
+    }
+  ],
+  "commit": "5567d7fe7298fd37aca53194885ba444c6678669",
+  "evaluated": "2026-11-27T12:26:49Z",
+  "kind": "tool",
+  "language": "Shell",
+  "lines": 69880,
+  "name": "acmesh-official/acme.sh",
+  "score": {
+    "base": 63.57,
+    "breakdown": {
+      "": [
+        5,
+        8
+      ],
+      "Docker": [
+        0.1,
+        0.3
+      ],
+      "Shell": [
+        3.78,
+        5.68
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 3,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.9460502267650444,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "shfmt"
+        ],
+        "unit": ".",
+        "weight": 0.9460502267650444
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.9460502267650444,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9460502267650444
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9460502267650444
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "Docker",
+        "extra": 0,
+        "filled": 0.05,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "Docker",
+        "extra": 0,
+        "filled": 0.05,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Docker",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.9460502267650444,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "shellcheck"
+        ],
+        "unit": ".",
+        "weight": 0.9460502267650444
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9460502267650444
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.9460502267650444,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9460502267650444
+      }
+    ],
+    "extra": 0.0,
+    "filled": 8.88,
+    "held": 0.0,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "tests-run",
+        "completes": true,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 1,
+        "message": "no tests found (bats tests (*.bats), zunit tests (*.zunit), urchin tests (shell scripts without a suffix under test/), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
+        "needed_for": 1,
+        "points": 6.77,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 2,
+        "message": "no line coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 6.77,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Docker",
+        "hint": "consider running hadolint Dockerfile (or hadolint/hadolint-action), checkov -d ., trivy config . or kics scan -p . in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 0.72,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "Docker",
+        "hint": "consider running in CI: trivy image <image> (or aquasecurity/trivy-action, which scans an image unless told otherwise), grype <image> (or anchore/scan-action) or docker scout cves <image> (or docker/scout-action)",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 0.36,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "action-pinning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "pin each action to the full commit of its release, e.g. actions/checkout@<40-character SHA> # v4.2.2; Dependabot and Renovate keep such pins up to date",
+        "level": 3,
+        "message": "87 of 87 actions are pinned to a tag rather than a commit",
+        "needed_for": null,
+        "points": 3.58,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "Docker",
+        "hint": "consider running in CI: hadolint Dockerfile (its security rules: a non-root USER, pinned versions), checkov -d ., trivy config . or kics scan -p .",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 0.36,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-lint",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "",
+        "level": 4,
+        "message": "CI does not lint its GitHub Actions configuration",
+        "needed_for": null,
+        "points": 3.58,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 3.58,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "dependency-updates",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)",
+        "level": 4,
+        "message": "no automated dependency updates configured",
+        "needed_for": null,
+        "points": 3.58,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 3.58,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "security-policy",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)",
+        "level": 4,
+        "message": "no security policy",
+        "needed_for": null,
+        "points": 3.58,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      }
+    ],
+    "percent": 63.57,
+    "slots": 13.98,
+    "summary": "63% · Level 0 Getting started · 14 of 17 gates in place",
+    "units": {
+      "": [
+        5,
+        8
+      ],
+      ".": [
+        3.88,
+        5.98
+      ]
+    },
+    "version": "3"
+  },
+  "seed": true,
+  "unknowns": 5,
+  "validator": "f484d7b15d7a40db5bde6b087ebd2dac289c962e"
+}

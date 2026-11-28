@@ -1,0 +1,897 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "22 of 22 actions are not pinned to a commit",
+      "status": "FAIL"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "all 6 OS/compiler combination(s) build Debug and Release, each with and without sanitizers",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI does not lint its GitHub Actions, GitLab CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for GitHub Actions, GitLab CI",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": "CMake: .cmake-format.yaml is defined but CI does not run gersemi or cmake-format; C++: .clang-format is defined and CI runs clang-format",
+      "status": "WARN"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "compile_commands.json is exported with set(CMAKE_EXPORT_COMPILE_COMMANDS ON)",
+      "status": "PASS"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "C++ compiler extensions are disabled with set(CMAKE_CXX_EXTENSIONS OFF)",
+      "status": "PASS"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "strict compiler warning flags are enabled: -Wall -Wextra -Wpedantic -Wshadow -Wconversion for clang and gcc; /W4 /permissive- for msvc",
+      "status": "PASS"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "branch coverage is reported with gcovr",
+      "status": "PASS"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "Data: JSON: 2 JSON files parse; YAML: 10 YAML files parse; Docker: 1 Dockerfile file parses",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "dependency-management",
+      "message": "dependencies are declared in Dependencies.cmake, cmake/Doxygen.cmake, cmake/PackageProject.cmake (CPM, FetchContent)",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    {
+      "check": "file-soundness",
+      "message": "the project holds no binary or asset files (images, PDFs, fonts, media, archives)",
+      "status": "SKIP"
+    },
+    {
+      "check": "function-limits",
+      "message": "CI runs clang-tidy, but its readability-function-size rule is off or has no limit; set readability-function-size with a LineThreshold or StatementThreshold in .clang-tidy",
+      "status": "FAIL"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "fuzz targets in 1 file(s), run by CTest (fuzz_test/CMakeLists.txt): fuzz_tester_run",
+      "status": "PASS"
+    },
+    {
+      "check": "hardening",
+      "message": "hardening options are enabled: _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, _GLIBCXX_ASSERTIONS or _LIBCPP_HARDENING_MODE for clang and gcc; /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT for msvc",
+      "status": "PASS"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under Unlicense",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "no mutation testing runs",
+      "status": "WARN"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "in-source builds are prevented by a check that the source and binary directories differ",
+      "status": "PASS"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "CI covers 3 OS(es) (linux, macos, windows), 3 compiler(s) (clang, gcc, msvc), 6 combination(s)",
+      "status": "PASS"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "sanitizers are enabled: AddressSanitizer, UndefinedBehaviorSanitizer",
+      "status": "PASS"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-declared",
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-examples",
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-validation",
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    {
+      "check": "security-scanning",
+      "message": "C++: CI scans the code for security problems with CodeQL; Docker: no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "static-analysis",
+      "message": "CMake: cmake-lint is configured (.cmake-format.yaml) but does not run; C++: clang-tidy (.clang-tidy) and cppcheck run; Docker: no static analyzer runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows CI (GitHub Actions) and quality (Codecov) badges",
+      "status": "PASS"
+    },
+    {
+      "check": "tests-run",
+      "message": "tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call): 2 file(s), run by ctest",
+      "status": "PASS"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "developer-only settings are guarded by PROJECT_IS_TOP_LEVEL",
+      "status": "PASS"
+    },
+    {
+      "check": "type-checking",
+      "message": "not applicable to C++",
+      "status": "SKIP"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": ".gitignore ignores build/",
+      "status": "PASS"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "CMake: warnings are not treated as errors in CI configuration and CMakePresets.json; C++: warnings are treated as errors with -Werror, /WX",
+      "status": "FAIL"
+    }
+  ],
+  "commit": "c1b9b34934afa5759249a25f0b9bc441a7bf5b16",
+  "evaluated": "2026-11-28T11:49:50Z",
+  "kind": "tool",
+  "language": "C++",
+  "lines": 402,
+  "name": "cpp-best-practices/cmake_template",
+  "score": {
+    "base": 63.63,
+    "breakdown": {
+      "": [
+        5,
+        8
+      ],
+      "C++": [
+        2.16,
+        2.34
+      ],
+      "CMake": [
+        0.54,
+        1.63
+      ],
+      "Docker": [
+        0.1,
+        0.3
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 3,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-build-types",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "CMake",
+        "extra": 0,
+        "filled": 0.27165697674418604,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5433139534883721
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "clang-format"
+        ],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "compile-commands",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "compiler-extensions",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "gcovr",
+          "OpenCppCoverage"
+        ],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "Docker",
+        "extra": 0,
+        "filled": 0.05,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "clang-tidy's readability-function-size"
+        ],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "fuzz-testing",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "hardening",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.05843023255813953,
+        "level": 3,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "out-of-source-build",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "sanitizers",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "CodeQL"
+        ],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "Docker",
+        "extra": 0,
+        "filled": 0.05,
+        "level": 3,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "CMake",
+        "extra": 0,
+        "filled": 0.27165697674418604,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5433139534883721
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "C++",
+        "extra": 0.03,
+        "filled": 0.11686046511627907,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "clang-tidy",
+          "cppcheck"
+        ],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Docker",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "ctest"
+        ],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "top-level-guard",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "CMake",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5433139534883721
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "C++",
+        "extra": 0,
+        "filled": 0.11686046511627907,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.11686046511627907
+      }
+    ],
+    "extra": 0.0,
+    "filled": 7.81,
+    "held": 0.22,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "CMake",
+        "hint": "",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration and CMakePresets.json",
+        "needed_for": 1,
+        "points": 4.43,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "CMake",
+        "hint": "consider a CI job that runs gersemi --check . (or cmake-format --check CMakeLists.txt)",
+        "level": 1,
+        "message": ".cmake-format.yaml is defined but CI does not run gersemi or cmake-format",
+        "needed_for": 1,
+        "points": 2.21,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "CMake",
+        "hint": "consider running cmake-lint CMakeLists.txt or cmakelint CMakeLists.txt in CI",
+        "level": 2,
+        "message": "cmake-lint is configured (.cmake-format.yaml) but does not run",
+        "needed_for": null,
+        "points": 2.21,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Docker",
+        "hint": "consider running hadolint Dockerfile (or hadolint/hadolint-action), checkov -d ., trivy config . or kics scan -p . in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 0.82,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "Docker",
+        "hint": "consider running in CI: trivy image <image> (or aquasecurity/trivy-action, which scans an image unless told otherwise), grype <image> (or anchore/scan-action) or docker scout cves <image> (or docker/scout-action)",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 0.41,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "action-pinning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "pin each action to the full commit of its release, e.g. actions/checkout@<40-character SHA> # v4.2.2; Dependabot and Renovate keep such pins up to date",
+        "level": 3,
+        "message": "22 of 22 actions are not pinned to a commit",
+        "needed_for": null,
+        "points": 8.15,
+        "status": "FAIL",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "mutation-testing",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "consider running mull-runner or dextool mutate in CI",
+        "level": 3,
+        "message": "no mutation testing runs",
+        "needed_for": null,
+        "points": 0.48,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "Docker",
+        "hint": "consider running in CI: hadolint Dockerfile (its security rules: a non-root USER, pinned versions), checkov -d ., trivy config . or kics scan -p .",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 0.41,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-lint",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "",
+        "level": 4,
+        "message": "CI does not lint its GitHub Actions, GitLab CI configuration",
+        "needed_for": null,
+        "points": 4.08,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 4.08,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 4.08,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "security-policy",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)",
+        "level": 4,
+        "message": "no security policy",
+        "needed_for": null,
+        "points": 4.08,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "C++",
+        "hint": "",
+        "level": 4,
+        "message": "CI runs clang-tidy, but its readability-function-size rule is off or has no limit; set readability-function-size with a LineThreshold or StatementThreshold in .clang-tidy",
+        "needed_for": null,
+        "points": 0.95,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      }
+    ],
+    "percent": 63.63,
+    "slots": 12.27,
+    "summary": "63% · Level 0 Getting started · 30 of 34 gates in place (+0.2 extra credit held until every gate is in place)",
+    "units": {
+      "": [
+        5,
+        8
+      ],
+      ".": [
+        2.81,
+        4.27
+      ]
+    },
+    "version": "5"
+  },
+  "seed": false,
+  "unknowns": 0,
+  "validator": "6256506545c84c82e19c816a37fbb2cffb8e4fec"
+}

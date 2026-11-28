@@ -1,0 +1,850 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "all 18 actions are pinned to a commit",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI lints its configuration (GitHub Actions: zizmor)",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": ".php-cs-fixer.php is defined but CI does not run PHP-CS-Fixer, PHP_CodeSniffer or Pint",
+      "status": "WARN"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "no PHP error reporting settings found; enable at least error_reporting = E_ALL",
+      "status": "FAIL"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "no branch coverage measurement found in what CI runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "Data: JSON: 1 JSON file parses; XML: 1 XML file parses; YAML: 9 YAML files parse; File formats: ICO: 1 ICO file parses; INI: 1 INI file parses; PNG: 1 PNG file parses",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "dependency-management",
+      "message": "dependencies are declared in composer.json (Composer)",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    {
+      "check": "file-soundness",
+      "message": "no tool checks the image files (favicon.ico, logo.png)",
+      "status": "WARN"
+    },
+    {
+      "check": "function-limits",
+      "message": "function length is never limited",
+      "status": "FAIL"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
+    {
+      "check": "hardening",
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under MIT",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "no link check found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "no mutation testing runs",
+      "status": "WARN"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "CI covers 1 OS(es) (linux), 6 PHP version(s) (8.1, 8.2, 8.3, 8.4, 8.5, 8.6), 6 combination(s); expected at least 2 operating systems (found 1)",
+      "status": "FAIL"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-declared",
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-examples",
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-validation",
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": ".github/SECURITY.md says how to report a vulnerability",
+      "status": "PASS"
+    },
+    {
+      "check": "security-scanning",
+      "message": "CI scans the code for security problems with Psalm taint analysis",
+      "status": "PASS"
+    },
+    {
+      "check": "static-analysis",
+      "message": "Documentation site: no static analyzer runs; PHP: PHPStan (phpstan.neon.dist) and Psalm (psalm.xml.dist) run",
+      "status": "WARN"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows a CI badge (GitHub Actions) but no quality badge",
+      "status": "WARN"
+    },
+    {
+      "check": "tests-run",
+      "message": "Documentation site: the Jekyll site's configuration: 1 file(s), but no CI configuration runs jekyll build (bundle exec jekyll build); PHP: *Test.php files with PHPUnit test cases or Pest tests: 98 file(s), run by phpunit, pest or composer test",
+      "status": "WARN"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "not applicable to PHP",
+      "status": "SKIP"
+    },
+    {
+      "check": "type-checking",
+      "message": "PHPStan (phpstan.neon.dist) and Psalm (psalm.xml.dist) run; strict mode bonus: PHPStan (phpstan.neon.dist), Psalm (psalm.xml.dist)",
+      "status": "PASS"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": "Documentation site: .gitignore does not ignore the Jekyll site _site/; .gitignore does not ignore the Jekyll site .jekyll-cache/; PHP: .gitignore ignores vendor",
+      "status": "WARN"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "Documentation site: warnings are not treated as errors in CI configuration; PHP: warnings are not treated as errors in phpunit.xml, CI configuration or the Composer scripts it runs",
+      "status": "FAIL"
+    }
+  ],
+  "commit": "6d4cf3a1199b8fa9e38fdb540569579354242fc7",
+  "evaluated": "2026-11-28T11:50:44Z",
+  "kind": "library",
+  "language": "PHP",
+  "lines": 16426,
+  "name": "Seldaek/monolog",
+  "score": {
+    "base": 62.96,
+    "breakdown": {
+      "": [
+        7.5,
+        9
+      ],
+      "Documentation site": [
+        2.5,
+        5
+      ],
+      "PHP": [
+        6.76,
+        12.62
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "PHP",
+        "extra": 0,
+        "filled": 0.45089212187757344,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9017842437551469
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "PHP",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9017842437551469
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "PHP",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9017842437551469
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "PHP",
+        "extra": 0,
+        "filled": 0.45089212187757344,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9017842437551469
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "PHP",
+        "extra": 0,
+        "filled": 0.9017842437551469,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9017842437551469
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "file-soundness",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "PHP",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9017842437551469
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "link-check",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "PHP",
+        "extra": 0,
+        "filled": 0.45089212187757344,
+        "level": 3,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9017842437551469
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "PHP",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9017842437551469
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "PHP",
+        "extra": 0,
+        "filled": 0.9017842437551469,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "Psalm taint analysis"
+        ],
+        "unit": ".",
+        "weight": 0.9017842437551469
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "PHP",
+        "extra": 0.22,
+        "filled": 0.9017842437551469,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "PHPStan",
+          "Psalm"
+        ],
+        "unit": ".",
+        "weight": 0.9017842437551469
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "PHP",
+        "extra": 0,
+        "filled": 0.9017842437551469,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "phpunit, pest or composer test"
+        ],
+        "unit": ".",
+        "weight": 0.9017842437551469
+      },
+      {
+        "check": "type-checking",
+        "ecosystem": "PHP",
+        "extra": 0.22,
+        "filled": 0.9017842437551469,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "PHPStan",
+          "Psalm"
+        ],
+        "unit": ".",
+        "weight": 0.9017842437551469
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "PHP",
+        "extra": 0,
+        "filled": 0.9017842437551469,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9017842437551469
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "PHP",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.9017842437551469
+      }
+    ],
+    "extra": 0.0,
+    "filled": 16.76,
+    "held": 1.69,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "PHP",
+        "hint": "",
+        "level": 1,
+        "message": "no PHP error reporting settings found; enable at least error_reporting = E_ALL",
+        "needed_for": 1,
+        "points": 3.39,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "PHP",
+        "hint": "set failOnWarning=\"true\", failOnNotice=\"true\" and failOnDeprecation=\"true\" in phpunit.xml",
+        "level": 1,
+        "message": "warnings are not treated as errors in phpunit.xml, CI configuration or the Composer scripts it runs",
+        "needed_for": 1,
+        "points": 3.39,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "Documentation site",
+        "hint": "",
+        "level": 1,
+        "message": "the Jekyll site's configuration: 1 file(s), but no CI configuration runs jekyll build (bundle exec jekyll build)",
+        "needed_for": 1,
+        "points": 1.88,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "vcs-ignore",
+        "completes": false,
+        "ecosystem": "Documentation site",
+        "hint": "consider ignoring _site/",
+        "level": 1,
+        "message": ".gitignore does not ignore the Jekyll site _site/; .gitignore does not ignore the Jekyll site .jekyll-cache/",
+        "needed_for": 1,
+        "points": 1.88,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "Documentation site",
+        "hint": "",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration",
+        "needed_for": 1,
+        "points": 1.88,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "PHP",
+        "hint": "consider a CI job that runs php-cs-fixer check (or phpcs or pint --test)",
+        "level": 1,
+        "message": ".php-cs-fixer.php is defined but CI does not run PHP-CS-Fixer, PHP_CodeSniffer or Pint",
+        "needed_for": 1,
+        "points": 1.69,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "PHP",
+        "hint": "",
+        "level": 2,
+        "message": "no branch coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 3.39,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Documentation site",
+        "hint": "consider running markdownlint-cli2 (or DavidAnson/markdownlint-cli2-action) or vale docs (or errata-ai/vale-action) in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 1.88,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "PHP",
+        "hint": "consider running in CI: composer audit, requiring roave/security-advisories, GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 1.69,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "mutation-testing",
+        "completes": false,
+        "ecosystem": "PHP",
+        "hint": "consider running vendor/bin/infection in CI",
+        "level": 3,
+        "message": "no mutation testing runs",
+        "needed_for": null,
+        "points": 1.69,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "PHP",
+        "hint": "consider running in CI: phpmd with its codesize rules (ExcessiveMethodLength) or lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 3.39,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "platform-matrix",
+        "completes": false,
+        "ecosystem": "PHP",
+        "hint": "",
+        "level": 4,
+        "message": "CI covers 1 OS(es) (linux), 6 PHP version(s) (8.1, 8.2, 8.3, 8.4, 8.5, 8.6), 6 combination(s); expected at least 2 operating systems (found 1)",
+        "needed_for": null,
+        "points": 3.39,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 1.88,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "file-soundness",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "run ClamAV (clamscan -r .) over the repository, or a tool that decodes each kind of file (magick identify -regard-warnings, pngcheck, qpdf --check, fontbakery, ffprobe -v error, gltf_validator)",
+        "level": 4,
+        "message": "no tool checks the image files (favicon.ico, logo.png)",
+        "needed_for": null,
+        "points": 1.88,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "link-check",
+        "completes": false,
+        "ecosystem": "Documentation site",
+        "hint": "consider running in CI: lychee --no-progress 'docs/**/*.md' (or lycheeverse/lychee-action), markdown-link-check docs/*.md (or gaurav-nelson/github-action-markdown-link-check), linkinator site --recurse, muffet http://localhost:8000 (the served site), htmltest site, htmlproofer ./_site or linkchecker site/index.html",
+        "level": 4,
+        "message": "no link check found in CI configuration",
+        "needed_for": null,
+        "points": 1.88,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.88,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      }
+    ],
+    "percent": 62.96,
+    "slots": 26.62,
+    "summary": "62% · Level 0 Getting started · 23 of 28 gates in place (+1 extra credit held until every gate is in place)",
+    "units": {
+      "": [
+        7.5,
+        9
+      ],
+      ".": [
+        9.26,
+        17.62
+      ]
+    },
+    "version": "5"
+  },
+  "seed": true,
+  "unknowns": 0,
+  "validator": "6256506545c84c82e19c816a37fbb2cffb8e4fec"
+}

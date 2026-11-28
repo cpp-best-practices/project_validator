@@ -1,0 +1,1576 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "17 of 17 actions are not pinned to a commit",
+      "status": "FAIL"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "3 of 4 OS/compiler combination(s) do not build Debug and Release, each with and without sanitizers",
+      "status": "FAIL"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-lint",
+      "message": "CI does not lint its GitHub Actions configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "ci-present",
+      "message": "CI configuration found for GitHub Actions",
+      "status": "PASS"
+    },
+    {
+      "check": "code-formatting",
+      "message": "C: .clang-format is defined but CI does not run clang-format; CMake: .cmake-format.yaml is defined but CI does not run gersemi or cmake-format; JavaScript (auxiliary: only in docs code, only in tooling code): the root (auxiliary: only in tooling code): CI never runs prettier, deno fmt, oxfmt, dprint or biome; its formatting is not enforced; website (auxiliary: only in docs code): CI enforces the prettier style; Shell (auxiliary: only in tooling code): CI never runs shfmt; its formatting is not enforced; TypeScript (auxiliary: only in docs code): CI enforces the prettier style",
+      "status": "WARN"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "compile_commands.json is exported with set(CMAKE_EXPORT_COMPILE_COMMANDS ON)",
+      "status": "PASS"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "C compiler extensions are never disabled",
+      "status": "FAIL"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "C: missing compiler warning flags: -Wextra, -Wpedantic, -Wshadow, -Wconversion for appleclang and clang and gcc; /W4, /permissive- for msvc; JavaScript (auxiliary: only in docs code, only in tooling code): no JavaScript linters found; enable at least eslint; Shell (auxiliary: only in tooling code): PowerShell (auxiliary: only in tooling code): no PowerShell lints found; enable at least PSScriptAnalyzer; Shell (auxiliary: only in tooling code): no shell lints found; enable at least shellcheck; TypeScript (auxiliary: only in docs code): no JavaScript linters found; enable at least eslint",
+      "status": "WARN"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "C: branch coverage is reported with lcov; JavaScript (auxiliary: only in tooling code): no branch coverage measurement found in what CI runs; Shell (auxiliary: only in tooling code): PowerShell (auxiliary: only in tooling code): no statement coverage measurement found in what CI runs; Shell (auxiliary: only in tooling code): no line coverage measurement found in what CI runs",
+      "status": "WARN"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "Data: JSON in website: 3 JSON files parse; YAML in the root: 12 YAML files parse; File formats (auxiliary: only in docs code): GIF (auxiliary: only in docs code): 1 GIF file parses; ICO (auxiliary: only in docs code): 1 ICO file parses; PNG (auxiliary: only in docs code): 17 PNG files parse; SVG (auxiliary: only in docs code): 4 SVG files parse",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "JavaScript (auxiliary: only in tooling code): no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "dependency-management",
+      "message": "C: no dependencies are declared; JavaScript (auxiliary: only in tooling code): no dependencies are declared",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "automated dependency updates are configured with Dependabot",
+      "status": "PASS"
+    },
+    {
+      "check": "file-soundness",
+      "message": "no tool checks the image files (website/static/favicon.ico, website/static/images/ca_compact_6_901.png, website/static/images/ca_uncompact_6_10633.png and 16 more)",
+      "status": "WARN"
+    },
+    {
+      "check": "function-limits",
+      "message": "C: CI runs clang-tidy, but its readability-function-size rule is off or has no limit; set readability-function-size with a LineThreshold or StatementThreshold in .clang-tidy; JavaScript (auxiliary: only in docs code, only in tooling code): the root (auxiliary: only in tooling code): function length is never limited; website (auxiliary: only in docs code): function length is never limited; TypeScript (auxiliary: only in docs code): function length is never limited",
+      "status": "FAIL"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "C: fuzz targets in 24 file(s), run by libFuzzer and CIFuzz (.github/workflows/cifuzz.yml); JavaScript (auxiliary: only in tooling code): CI runs CIFuzz (.github/workflows/cifuzz.yml), but no fuzz targets were recognised (Jazzer.js fuzz targets (an exported fuzz function or .fuzz()))",
+      "status": "WARN"
+    },
+    {
+      "check": "hardening",
+      "message": "no hardening options found; enable _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT",
+      "status": "FAIL"
+    },
+    {
+      "check": "large-files",
+      "message": "2 committed files are larger than 5 MiB",
+      "status": "WARN"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under Apache-2.0",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "no link check found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to C, JavaScript, PowerShell, Shell, TypeScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "C: no mutation testing runs; JavaScript (auxiliary: only in tooling code): no mutation testing runs",
+      "status": "WARN"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "in-source builds are not prevented",
+      "status": "WARN"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "C: CI covers 3 OS(es) (linux, macos, windows), 4 compiler(s) (appleclang, clang, gcc, msvc), 4 combination(s); JavaScript (auxiliary: only in docs code, only in tooling code): CI covers 1 OS(es) (linux), 1 runtime version(s) (22), 1 combination(s); expected at least 2 operating systems (found 1), at least 2 runtime versions (found 1), at least 3 OS/runtime version combinations (found 1); TypeScript (auxiliary: only in docs code): CI covers 1 OS(es) (linux), 1 runtime version(s) (22), 1 combination(s); expected at least 2 operating systems (found 1), at least 2 runtime versions (found 1), at least 3 OS/runtime version combinations (found 1)",
+      "status": "WARN"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "sanitizers are enabled: AddressSanitizer, UndefinedBehaviorSanitizer",
+      "status": "PASS"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "not applicable to C, JavaScript, PowerShell, Shell, TypeScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-declared",
+      "message": "not applicable to C, JavaScript, PowerShell, Shell, TypeScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-examples",
+      "message": "not applicable to C, JavaScript, PowerShell, Shell, TypeScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-validation",
+      "message": "not applicable to C, JavaScript, PowerShell, Shell, TypeScript",
+      "status": "SKIP"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    {
+      "check": "security-scanning",
+      "message": "C: no code security scanning found in CI configuration; JavaScript (auxiliary: only in tooling code): no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "static-analysis",
+      "message": "C: clang-tidy (.clang-tidy) runs; CMake: cmake-lint is configured (.cmake-format.yaml) but does not run; Documentation site: no static analyzer runs; JavaScript (auxiliary: only in docs code, only in tooling code): the root (auxiliary: only in tooling code): no static analyzer runs; website (auxiliary: only in docs code): no static analyzer runs; Shell (auxiliary: only in tooling code): PowerShell (auxiliary: only in tooling code): no static analyzer runs; Shell (auxiliary: only in tooling code): no static analyzer runs; TypeScript (auxiliary: only in docs code): no static analyzer runs",
+      "status": "WARN"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows CI (GitHub Actions) and quality (Coveralls) badges",
+      "status": "PASS"
+    },
+    {
+      "check": "tests-run",
+      "message": "C: tests registered with CTest (enable_testing(), then add_test or a *_discover_tests call): 2 file(s), run by ctest; JavaScript (auxiliary: only in tooling code): no tests found (*.test.*, *.spec.*, __tests__/ or test/ files); Shell (auxiliary: only in tooling code): PowerShell (auxiliary: only in tooling code): no tests found (Pester tests (*.Tests.ps1)); Shell (auxiliary: only in tooling code): no tests found (bats tests (*.bats), zunit tests (*.zunit), urchin tests (shell scripts without a suffix under test/), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
+      "status": "WARN"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "developer-only settings are guarded by CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME",
+      "status": "PASS"
+    },
+    {
+      "check": "type-checking",
+      "message": "TypeScript (auxiliary: only in docs code): no type checker runs",
+      "status": "WARN"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": "C: .gitignore ignores /build/; Documentation site: .gitignore ignores /build/; .gitignore ignores .docusaurus (website/.gitignore); JavaScript: .gitignore ignores node_modules/; TypeScript: .gitignore ignores node_modules/",
+      "status": "PASS"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "C: warnings are treated as errors with -Werror, /WX; CMake: warnings are not treated as errors in CI configuration and CMakePresets.json; Documentation site: warnings are treated as errors with onBrokenLinks: 'throw' in docusaurus.config; JavaScript (auxiliary: only in docs code, only in tooling code): warnings are not treated as errors in CI configuration or the package scripts it runs; Shell (auxiliary: only in tooling code): PowerShell (auxiliary: only in tooling code): warnings are not treated as errors in CI configuration; Shell (auxiliary: only in tooling code): warnings are not treated as errors in CI configuration; TypeScript (auxiliary: only in docs code): warnings are not treated as errors in CI configuration or the package scripts it runs",
+      "status": "FAIL"
+    }
+  ],
+  "commit": "03135828ecde394ab4a3779051ccc094562669ae",
+  "evaluated": "2026-11-28T11:49:53Z",
+  "kind": "library",
+  "language": "C",
+  "lines": 40004,
+  "name": "uber/h3",
+  "score": {
+    "base": 63.86,
+    "breakdown": {
+      "": [
+        5.5,
+        10
+      ],
+      "C": [
+        12.89,
+        19.09
+      ],
+      "CMake": [
+        0.1,
+        0.3
+      ],
+      "Documentation site": [
+        3,
+        4
+      ],
+      "JavaScript": [
+        3.5,
+        5.5
+      ],
+      "Shell": [
+        1.25,
+        2.5
+      ],
+      "TypeScript": [
+        2.75,
+        4
+      ]
+    },
+    "cells": [
+      {
+        "check": "action-pinning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 3,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-build-types",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "ci-lint",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.477340524544782,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "CMake",
+        "extra": 0,
+        "filled": 0.05,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [
+          "prettier"
+        ],
+        "unit": "website",
+        "weight": 0.5
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "TypeScript",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [
+          "prettier"
+        ],
+        "unit": "website",
+        "weight": 0.5
+      },
+      {
+        "check": "compile-commands",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.954681049089564,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "compiler-extensions",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.477340524544782,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "TypeScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.954681049089564,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "lcov"
+        ],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.954681049089564,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "file-soundness",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "clang-tidy's readability-function-size"
+        ],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": "website",
+        "weight": 0.5
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "TypeScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": "website",
+        "weight": 0.5
+      },
+      {
+        "check": "fuzz-testing",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.954681049089564,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "libFuzzer"
+        ],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "hardening",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "large-files",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "link-check",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": "website",
+        "weight": 1.0
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.477340524544782,
+        "level": 3,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "out-of-source-build",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.477340524544782,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.954681049089564,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "sanitizers",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.954681049089564,
+        "level": 3,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.477340524544782,
+        "level": 3,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.954681049089564,
+        "level": 2,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "clang-tidy"
+        ],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "CMake",
+        "extra": 0,
+        "filled": 0.05,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": "website",
+        "weight": 1.0
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": "website",
+        "weight": 0.5
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "TypeScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": "website",
+        "weight": 0.5
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.954681049089564,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [
+          "ctest"
+        ],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "top-level-guard",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.954681049089564,
+        "level": 4,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "type-checking",
+        "ecosystem": "TypeScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 2,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": "website",
+        "weight": 0.5
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.954681049089564,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "TypeScript",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "C",
+        "extra": 0,
+        "filled": 0.954681049089564,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.954681049089564
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "CMake",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "strength": 1,
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "TypeScript",
+        "extra": 0,
+        "filled": 0.25,
+        "level": 1,
+        "status": "WARN",
+        "strength": 1,
+        "tier": "auxiliary",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5
+      }
+    ],
+    "extra": 0.0,
+    "filled": 28.99,
+    "held": 0.0,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "C",
+        "hint": "consider a CI job that runs clang-format --dry-run -Werror",
+        "level": 1,
+        "message": ".clang-format is defined but CI does not run clang-format",
+        "needed_for": 1,
+        "points": 1.05,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "C",
+        "hint": "",
+        "level": 1,
+        "message": "missing compiler warning flags: -Wextra, -Wpedantic, -Wshadow, -Wconversion for appleclang and clang and gcc; /W4, /permissive- for msvc",
+        "needed_for": 1,
+        "points": 1.05,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "CMake",
+        "hint": "",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration and CMakePresets.json",
+        "needed_for": 1,
+        "points": 0.22,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "CMake",
+        "hint": "consider a CI job that runs gersemi --check . (or cmake-format --check CMakeLists.txt)",
+        "level": 1,
+        "message": ".cmake-format.yaml is defined but CI does not run gersemi or cmake-format",
+        "needed_for": 1,
+        "points": 0.11,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider a CI job that runs prettier --check . (or deno fmt --check, oxfmt --check, dprint check or biome ci)",
+        "level": 1,
+        "message": "CI never runs prettier, deno fmt, oxfmt, dprint or biome; its formatting is not enforced",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "consider a CI job that runs shfmt -d .",
+        "level": 1,
+        "message": "CI never runs shfmt; its formatting is not enforced",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "",
+        "level": 1,
+        "message": "no JavaScript linters found; enable at least eslint",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 1,
+        "message": "PowerShell: no PowerShell lints found; enable at least PSScriptAnalyzer; Shell: no shell lints found; enable at least shellcheck",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "TypeScript",
+        "hint": "",
+        "level": 1,
+        "message": "no JavaScript linters found; enable at least eslint",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "",
+        "level": 1,
+        "message": "no tests found (*.test.*, *.spec.*, __tests__/ or test/ files)",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 1,
+        "message": "PowerShell: no tests found (Pester tests (*.Tests.ps1)); Shell: no tests found (bats tests (*.bats), zunit tests (*.zunit), urchin tests (shell scripts without a suffix under test/), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "run eslint with --max-warnings 0 (or biome ci, deno lint or oxlint --deny-warnings), so that a lint warning fails CI",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration or the package scripts it runs",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 1,
+        "message": "PowerShell: warnings are not treated as errors in CI configuration; Shell: warnings are not treated as errors in CI configuration",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "TypeScript",
+        "hint": "run eslint with --max-warnings 0 (or biome ci, deno lint or oxlint --deny-warnings), so that a lint warning fails CI",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration or the package scripts it runs",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Documentation site",
+        "hint": "consider running markdownlint-cli2 (or DavidAnson/markdownlint-cli2-action) or vale docs (or errata-ai/vale-action) in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 1.1,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "website"
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "CMake",
+        "hint": "consider running cmake-lint CMakeLists.txt or cmakelint CMakeLists.txt in CI",
+        "level": 2,
+        "message": "cmake-lint is configured (.cmake-format.yaml) but does not run",
+        "needed_for": null,
+        "points": 0.11,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running eslint, xo, oxlint, deno lint or biome lint in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running eslint, xo, oxlint, deno lint or biome lint in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "website"
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 2,
+        "message": "PowerShell: no static analyzer runs; Shell: no static analyzer runs",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "TypeScript",
+        "hint": "consider running eslint, xo, oxlint, deno lint or biome lint in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "website"
+      },
+      {
+        "check": "type-checking",
+        "completes": false,
+        "ecosystem": "TypeScript",
+        "hint": "consider running a type checker in CI: tsc --noEmit or deno check",
+        "level": 2,
+        "message": "no type checker runs",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "website"
+      },
+      {
+        "check": "action-pinning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "pin each action to the full commit of its release, e.g. actions/checkout@<40-character SHA> # v4.2.2; Dependabot and Renovate keep such pins up to date",
+        "level": 3,
+        "message": "17 of 17 actions are not pinned to a commit",
+        "needed_for": null,
+        "points": 2.2,
+        "status": "FAIL",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "mutation-testing",
+        "completes": false,
+        "ecosystem": "C",
+        "hint": "consider running mull-runner or dextool mutate in CI",
+        "level": 3,
+        "message": "no mutation testing runs",
+        "needed_for": null,
+        "points": 1.05,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "C",
+        "hint": "consider running in CI: CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.05,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "large-files",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "",
+        "level": 4,
+        "message": "2 committed files are larger than 5 MiB",
+        "needed_for": null,
+        "points": 2.2,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "ci-build-types",
+        "completes": false,
+        "ecosystem": "C",
+        "hint": "",
+        "level": 4,
+        "message": "3 of 4 OS/compiler combination(s) do not build Debug and Release, each with and without sanitizers",
+        "needed_for": null,
+        "points": 2.1,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-extensions",
+        "completes": false,
+        "ecosystem": "C",
+        "hint": "",
+        "level": 4,
+        "message": "C compiler extensions are never disabled",
+        "needed_for": null,
+        "points": 2.1,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "C",
+        "hint": "",
+        "level": 4,
+        "message": "CI runs clang-tidy, but its readability-function-size rule is off or has no limit; set readability-function-size with a LineThreshold or StatementThreshold in .clang-tidy",
+        "needed_for": null,
+        "points": 2.1,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "hardening",
+        "completes": false,
+        "ecosystem": "C",
+        "hint": "enable -fhardened (GCC 14+) or _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection; for MSVC /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT",
+        "level": 4,
+        "message": "no hardening options found; enable _FORTIFY_SOURCE, -fstack-protector-strong, -fcf-protection, -fstack-clash-protection, /sdl, /guard:cf, /DYNAMICBASE, /CETCOMPAT",
+        "needed_for": null,
+        "points": 2.1,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-lint",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "",
+        "level": 4,
+        "message": "CI does not lint its GitHub Actions configuration",
+        "needed_for": null,
+        "points": 1.1,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 1.1,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "file-soundness",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "run ClamAV (clamscan -r .) over the repository, or a tool that decodes each kind of file (magick identify -regard-warnings, pngcheck, qpdf --check, fontbakery, ffprobe -v error, gltf_validator)",
+        "level": 4,
+        "message": "no tool checks the image files (website/static/favicon.ico, website/static/images/ca_compact_6_901.png, website/static/images/ca_uncompact_6_10633.png and 16 more)",
+        "needed_for": null,
+        "points": 1.1,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "link-check",
+        "completes": false,
+        "ecosystem": "Documentation site",
+        "hint": "consider running in CI: lychee --no-progress 'docs/**/*.md' (or lycheeverse/lychee-action), markdown-link-check docs/*.md (or gaurav-nelson/github-action-markdown-link-check), linkinator site --recurse, muffet http://localhost:8000 (the served site), htmltest site, htmlproofer ./_site or linkchecker site/index.html",
+        "level": 4,
+        "message": "no link check found in CI configuration",
+        "needed_for": null,
+        "points": 1.1,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "website"
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.1,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "security-policy",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)",
+        "level": 4,
+        "message": "no security policy",
+        "needed_for": null,
+        "points": 1.1,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "out-of-source-build",
+        "completes": false,
+        "ecosystem": "C",
+        "hint": "compare CMAKE_SOURCE_DIR with CMAKE_BINARY_DIR and message(FATAL_ERROR) when they are equal (cmake_template's PreventInSourceBuilds.cmake)",
+        "level": 4,
+        "message": "in-source builds are not prevented",
+        "needed_for": null,
+        "points": 1.05,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running in CI: eslint with max-lines-per-function on or lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "."
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running in CI: eslint with max-lines-per-function on or lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "website"
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "TypeScript",
+        "hint": "consider running in CI: eslint with max-lines-per-function on or lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 0.55,
+        "status": "WARN",
+        "tier": "auxiliary",
+        "unit": "website"
+      }
+    ],
+    "percent": 63.86,
+    "slots": 45.39,
+    "summary": "63% · Level 0 Getting started · 52 of 59 gates in place",
+    "units": {
+      "": [
+        5.5,
+        10
+      ],
+      ".": [
+        20.24,
+        29.89
+      ],
+      "website": [
+        3.25,
+        5.5
+      ]
+    },
+    "version": "5"
+  },
+  "seed": true,
+  "unknowns": 15,
+  "validator": "6256506545c84c82e19c816a37fbb2cffb8e4fec"
+}

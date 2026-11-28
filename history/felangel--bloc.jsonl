@@ -1,0 +1,10 @@
+{"commit": "2f77437b8a051dc3dbeff51dd534432c78f02cf5", "completeness": 0.3831, "date": "2026-11-19", "depth": 205, "level": 0, "validator": "63d182b6c24090673388708e53ad38404d90ed80", "version": "0"}
+{"commit": "2f77437b8a051dc3dbeff51dd534432c78f02cf5", "date": "2026-11-20", "filled": 189.5, "level": 0, "percent": 47.49, "slots": 399, "validator": "7672e9af7c1084e41a91f1f9cc14e52e19561eb9", "version": "1"}
+{"commit": "2f77437b8a051dc3dbeff51dd534432c78f02cf5", "date": "2026-11-21", "filled": 189.5, "level": 0, "percent": 47.49, "slots": 399, "validator": "6a457ee44dbce2eb16958ac1239e9fa1c1d363cc", "version": "1"}
+{"commit": "2f77437b8a051dc3dbeff51dd534432c78f02cf5", "date": "2026-11-22", "filled": 189.5, "level": 0, "percent": 47.49, "slots": 399, "validator": "d3dc4c2d83ecee2362bfd9ac2d6bea08f67a0ed5", "version": "1"}
+{"commit": "2f77437b8a051dc3dbeff51dd534432c78f02cf5", "date": "2026-11-23", "filled": 189.5, "level": 0, "percent": 47.49, "slots": 399, "validator": "5f753ed26f91095092646017fac2732c6a4fb32a", "version": "1"}
+{"commit": "af38411c84f2bce192b2d4dfb85f9e4a7bf5c330", "date": "2026-11-24", "filled": 186.5, "level": 0, "percent": 48.82, "slots": 382, "validator": "fceeceb81e14299fa6c7d8654e8924ad0132dd9c", "version": "1"}
+{"commit": "654f15a566fe26a5c5d499c2b75a955d81eb8bca", "date": "2026-11-25", "filled": 186.5, "level": 0, "percent": 48.82, "slots": 382, "validator": "79c1e97517ad38b36a03e7cb9b03733a08806a00", "version": "1"}
+{"commit": "3a123e219e9e6cc21483acece82d49504119cd70", "date": "2026-11-26", "filled": 151.44, "level": 0, "percent": 48.67, "slots": 311.14, "validator": "eafd8865989645ef7e712b7e8fd12ffba10f207c", "version": "2"}
+{"commit": "3a123e219e9e6cc21483acece82d49504119cd70", "date": "2026-11-27", "filled": 108.19, "level": 0, "percent": 40.21, "slots": 269.08, "validator": "f484d7b15d7a40db5bde6b087ebd2dac289c962e", "version": "3"}
+{"commit": "3a123e219e9e6cc21483acece82d49504119cd70", "date": "2026-11-28", "filled": 108.19, "level": 0, "percent": 40.21, "slots": 269.08, "validator": "6256506545c84c82e19c816a37fbb2cffb8e4fec", "version": "5"}

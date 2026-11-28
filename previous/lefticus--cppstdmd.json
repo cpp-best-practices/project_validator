@@ -1,0 +1,1615 @@
+{
+  "checks": [
+    {
+      "check": "action-pinning",
+      "message": "no CI configuration with reusable steps",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-build-types",
+      "message": "not applicable to JavaScript, Lua, Python, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-current",
+      "message": "no CI configuration is known to be defunct",
+      "status": "PASS"
+    },
+    {
+      "check": "ci-lint",
+      "message": "no configuration linter is known for local checks",
+      "status": "SKIP"
+    },
+    {
+      "check": "ci-present",
+      "message": "no CI configuration; the local checks (pre-commit run --all-files) are read as the pipeline, so the project is judged at an entry level",
+      "status": "WARN"
+    },
+    {
+      "check": "code-formatting",
+      "message": "JavaScript: CI never runs prettier, deno fmt, oxfmt, dprint or biome; its formatting is not enforced; JSON Schema: CI never runs prettier or biome; its formatting is not enforced; Lua: CI never runs StyLua; its formatting is not enforced; Python: pyproject.toml is defined and CI runs black, ruff format; Shell: CI never runs shfmt; its formatting is not enforced",
+      "status": "FAIL"
+    },
+    {
+      "check": "committed-artifacts",
+      "message": "no build outputs are committed",
+      "status": "PASS"
+    },
+    {
+      "check": "compile-commands",
+      "message": "not applicable to JavaScript, Lua, Python, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-extensions",
+      "message": "not applicable to JavaScript, Lua, Python, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "compiler-warnings",
+      "message": "JavaScript: no JavaScript linters found; enable at least eslint; Lua: strict Lua linters are enabled: luacheck; Python: no Python warning settings found; enable at least warnings as errors; Shell: no shell lints found; enable at least shellcheck",
+      "status": "FAIL"
+    },
+    {
+      "check": "copy-paste-detection",
+      "message": "no copy-paste detection found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "coverage",
+      "message": "JavaScript: no branch coverage measurement found in what CI runs; Lua: no line coverage measurement found in what CI runs; Python: no branch coverage measurement found in what CI runs; Shell: no line coverage measurement found in what CI runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "data-wellformed",
+      "message": "Data: JSON: 4 JSON files parse; TOML: 1 TOML file parses; YAML: 26 YAML files parse; File formats: 40 SVG files parse",
+      "status": "PASS"
+    },
+    {
+      "check": "dependency-audit",
+      "message": "JavaScript: no dependency vulnerability audit found in CI configuration; Python: no dependency vulnerability audit found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "dependency-management",
+      "message": "JavaScript: no dependencies are declared; Python: dependencies are declared in requirements.txt (Python packages) but not locked",
+      "status": "WARN"
+    },
+    {
+      "check": "dependency-updates",
+      "message": "no automated dependency updates configured",
+      "status": "WARN"
+    },
+    {
+      "check": "file-soundness",
+      "message": "no tool checks the font files (templates/fonts/SourceCodeProNerdFont-Bold.woff2, templates/fonts/SourceCodeProNerdFont-Regular.woff2, templates/fonts/SourceSansPro-Bold.woff2 and 5 more)",
+      "status": "WARN"
+    },
+    {
+      "check": "function-limits",
+      "message": "JavaScript: function length is never limited; Lua: function length is never limited; Python: function length is never limited",
+      "status": "FAIL"
+    },
+    {
+      "check": "fuzz-testing",
+      "message": "JavaScript: no fuzz targets found (Jazzer.js fuzz targets (an exported fuzz function or .fuzz())); Python: no fuzz targets found (atheris fuzz targets (atheris.Setup or atheris.Fuzz))",
+      "status": "FAIL"
+    },
+    {
+      "check": "hardening",
+      "message": "not applicable to JavaScript, Lua, Python, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "large-files",
+      "message": "no committed file is larger than 5 MiB",
+      "status": "PASS"
+    },
+    {
+      "check": "license",
+      "message": "the project is licensed under Unlicense",
+      "status": "PASS"
+    },
+    {
+      "check": "link-check",
+      "message": "no link check found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "migration-safety",
+      "message": "not applicable to JavaScript, Lua, Python, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "mutation-testing",
+      "message": "JavaScript: no mutation testing runs; Python: no mutation testing runs",
+      "status": "WARN"
+    },
+    {
+      "check": "out-of-source-build",
+      "message": "not applicable to JavaScript, Lua, Python, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "platform-matrix",
+      "message": "JavaScript: CI covers 0 OS(es) (none), 0 runtime version(s) (none), 0 combination(s); expected at least 2 operating systems (found 0), at least 2 runtime versions (found 0), at least 3 OS/runtime version combinations (found 0); Lua: CI covers 0 OS(es) (none), 0 Lua version(s) (none), 0 combination(s); 1 job(s) run on runners of unknown OS; expected at least 2 operating systems (found 0), at least 2 Lua versions (found 0), at least 3 OS/Lua version combinations (found 0); Python: CI covers 0 OS(es) (none), 0 Python version(s) (none), 0 combination(s); expected at least 2 operating systems (found 0), at least 2 Python versions (found 0), at least 3 OS/Python version combinations (found 0)",
+      "status": "WARN"
+    },
+    {
+      "check": "repository-hygiene",
+      "message": "no conflict markers, control characters, unportable paths or broken links",
+      "status": "PASS"
+    },
+    {
+      "check": "sanitizers",
+      "message": "not applicable to JavaScript, Lua, Python, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "schema-compatibility",
+      "message": "no check for breaking schema changes found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "schema-declared",
+      "message": "4 JSON Schema files declare a superseded dialect",
+      "status": "WARN"
+    },
+    {
+      "check": "schema-examples",
+      "message": "no check of the schemas' examples found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "schema-validation",
+      "message": "no schema validation found in CI configuration",
+      "status": "FAIL"
+    },
+    {
+      "check": "secret-scanning",
+      "message": "no secret scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "security-policy",
+      "message": "no security policy",
+      "status": "WARN"
+    },
+    {
+      "check": "security-scanning",
+      "message": "JavaScript: no code security scanning found in CI configuration; Lua: no code security scanning found in CI configuration; Python: no code security scanning found in CI configuration",
+      "status": "WARN"
+    },
+    {
+      "check": "static-analysis",
+      "message": "Documentation site: markdownlint runs; JavaScript: no static analyzer runs; Lua: luacheck (.luacheckrc) runs; Python: ruff check (pyproject.toml) runs; Shell: no static analyzer runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "status-badges",
+      "message": "README.md shows no status badges",
+      "status": "FAIL"
+    },
+    {
+      "check": "tests-run",
+      "message": "JavaScript: no tests found (*.test.*, *.spec.*, __tests__/ or test/ files); Lua: no tests found (busted specs (spec/**/*_spec.lua)); Python: test_*.py, *_test.py or tests/*_tests.py files: 28 file(s), but no CI configuration runs pytest, unittest or nox; Shell: no tests found (bats tests (*.bats), zunit tests (*.zunit), urchin tests (shell scripts without a suffix under test/), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
+      "status": "FAIL"
+    },
+    {
+      "check": "top-level-guard",
+      "message": "not applicable to JavaScript, Lua, Python, Shell",
+      "status": "SKIP"
+    },
+    {
+      "check": "type-checking",
+      "message": "Lua: no type checker runs; Python: mypy (pyproject.toml) runs",
+      "status": "FAIL"
+    },
+    {
+      "check": "vcs-ignore",
+      "message": "JavaScript: .gitignore ignores node_modules/; Lua: .gitignore does not ignore the local rocks tree; .gitignore does not ignore luacov's output; Python: .gitignore ignores __pycache__/",
+      "status": "WARN"
+    },
+    {
+      "check": "warnings-as-errors",
+      "message": "JavaScript: warnings are not treated as errors in CI configuration or the package scripts it runs; Shell: warnings are not treated as errors in CI configuration",
+      "status": "FAIL"
+    }
+  ],
+  "commit": "1ef40e3d656c6e77e07ead58308e76b7b55ebf4a",
+  "evaluated": "2026-11-27T12:26:21Z",
+  "kind": "tool",
+  "language": "Lua",
+  "lines": 36192,
+  "name": "lefticus/cppstdmd",
+  "score": {
+    "base": 43.81,
+    "breakdown": {
+      "": [
+        4,
+        7
+      ],
+      "Documentation site": [
+        1.5,
+        2
+      ],
+      "JSON Schema": [
+        1.5,
+        5
+      ],
+      "JavaScript": [
+        0.4,
+        1.41
+      ],
+      "Lua": [
+        1.89,
+        5.39
+      ],
+      "Python": [
+        1.19,
+        2.53
+      ],
+      "Shell": [
+        0,
+        0.6
+      ]
+    },
+    "cells": [
+      {
+        "check": "ci-present",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 1,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.10100565390675688
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "JSON Schema",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5387663360830476
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.180762813977199,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "black",
+          "ruff format"
+        ],
+        "unit": ".",
+        "weight": 0.180762813977199
+      },
+      {
+        "check": "code-formatting",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.10100565390675688
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.5387663360830476,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5387663360830476
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.180762813977199
+      },
+      {
+        "check": "compiler-warnings",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "copy-paste-detection",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.10100565390675688
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5387663360830476
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.180762813977199
+      },
+      {
+        "check": "coverage",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.05050282695337844,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.10100565390675688
+      },
+      {
+        "check": "dependency-audit",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.0903814069885995,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.180762813977199
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.10100565390675688,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.10100565390675688
+      },
+      {
+        "check": "dependency-management",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.0903814069885995,
+        "level": 2,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.180762813977199
+      },
+      {
+        "check": "dependency-updates",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "file-soundness",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.10100565390675688
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5387663360830476
+      },
+      {
+        "check": "function-limits",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.180762813977199
+      },
+      {
+        "check": "fuzz-testing",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 3,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.10100565390675688
+      },
+      {
+        "check": "fuzz-testing",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 3,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.180762813977199
+      },
+      {
+        "check": "license",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 1,
+        "status": "PASS",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "link-check",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.05050282695337844,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.10100565390675688
+      },
+      {
+        "check": "mutation-testing",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.0903814069885995,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.180762813977199
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.05050282695337844,
+        "level": 4,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.10100565390675688
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.2693831680415238,
+        "level": 4,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5387663360830476
+      },
+      {
+        "check": "platform-matrix",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.0903814069885995,
+        "level": 4,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.180762813977199
+      },
+      {
+        "check": "schema-compatibility",
+        "ecosystem": "JSON Schema",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "schema-declared",
+        "ecosystem": "JSON Schema",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "schema-examples",
+        "ecosystem": "JSON Schema",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "schema-validation",
+        "ecosystem": "JSON Schema",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 4,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "secret-scanning",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-policy",
+        "ecosystem": "",
+        "extra": 0,
+        "filled": 0.5,
+        "level": 4,
+        "status": "WARN",
+        "tier": "project",
+        "tools": [],
+        "unit": "",
+        "weight": 1.0
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.05050282695337844,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.10100565390675688
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.2693831680415238,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5387663360830476
+      },
+      {
+        "check": "security-scanning",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.0903814069885995,
+        "level": 3,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.180762813977199
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Documentation site",
+        "extra": 0,
+        "filled": 1.0,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "markdownlint"
+        ],
+        "unit": ".",
+        "weight": 1.0
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.10100565390675688
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.5387663360830476,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "luacheck"
+        ],
+        "unit": ".",
+        "weight": 0.5387663360830476
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.180762813977199,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "ruff check"
+        ],
+        "unit": ".",
+        "weight": 0.180762813977199
+      },
+      {
+        "check": "static-analysis",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.10100565390675688
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5387663360830476
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.0903814069885995,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.180762813977199
+      },
+      {
+        "check": "tests-run",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      },
+      {
+        "check": "type-checking",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 2,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5387663360830476
+      },
+      {
+        "check": "type-checking",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.10992677727314858,
+        "level": 2,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [
+          "mypy"
+        ],
+        "unit": ".",
+        "weight": 0.180762813977199
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.10100565390675688,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.10100565390675688
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Lua",
+        "extra": 0,
+        "filled": 0.2693831680415238,
+        "level": 1,
+        "status": "WARN",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.5387663360830476
+      },
+      {
+        "check": "vcs-ignore",
+        "ecosystem": "Python",
+        "extra": 0,
+        "filled": 0.180762813977199,
+        "level": 1,
+        "status": "PASS",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.180762813977199
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "JavaScript",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.10100565390675688
+      },
+      {
+        "check": "warnings-as-errors",
+        "ecosystem": "Shell",
+        "extra": 0,
+        "filled": 0.0,
+        "level": 1,
+        "status": "FAIL",
+        "tier": "core",
+        "tools": [],
+        "unit": ".",
+        "weight": 0.1
+      }
+    ],
+    "extra": 0.0,
+    "filled": 10.48,
+    "held": 0.0,
+    "level": 0,
+    "level_name": "Getting started",
+    "next_steps": [
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "JSON Schema",
+        "hint": "consider a CI job that runs prettier --check . (or biome format . (or biome ci .))",
+        "level": 1,
+        "message": "CI never runs prettier or biome; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 4.18,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "consider a CI job that runs stylua --check .",
+        "level": 1,
+        "message": "CI never runs StyLua; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 2.25,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "",
+        "level": 1,
+        "message": "no tests found (busted specs (spec/**/*_spec.lua))",
+        "needed_for": 1,
+        "points": 2.25,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "ci-present",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "run the same checks in CI (GitHub Actions, GitLab CI, ...) on every change",
+        "level": 1,
+        "message": "no CI configuration; the local checks (pre-commit run --all-files) are read as the pipeline, so the project is judged at an entry level",
+        "needed_for": 1,
+        "points": 2.09,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "vcs-ignore",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "consider ignoring lua_modules/ and .luarocks/ (luarocks init writes them)",
+        "level": 1,
+        "message": ".gitignore does not ignore the local rocks tree; .gitignore does not ignore luacov's output",
+        "needed_for": 1,
+        "points": 1.13,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Python",
+        "hint": "",
+        "level": 1,
+        "message": "no Python warning settings found; enable at least warnings as errors",
+        "needed_for": 1,
+        "points": 0.76,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider a CI job that runs prettier --check . (or deno fmt --check, oxfmt --check, dprint check or biome ci)",
+        "level": 1,
+        "message": "CI never runs prettier, deno fmt, oxfmt, dprint or biome; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 0.42,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "",
+        "level": 1,
+        "message": "no JavaScript linters found; enable at least eslint",
+        "needed_for": 1,
+        "points": 0.42,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "",
+        "level": 1,
+        "message": "no tests found (*.test.*, *.spec.*, __tests__/ or test/ files)",
+        "needed_for": 1,
+        "points": 0.42,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "run eslint with --max-warnings 0 (or biome ci, deno lint or oxlint --deny-warnings), so that a lint warning fails CI",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration or the package scripts it runs",
+        "needed_for": 1,
+        "points": 0.42,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "code-formatting",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "consider a CI job that runs shfmt -d .",
+        "level": 1,
+        "message": "CI never runs shfmt; its formatting is not enforced",
+        "needed_for": 1,
+        "points": 0.42,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "compiler-warnings",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 1,
+        "message": "no shell lints found; enable at least shellcheck",
+        "needed_for": 1,
+        "points": 0.42,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 1,
+        "message": "no tests found (bats tests (*.bats), zunit tests (*.zunit), urchin tests (shell scripts without a suffix under test/), shellspec specs (spec/*_spec.sh) or shunit2 tests (*_test.sh))",
+        "needed_for": 1,
+        "points": 0.42,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "warnings-as-errors",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "run shellcheck in CI: it fails on any finding",
+        "level": 1,
+        "message": "warnings are not treated as errors in CI configuration",
+        "needed_for": 1,
+        "points": 0.42,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "tests-run",
+        "completes": false,
+        "ecosystem": "Python",
+        "hint": "",
+        "level": 1,
+        "message": "test_*.py, *_test.py or tests/*_tests.py files: 28 file(s), but no CI configuration runs pytest, unittest or nox",
+        "needed_for": 1,
+        "points": 0.38,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "",
+        "level": 2,
+        "message": "no line coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 2.25,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "type-checking",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "consider running a type checker in CI: lua-language-server --check . (with LuaCATS annotations), emmylua_check . (with LuaCATS annotations), luau-analyze . or tl check <file.tl> (Teal)",
+        "level": 2,
+        "message": "no type checker runs",
+        "needed_for": null,
+        "points": 2.25,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Python",
+        "hint": "",
+        "level": 2,
+        "message": "no branch coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 0.76,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "",
+        "level": 2,
+        "message": "no branch coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 0.42,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running eslint, xo, oxlint, deno lint or biome lint in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 0.42,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "coverage",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "",
+        "level": 2,
+        "message": "no line coverage measurement found in what CI runs",
+        "needed_for": null,
+        "points": 0.42,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "static-analysis",
+        "completes": false,
+        "ecosystem": "Shell",
+        "hint": "consider running shellcheck <scripts> (or ludeeus/action-shellcheck) in CI",
+        "level": 2,
+        "message": "no static analyzer runs",
+        "needed_for": null,
+        "points": 0.42,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "Python",
+        "hint": "consider running in CI: pip-audit, safety scan, GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 0.38,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-management",
+        "completes": false,
+        "ecosystem": "Python",
+        "hint": "",
+        "level": 2,
+        "message": "dependencies are declared in requirements.txt (Python packages) but not locked",
+        "needed_for": null,
+        "points": 0.38,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "dependency-audit",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running in CI: npm audit, pnpm audit, yarn npm audit, bun audit, yarn audit, GitLab Dependency Scanning (Security/Dependency-Scanning.gitlab-ci.yml), osv-scanner, trivy fs or snyk test",
+        "level": 2,
+        "message": "no dependency vulnerability audit found in CI configuration",
+        "needed_for": null,
+        "points": 0.21,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "consider running in CI: semgrep ci",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 1.13,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "fuzz-testing",
+        "completes": false,
+        "ecosystem": "Python",
+        "hint": "consider adding python <fuzz target>.py",
+        "level": 3,
+        "message": "no fuzz targets found (atheris fuzz targets (atheris.Setup or atheris.Fuzz))",
+        "needed_for": null,
+        "points": 0.76,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "fuzz-testing",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider adding npx jazzer <target> -- -max_total_time=30 (or jest with JAZZER_FUZZ=1)",
+        "level": 3,
+        "message": "no fuzz targets found (Jazzer.js fuzz targets (an exported fuzz function or .fuzz()))",
+        "needed_for": null,
+        "points": 0.42,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "mutation-testing",
+        "completes": false,
+        "ecosystem": "Python",
+        "hint": "consider running mutmut run, cosmic-ray exec or mutatest in CI",
+        "level": 3,
+        "message": "no mutation testing runs",
+        "needed_for": null,
+        "points": 0.38,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "Python",
+        "hint": "consider running in CI: bandit -r ., ruff check with S selected, CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 0.38,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "mutation-testing",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running stryker run in CI",
+        "level": 3,
+        "message": "no mutation testing runs",
+        "needed_for": null,
+        "points": 0.21,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "security-scanning",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running in CI: eslint with eslint-plugin-security, CodeQL (github/codeql-action), GitLab SAST (Security/SAST.gitlab-ci.yml) or semgrep ci",
+        "level": 3,
+        "message": "no code security scanning found in CI configuration",
+        "needed_for": null,
+        "points": 0.21,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "schema-validation",
+        "completes": false,
+        "ecosystem": "JSON Schema",
+        "hint": "consider running in CI: check-jsonschema --schemafile <schema> <documents>, ajv validate -s <schema> -d <documents> (ajv-cli), jsonschema -i <document> <schema> or jv <schema> <documents>",
+        "level": 4,
+        "message": "no schema validation found in CI configuration",
+        "needed_for": null,
+        "points": 4.18,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "consider running in CI: lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 2.25,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "copy-paste-detection",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding jscpd (npx jscpd .), which reads most languages, or PMD CPD, Duplo or Simian",
+        "level": 4,
+        "message": "no copy-paste detection found in CI configuration",
+        "needed_for": null,
+        "points": 2.09,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "dependency-updates",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider adding .github/dependabot.yml or a Renovate configuration (renovate.json)",
+        "level": 4,
+        "message": "no automated dependency updates configured",
+        "needed_for": null,
+        "points": 2.09,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "file-soundness",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "run ClamAV (clamscan -r .) over the repository, or a tool that decodes each kind of file (magick identify -regard-warnings, pngcheck, qpdf --check, fontbakery, ffprobe -v error, gltf_validator)",
+        "level": 4,
+        "message": "no tool checks the font files (templates/fonts/SourceCodeProNerdFont-Bold.woff2, templates/fonts/SourceCodeProNerdFont-Regular.woff2, templates/fonts/SourceSansPro-Bold.woff2 and 5 more)",
+        "needed_for": null,
+        "points": 2.09,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "link-check",
+        "completes": false,
+        "ecosystem": "Documentation site",
+        "hint": "consider running in CI: lychee --no-progress 'docs/**/*.md' (or lycheeverse/lychee-action), markdown-link-check docs/*.md (or gaurav-nelson/github-action-markdown-link-check), linkinator site --recurse, muffet http://localhost:8000 (the served site), htmltest site, htmlproofer ./_site or linkchecker site/index.html",
+        "level": 4,
+        "message": "no link check found in CI configuration",
+        "needed_for": null,
+        "points": 2.09,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "schema-compatibility",
+        "completes": false,
+        "ecosystem": "JSON Schema",
+        "hint": "consider running in CI: json-schema-diff <main branch's schema> <schema>",
+        "level": 4,
+        "message": "no check for breaking schema changes found in CI configuration",
+        "needed_for": null,
+        "points": 2.09,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "schema-declared",
+        "completes": false,
+        "ecosystem": "JSON Schema",
+        "hint": "",
+        "level": 4,
+        "message": "4 JSON Schema files declare a superseded dialect",
+        "needed_for": null,
+        "points": 2.09,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "schema-examples",
+        "completes": false,
+        "ecosystem": "JSON Schema",
+        "hint": "consider running in CI: check-jsonschema --schemafile <schema> examples/valid/*.json, ajv test -s <schema> -d 'examples/valid/*.json' --valid (and -d 'examples/invalid/*.json' --invalid), jsonschema -i examples/valid/<document> <schema> or jv <schema> examples/valid/*.json",
+        "level": 4,
+        "message": "no check of the schemas' examples found in CI configuration",
+        "needed_for": null,
+        "points": 2.09,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "secret-scanning",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "consider running gitleaks, TruffleHog (trufflesecurity/trufflehog) or detect-secrets in CI or as a pre-commit hook; GitHub's secret scanning and push protection are repository settings, which cannot be seen from here",
+        "level": 4,
+        "message": "no secret scanning found in CI configuration",
+        "needed_for": null,
+        "points": 2.09,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "security-policy",
+        "completes": false,
+        "ecosystem": "",
+        "hint": "add a SECURITY.md that says how to report a vulnerability privately: an email address, or GitHub's private vulnerability reporting (Settings > Code security, then link to /security/advisories/new)",
+        "level": 4,
+        "message": "no security policy",
+        "needed_for": null,
+        "points": 2.09,
+        "status": "WARN",
+        "tier": "project",
+        "unit": ""
+      },
+      {
+        "check": "platform-matrix",
+        "completes": false,
+        "ecosystem": "Lua",
+        "hint": "",
+        "level": 4,
+        "message": "CI covers 0 OS(es) (none), 0 Lua version(s) (none), 0 combination(s); 1 job(s) run on runners of unknown OS; expected at least 2 operating systems (found 0), at least 2 Lua versions (found 0), at least 3 OS/Lua version combinations (found 0)",
+        "needed_for": null,
+        "points": 1.13,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "Python",
+        "hint": "consider running in CI: lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 0.76,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "function-limits",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "consider running in CI: eslint with max-lines-per-function on or lizard --length 30",
+        "level": 4,
+        "message": "function length is never limited",
+        "needed_for": null,
+        "points": 0.42,
+        "status": "FAIL",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "platform-matrix",
+        "completes": false,
+        "ecosystem": "Python",
+        "hint": "",
+        "level": 4,
+        "message": "CI covers 0 OS(es) (none), 0 Python version(s) (none), 0 combination(s); expected at least 2 operating systems (found 0), at least 2 Python versions (found 0), at least 3 OS/Python version combinations (found 0)",
+        "needed_for": null,
+        "points": 0.38,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      },
+      {
+        "check": "platform-matrix",
+        "completes": false,
+        "ecosystem": "JavaScript",
+        "hint": "",
+        "level": 4,
+        "message": "CI covers 0 OS(es) (none), 0 runtime version(s) (none), 0 combination(s); expected at least 2 operating systems (found 0), at least 2 runtime versions (found 0), at least 3 OS/runtime version combinations (found 0)",
+        "needed_for": null,
+        "points": 0.21,
+        "status": "WARN",
+        "tier": "core",
+        "unit": "."
+      }
+    ],
+    "percent": 43.81,
+    "slots": 23.93,
+    "summary": "43% · Level 0 Getting started · 33 of 58 gates in place",
+    "units": {
+      "": [
+        4,
+        7
+      ],
+      ".": [
+        6.48,
+        16.93
+      ]
+    },
+    "version": "3"
+  },
+  "seed": false,
+  "unknowns": 0,
+  "validator": "f484d7b15d7a40db5bde6b087ebd2dac289c962e"
+}
