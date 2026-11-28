@@ -319,21 +319,8 @@ def _clippy_disabled(setting: Setting) -> Iterator[tuple[str, str]]:
         yield setting.key.partition(".")[0], GLOBAL
 
 
-# clippy's groups that find bugs, and the restriction lints against panics: not its pedantic lints (casts, docs).
-CLIPPY_DISABLED = Disabler(
-    tool="clippy",
-    settings="clippy",
-    disabled=_clippy_disabled,
-    key=(
-        "correctness",
-        "suspicious",
-        "unwrap_used",
-        "expect_used",
-        "panic",
-        "indexing_slicing",
-        "undocumented_unsafe_blocks",
-    ),
-)
+# Which lints find bugs is policy: policy/diagnostics.toml (upstream #440).
+CLIPPY_DISABLED = Disabler(tool="clippy", settings="clippy", disabled=_clippy_disabled)
 ALLOW_ATTRIBUTE = Marker(
     tool="clippy",
     languages=RUST_LANGUAGE,

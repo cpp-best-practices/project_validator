@@ -38,27 +38,9 @@ def _clang_tidy_disabled(setting: Setting) -> Iterator[tuple[str, str]]:
             yield glob.removeprefix("-"), GLOBAL
 
 
-_GUARDS = "it guards against undefined behaviour: "
-# The guidelines' checks against undefined behaviour: each flags every use of a construct that can be undefined, not
-# only the uses that are, but turning one off weighs as a check that finds bugs (#295), and the next step says why.
-_UNDEFINED_BEHAVIOUR = (
-    ("cppcoreguidelines-pro-bounds-*", _GUARDS + "reads and writes out of bounds"),
-    ("cppcoreguidelines-pro-type-reinterpret-cast", _GUARDS + "accesses that break the strict aliasing rule"),
-    ("cppcoreguidelines-pro-type-union-access", _GUARDS + "reads of a union's inactive member"),
-    (
-        "hicpp-no-array-decay",
-        _GUARDS + "arrays decayed to pointers, which lose their length and invite out-of-bounds access",
-    ),
-    ("hicpp-signed-bitwise", _GUARDS + "shifts of negative numbers or into the sign bit (undefined before C++20)"),
-)
-CLANG_TIDY_DISABLED = Disabler(
-    tool="clang-tidy",
-    settings="clang-tidy",
-    disabled=_clang_tidy_disabled,
-    blanket=("*",),
-    key=("bugprone-*", "cert-*", "clang-analyzer-*", "concurrency-*", *(glob for glob, _ in _UNDEFINED_BEHAVIOUR)),
-    reasons=_UNDEFINED_BEHAVIOUR,
-)
+# Which checks find bugs, and what the guidelines' checks against undefined behaviour guard against, are policy:
+# policy/diagnostics.toml (upstream #440).
+CLANG_TIDY_DISABLED = Disabler(tool="clang-tidy", settings="clang-tidy", disabled=_clang_tidy_disabled)
 NOLINT = Marker(
     tool="clang-tidy",
     languages=C_FAMILY,

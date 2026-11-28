@@ -8,38 +8,30 @@ A diagnostic turned off weighs by its kind, its scope and whether a comment says
 everywhere, everything (`-*`, `ALL`, `-w`) leaves nothing; for one file, half. The suppressions in the code weigh by
 their density in the product's code of the tool's languages: `DENSITY` per unjustified suppression per thousand lines
 (`JUSTIFIED_DENSITY` per justified one), at most `MOST_DENSITY`; a file turned off whole weighs as a blanket for one
-file."""
+file. The numbers are in `policy/strength.toml` (upstream #440)."""
 
 from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass
 
+from project_validator import policy_tables
 from project_validator.facts import Facts
 from project_validator.facts.structure import SourceFile
-from project_validator.facts.suppressions import BLANKET, FILE, GLOBAL, KEY, STYLISTIC, Disabled, Suppressions
+from project_validator.facts.suppressions import BLANKET, FILE, KEY, Disabled, Suppressions
 from project_validator.facts.tools import known_tools
 
+_TABLE = policy_tables.load("strength")  # its comments say why each number is what it is
 # The strength a gate's strongest tool needs for the gate to count.
-COVERED = 0.5
-# (kind, scope, justified) -> weight; a global blanket leaves nothing. Style weighs nothing: strength is what a tool can
-# still find of bugs, and a project that enables every check and turns off those that don't apply to it (clang-tidy's
-# altera-*, fuchsia-*) must not count for less than one that enabled few.
+COVERED: float = _TABLE["covered"]
+# (kind, scope, justified) -> weight; a global blanket leaves nothing, and style weighs nothing.
 WEIGHTS: Mapping[tuple[str, str, bool], float] = {
-    (BLANKET, GLOBAL, False): 1.0,
-    (BLANKET, GLOBAL, True): 1.0,
-    (BLANKET, FILE, False): 0.5,
-    (BLANKET, FILE, True): 0.5,
-    (KEY, GLOBAL, False): 0.25,
-    (KEY, GLOBAL, True): 0.12,
-    (KEY, FILE, False): 0.05,
-    (KEY, FILE, True): 0.02,
-    (STYLISTIC, GLOBAL, False): 0.0,
-    (STYLISTIC, GLOBAL, True): 0.0,
-    (STYLISTIC, FILE, False): 0.0,
-    (STYLISTIC, FILE, True): 0.0,
+    (kind, scope, justified): weights["justified" if justified else "unjustified"]
+    for kind, scopes in _TABLE["weights"].items()
+    for scope, weights in scopes.items()
+    for justified in (False, True)
 }
-DENSITY, JUSTIFIED_DENSITY, MOST_DENSITY = 0.02, 0.005, 0.5
+DENSITY, JUSTIFIED_DENSITY, MOST_DENSITY = (_TABLE["density"][name] for name in ("unjustified", "justified", "most"))
 
 
 def _weights(facts: Facts) -> dict[str, float]:

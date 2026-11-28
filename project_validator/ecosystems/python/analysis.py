@@ -53,9 +53,7 @@ MYPY_SETTINGS = SettingsReader(
 )
 MYPY_SCOPE = Scoping(tools=("mypy",), settings="mypy", excludes=("exclude",), how=REGEX)
 MYPY_FILES = Scoping(tools=("mypy",), settings="mypy", includes=("files",), how=ANCHORED)
-# Codes that find bugs: pyflakes' (undefined names), bugbear's, bandit's (each a letter and digits, or the letter alone
-# for the whole plugin: not flynt's FLY, flake8-simplify's SIM, flake8-blind-except's BLE), and syntax errors.
-_PYTHON_KEY = ("F", "F[0-9]*", "B", "B[0-9]*", "S", "S[0-9]*", "E9*")
+# Which codes find bugs, and which turn everything off, is policy: policy/diagnostics.toml (upstream #440).
 _RUFF_PER_FILE = (
     "per-file-ignores",
     "lint.per-file-ignores",
@@ -66,21 +64,14 @@ RUFF_DISABLED = Disabler(
     tool="ruff check",
     settings="ruff",
     disabled=keyed("ignore", "extend-ignore", "lint.ignore", "lint.extend-ignore", per_file=_RUFF_PER_FILE),
-    blanket=("ALL",),
-    key=_PYTHON_KEY,
 )
 FLAKE8_DISABLED = Disabler(
-    tool="flake8",
-    settings="flake8",
-    disabled=keyed("ignore", "extend-ignore", per_file=("per-file-ignores",)),
-    key=_PYTHON_KEY,
+    tool="flake8", settings="flake8", disabled=keyed("ignore", "extend-ignore", per_file=("per-file-ignores",))
 )
 PYLINT_DISABLED = Disabler(
     tool="pylint",
     settings="pylint",
     disabled=keyed("disable", "messages_control.disable", "MESSAGES CONTROL.disable"),
-    blanket=("all",),
-    key=("E*", "undefined-*", "used-before-assignment", "no-member", "dangerous-default-value"),
 )
 
 
@@ -92,7 +83,7 @@ def _mypy_disabled(setting: Setting) -> Iterator[tuple[str, str]]:
         yield "ignore_errors", GLOBAL
 
 
-MYPY_DISABLED = Disabler(tool="mypy", settings="mypy", disabled=_mypy_disabled, blanket=("ignore_errors",), key=("*",))
+MYPY_DISABLED = Disabler(tool="mypy", settings="mypy", disabled=_mypy_disabled)
 _NOQA = re.compile(r"#\s*noqa(?::\s*(?P<codes>[A-Z]+\d*(?:\s*,\s*[A-Z]+\d*)*))?(?P<reason>[^\n]*)")
 NOQA_RUFF = Marker(tool="ruff check", languages=PYTHON, pattern=_NOQA)
 NOQA_FLAKE8 = Marker(tool="flake8", languages=PYTHON, pattern=_NOQA)

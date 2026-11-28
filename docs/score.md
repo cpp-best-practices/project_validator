@@ -2,7 +2,7 @@
 
 The console and HTML reports always show the score; `python -m project_validator --score path/to/project` adds it to
 the plain text, markdown and JSON outputs too. The statuses and the exit code do not change. The design is upstream
-issue #295; this is **version 5**.
+issue #295; this is **version 6**.
 
 > **87% · Level 2 Analysis · 41 of 47 gates in place**
 
@@ -76,8 +76,9 @@ member), not only the uses that are, so a project may turn one off on purpose; i
 bugs, and the next step to turn it back on says what it guards against. A comment naming a glob that covers a check
 (`# cppcoreguidelines-pro-bounds-*: parsers index by design`) says why for each check it covers.
 
-These tables are in the code for now; [#440](https://github.com/cpp-best-practices/project_validator/issues/440) moves
-them into configuration files.
+The weights are in `project_validator/policy/strength.toml`, and which diagnostics turn everything off or find bugs,
+with what they guard against, in `project_validator/policy/diagnostics.toml`
+([#440](https://github.com/cpp-best-practices/project_validator/issues/440)).
 
 The suppressions in the product's code (`NOLINT`, `# noqa`, `# type: ignore`, `eslint-disable`, `#[allow]`,
 `//nolint`, `@SuppressWarnings`, ...) weigh 0.02 each per thousand lines of the tool's languages, 0.005 when text or a
@@ -98,8 +99,9 @@ rather than adding a tool.
 Some gates find more with each tool: two static analysers, a scanner beside CodeQL, a second fuzzing engine, more
 sanitizers, a second type checker. In those gates (`static-analysis`, `security-scanning`, `dependency-audit`,
 `fuzz-testing`, `sanitizers`, `type-checking`, `compiler-warnings`), the second distinct tool in a slot earns a
-quarter of a slot more, and the third a tenth. Tools of one family count once: ruff and flake8, or golangci-lint and
-the linters it bundles. Two formatters, or two coverage tools, earn nothing: they do not make a project stronger.
+quarter of a slot more, and the third a tenth. Tools of one family count once: ruff and flake8 (since score version 6),
+or golangci-lint and the linters it bundles. Two formatters, or two coverage tools, earn nothing: they do not make a
+project stronger.
 
 **Extra credit is held until every slot is filled.** Below 100% it is shown but not added, so passing 100% always
 means every gate is in place: `100% + extra`.

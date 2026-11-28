@@ -54,6 +54,8 @@ include = ["project_validator*"]
 [tool.setuptools.package-data]
 # The HTML report's stylesheet and scripts.
 "project_validator.views" = ["assets/*"]
+# The policy tables (upstream #440).
+"project_validator.policy" = ["*.toml"]
 
 [tool.ruff]
 line-length = 120

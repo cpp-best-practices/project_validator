@@ -30,6 +30,7 @@ from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass, field, replace
 from pathlib import PurePosixPath
 
+from project_validator import policy_tables
 from project_validator.core import Result, Status
 from project_validator.facts import Facts
 from project_validator.judging import NOT_FOR_AUXILIARY
@@ -38,59 +39,44 @@ from project_validator.strength import COVERED, TurnedOff
 
 # 2: each language's slots weigh its share of its unit's code (upstream #331).
 # 3: what the validator finds itself (`FINDINGS`) earns nothing; 4: tools' strength weighs their slots.
-SCORE_VERSION = "5"
+# 5: style disables cost nothing; 6: ruff's linter and flake8 are one family, as `FAMILIES` meant (upstream #440).
+SCORE_VERSION = "6"
+# The digest of the scored policy files (`policy_tables.SCORED`) this version stands for: a test fails when they change
+# without a new SCORE_VERSION, and gives the new digest to put here.
+POLICY_DIGEST = "226969e7716e04a5"
 
+# The tables are policy, with the comments that say why: policy/score.toml (upstream #440).
+_TABLE = policy_tables.load("score")
 # The checks each level's core and project slots must pass, in order; every other check belongs to the top level.
-LEVELS: Mapping[int, tuple[str, ...]] = {
-    1: (
-        "ci-present",
-        "compiler-warnings",
-        "warnings-as-errors",
-        "code-formatting",
-        "tests-run",
-        "license",
-        "vcs-ignore",
-    ),
-    2: ("static-analysis", "type-checking", "coverage", "dependency-management", "dependency-audit"),
-    3: ("sanitizers", "fuzz-testing", "mutation-testing", "security-scanning", "action-pinning"),
-}
-TOP_LEVEL = 4
-LEVEL_NAMES: Mapping[int, str] = {0: "Getting started", 1: "Foundations", 2: "Analysis", 3: "Hardening", 4: "Complete"}
+LEVELS: Mapping[int, tuple[str, ...]] = {int(level): tuple(checks) for level, checks in _TABLE["levels"].items()}
+TOP_LEVEL = max(LEVELS) + 1
+LEVEL_NAMES: Mapping[int, str] = {int(level): name for level, name in _TABLE["level_names"].items()}
 
-# Reported, never scored: what a README shows is not a quality gate.
-COSMETIC = frozenset({"status-badges"})
-# Defects the validator finds itself, in the files: a check of them passes because none was found, not because the
-# project put a process in place, so it can take points away but never add them. Passing, it is no slot; warning or
-# failing, it is a slot that nothing fills (and a next step). The processes that keep the defects out are scored on
-# their own: file-soundness, vcs-ignore, ci-lint, ...
-FINDINGS = frozenset({"data-wellformed", "repository-hygiene", "committed-artifacts", "large-files", "ci-current"})
+# Reported, never scored.
+COSMETIC = frozenset(_TABLE["unscored"]["cosmetic"])
+# Defects the validator finds itself: they can take points away but never add them.
+FINDINGS = frozenset(_TABLE["unscored"]["findings"])
 # The checks that never earn points: the cosmetic ones are not scored at all.
 UNSCORED = COSMETIC | FINDINGS
-# The gates where each more tool finds more: two analysers are stronger than one; two formatters are not.
-EXTRA_CREDIT = frozenset(
-    {
-        "static-analysis",
-        "security-scanning",
-        "dependency-audit",
-        "fuzz-testing",
-        "sanitizers",
-        "type-checking",
-        "compiler-warnings",
-    }
-)
-# The extra credit of the 2nd, 3rd, ... distinct tool family in a slot, in slots.
-EXTRA = (0.25, 0.10)
+# The gates where each more tool finds more, and the extra credit of the 2nd, 3rd, ... distinct tool family in a slot.
+EXTRA_CREDIT = frozenset(_TABLE["extra_credit"]["checks"])
+EXTRA: tuple[float, ...] = tuple(_TABLE["extra_credit"]["steps"])
 # Tools that are one tool for the extra credit: reimplementations of each other's rules.
-FAMILIES: Mapping[str, str] = {"flake8": "ruff", "pylint": "pylint", "ruff": "ruff"}
+FAMILIES: Mapping[str, str] = dict(_TABLE["families"])
 
 CORE, AUXILIARY, PROJECT = "core", "auxiliary", "project"
-_WEIGHT = {CORE: 1.0, AUXILIARY: 0.5, PROJECT: 1.0}
+_WEIGHT: Mapping[str, float] = dict(_TABLE["tiers"])
 # The least a language's core slots weigh, whatever its share of the code: a gap in a small language still costs.
-FLOOR = 0.1
+FLOOR: float = _TABLE["weights"]["floor"]
 
 # Each language's (an ecosystem's, by its label) share of its unit's product lines: (label, unit) -> share.
 type Sizes = Mapping[tuple[str, str], float]
 _FILLS = {Status.PASS: 1.0, Status.WARN: 0.5}
+
+
+def weight_of(tier: str) -> float:
+    """What a slot of `tier` (`CORE`, `AUXILIARY`, `PROJECT`) weighs, before its language's share."""
+    return _WEIGHT[tier]
 
 
 def level_of(check: str) -> int:
@@ -142,7 +128,7 @@ class Cell:
 
     @property
     def weight(self) -> float:
-        return _WEIGHT[self.tier] * (max(FLOOR, self.size) if self.tier == CORE else 1.0)
+        return weight_of(self.tier) * (max(FLOOR, self.size) if self.tier == CORE else 1.0)
 
     @property
     def fill(self) -> float:
@@ -475,8 +461,8 @@ def _weighed(cells: Iterable[Cell], strengths: Mapping[str, float]) -> tuple[Cel
     )
 
 
-# The fewest points a re-enabling step is worth: a tenth, the least the score shows.
-SMALLEST_STEP = 0.05
+# The fewest points a re-enabling step must be worth to be shown.
+SMALLEST_STEP: float = _TABLE["next_steps"]["smallest_step"]
 
 
 def _restored(cell: Cell, off: TurnedOff) -> Cell:
@@ -559,13 +545,17 @@ def shortfalls(found: Score, *, min_level: int | None = None, min_completeness: 
 
 __all__ = [
     "COSMETIC",
+    "EXTRA",
     "EXTRA_CREDIT",
+    "FAMILIES",
     "FINDINGS",
     "FLOOR",
     "LEVELS",
     "LEVEL_NAMES",
     "NOT_FOR_AUXILIARY",
+    "POLICY_DIGEST",
     "SCORE_VERSION",
+    "SMALLEST_STEP",
     "TOP_LEVEL",
     "UNSCORED",
     "Cell",
@@ -577,4 +567,5 @@ __all__ = [
     "score",
     "shortfalls",
     "sizes",
+    "weight_of",
 ]
