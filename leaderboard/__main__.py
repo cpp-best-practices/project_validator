@@ -14,7 +14,7 @@ import argparse
 import json
 import sys
 import tempfile
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -22,7 +22,8 @@ from leaderboard import MANIFEST, Entry, ManifestError, by_name, entries, parse
 from leaderboard.evaluation import evaluate, failed, fetch, remote_head, write
 from leaderboard.history import changed_since, record
 from leaderboard.rules import Repository, changed, duplicates, github_repository, problems, token
-from project_validator.score import SCORE_VERSION
+from project_validator.losses import in_points
+from project_validator.score import SCORE_VERSION, where
 
 PREVIEW_MARKER = "<!-- leaderboard-preview -->"
 PREVIEW_STEPS = 5
@@ -62,6 +63,27 @@ def _evaluated(entry: Entry, cache: Path, validator: str) -> dict[str, object]:
     return evaluate(entry, directory, commit=commit, validator=validator)
 
 
+def _named(slot: Mapping[str, str]) -> str:
+    """`` `coverage` (Rust) ``: a slot, as the preview names it."""
+    place = where(slot["ecosystem"], slot["unit"])
+    return f"`{slot['check']}`" + (f" ({place})" if place else "")
+
+
+def loss_lines(scored: Mapping[str, object]) -> list[str]:
+    """Where the score loses its points, by cause, with the slots that cost the most: none for a night recorded before
+    the score said."""
+    found = scored.get("losses")
+    if not isinstance(found, list) or not found:
+        return []
+    lines = ["Where points are lost:", ""]
+    for each in found:
+        slots = each["slots"][:PREVIEW_STEPS]
+        named = ", ".join(_named(slot) for slot in slots)
+        more = f" and {len(each['slots']) - len(slots)} more" if len(each["slots"]) > len(slots) else ""
+        lines.append(f"- {each['title']}: {in_points(float(each['points']))} points ({named}{more})")
+    return [*lines, ""]
+
+
 def _preview_lines(entry: Entry, found: list[str], result: dict[str, object] | None) -> list[str]:
     lines = [f"### [{entry.name}]({entry.url}) on the {entry.language} board", ""]
     if found:
@@ -69,13 +91,13 @@ def _preview_lines(entry: Entry, found: list[str], result: dict[str, object] | N
     scored = result.get("score") if result else None
     if not isinstance(scored, dict):
         return [*lines, f"Could not be scored: {result.get('error') if result else 'no result'}", ""]
-    lines += [f"**{scored['summary']}**", ""]
+    lines += [f"**{scored['summary']}**", "", *loss_lines(scored)]
     steps = scored.get("next_steps")
     if isinstance(steps, list) and steps:
         lines += ["Next steps that would raise it most:", ""]
         for step in steps[:PREVIEW_STEPS]:
-            where = " in ".join(part for part in (step["ecosystem"], step["unit"]) if part and part != ".")
-            lines.append(f"- `{step['check']}`{f' ({where})' if where else ''}: +{float(step['points']):.1f} points")
+            place = where(step["ecosystem"], step["unit"])
+            lines.append(f"- `{step['check']}`{f' ({place})' if place else ''}: +{float(step['points']):.1f} points")
         lines.append("")
     return lines
 

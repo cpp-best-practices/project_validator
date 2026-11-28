@@ -79,19 +79,20 @@ What you see:
   how much was read), what is shown about the project without being judged ("About the project": the versions each
   language declares beside those CI tests, its size, dependencies, licences, history, releases, the tools CI runs, the
   shape of its CI, where it publishes and its documents), the results grouped by category with a line per language where
-  they differ, and the score's breakdown and next steps. Progress is shown while the project is read. `--verbose` shows
-  every detail and the checks that do not apply.
+  they differ, and the score's breakdown, where its points are lost and the next steps. Progress is shown while the
+  project is read. `--verbose` shows every detail and the checks that do not apply.
 - **Elsewhere** (CI logs, or without rich): the same detection, then one greppable `[STATUS] check: message` line per
   check, each detail said once.
 - **The HTML report** (`--html FILE`, or `--format html`): one self-contained file, light and dark, with the score, what
-  was detected, every result with why it matters, a matrix of checks by language, the next steps, a searchable browser
-  of every fact the validator read (linked to the file on GitHub for a checkout) and how long each stage took. Each
+  was detected, every result with why it matters, a matrix of checks by language, where the points are lost, the next
+  steps, a searchable browser of every fact the validator read (linked to the file on GitHub for a checkout) and how
+  long each stage took. Each
   language's name opens its own view: where its files are, and what each check says of it. Results open and close with
   the arrow keys too.
 - **The TUI** (`--tui`, with textual): the stages as they are read, then a tree of the overview, what was detected,
-  each language's own page (where its files are, and what each check says of it), the results, the next steps and
-  the facts by kind. The arrow keys walk the tree: Right expands a branch or enters it, Left collapses it or leaves
-  it.
+  each language's own page (where its files are, and what each check says of it), the results, where the points are
+  lost, the next steps and the facts by kind. The arrow keys walk the tree: Right expands a branch or enters it, Left
+  collapses it or leaves it.
 
 | Option | Meaning |
 | --- | --- |
@@ -102,7 +103,7 @@ What you see:
 | `--answers` | print the answers to every question about the project as JSON, per language in each unit of the project: each `yes`, `no`, `unknown` (something that could answer it was not read) or `impossible` (no known tool provides it for the language), with what shows it (the tools CI runs and the files that define them, the coverage at each granularity, the settings met, the platforms, the manifests and lockfiles, …) and what the known tools could do |
 | `--only CHECKS` / `--skip CHECKS` | comma separated check names to run / not run |
 | `--format text\|json\|markdown\|html` | output format; `text` is the console report on a terminal with rich, plain text otherwise; `html` prints the HTML report; `json` gives each check's result and, in `places`, its result for each ecosystem in each unit (status, message, details, the tools that ran, what `--auxiliary` named); `markdown` lays those places out as a grid of checks against ecosystems, for a CI job summary (and says so when no ecosystem was recognised) |
-| `--score` | also print the tooling score ([docs/score.md](docs/score.md)) in the plain text, markdown and JSON outputs (the console and HTML reports always show it): **100% means every quality gate that applies to each part of the project is in place**, with extra credit above it for complementary tools once every gate is; its **level** (Foundations, Analysis, Hardening, Complete); and the next steps worth the most. The JSON output gains a `score` beside its `results`. The statuses and the exit code do not change |
+| `--score` | also print the tooling score ([docs/score.md](docs/score.md)) in the plain text, markdown and JSON outputs (the console and HTML reports always show it): **100% means every quality gate that applies to each part of the project is in place**, with extra credit above it for complementary tools once every gate is; its **level** (Foundations, Analysis, Hardening, Complete); where its points are lost, by cause, with what corrects each; and the next steps worth the most. The JSON output gains a `score` beside its `results`. The statuses and the exit code do not change |
 | `--min-level LEVEL`, `--min-completeness PERCENT` | fail the run (exit 1) unless the score reaches this level (0 to 4), or this share of the gates that apply is in place (0 to 100), saying why on stderr ([docs/score.md](docs/score.md#gates)) |
 | `--html FILE` | also write the self-contained HTML report to `FILE`, whatever `--format` prints |
 | `-v`, `--verbose` | in the console report, show every detail, the checks that do not apply, and each stage of the reading |

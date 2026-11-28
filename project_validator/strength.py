@@ -115,12 +115,18 @@ def turned_off(facts: Facts) -> tuple[TurnedOff, ...]:
     return tuple(sorted(found, key=lambda off: -off.weight))
 
 
+def causes(facts: Facts) -> dict[str, tuple[float, float]]:
+    """What weakens each tool something turns off: (what its configuration turns off, what the comments in the code
+    do), each as the strength it takes."""
+    weights, densities = _weights(facts), _densities(facts)
+    return {tool: (weights.get(tool, 0.0), densities.get(tool, 0.0)) for tool in {*weights, *densities}}
+
+
 def strengths(facts: Facts) -> dict[str, float]:
     """The strength of each tool something turns off (a tool nothing turns off is at full strength, 1)."""
-    weights, densities = _weights(facts), _densities(facts)
     return {
-        tool: round(max(0.0, 1.0 - weights.get(tool, 0.0) - densities.get(tool, 0.0)), 6)
-        for tool in {*weights, *densities}
+        tool: round(max(0.0, 1.0 - configuration - comments), 6)
+        for tool, (configuration, comments) in causes(facts).items()
     }
 
 
@@ -132,6 +138,7 @@ __all__ = [
     "MOST_DENSITY",
     "WEIGHTS",
     "TurnedOff",
+    "causes",
     "strengths",
     "turned_off",
 ]

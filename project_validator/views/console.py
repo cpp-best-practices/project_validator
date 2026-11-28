@@ -68,6 +68,7 @@ STYLES = {
 }
 DETAILS_SHOWN = 3  # details shown per result before they are cut, unless verbose
 NEXT_STEPS = 8
+LOST_SLOTS = 3  # how many of a cause's slots the report names, unless --verbose
 ACCENT = "cyan"
 
 
@@ -257,8 +258,27 @@ class _Renderer:
                     self.text(f"{filled:g} of {slots:g} slots", style="dim"),
                 )
             self.print(breakdown)
+        if scored.losses():
+            self.losses(scored)
         if scored.next_steps:
             self.next_steps(scored)
+
+    def losses(self, scored: Score) -> None:
+        """Where the score loses its points: each cause, what corrects it, and the slots that cost the most."""
+        self.print()
+        self.print(self.text("Where points are lost", style="bold"))
+        rows = self.rich["table"].Table.grid(padding=(0, 2))
+        rows.add_column(no_wrap=True, justify="right")
+        rows.add_column(ratio=1)
+        for each in scored.losses():
+            shown = each.slots[: None if self.verbose else LOST_SLOTS]
+            body = self.text.assemble((each.title, "bold"), ("\n" + each.correct, "dim"))
+            for lost in shown:
+                body.append("\n" + lost.describe())
+            if len(each.slots) > len(shown):
+                body.append(f"\n… {len(each.slots) - len(shown)} more (--verbose)", style="dim italic")
+            rows.add_row(self.text(f"-{each.points:.1f}", style="bold red"), body)
+        self.print(rows)
 
     def next_steps(self, scored: Score) -> None:
         self.print()

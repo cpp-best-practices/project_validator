@@ -163,6 +163,25 @@ passes, and each of those checks ran. A warning does not complete a level, and a
 | 3, Hardening | `sanitizers`, `fuzz-testing`, `mutation-testing`, `security-scanning`, `action-pinning` |
 | 4, Complete | every check ran, and every slot is filled: 100% |
 
+## Where points are lost
+
+Every report says what costs the score its points, before the next steps that would add them. Each slot's shortfall,
+its weight less what it fills, is split by cause, and the causes add up to everything the score lacks of 100%:
+
+| Cause | What corrects it |
+| --- | --- |
+| Gates that fail | put the gate in place in CI |
+| Gates whose answer is not known | make what CI runs readable, or pass `--fetch-remote` |
+| Gates in place but not enforced (a warning fills half) | let the step fail CI: no `\|\| true`, `continue-on-error` or pipe without `pipefail`, and warnings as errors |
+| Tools that reach only part of the code | point the tools at all of the product's code |
+| Tools weakened by what is turned off | turn the rules that find bugs back on, in the configuration and in comments; code that needs a rule off belongs in one small, well-tested place |
+| Defects the validator found | fix what the check reports |
+
+Each cause lists its slots, heaviest first. A weakened tool says how much its configuration takes and how much the
+comments in the code do (`mypy at 0.991: 0 turned off in its configuration, 0.00892 by comments in the code`), and no
+loss is rounded away to nothing. The JSON's `score.losses` lists each cause with its `title`, `correct`, `points`
+and `slots`.
+
 ## Next steps
 
 Every slot not filled is a next step, with the points filling it is worth and, when it stands in the way of the next
