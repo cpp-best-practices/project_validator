@@ -7,7 +7,16 @@ import unittest
 from collections.abc import Mapping
 
 from project_validator.facts import Facts
-from project_validator.facts.suppressions import BLANKET, FILE, GLOBAL, KEY, STYLISTIC, Disabled, Suppressions
+from project_validator.facts.suppressions import (
+    BLANKET,
+    FILE,
+    GLOBAL,
+    KEY,
+    STYLISTIC,
+    Disabled,
+    Suppressions,
+    diagnostics,
+)
 from tests.support import github_job, make_context, temp_project
 
 
@@ -228,6 +237,53 @@ class SuppressionTests(unittest.TestCase):
         self.assertEqual(found[("src/lib.rs", "clippy")], (2, 1, True))
         self.assertEqual(found[("index.ts", "tsc")], (1, 0, False))
         self.assertEqual(found[("index.ts", "eslint")], (1, 1, False))
+
+    def test_each_suppression_names_its_rules_and_whether_they_find_bugs(self) -> None:
+        files = {
+            "app.py": "import os  # noqa: F401\nx = 1  # noqa: E501\ny = 2  # noqa\nz = 3  # noqa: E501, B008\n",
+            "lib.cpp": (
+                '#pragma GCC diagnostic ignored "-Wconversion"\n'
+                '#pragma GCC diagnostic ignored "-Wunused-parameter"\n'
+                "int f(); // NOLINT(readability-magic-numbers, bugprone-x)\n"
+                "int g(); // NOLINTNEXTLINE(readability-identifier-naming)\n"
+            ),
+            "src/lib.rs": "#[allow(clippy::unwrap_used)]\n#[allow(clippy::doc_markdown)]\nfn f() {}\n",
+            "Cargo.toml": '[package]\nname = "a"\n',
+        }
+        found = {(fact.origin.path, fact.tool): fact.found for fact in _facts(files).of(Suppressions)}
+
+        def said(path: str, tool: str) -> list[tuple[tuple[str, ...], str]]:
+            return [(each.rules, each.kind) for each in found[path, tool]]
+
+        self.assertEqual(
+            said("app.py", "ruff check"),
+            [(("F401",), KEY), (("E501",), STYLISTIC), ((), KEY), (("E501", "B008"), KEY)],
+        )
+        self.assertEqual(said("lib.cpp", "compiler"), [(("conversion",), KEY), (("unused-parameter",), STYLISTIC)])
+        self.assertEqual(
+            said("lib.cpp", "clang-tidy"),
+            [(("readability-magic-numbers", "bugprone-x"), KEY), (("readability-identifier-naming",), STYLISTIC)],
+        )
+        self.assertEqual(said("src/lib.rs", "clippy"), [(("unwrap_used",), KEY), (("doc_markdown",), STYLISTIC)])
+
+    def test_a_tool_the_policy_does_not_classify_finds_bugs_with_every_rule(self) -> None:
+        files = {"src/A.java": '@SuppressWarnings("unused")\nclass A {}\n', "pom.xml": "<project/>\n"}
+        found = [fact for fact in _facts(files).of(Suppressions) if fact.tool == "Error Prone"]
+        self.assertEqual([(each.rules, each.kind) for fact in found for each in fact.found], [(("unused",), KEY)])
+
+    def test_which_rules_of_eslint_golangci_lint_and_rubocop_find_bugs(self) -> None:
+        for tool, key, lint in (
+            (
+                "eslint",
+                ("no-undef", "@typescript-eslint/no-floating-promises", "react-hooks/rules-of-hooks"),
+                ("no-console", "max-len"),
+            ),
+            ("golangci-lint", ("errcheck", "gosec", "staticcheck"), ("lll", "funlen", "gofmt")),
+            ("RuboCop", ("Lint/UselessAssignment", "Security/Eval"), ("Style/StringLiterals", "Metrics/MethodLength")),
+        ):
+            with self.subTest(tool=tool):
+                self.assertEqual({diagnostics(tool).kind(rule) for rule in key}, {KEY})
+                self.assertEqual({diagnostics(tool).kind(rule) for rule in lint}, {STYLISTIC})
 
     def test_only_the_products_code_counts(self) -> None:
         self.assertEqual(_suppressions({"app.py": "", "tests/test_app.py": "import os  # noqa: F401\n"}), {})

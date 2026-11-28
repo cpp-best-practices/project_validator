@@ -76,6 +76,7 @@ SECTIONS = (
     ("detected", "Detected"),
     ("results", "Results"),
     ("matrix", "Matrix"),
+    ("lost", "Points lost"),
     ("next", "Next steps"),
     ("facts", "Facts"),
     ("run", "Run"),
@@ -493,6 +494,27 @@ def _matrix(analysis: Analysis) -> str:
     )
 
 
+def _losses(scored: Score | None) -> str:
+    """Where the score loses its points: each cause, what corrects it, and every slot it costs."""
+    found = scored.losses() if scored is not None else ()
+    if not found:
+        return ""
+    rows = (
+        (
+            f'<strong style="color:var(--fail)">-{each.points:.1f}</strong>',
+            f"<strong>{e(each.title)}</strong><br><span class=muted>{e(each.correct)}</span>",
+            "<br>".join(e(lost.describe()) for lost in each.slots),
+        )
+        for each in found
+    )
+    return (
+        '<section class="wrap" id="lost"><h2>Where points are lost</h2><div class="card">'
+        '<p class="muted" style="margin-top:0">What costs the score its points, by cause, and what corrects each; '
+        "together they are everything the score lacks of 100%.</p>"
+        f"{table(('Points', 'Cause', 'Slots'), rows)}</div></section>"
+    )
+
+
 def _next_steps(scored: Score | None) -> str:
     if scored is None:
         return ""
@@ -599,7 +621,9 @@ def render(analysis: Analysis, *, generated: datetime | None = None) -> str:
     when = (generated or datetime.now(UTC)).strftime("%Y-%m-%d %H:%M UTC")
     navigation = "".join(f'<a href="#{anchor}">{e(label)}</a>' for anchor, label in SECTIONS)
     sections = (_hero, _overview, _detected, _results, _matrix, _facts, _run)
-    body = "".join(section(analysis) for section in sections[:5]) + _next_steps(analysis.score)
+    body = (
+        "".join(section(analysis) for section in sections[:5]) + _losses(analysis.score) + _next_steps(analysis.score)
+    )
     body += "".join(section(analysis) for section in sections[5:])
     return (
         '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'

@@ -29,6 +29,7 @@ import math
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from dataclasses import dataclass, field, replace
 from pathlib import PurePosixPath
+from typing import TYPE_CHECKING
 
 from project_validator import policy_tables
 from project_validator.core import Result, Status
@@ -37,13 +38,18 @@ from project_validator.judging import NOT_FOR_AUXILIARY
 from project_validator.runner import Report
 from project_validator.strength import COVERED, TurnedOff
 
+if TYPE_CHECKING:
+    from project_validator.losses import Losses
+
 # 2: each language's slots weigh its share of its unit's code (upstream #331).
 # 3: what the validator finds itself (`FINDINGS`) earns nothing; 4: tools' strength weighs their slots.
 # 5: style disables cost nothing; 6: ruff's linter and flake8 are one family, as `FAMILIES` meant (upstream #440).
-SCORE_VERSION = "6"
+# 7: a comment turning off lint rules that find no bugs costs nothing, each rule's comments are held below turning the
+# rule off, and a slot is filled as far as its strongest tool is strong (upstream #295).
+SCORE_VERSION = "7"
 # The digest of the scored policy files (`policy_tables.SCORED`) this version stands for: a test fails when they change
 # without a new SCORE_VERSION, and gives the new digest to put here.
-POLICY_DIGEST = "226969e7716e04a5"
+POLICY_DIGEST = "1fd7740ce1a59f78"
 
 # The tables are policy, with the comments that say why: policy/score.toml (upstream #440).
 _TABLE = policy_tables.load("score")
@@ -131,16 +137,37 @@ class Cell:
         return weight_of(self.tier) * (max(FLOOR, self.size) if self.tier == CORE else 1.0)
 
     @property
-    def fill(self) -> float:
-        """How much of the slot is filled: a finding's (`FINDINGS`) slot, there only when it found a defect, never; nor
-        one whose strongest tool is turned off more than half (see `COVERED`)."""
+    def reach(self) -> float:
+        """How far the gate is in place, before its tools' strength: a finding's (`FINDINGS`) slot, there only when it
+        found a defect, never; nor one whose strongest tool is turned off more than half (see `COVERED`)."""
         if self.check in FINDINGS or self.strength < COVERED:
             return 0.0
         return _FILLS.get(self.status, 0.0) * self.share
 
     @property
+    def fill(self) -> float:
+        """How much of the slot is filled: as far as the gate is in place, and as far as its strongest tool is strong,
+        so that whatever turns a tool off shows in the score."""
+        return self.reach * self.strength
+
+    @property
     def filled(self) -> float:
         return self.weight * self.fill
+
+    def lacks(self) -> Iterator[tuple[str, float]]:
+        """What the slot lacks, in slots, by cause (see `project_validator.losses`): together, its weight less what it
+        fills."""
+        found = _FILLS.get(self.status, 0.0)
+        if self.check in FINDINGS:
+            yield "found", self.weight
+        elif not found:
+            yield ("unknown" if self.status is Status.ERROR else "failing"), self.weight
+        elif self.strength < COVERED:
+            yield "turned-off", self.weight
+        else:
+            yield "warning", self.weight * (1.0 - found)
+            yield "reach", self.weight * found * (1.0 - self.share)
+            yield "turned-off", self.weight * found * self.share * (1.0 - self.strength)
 
     @property
     def families(self) -> tuple[str, ...]:
@@ -150,9 +177,9 @@ class Cell:
     def extra(self) -> float:
         """The extra credit the slot earns, in slots: for each distinct tool family past the first, in a gate where
         more tools find more."""
-        if self.check not in EXTRA_CREDIT or not self.fill:
+        if self.check not in EXTRA_CREDIT or not self.reach:
             return 0.0
-        return sum(EXTRA[: max(0, len(self.families) - 1)]) * self.weight * self.fill * self.power
+        return sum(EXTRA[: max(0, len(self.families) - 1)]) * self.weight * self.reach * self.power
 
     def as_dict(self) -> dict[str, object]:
         return {
@@ -168,6 +195,11 @@ class Cell:
             "extra": _number(self.extra),
             "strength": _number(self.strength),
         }
+
+
+def where(ecosystem: str, unit: str) -> str:
+    """`C++ in lib`: a slot's language and unit, leaving out the project's root and the whole project's own gates."""
+    return " in ".join(part for part in (ecosystem, {"": "", ".": ""}.get(unit, unit)) if part)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -188,8 +220,7 @@ class NextStep:
 
     @property
     def where(self) -> str:
-        unit = {"": "", ".": ""}.get(self.unit, self.unit)
-        return " in ".join(part for part in (self.ecosystem, unit) if part)
+        return where(self.ecosystem, self.unit)
 
     def describe(self) -> str:
         """`coverage (C++ in lib): +12 points, needed for Level 2 (Analysis); run gcovr in CI`."""
@@ -225,6 +256,9 @@ class Score:
     extra_slots: float
     cells: tuple[Cell, ...]
     next_steps: tuple[NextStep, ...] = field(default=())
+    # What weakens each tool: (what its configuration turns off, what the comments in the code do), as
+    # `project_validator.strength.causes` says.
+    weakened: Mapping[str, tuple[float, float]] = field(default_factory=dict)
 
     @property
     def base(self) -> float:
@@ -288,6 +322,12 @@ class Score:
     def several_units(self) -> bool:
         return len({cell.unit for cell in self.cells} - {""}) > 1
 
+    def losses(self) -> tuple[Losses, ...]:
+        """Where the score loses its points, by cause, the heaviest first (see `project_validator.losses`)."""
+        from project_validator.losses import losses  # it reads the cells this module defines
+
+        return losses(self)
+
     def as_dict(self) -> dict[str, object]:
         return {
             "version": SCORE_VERSION,
@@ -304,6 +344,7 @@ class Score:
             "units": {name: [_number(a), _number(b)] for name, (a, b) in self.units().items()},
             "cells": [cell.as_dict() for cell in self.cells],
             "next_steps": [step.as_dict() for step in self.next_steps],
+            "losses": [lost.as_dict() for lost in self.losses()],
         }
 
 
@@ -506,6 +547,7 @@ def score(
     sizes: Sizes | None = None,
     strengths: Mapping[str, float] | None = None,
     turned_off: Iterable[TurnedOff] = (),
+    weakened: Mapping[str, tuple[float, float]] | None = None,
 ) -> Score:
     """The score of a run, from its reports. A level is reached only when each of its checks ran, and the top level
     only when `every_check` (the names of every check there is) ran too: a run narrowed by `--only` or `--skip`
@@ -527,6 +569,7 @@ def score(
         extra_slots=sum(cell.extra for cell in cells),
         cells=cells,
         next_steps=tuple(sorted((*steps, *_reenabled(cells, slots, turned_off)), key=_rank)),
+        weakened=dict(weakened or {}),
     )
 
 

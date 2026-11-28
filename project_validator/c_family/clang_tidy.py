@@ -58,6 +58,7 @@ PRAGMA_IGNORED = Marker(
         r'#\s*pragma\s+(?:(?:GCC|clang)\s+diagnostic\s+ignored\s+"(?P<codes>[^"]+)"|warning\s*\(\s*disable\s*:[^)]*\))'
         r"(?P<reason>[^\n]*)"
     ),
+    prefix="-W",
 )
 
 

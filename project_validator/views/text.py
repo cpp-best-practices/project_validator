@@ -28,6 +28,7 @@ from project_validator.views.common import (
 from project_validator.words import folder
 
 NEXT_STEPS = 5  # how many next steps the report lists
+LOST_SLOTS = 3  # how many of a cause's slots the report names
 
 
 def detected_lines(analysis: Analysis) -> list[str]:
@@ -72,6 +73,13 @@ def score_lines(scored: Score, *, markdown: bool = False, steps: int = NEXT_STEP
             f"  - {name}: {floor_percent(percent)}% ({filled:g} of {slots:g} slots)"
             for name, percent, filled, slots in rows
         )
+    if losses := scored.losses():
+        lines.append("Where points are lost:")
+        for each in losses:
+            lines.append(f"  - {each.describe()}")
+            lines.extend(f"      - {lost.describe()}" for lost in each.slots[:LOST_SLOTS])
+            if len(each.slots) > LOST_SLOTS:
+                lines.append(f"      - and {len(each.slots) - LOST_SLOTS} more")
     if scored.next_steps:
         lines.append("Next steps:")
         lines.extend(f"  - {step.describe()}" for step in scored.next_steps[:steps])

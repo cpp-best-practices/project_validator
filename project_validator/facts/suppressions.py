@@ -39,14 +39,33 @@ class Disabled(Fact):
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
+class Suppression:
+    """One suppression written in the code: the diagnostics it names (none: every one), whether text or a link after
+    it says why, and its kind: `KEY` when it turns off a diagnostic that finds bugs (or names none), `STYLISTIC` when
+    every one it names is a lint rule that finds no bugs."""
+
+    rules: tuple[str, ...] = ()
+    justified: bool = False
+    kind: str = KEY
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
 class Suppressions(Fact):
-    """The suppressions of `tool`'s diagnostics written in one file: how many, how many say why, and whether one turns
-    off every diagnostic of the file (`# mypy: ignore-errors`, `/* eslint-disable */`, `#![allow(warnings)]`)."""
+    """The suppressions of `tool`'s diagnostics written in one file, each with what it names (`found`), and whether
+    one turns off every diagnostic of the file (`# mypy: ignore-errors`, `/* eslint-disable */`,
+    `#![allow(warnings)]`)."""
 
     tool: str
-    count: int
-    justified: int = 0
+    found: tuple[Suppression, ...] = ()
     blanket: bool = False
+
+    @property
+    def count(self) -> int:
+        return len(self.found)
+
+    @property
+    def justified(self) -> int:
+        return sum(each.justified for each in self.found)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -71,9 +90,9 @@ class Diagnostics:
 @cache
 def diagnostics(tool: str) -> Diagnostics:
     """What `policy/diagnostics.toml` says of `tool`'s diagnostics: a table may take its key diagnostics from another
-    tool's (`key_of`); a tool it doesn't name has only stylistic ones."""
+    tool's (`key_of`). Every diagnostic of a tool it doesn't name finds bugs, until a table says which don't."""
     table = policy_tables.load("diagnostics")
-    entry = table.get(tool, {})
+    entry = table.get(tool, {"key": ["*"]})
     return Diagnostics(
         blanket=tuple(entry.get("blanket", ())),
         key=tuple(table[entry["key_of"]]["key"] if "key_of" in entry else entry.get("key", ())),
@@ -108,6 +127,22 @@ class Marker:
     languages: frozenset[str]
     pattern: re.Pattern[str]
     blanket: re.Pattern[str] | None = None
+    prefix: str = ""  # what each code starts with that the policy's names leave out (`-W`, `clippy::`)
+
+    def rules(self, codes: str | None) -> tuple[str, ...]:
+        """The diagnostics a suppression's `codes` name, as the policy names them."""
+        return tuple(code.removeprefix(self.prefix) for code in _CODE.findall(codes or ""))
+
+
+# A diagnostic's name in a suppression's codes: not the quotes, commas and brackets around it.
+_CODE = re.compile(r"[\w@/.:-]+")
+
+
+def finding_bugs(tool: str, rules: tuple[str, ...]) -> tuple[str, ...]:
+    """Which of `rules` (a suppression's) find bugs, as the policy says; every one (`*`) when it names none."""
+    if not rules:
+        return ("*",)
+    return tuple(rule for rule in rules if diagnostics(tool).kind(rule) != STYLISTIC)
 
 
 def listed(value: object) -> tuple[str, ...]:
@@ -210,13 +245,15 @@ def compiler_disabled(commands: Iterable[Command]) -> Iterator[Disabled]:
             )
 
 
-def _counted(text: str, marker: Marker) -> tuple[int, int, bool]:
-    count = justified = 0
-    for found in marker.pattern.finditer(text):
-        count += 1
-        justified += bool(_REASON.search(found["reason"] or ""))
+def _found(text: str, marker: Marker) -> tuple[tuple[Suppression, ...], bool]:
+    """Each suppression of `marker` in `text`, and whether one turns off the whole file."""
+    found = []
+    for match in marker.pattern.finditer(text):
+        rules = marker.rules(match.groupdict().get("codes"))
+        kind = KEY if finding_bugs(marker.tool, rules) else STYLISTIC
+        found.append(Suppression(rules=rules, justified=bool(_REASON.search(match["reason"] or "")), kind=kind))
     blanket = marker.blanket is not None and marker.blanket.search(text) is not None
-    return count, justified, blanket
+    return tuple(found), blanket
 
 
 def suppression_facts(project: Project, facts: Facts, markers: Iterable[Marker]) -> Iterator[Suppressions]:
@@ -225,16 +262,14 @@ def suppression_facts(project: Project, facts: Facts, markers: Iterable[Marker])
 
     markers = tuple(markers)
     for source in facts.of(SourceFile):
-        found = [marker for marker in markers if source.language in marker.languages]
-        if not found or source.role != "product" or not source.lines:
+        matching = [marker for marker in markers if source.language in marker.languages]
+        if not matching or source.role != "product" or not source.lines:
             continue
         text = project.read_text(source.path)
-        for marker in found:
-            count, justified, blanket = _counted(text, marker)
-            if count or blanket:
-                yield Suppressions(
-                    origin=Origin(path=source.path), tool=marker.tool, count=count, justified=justified, blanket=blanket
-                )
+        for marker in matching:
+            found, blanket = _found(text, marker)
+            if found or blanket:
+                yield Suppressions(origin=Origin(path=source.path), tool=marker.tool, found=found, blanket=blanket)
 
 
 def known_disablers() -> tuple[Disabler, ...]:
@@ -262,9 +297,11 @@ __all__ = [
     "Disabled",
     "Disabler",
     "Marker",
+    "Suppression",
     "Suppressions",
     "compiler_disabled",
     "diagnostics",
+    "finding_bugs",
     "keyed",
     "known_disablers",
     "known_markers",

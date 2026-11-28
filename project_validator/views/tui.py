@@ -141,6 +141,22 @@ def report_page(report: Report) -> str:
     return "\n".join(lines)
 
 
+def losses_page(analysis: Analysis) -> str:
+    """Where the score loses its points, by cause, with every slot each costs."""
+    found = analysis.score.losses() if analysis.score is not None else ()
+    if not found:
+        return "No points are lost."
+    lines = ["[bold]Where points are lost[/] [dim](the points each costs, and what corrects it)[/]"]
+    for each in found:
+        lines += [
+            "",
+            f"[bold red]-{each.points:5.1f}[/]  [bold]{markup(each.title)}[/]",
+            f"        [dim]{markup(each.correct)}[/]",
+        ]
+        lines += [f"        {markup(lost.describe())}" for lost in each.slots]
+    return "\n".join(lines)
+
+
 def next_steps(analysis: Analysis) -> str:
     if analysis.score is None or not analysis.score.next_steps:
         return "Every quality gate that applies is in place."
@@ -212,6 +228,7 @@ __all__ = [
     "build_app",
     "detected",
     "facts_page",
+    "losses_page",
     "markup",
     "next_steps",
     "overview",

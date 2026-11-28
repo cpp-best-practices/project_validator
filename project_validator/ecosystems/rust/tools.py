@@ -326,4 +326,5 @@ ALLOW_ATTRIBUTE = Marker(
     languages=RUST_LANGUAGE,
     pattern=re.compile(r"#!?\[allow\((?P<codes>[^)]*)\)\](?P<reason>[^\n]*)"),
     blanket=re.compile(r"#!\[allow\(\s*warnings\s*\)\]"),
+    prefix="clippy::",
 )

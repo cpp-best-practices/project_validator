@@ -11,7 +11,7 @@ from importlib.resources import files
 from pathlib import Path
 
 from project_validator import policy_tables
-from project_validator.facts.suppressions import BLANKET, FILE, GLOBAL, KEY, STYLISTIC, known_disablers
+from project_validator.facts.suppressions import BLANKET, FILE, GLOBAL, KEY, STYLISTIC, known_disablers, known_markers
 from project_validator.facts.tools import known_tools
 from project_validator.plugins import discover
 from project_validator.score import (
@@ -29,7 +29,7 @@ from project_validator.score import (
     TOP_LEVEL,
     weight_of,
 )
-from project_validator.strength import COVERED, DENSITY, JUSTIFIED_DENSITY, MOST_DENSITY, WEIGHTS
+from project_validator.strength import BELOW, COVERED, DENSITY, JUSTIFIED_DENSITY, MOST_DENSITY, WEIGHTS
 
 _DOCS = Path(__file__).resolve().parents[1] / "docs" / "score.md"
 
@@ -85,16 +85,19 @@ class StrengthTableTests(unittest.TestCase):
                 self.assertLessEqual(WEIGHTS[kind, FILE, False], WEIGHTS[kind, GLOBAL, False])
 
     def test_the_numbers_are_the_documented_ones(self) -> None:
-        self.assertEqual((COVERED, DENSITY, JUSTIFIED_DENSITY, MOST_DENSITY), (0.5, 0.02, 0.005, 0.5))
+        self.assertEqual((COVERED, DENSITY, JUSTIFIED_DENSITY, MOST_DENSITY, BELOW), (0.5, 0.02, 0.005, 0.5, 0.8))
         self.assertEqual(WEIGHTS[BLANKET, GLOBAL, False], 1.0)
         self.assertEqual((WEIGHTS[KEY, GLOBAL, False], WEIGHTS[KEY, FILE, True]), (0.25, 0.02))
 
 
 class DiagnosticsTableTests(unittest.TestCase):
     def test_every_tool_in_the_file_turns_diagnostics_off_somewhere(self) -> None:
-        tools = {disabler.tool for disabler in known_disablers()} | {"compiler"}
-        self.assertEqual(sorted(set(policy_tables.load("diagnostics")) - tools), [])
-        self.assertEqual(sorted(tools - set(policy_tables.load("diagnostics"))), [])
+        """Each tool whose configuration turns diagnostics off has a table; a tool known only by its inline
+        suppressions may have one, and without it finds bugs with every rule."""
+        configured = {disabler.tool for disabler in known_disablers()} | {"compiler"}
+        inline = {marker.tool for marker in known_markers()}
+        self.assertEqual(sorted(set(policy_tables.load("diagnostics")) - configured - inline), [])
+        self.assertEqual(sorted(configured - set(policy_tables.load("diagnostics"))), [])
 
     def test_each_entry_has_only_known_fields_and_well_formed_globs(self) -> None:
         for tool, entry in policy_tables.load("diagnostics").items():

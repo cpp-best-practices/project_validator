@@ -2,9 +2,35 @@
 
 The console and HTML reports always show the score; `python -m project_validator --score path/to/project` adds it to
 the plain text, markdown and JSON outputs too. The statuses and the exit code do not change. The design is upstream
-issue #295; this is **version 6**.
+issue #295; this is **version 7**.
 
 > **87% · Level 2 Analysis · 41 of 47 gates in place**
+
+## What the score is for
+
+The validator exists to drive a project's development towards higher quality, whether a person or an AI agent does
+the work. Copy-pasted code, code no tool checks, large and complex functions, warnings turned off: each makes the code
+worse, and each is something a quality gate can catch and keep out. The score counts those gates, so that the way to
+raise it is to put them in place and keep them on.
+
+That only works if the number has two properties:
+
+- **It changes in meaningful ways as the code gets better.** A new gate, a tool turned back on, a suppression removed:
+  each moves the score, in proportion to what it adds. A change that doesn't make the code better doesn't move it.
+- **It is hard to game.** A tireless optimiser told to raise the number must find that the cheapest way to raise it is
+  to improve the code. A gate that runs but can't fail, a check turned off, a tool nobody's code reaches: none of these
+  earns what the real gate does.
+
+This is why turning a warning off has a cost even when it is done one line at a time. If a comment like
+`NOLINT(bugprone-…)` were free, a project could keep every tool "on" and silence each finding where it appears. The
+gate would look in place while finding nothing. So a local suppression of a rule that finds bugs costs something,
+less with a reason, never nothing, and always less than turning the rule off everywhere. The cheapest way to keep a
+rule that must be off for some code is to move that code into one small, well-tested function and turn the rule off
+there once. A comment that turns off a lint rule that finds no bugs, or formatting, costs nothing, but the report still
+lists it.
+
+The score measures whether the gates are in place, not the code itself. The gates are what keep the code from getting
+worse.
 
 ## 100% means every gate is in place
 
@@ -50,9 +76,9 @@ each part's gates is in place. The headline stays the one score of the whole pro
 
 ## Strength
 
-A tool that is turned off counts for less (score version 4; style weighs nothing since version 5). A tool's
-**strength**, from 0 to 1, is what is left after what its configuration turns off and the suppressions written in the
-code:
+A tool that is turned off counts for less (score version 4; lint rules that find no bugs weigh nothing since version
+5). A tool's **strength**, from 0 to 1, is what is left after what its configuration turns off and the suppressions
+written in the code:
 
 ```text
 strength = max(0, 1 - the weights of what is turned off - the density of the suppressions)
@@ -63,11 +89,11 @@ strength = max(0, 1 - the weights of what is turned off - the density of the sup
 | Everything (clang-tidy's `-*` with nothing enabled after it, ruff's `ALL`, `-w`, mypy's `ignore_errors`) | the tool counts as not run | 0.5 |
 | A diagnostic that finds bugs (`bugprone-*`, clang-tidy's memory checks such as `cppcoreguidelines-pro-bounds-*`, `-Wconversion`, bugbear `B`, bandit `S`, mypy's error codes, tsconfig's strict flags), no reason given | 0.25 | 0.05 |
 | The same, with a comment saying why on its line or the line above | 0.12 | 0.02 |
-| Any other diagnostic (style) | 0 | 0 |
+| Any other diagnostic: a lint rule that finds no bugs (naming, readability, line length) | 0 | 0 |
 
-Style weighs nothing: strength is what a tool can still find of bugs. A project that enables every check and turns off
-the ones that don't apply to it (clang-tidy's `altera-*` for FPGAs, `fuchsia-*` for Fuchsia's rules) must not count for
-less than one that only ever enabled a few.
+Lint rules that find no bugs weigh nothing: strength is what a tool can still find of bugs. A project that enables
+every check and turns off the ones that don't apply to it (clang-tidy's `altera-*` for FPGAs, `fuchsia-*` for
+Fuchsia's rules) must not count for less than one that only ever enabled a few.
 
 clang-tidy's checks against undefined behaviour (`cppcoreguidelines-pro-bounds-*`, `pro-type-reinterpret-cast`,
 `pro-type-union-access`, `hicpp-no-array-decay`, `hicpp-signed-bitwise`) find bugs for this purpose. Each flags every
@@ -80,19 +106,38 @@ The weights are in `project_validator/policy/strength.toml`, and which diagnosti
 with what they guard against, in `project_validator/policy/diagnostics.toml`
 ([#440](https://github.com/cpp-best-practices/project_validator/issues/440)).
 
-The suppressions in the product's code (`NOLINT`, `# noqa`, `# type: ignore`, `eslint-disable`, `#[allow]`,
-`//nolint`, `@SuppressWarnings`, ...) weigh 0.02 each per thousand lines of the tool's languages, 0.005 when text or a
-link after one says why, at most 0.5 together; a file turned off whole (`# mypy: ignore-errors`,
-`/* eslint-disable */`) weighs as everything turned off for one file.
+The comments in the product's code that turn rules off (`NOLINT`, `# noqa`, `# type: ignore`, `eslint-disable`,
+`#[allow]`, `//nolint`, `@SuppressWarnings`, ...) weigh by the rules they name (score version 7):
 
-**A gate counts only when its strongest tool is at least half strong.** Below that, its slot is not filled, it holds
-its level back, and it is a next step: turn back on what is turned off, and fix what the tool finds. A gate's extra
-credit is scaled by its tools' mean strength. Each slot's `strength` is in `--format json --score`.
+| A comment that turns off | Weighs |
+| --- | --- |
+| Only lint rules that find no bugs (`# noqa: E501`, `NOLINT(readability-magic-numbers)`, `rubocop:disable Style/…`) | nothing; "About the project" counts them |
+| A rule that finds bugs, or names none (`NOLINT(bugprone-…)`, `# noqa: F401`, a bare `# noqa`) | 0.02 per thousand lines of the tool's languages |
+| The same, with text or a link after it saying why | 0.005 per thousand lines |
+
+The comments that cost weigh at most 0.5 together, and each rule's are held below what turning that rule off weighs:
+those in one file at most 0.8 of turning it off for that file, and all of them at most 0.8 of turning it off
+everywhere (a comment naming no rule, of turning everything off). So one comment costs less than many, and many cost
+less than turning the rule off: the cheapest way to keep a rule that must be off for some code is to move that code
+into one well-tested place and turn the rule off there once. A comment naming several rules counts for each that finds
+bugs. A file turned off whole (`# mypy: ignore-errors`, `/* eslint-disable */`) weighs as everything turned off for
+one file.
+
+Which rules find bugs is the same list as for the configuration, in `policy/diagnostics.toml`; eslint, golangci-lint
+and RuboCop are named there for their comments alone. A tool the file doesn't name (cppcheck, Error Prone, PHPStan)
+finds bugs with every rule, until its table says otherwise.
+
+**A slot is filled as far as its strongest tool is strong** (score version 7): a gate whose clang-tidy is at 0.9
+fills 0.9 of its slot, so whatever turns a tool off shows in the score, a comment as much as a configuration. **A gate
+counts only when its strongest tool is at least half strong.** Below that, its slot is not filled at all, it holds its
+level back, and it is a next step: turn back on what is turned off, and fix what the tool finds. A gate's extra credit
+is scaled by its tools' mean strength (once: not again by how far its slot is filled). Each slot's `strength` is in
+`--format json --score`.
 
 Each diagnostic that finds bugs a tool's configuration turns off is a next step of its own, where turning it back on
 restores points: `re-enable bugprone-narrowing-conversions in .clang-tidy (clang-tidy)`, and fix what the tool finds.
-It is worth the slots it fills again, or the extra credit it restores; a small, local task that improves the code
-rather than adding a tool.
+It is worth what it fills of its slots again, and the extra credit it restores, whether or not the gate already counts;
+a small, local task that improves the code rather than adding a tool.
 
 ## Extra credit
 
@@ -117,6 +162,25 @@ passes, and each of those checks ran. A warning does not complete a level, and a
 | 2, Analysis | `static-analysis`, `type-checking`, `coverage`, `dependency-management`, `dependency-audit` |
 | 3, Hardening | `sanitizers`, `fuzz-testing`, `mutation-testing`, `security-scanning`, `action-pinning` |
 | 4, Complete | every check ran, and every slot is filled: 100% |
+
+## Where points are lost
+
+Every report says what costs the score its points, before the next steps that would add them. Each slot's shortfall,
+its weight less what it fills, is split by cause, and the causes add up to everything the score lacks of 100%:
+
+| Cause | What corrects it |
+| --- | --- |
+| Gates that fail | put the gate in place in CI |
+| Gates whose answer is not known | make what CI runs readable, or pass `--fetch-remote` |
+| Gates in place but not enforced (a warning fills half) | let the step fail CI: no `\|\| true`, `continue-on-error` or pipe without `pipefail`, and warnings as errors |
+| Tools that reach only part of the code | point the tools at all of the product's code |
+| Tools weakened by what is turned off | turn the rules that find bugs back on, in the configuration and in comments; code that needs a rule off belongs in one small, well-tested place |
+| Defects the validator found | fix what the check reports |
+
+Each cause lists its slots, heaviest first. A weakened tool says how much its configuration takes and how much the
+comments in the code do (`mypy at 0.991: 0 turned off in its configuration, 0.00892 by comments in the code`), and no
+loss is rounded away to nothing. The JSON's `score.losses` lists each cause with its `title`, `correct`, `points`
+and `slots`.
 
 ## Next steps
 
@@ -160,8 +224,9 @@ With `--format json --score`, the output is `{"format": "results", "version": "1
 ## What the score is not
 
 It measures whether quality gates are in place, not the quality of the code, nor the cost of the CI. A gate that runs
-but can not fail CI (`|| true`) still counts for now; reading that, and verified points from CI artefacts, are for a
-later version. The score's version is printed with it, so numbers from different versions are never compared.
+but can not fail CI (`|| true`, a pipe without `pipefail`, `continue-on-error`) is a warning, and fills half its slot;
+verified points from CI artefacts are for a later version. The score's version is printed with it, so numbers from
+different versions are never compared.
 
 ## The leaderboard
 

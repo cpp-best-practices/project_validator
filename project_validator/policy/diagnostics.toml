@@ -1,6 +1,6 @@
 # Which of each tool's diagnostics turn everything off (`blanket`) and which find bugs (`key`, globs), and what some
 # of them guard against (`reasons`: a glob and the words a next step uses). A diagnostic a reason names finds bugs too.
-# Any other diagnostic is style, which costs a tool's strength nothing (see strength.toml).
+# Any other diagnostic is a lint rule that finds no bugs, which costs a tool's strength nothing (see strength.toml).
 #
 # A table is a tool as the validator names it, whose settings a reader turns into what is turned off. Changing an
 # entry changes the score: bump SCORE_VERSION in project_validator/score.py and say why in the changelog.
@@ -71,3 +71,45 @@ key_of = "flake8"
 # The flags `strict` turns on, which tsconfig may turn off one by one: each lets bugs through.
 [tsc]
 key = ["*"]
+
+# The tools below are named only for their inline suppressions (`eslint-disable`, `//nolint`, `rubocop:disable`): a
+# comment that turns off only rules not listed here turns off lint rules that find no bugs, which costs nothing. A
+# tool not named in this file finds bugs with every rule (cppcheck, Error Prone, PHPStan).
+
+# eslint: its core rules of the "possible problems" kind, and the rules of the TypeScript, React hooks and security
+# plugins that find bugs; not its suggestions (`no-console`, `max-len`, `prefer-const`) nor its layout rules.
+[eslint]
+key = [
+    "array-callback-return", "constructor-super", "for-direction", "getter-return", "no-async-promise-executor",
+    "no-await-in-loop", "no-class-assign", "no-compare-neg-zero", "no-cond-assign", "no-const-assign",
+    "no-constant-binary-expression", "no-constant-condition", "no-constructor-return", "no-control-regex",
+    "no-debugger", "no-dupe-*", "no-duplicate-*", "no-empty-character-class", "no-empty-pattern", "no-ex-assign",
+    "no-fallthrough", "no-func-assign", "no-import-assign", "no-inner-declarations", "no-invalid-regexp",
+    "no-irregular-whitespace", "no-loss-of-precision", "no-misleading-character-class",
+    "no-new-native-nonconstructor", "no-obj-calls", "no-promise-executor-return", "no-prototype-builtins",
+    "no-self-assign", "no-self-compare", "no-setter-return", "no-sparse-arrays", "no-template-curly-in-string",
+    "no-this-before-super", "no-undef", "no-unexpected-multiline", "no-unmodified-loop-condition", "no-unreachable*",
+    "no-unsafe-*", "no-unused-private-class-members", "no-unused-vars", "no-use-before-define",
+    "no-useless-backreference", "require-atomic-updates", "use-isnan", "valid-typeof", "eqeqeq", "no-eval",
+    "no-implied-eval", "no-new-func", "no-shadow",
+    "@typescript-eslint/await-thenable", "@typescript-eslint/ban-ts-comment", "@typescript-eslint/no-explicit-any",
+    "@typescript-eslint/no-floating-promises", "@typescript-eslint/no-misused-promises",
+    "@typescript-eslint/no-non-null-assertion", "@typescript-eslint/no-shadow", "@typescript-eslint/no-unsafe-*",
+    "@typescript-eslint/no-unused-vars", "@typescript-eslint/no-use-before-define", "@typescript-eslint/restrict-*",
+    "@typescript-eslint/switch-exhaustiveness-check", "@typescript-eslint/no-unnecessary-condition",
+    "react-hooks/*", "security/*",
+]
+
+# golangci-lint: the linters that find bugs (staticcheck's own codes too); not those of layout, length or naming
+# (`lll`, `funlen`, `gofmt`, `revive`'s style rules).
+[golangci-lint]
+key = [
+    "errcheck", "govet", "staticcheck", "SA*", "gosec", "G[0-9]*", "ineffassign", "unused", "typecheck", "bodyclose",
+    "nilerr", "nilnil", "noctx", "rowserrcheck", "sqlclosecheck", "errorlint", "errchkjson", "exhaustive",
+    "contextcheck", "durationcheck", "makezero", "copyloopvar", "exportloopref", "forcetypeassert", "asasalint",
+    "bidichk", "musttag", "reassign", "spancheck",
+]
+
+# RuboCop: its Lint and Security departments; not Style, Layout, Naming or Metrics.
+[RuboCop]
+key = ["Lint/*", "Security/*"]

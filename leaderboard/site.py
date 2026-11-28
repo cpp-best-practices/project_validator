@@ -22,7 +22,8 @@ from pathlib import Path
 from leaderboard import Entry
 from leaderboard.history import latest, movement, previous, ranked, read_history, scored
 from project_validator.core import Status
-from project_validator.score import SCORE_VERSION
+from project_validator.losses import in_points
+from project_validator.score import SCORE_VERSION, where
 from project_validator.views.html import bar, e, pill, ring, table
 
 NEXT_STEPS = 10
@@ -213,6 +214,27 @@ def _step_row(step: Mapping[str, object]) -> tuple[str, ...]:
     )
 
 
+def losses_card(scored: Mapping[str, object]) -> str:
+    """Where the score loses its points, by cause, and what corrects each: nothing for a night recorded before the
+    score said."""
+    found = scored.get("losses")
+    if not isinstance(found, list) or not found:
+        return ""
+    rows = [
+        (
+            f'<strong style="color:var(--fail)">-{e(in_points(float(each["points"])))}</strong>',
+            f"<strong>{e(each['title'])}</strong><br><span class=muted>{e(each['correct'])}</span>",
+            "<br>".join(
+                f"<code>{e(slot['check'])}</code> {e(where(slot['ecosystem'], slot['unit']))} "
+                f'<span class="muted">{e(in_points(float(slot["points"])))}</span>'
+                for slot in each["slots"][:NEXT_STEPS]
+            ),
+        )
+        for each in found
+    ]
+    return f'<h2>Where points are lost</h2><div class="card">{table(("Points", "Cause", "Slots"), rows)}</div>'
+
+
 def _next_steps(scored: Mapping[str, object]) -> str:
     found = scored.get("next_steps")
     steps = found if isinstance(found, list) else []
@@ -287,6 +309,7 @@ def project_page(
         f'<div class="chips">{_level(scored)}<span class="chip">{e(_gates(scored))}</span></div>{facts}</div></div>'
         f'<div class="grid two" style="margin-top:1rem"><div class="card"><h3>The score, night by night</h3>'
         f'{_history(history)}</div><div class="card"><h3>Since it was last scored</h3><ul>{since}</ul></div></div>'
+        f"{losses_card(scored)}"
         f'<h2>Next steps</h2><div class="card">{_next_steps(scored)}</div>'
         f'<h2>Every gate</h2><div class="card">{_cells(scored)}</div>{_badge_section(badge_url)}\n'
     )

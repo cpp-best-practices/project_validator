@@ -19,6 +19,7 @@ from project_validator.views.tui import (
     detected,
     facts_page,
     language_page,
+    losses_page,
     markup,
     next_steps,
     overview,
@@ -141,6 +142,7 @@ class Validator(App[int]):
             languages.add_leaf(
                 f"{markup(view.language)} [dim]{markup(view.files)}[/]", data=("language", view.language)
             )
+        tree.root.add_leaf("Where points are lost", data=("lost", None))
         tree.root.add_leaf("Next steps", data=("next", None))
         facts = tree.root.add(f"Facts [dim]{len(analysis.facts.all):,}[/]", data=("facts", None))
         for kind, count in fact_kinds(analysis):
@@ -164,6 +166,7 @@ class Validator(App[int]):
         text = {
             "overview": overview,
             "detected": detected,
+            "lost": losses_page,
             "next": next_steps,
         }.get(page)
         pane.update(text(self.analysis) if text is not None else report_page(value))
