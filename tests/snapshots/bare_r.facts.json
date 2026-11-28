@@ -63,6 +63,8 @@
       "reader": "R package dependencies"
     },
     {
+      "development": [],
+      "direct": null,
       "kind": "Declared",
       "manager": "R packages",
       "origin": "DESCRIPTION"

@@ -95,6 +95,8 @@
       "reader": "Maven dependencies"
     },
     {
+      "development": [],
+      "direct": null,
       "kind": "Declared",
       "manager": "Maven",
       "origin": "pom.xml"

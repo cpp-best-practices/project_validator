@@ -292,6 +292,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -407,6 +408,7 @@
       "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -700,6 +702,7 @@
       ]
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -993,6 +996,7 @@
       ]
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1286,6 +1290,7 @@
       ]
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1579,6 +1584,7 @@
       ]
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1872,6 +1878,7 @@
       ]
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -2175,6 +2182,7 @@
       "reference": "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -2245,6 +2253,7 @@
       "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -2587,6 +2596,11 @@
     {
       "kind": "ConfigurationFile",
       "origin": "package.json",
+      "reader": "package.json pins"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
       "reader": "graphql-eslint"
     },
     {
@@ -2605,6 +2619,15 @@
       "reader": "package.json dependencies"
     },
     {
+      "development": [
+        "@vitest/coverage-v8",
+        "eslint",
+        "eslint-plugin-security",
+        "prettier",
+        "typescript",
+        "vitest"
+      ],
+      "direct": [],
       "kind": "Declared",
       "manager": "npm packages",
       "origin": "package.json"

@@ -319,6 +319,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -434,6 +435,7 @@
       "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -614,6 +616,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -794,6 +797,7 @@
       "via": []
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -974,6 +978,7 @@
       "via": []
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1154,6 +1159,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1334,6 +1340,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1524,6 +1531,7 @@
       "reference": "actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1594,6 +1602,7 @@
       "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1897,6 +1906,8 @@
       "reader": "NuGet package references"
     },
     {
+      "development": [],
+      "direct": null,
       "kind": "Declared",
       "manager": "NuGet",
       "origin": "Directory.Build.props"
@@ -2070,6 +2081,8 @@
       "reader": "NuGet package references"
     },
     {
+      "development": [],
+      "direct": null,
       "kind": "Declared",
       "manager": "NuGet",
       "origin": "fuzz/App.Fuzz/App.Fuzz.csproj"
@@ -2196,6 +2209,8 @@
       "reader": "NuGet package references"
     },
     {
+      "development": [],
+      "direct": null,
       "kind": "Declared",
       "manager": "NuGet",
       "origin": "tests/App.Tests/App.Tests.csproj"

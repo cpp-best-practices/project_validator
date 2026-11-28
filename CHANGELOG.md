@@ -15,11 +15,12 @@ The first release.
   score (`--score`, score version 5). "About the project" shows what is learned without being judged: the versions
   each language declares (`requires-python`, `rust-version`, the `go` directive, `engines`, the C and C++ standard,
   and the pins of `.python-version`, `rust-toolchain.toml` and `.nvmrc`) beside the versions CI tests; each
-  language's lines by role and how much is generated; each package manager's manifests and lockfiles, and the
-  vendored code; the license files beside what the manifests declare, the sources' SPDX headers, and the licenses of
-  vendored code; the repository's age, its last year's commits, authors and signed commits, and its version tags,
-  how often they come and whether the manifests' version is the latest tag's; every tool CI runs, by what it does;
-  the events CI runs on, whether pull requests from forks run it, and its jobs and OSes; where releases are published,
+  language's lines by role and how much is generated; each package manager's direct dependencies, manifests and
+  lockfiles, and the vendored code; the license files beside what the manifests declare, the sources' SPDX headers,
+  and the licenses of vendored code; the repository's age, its last year's commits, authors and signed commits, and
+  its version tags, how often they come and whether the manifests' version is the latest tag's; every tool CI runs, by
+  what it does and at the version it is pinned at; the events CI runs on, whether pull requests from forks run it,
+  and its jobs, OSes and architectures; where releases are published,
   by trusted publishing or with provenance, and any SBOM or attestation; and the docs generator, the changelog's
   latest entry, CONTRIBUTING, CODEOWNERS and the issue and pull request templates.
 - **The JSON formats,** each at version 1: `results`, `map`, `facts`, `answers`, `checks` and `support-matrix`.

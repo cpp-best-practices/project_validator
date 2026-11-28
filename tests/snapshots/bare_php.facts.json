@@ -81,6 +81,10 @@
       "reader": "Composer dependencies"
     },
     {
+      "development": [],
+      "direct": [
+        "psr/log"
+      ],
       "kind": "Declared",
       "manager": "Composer",
       "origin": "composer.json"

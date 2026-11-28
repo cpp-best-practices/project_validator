@@ -173,6 +173,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -297,6 +298,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -436,6 +438,7 @@
       ]
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -501,6 +504,7 @@
       "reference": "graphql-hive/graphql-inspector@70745e66e20a3b741cb75e1143d3a9afb1dfd7a5"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,

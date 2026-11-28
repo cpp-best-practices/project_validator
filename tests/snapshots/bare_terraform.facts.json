@@ -49,6 +49,8 @@
       "reader": "Terraform provider requirements"
     },
     {
+      "development": [],
+      "direct": null,
       "kind": "Declared",
       "manager": "Terraform providers",
       "origin": "main.tf"

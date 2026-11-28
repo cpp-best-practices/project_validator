@@ -11,7 +11,7 @@ from project_validator.ecosystems.model import BuildSystem, Ecosystem, toml_memb
 from project_validator.facts import Command, resolved
 from project_validator.facts.arguments import option_values
 from project_validator.facts.axes import versions_axis
-from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
+from project_validator.facts.dependencies import Dependencies, Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action, joined
 from project_validator.facts.history import package_version_reader
 from project_validator.facts.licenses import declared_license_reader, toml_license
@@ -187,11 +187,41 @@ def _cargo_declares(_path: str, text: str) -> bool:
     return any(tables) or (isinstance(workspace, dict) and bool(workspace.get("dependencies")))
 
 
+def _named(table: object) -> Iterator[str]:
+    """The dependencies a table names, but the project's own (`path = ...`)."""
+    for name, value in table.items() if isinstance(table, dict) else ():
+        if not (isinstance(value, dict) and "path" in value):
+            yield name
+
+
+def _cargo_dependencies(_path: str, text: str) -> Dependencies:
+    """A crate's (and its workspace's) dependencies, for every target; its dev-dependencies are its development's."""
+    manifest = tomllib.loads(text)
+    targets = manifest.get("target")
+    scopes = [manifest, *(targets.values() if isinstance(targets, dict) else ())]
+    workspace = manifest.get("workspace")
+    direct = [
+        *(
+            name
+            for scope in scopes
+            if isinstance(scope, dict)
+            for table in ("dependencies", "build-dependencies")
+            for name in _named(scope.get(table))
+        ),
+        *_named(workspace.get("dependencies") if isinstance(workspace, dict) else None),
+    ]
+    development = [
+        name for scope in scopes if isinstance(scope, dict) for name in _named(scope.get("dev-dependencies"))
+    ]
+    return direct, development
+
+
 CARGO_MANIFESTS = manifest_reader(
     name="Cargo dependencies",
     manager="Cargo",
     files=("Cargo.toml",),
     declares=_cargo_declares,
+    lists=_cargo_dependencies,
     application=lambda _path, text: "[[bin]]" in text,
 )
 

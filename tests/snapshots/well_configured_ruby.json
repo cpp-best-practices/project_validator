@@ -34,11 +34,20 @@
         "declared": [
           "Gemfile"
         ],
+        "development": [],
+        "direct": [
+          "bundler-audit",
+          "rake",
+          "rspec",
+          "rubocop",
+          "simplecov",
+          "steep"
+        ],
         "locked": []
       },
       "group": "Dependencies",
       "subject": "Bundler",
-      "text": "declared in Gemfile; no lockfile"
+      "text": "6 direct dependencies, declared in Gemfile; no lockfile"
     },
     {
       "data": {
@@ -94,6 +103,10 @@
     },
     {
       "data": {
+        "architectures": [
+          "arm64",
+          "x64"
+        ],
         "events": [
           "pull_request",
           "push"
@@ -108,7 +121,7 @@
       },
       "group": "CI",
       "subject": "the CI",
-      "text": "runs on pull_request, push; pull requests from forks run it; 9 jobs on 3 OSes (linux, macos, windows)"
+      "text": "runs on pull_request, push; pull requests from forks run it; 9 jobs on 3 OSes (linux, macos, windows) and 2 architectures (arm64, x64)"
     }
   ],
   "answers": {

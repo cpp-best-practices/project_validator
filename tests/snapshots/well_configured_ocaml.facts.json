@@ -191,6 +191,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -315,6 +316,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -492,6 +494,7 @@
       ]
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -669,6 +672,7 @@
       ]
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -846,6 +850,7 @@
       ]
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1023,6 +1028,7 @@
       ]
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1200,6 +1206,7 @@
       ]
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1377,6 +1384,7 @@
       ]
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1525,6 +1533,7 @@
       "reference": "ocaml/setup-ocaml@ff66428f72b64472e749b22e0ad4dded4b2ddca6"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,

@@ -282,6 +282,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -397,6 +398,7 @@
       "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {
         "RUSTFLAGS": "-D warnings "
@@ -597,6 +599,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {
         "RUSTFLAGS": "-D warnings -Zsanitizer=address"
@@ -797,6 +800,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {
         "RUSTFLAGS": "-D warnings "
@@ -1019,6 +1023,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {
         "RUSTFLAGS": "-D warnings -Zsanitizer=address"
@@ -1241,6 +1246,7 @@
       "via": []
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {
         "RUSTFLAGS": "-D warnings "
@@ -1441,6 +1447,7 @@
       "via": []
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {
         "RUSTFLAGS": "-D warnings -Zsanitizer=address"
@@ -1641,6 +1648,7 @@
       "via": []
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {
         "RUSTFLAGS": "-D warnings "
@@ -1863,6 +1871,7 @@
       "via": []
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {
         "RUSTFLAGS": "-D warnings -Zsanitizer=address"
@@ -2085,6 +2094,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {
         "RUSTFLAGS": "-D warnings "
@@ -2285,6 +2295,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {
         "RUSTFLAGS": "-D warnings -Zsanitizer=address"
@@ -2485,6 +2496,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {
         "RUSTFLAGS": "-D warnings "
@@ -2707,6 +2719,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {
         "RUSTFLAGS": "-D warnings -Zsanitizer=address"
@@ -2939,6 +2952,7 @@
       "reference": "dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -3020,6 +3034,7 @@
       "reference": "github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -3090,6 +3105,7 @@
       "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -3759,6 +3775,10 @@
       "reader": "Cargo dependencies"
     },
     {
+      "development": [],
+      "direct": [
+        "libfuzzer-sys"
+      ],
       "kind": "Declared",
       "manager": "Cargo",
       "origin": "fuzz/Cargo.toml"

@@ -36,11 +36,15 @@
         "declared": [
           "go.mod"
         ],
+        "development": [],
+        "direct": [
+          "golang.org/x/text"
+        ],
         "locked": []
       },
       "group": "Dependencies",
       "subject": "Go modules",
-      "text": "declared in go.mod; no lockfile"
+      "text": "1 direct dependency, declared in go.mod; no lockfile"
     }
   ],
   "answers": {

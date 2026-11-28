@@ -16,11 +16,15 @@
         "declared": [
           "Cargo.toml"
         ],
+        "development": [],
+        "direct": [
+          "libc"
+        ],
         "locked": []
       },
       "group": "Dependencies",
       "subject": "Cargo",
-      "text": "declared in Cargo.toml; no lockfile"
+      "text": "1 direct dependency, declared in Cargo.toml; no lockfile"
     }
   ],
   "answers": {

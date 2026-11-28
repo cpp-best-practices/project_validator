@@ -168,6 +168,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -292,6 +293,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -406,6 +408,7 @@
       "reference": "bufbuild/buf-action@37ac33d8960807670a6e9719080e885197b09cc6"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,

@@ -12,6 +12,7 @@ from project_validator.platforms import (
     detect_compilers,
     detect_operating_systems,
     detect_toolchains,
+    runner_architecture,
 )
 from tests.support import evidence
 
@@ -57,6 +58,28 @@ class PlatformDetectionTests(unittest.TestCase):
         self.assertEqual(detect_compilers("compiler: llvm-19.1.1"), ["clang"])
         self.assertEqual(detect_compilers("./setup_cpp_linux --compiler llvm --cmake true"), ["clang"])
         self.assertEqual(detect_compilers("gcov_executable: llvm-cov gcov"), [])
+
+
+class RunnerArchitectureTests(unittest.TestCase):
+    def test_github_s_hosted_runners_by_their_labels(self) -> None:
+        cases = {
+            "ubuntu-latest": "x64",
+            "ubuntu-24.04-arm": "arm64",
+            "windows-2022": "x64",
+            "windows-11-arm": "arm64",
+            "macos-latest": "arm64",
+            "macos-15": "arm64",
+            "macos-13": "x64",
+            "macos-14-large": "x64",
+            "macos-14-xlarge": "arm64",
+        }
+        self.assertEqual({label: runner_architecture(label) for label in cases}, cases)
+
+    def test_a_self_hosted_runner_says_its_architecture_or_nothing_is_known(self) -> None:
+        self.assertEqual(runner_architecture("self-hosted Linux ARM64"), "arm64")
+        self.assertEqual(runner_architecture("self-hosted linux X64"), "x64")
+        self.assertEqual(runner_architecture("self-hosted linux"), "")
+        self.assertEqual(runner_architecture("buildjet-4vcpu-ubuntu-2204"), "")
 
 
 class ToolchainDetectionTests(unittest.TestCase):

@@ -171,6 +171,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -295,6 +296,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {
         "LISP": "sbcl-bin"
@@ -379,6 +381,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {
         "LISP": "ccl-bin"
@@ -463,6 +466,7 @@
       "via": []
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {
         "LISP": "sbcl-bin"
@@ -547,6 +551,7 @@
       "via": []
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {
         "LISP": "ccl-bin"
@@ -631,6 +636,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {
         "LISP": "sbcl-bin"
@@ -715,6 +721,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {
         "LISP": "ccl-bin"
@@ -799,6 +806,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {
         "LISP": "sbcl-bin"
@@ -915,6 +923,7 @@
       "reference": "40ants/run-tests@663e2dc4907e1c46a3aa21a2e1cf7562e0a4db9d"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,

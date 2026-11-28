@@ -205,6 +205,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -329,6 +330,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -406,6 +408,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -483,6 +486,7 @@
       "via": []
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -560,6 +564,7 @@
       "via": []
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -637,6 +642,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -714,6 +720,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -791,6 +798,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -894,6 +902,7 @@
       "reference": "shogo82148/actions-setup-perl@eebc5c886de14ebbfcd2493d49a12007d2c30477"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -964,6 +973,7 @@
       "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,

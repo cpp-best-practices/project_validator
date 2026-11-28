@@ -16,11 +16,15 @@
         "declared": [
           "composer.json"
         ],
+        "development": [],
+        "direct": [
+          "psr/log"
+        ],
         "locked": []
       },
       "group": "Dependencies",
       "subject": "Composer",
-      "text": "declared in composer.json; no lockfile"
+      "text": "1 direct dependency, declared in composer.json; no lockfile"
     }
   ],
   "answers": {

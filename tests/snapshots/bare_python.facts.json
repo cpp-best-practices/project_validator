@@ -136,6 +136,10 @@
       "reader": "Python dependencies"
     },
     {
+      "development": [],
+      "direct": [
+        "requests"
+      ],
       "kind": "Declared",
       "manager": "Python packages",
       "origin": "pyproject.toml"

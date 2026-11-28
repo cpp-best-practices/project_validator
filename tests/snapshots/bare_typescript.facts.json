@@ -79,6 +79,11 @@
     {
       "kind": "ConfigurationFile",
       "origin": "package.json",
+      "reader": "package.json pins"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
       "reader": "graphql-eslint"
     },
     {
@@ -97,6 +102,10 @@
       "reader": "package.json dependencies"
     },
     {
+      "development": [],
+      "direct": [
+        "left-pad"
+      ],
       "kind": "Declared",
       "manager": "npm packages",
       "origin": "package.json"

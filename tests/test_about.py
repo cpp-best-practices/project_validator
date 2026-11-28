@@ -202,12 +202,62 @@ CARGO = '[package]\nname = "app"\n\n[dependencies]\nserde = "1"\n'
 class DependenciesTest(unittest.TestCase):
     def test_each_package_manager_shows_its_manifests_and_lockfile(self) -> None:
         found = _group({"Cargo.toml": CARGO, "Cargo.lock": "", "src/main.rs": ""}, "Dependencies")
-        self.assertEqual("declared in Cargo.toml; locked by Cargo.lock", found["Cargo"].text)
+        self.assertEqual("1 direct dependency, declared in Cargo.toml; locked by Cargo.lock", found["Cargo"].text)
 
     def test_a_manifest_without_a_lockfile_says_so(self) -> None:
         pyproject = '[project]\nname = "app"\ndependencies = ["requests"]\n'
         found = _group({"pyproject.toml": pyproject, "app.py": ""}, "Dependencies")
-        self.assertEqual("declared in pyproject.toml; no lockfile", found["Python packages"].text)
+        self.assertEqual("1 direct dependency, declared in pyproject.toml; no lockfile", found["Python packages"].text)
+
+    def test_the_direct_dependencies_are_counted_and_development_s_apart(self) -> None:
+        pyproject = (
+            '[project]\nname = "app"\ndependencies = ["requests>=2", "click"]\n'
+            '[project.optional-dependencies]\ncli = ["rich"]\n'
+            '[dependency-groups]\ndev = ["pytest", {include-group = "x"}]\n'
+        )
+        found = _group({"pyproject.toml": pyproject, "app.py": ""}, "Dependencies")["Python packages"]
+        self.assertEqual(
+            "3 direct dependencies and 1 for development, declared in pyproject.toml; no lockfile", found.text
+        )
+        self.assertEqual((["click", "requests", "rich"], ["pytest"]), (found.data["direct"], found.data["development"]))
+
+    def test_a_workspace_s_own_packages_are_not_dependencies_and_repeats_count_once(self) -> None:
+        root = '[workspace]\nmembers = ["a", "b"]\n'
+        member = (
+            '[package]\nname = "{}"\n[dependencies]\nserde = "1"\nb = {{ path = "../b" }}\n'
+            '[dev-dependencies]\nproptest = "1"\n'
+        )
+        files = {"Cargo.toml": root, "a/Cargo.toml": member.format("a"), "b/Cargo.toml": member.format("b")}
+        found = _group({**files, "Cargo.lock": "", "a/src/lib.rs": "", "b/src/lib.rs": ""}, "Dependencies")["Cargo"]
+        self.assertTrue(found.text.startswith("1 direct dependency and 1 for development, declared in "), found.text)
+
+    def test_each_manager_s_manifests_are_counted(self) -> None:
+        cases = {
+            "npm packages": {
+                "index.js": "",
+                "package.json": json.dumps(
+                    {"dependencies": {"a": "1", "own": "workspace:*"}, "devDependencies": {"b": "1", "c": "1"}}
+                ),
+            },
+            "Go modules": {
+                "main.go": "",
+                "go.mod": "module m\n\ngo 1.22\n\nrequire (\n\tgithub.com/a/a v1.0.0\n"
+                "\tgithub.com/b/b v1.0.0 // indirect\n)\nreplace (\n\tgithub.com/d/d v1.0.0 => ../d\n)\n"
+                "require github.com/c/c v1.0.0\n",
+            },
+            "Python packages": {"app.py": "", "requirements.txt": "-r base.txt\nflask==3.0\n# x\n\nsqlalchemy\n"},
+        }
+        expected = {"npm packages": (1, 2), "Go modules": (2, 0), "Python packages": (2, 0)}
+        for manager, files in cases.items():
+            with self.subTest(manager=manager):
+                found = next(detail for detail in _about(files) if detail.group == "Dependencies")
+                counts = (len(list(found.data["direct"])), len(list(found.data["development"])))  # type: ignore[call-overload]
+                self.assertEqual(expected[manager], counts)
+
+    def test_a_manifest_that_can_not_be_counted_leaves_the_count_out(self) -> None:
+        files = {"setup.py": "setup(install_requires=['a'])\n", "requirements.txt": "b\n", "app.py": ""}
+        found = _group(files, "Dependencies")["Python packages"]
+        self.assertTrue(found.text.startswith("declared in "), found.text)
 
     def test_vendored_code_shows_how_much_and_where(self) -> None:
         files = {"app.py": "", "vendor/a/a.py": "", "vendor/a/b.py": "", "third_party/c/c.py": ""}
@@ -374,7 +424,7 @@ class HistoryTest(unittest.TestCase):
 
 
 def _workflow(
-    on: object, *steps: Mapping[str, object], name: str = "ci", runners: tuple[str, ...] = ("ubuntu-latest",)
+    on: object, *steps: Mapping[str, object], name: str = "ci", runners: tuple[object, ...] = ("ubuntu-latest",)
 ) -> dict[str, str]:
     jobs = {f"job{index}": {"runs-on": runner, "steps": list(steps)} for index, runner in enumerate(runners)}
     return {f".github/workflows/{name}.yml": json.dumps({"on": on, "jobs": jobs})}
@@ -390,6 +440,63 @@ class ToolsTest(unittest.TestCase):
         self.assertEqual("format: ruff format; analysis: ruff check; test: pytest", found.text)
 
 
+class PinnedToolTest(unittest.TestCase):
+    def _tools(self, files: Mapping[str, str]) -> str:
+        return _group({"app.py": "", **files}, "Tools")["CI"].text
+
+    def test_a_pre_commit_hook_s_rev_is_its_tool_s_version(self) -> None:
+        config = (
+            "repos:\n- repo: https://github.com/astral-sh/ruff-pre-commit\n  rev: v0.6.9\n  hooks:\n"
+            "  - id: ruff\n  - id: ruff-format\n"
+        )
+        found = self._tools(
+            {".pre-commit-config.yaml": config, **_workflow(["push"], {"run": "pre-commit run --all-files"})}
+        )
+        self.assertIn("format: ruff format 0.6.9", found)
+        self.assertIn("analysis: ruff check 0.6.9", found)
+
+    def test_an_exact_requirement_pins_and_a_range_does_not(self) -> None:
+        files = {
+            "requirements-dev.txt": "mypy==1.11.2\npytest>=8\n",
+            **_workflow(["push"], {"run": "mypy ."}, {"run": "pytest"}),
+        }
+        found = self._tools(files)
+        self.assertIn("mypy 1.11.2", found)
+        self.assertIn("test: pytest", found)
+        self.assertNotIn("pytest 8", found)
+
+    def test_an_exact_package_json_dependency_pins(self) -> None:
+        files = {
+            "index.js": "",
+            "package.json": json.dumps({"devDependencies": {"eslint": "9.1.0", "prettier": "^3.3.0"}}),
+            **_workflow(["push"], {"run": "npx eslint ."}, {"run": "npx prettier --check ."}),
+        }
+        found = self._tools(files)
+        self.assertIn("eslint 9.1.0", found)
+        self.assertNotIn("prettier 3", found)
+
+    def test_ci_s_install_commands_and_action_versions_pin(self) -> None:
+        files = {
+            "main.go": "",
+            "go.mod": "module example.com/m\n\ngo 1.22\n",
+            **_workflow(
+                ["push"],
+                {"run": "pip install black==24.8.0 && black --check ."},
+                {"uses": "golangci/golangci-lint-action@v6", "with": {"version": "v1.59.1"}},
+            ),
+        }
+        found = self._tools(files)
+        self.assertIn("black 24.8.0", found)
+        self.assertIn("golangci-lint 1.59.1", found)
+
+    def test_two_versions_of_one_tool_are_both_named(self) -> None:
+        files = {
+            "requirements-dev.txt": "mypy==1.11.2\n",
+            **_workflow(["push"], {"run": "pip install mypy==1.10.0 && mypy ."}),
+        }
+        self.assertIn("mypy 1.10.0 or 1.11.2", self._tools(files))
+
+
 class CiShapeTest(unittest.TestCase):
     def test_the_triggers_forks_and_platforms_are_shown(self) -> None:
         files = {
@@ -403,9 +510,22 @@ class CiShapeTest(unittest.TestCase):
         found = _group(files, "CI")["the CI"]
         self.assertEqual(
             "runs on pull_request, push, schedule; pull requests from forks run it; "
-            "3 jobs on 3 OSes (linux, macos, windows)",
+            "3 jobs on 3 OSes (linux, macos, windows) and 2 architectures (arm64, x64)",
             found.text,
         )
+        self.assertEqual(["arm64", "x64"], found.data["architectures"])
+
+    def test_each_runner_s_architecture_is_read_from_its_label(self) -> None:
+        runners = ("ubuntu-24.04-arm", "ubuntu-latest", "macos-13", "macos-15", "windows-11-arm")
+        found = _group({"app.py": "", **_workflow(["push"], {"run": "pytest"}, runners=runners)}, "CI")["the CI"]
+        self.assertIn("5 jobs on 3 OSes (linux, macos, windows) and 2 architectures (arm64, x64)", found.text)
+
+    def test_a_self_hosted_runner_s_architecture_is_its_label_s_or_unknown(self) -> None:
+        runners = (["self-hosted", "linux", "ARM64"], ["self-hosted", "linux"])
+        found = _group({"app.py": "", **_workflow(["push"], {"run": "pytest"}, runners=runners)}, "CI")["the CI"]
+        self.assertIn("2 jobs on 1 OS (linux) and 1 architecture (arm64)", found.text)
+        alone = _group({"app.py": "", **_workflow(["push"], {"run": "pytest"}, runners=(["self-hosted"],))}, "CI")
+        self.assertNotIn("architecture", alone["the CI"].text)
 
     def test_ci_that_never_runs_on_a_pull_request_says_forks_do_not_run_it(self) -> None:
         found = _group({"app.py": "", **_workflow(["push"], {"run": "pytest"})}, "CI")["the CI"]

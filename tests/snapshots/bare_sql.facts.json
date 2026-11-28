@@ -134,6 +134,8 @@
       "reader": "dbt package requirements"
     },
     {
+      "development": [],
+      "direct": null,
       "kind": "Declared",
       "manager": "dbt packages",
       "origin": "packages.yml"

@@ -21,9 +21,14 @@ from project_validator.facts.settings import Read, SettingsReader, unreadable
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Declared(Fact):
-    """A manifest (`Cargo.toml`, a `CMakeLists.txt` that calls CPM) that declares dependencies `manager` resolves."""
+    """A manifest (`Cargo.toml`, a `CMakeLists.txt` that calls CPM) that declares dependencies `manager` resolves: by
+    name, those it uses (`direct`) and those its development alone does (`development`), where they are read (upstream
+    #412). `direct` is None when they are not: a manifest written in code (setup.py, CMake). The project's own packages
+    (a path or workspace dependency) are none of them."""
 
     manager: str
+    direct: tuple[str, ...] | None = None
+    development: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -89,19 +94,38 @@ def known_package_managers() -> tuple[PackageManager, ...]:
 
 
 type Recognise = Callable[[str, str], bool]
+# A manifest's direct dependencies by name, and its development's.
+type Dependencies = tuple[Iterable[str], Iterable[str]]
+type ListDependencies = Callable[[str, str], Dependencies]
+
+
+def declared(origin: Origin, manager: str, text: str, lists: ListDependencies | None) -> Declared:
+    """The manifest at `origin` declares dependencies, with those `lists` reads of its `text`."""
+    if lists is None:
+        return Declared(origin=origin, manager=manager)
+    direct, development = lists(origin.path, text)
+    return Declared(
+        origin=origin,
+        manager=manager,
+        direct=tuple(sorted(set(direct))),
+        development=tuple(sorted(set(development))),
+    )
 
 
 def _no(_path: str, _text: str) -> bool:
     return False
 
 
-def _manifest(manager: str, declares: Recognise, application: Recognise, library: Recognise) -> Read:
+def _manifest(
+    manager: str, declares: Recognise, application: Recognise, library: Recognise, lists: ListDependencies | None
+) -> Read:
     def read(path: str, text: str) -> Iterator[Fact]:
         origin = Origin(path=path)
         try:
-            found = [
+            found: list[Fact] = [declared(origin, manager, text, lists)] if declares(path, text) else []
+            found += [
                 kind(origin=origin, manager=manager)
-                for kind, recognises in ((Declared, declares), (Application, application), (Library, library))
+                for kind, recognises in ((Application, application), (Library, library))
                 if recognises(path, text)
             ]
         except ValueError as error:  # a manifest that does not parse (TOML and JSON errors are ValueErrors)
@@ -120,10 +144,11 @@ def manifest_reader(
     declares: Recognise,
     application: Recognise = _no,
     library: Recognise = _no,
+    lists: ListDependencies | None = None,
 ) -> SettingsReader:
-    """A reader of `manager`'s manifests `files`: whether each `declares` dependencies, and is an `application` or a
-    `library`; a manifest that does not parse is unknown."""
-    return SettingsReader(name=name, files=files, read=_manifest(manager, declares, application, library))
+    """A reader of `manager`'s manifests `files`: whether each `declares` dependencies (and which, where it `lists`
+    them), and is an `application` or a `library`; a manifest that does not parse is unknown."""
+    return SettingsReader(name=name, files=files, read=_manifest(manager, declares, application, library, lists))
 
 
 def lockfile_reader(*, manager: str, files: tuple[str, ...], name: str = "") -> SettingsReader:
@@ -146,10 +171,13 @@ def managers_of(language: str, managers: Iterable[PackageManager]) -> tuple[Pack
 __all__ = [
     "Application",
     "Declared",
+    "Dependencies",
     "Library",
+    "ListDependencies",
     "Lock",
     "Locked",
     "PackageManager",
+    "declared",
     "directory_of",
     "known_package_managers",
     "lockfile_reader",

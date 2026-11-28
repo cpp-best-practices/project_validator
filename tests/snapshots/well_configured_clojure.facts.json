@@ -201,6 +201,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -325,6 +326,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -412,6 +414,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -499,6 +502,7 @@
       "via": []
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -586,6 +590,7 @@
       "via": []
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -673,6 +678,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -760,6 +766,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -847,6 +854,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1010,6 +1018,7 @@
       "reference": "DeLaGuardo/setup-clojure@6d46099eae24853c33c0482f2bb54edf4f1a4c74"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,

@@ -216,6 +216,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -340,6 +341,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -415,6 +417,7 @@
       ]
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -490,6 +493,7 @@
       ]
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -571,6 +575,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -660,6 +665,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -769,6 +775,7 @@
       "reference": "mfinelli/setup-shfmt@a25fda4c1fe115aec0f85e04126610841bc3141d"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,

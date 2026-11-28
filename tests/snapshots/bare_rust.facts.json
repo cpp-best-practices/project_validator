@@ -105,6 +105,10 @@
       "reader": "Cargo dependencies"
     },
     {
+      "development": [],
+      "direct": [
+        "libc"
+      ],
       "kind": "Declared",
       "manager": "Cargo",
       "origin": "Cargo.toml"

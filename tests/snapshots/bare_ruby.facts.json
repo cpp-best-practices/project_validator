@@ -59,6 +59,10 @@
       "reader": "Gemfile dependencies"
     },
     {
+      "development": [],
+      "direct": [
+        "rack"
+      ],
       "kind": "Declared",
       "manager": "Bundler",
       "origin": "Gemfile"

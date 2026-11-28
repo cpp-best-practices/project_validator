@@ -161,6 +161,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -285,6 +286,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -367,6 +369,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -449,6 +452,7 @@
       "via": []
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -531,6 +535,7 @@
       "via": []
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -613,6 +618,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -695,6 +701,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -777,6 +784,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -859,6 +867,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1021,6 +1030,7 @@
       "reference": "Bogdanp/setup-racket@8889db76ff6cdc86df8aa09fdd1729cd090b7144"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,

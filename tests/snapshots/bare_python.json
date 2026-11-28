@@ -16,11 +16,15 @@
         "declared": [
           "pyproject.toml"
         ],
+        "development": [],
+        "direct": [
+          "requests"
+        ],
         "locked": []
       },
       "group": "Dependencies",
       "subject": "Python packages",
-      "text": "declared in pyproject.toml; no lockfile"
+      "text": "1 direct dependency, declared in pyproject.toml; no lockfile"
     }
   ],
   "answers": {

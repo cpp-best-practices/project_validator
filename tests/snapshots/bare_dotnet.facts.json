@@ -61,6 +61,8 @@
       "reader": "NuGet package references"
     },
     {
+      "development": [],
+      "direct": null,
       "kind": "Declared",
       "manager": "NuGet",
       "origin": "src/App/App.csproj"

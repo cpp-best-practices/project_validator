@@ -49,24 +49,28 @@
           "kcov"
         ],
         "format": [
-          "zig fmt"
+          "zig fmt 0.13.0 or 0.14.1"
         ],
         "function-length": [
           "lizard"
         ],
         "fuzz": [
-          "zig build fuzz"
+          "zig build fuzz 0.13.0 or 0.14.1"
         ],
         "test": [
-          "zig build test"
+          "zig build test 0.13.0 or 0.14.1"
         ]
       },
       "group": "Tools",
       "subject": "CI",
-      "text": "format: zig fmt; test: zig build test; coverage: kcov; fuzz: zig build fuzz; function-length: lizard"
+      "text": "format: zig fmt 0.13.0 or 0.14.1; test: zig build test 0.13.0 or 0.14.1; coverage: kcov; fuzz: zig build fuzz 0.13.0 or 0.14.1; function-length: lizard"
     },
     {
       "data": {
+        "architectures": [
+          "arm64",
+          "x64"
+        ],
         "events": [
           "pull_request",
           "push"
@@ -81,7 +85,7 @@
       },
       "group": "CI",
       "subject": "the CI",
-      "text": "runs on pull_request, push; pull requests from forks run it; 29 jobs on 3 OSes (linux, macos, windows)"
+      "text": "runs on pull_request, push; pull requests from forks run it; 29 jobs on 3 OSes (linux, macos, windows) and 2 architectures (arm64, x64)"
     }
   ],
   "answers": {

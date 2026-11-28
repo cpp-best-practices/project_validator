@@ -81,6 +81,8 @@
       "reader": "Pkg dependencies"
     },
     {
+      "development": [],
+      "direct": null,
       "kind": "Declared",
       "manager": "Pkg",
       "origin": "Project.toml"

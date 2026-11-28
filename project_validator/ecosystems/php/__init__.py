@@ -15,7 +15,7 @@ from project_validator.facts import Command, Facts, Setting, resolved
 from project_validator.facts.analysis import Strictness, analysed, analyzer, type_checked, type_checker
 from project_validator.facts.arguments import option_values, program
 from project_validator.facts.axes import versions_axis
-from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
+from project_validator.facts.dependencies import Dependencies, Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.tools import Claim, Run, Tool, combined, defined_by
@@ -118,11 +118,22 @@ def _composer_declares(_path: str, text: str) -> bool:
     return any(not PLATFORM_PACKAGE.match(name) for name in packages)
 
 
+def _composer_dependencies(_path: str, text: str) -> Dependencies:
+    """The packages composer.json requires, and those it requires for development, beyond the platform."""
+    manifest = _composer(text)
+
+    def named(table: object) -> list[str]:
+        return [name for name in table if not PLATFORM_PACKAGE.match(name)] if isinstance(table, dict) else []
+
+    return named(manifest.get("require")), named(manifest.get("require-dev"))
+
+
 COMPOSER_DEPENDENCIES = manifest_reader(
     name="Composer dependencies",
     manager="Composer",
     files=(COMPOSER_JSON,),
     declares=_composer_declares,
+    lists=_composer_dependencies,
     # Composer's default type is `library`.
     library=lambda _path, text: _composer(text).get("type", "library") == "library",
 )

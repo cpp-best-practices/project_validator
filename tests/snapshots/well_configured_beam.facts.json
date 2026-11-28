@@ -222,6 +222,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -346,6 +347,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -522,6 +524,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -698,6 +701,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -874,6 +878,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1050,6 +1055,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1212,6 +1218,7 @@
       "reference": "erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1585,6 +1592,8 @@
       "reader": "Mix dependencies"
     },
     {
+      "development": [],
+      "direct": null,
       "kind": "Declared",
       "manager": "Mix",
       "origin": "mix.exs"

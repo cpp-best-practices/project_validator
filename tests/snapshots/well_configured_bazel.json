@@ -18,18 +18,21 @@
     {
       "data": {
         "analysis": [
-          "buildifier"
+          "buildifier 8.2.1"
         ],
         "format": [
-          "buildifier"
+          "buildifier 8.2.1"
         ]
       },
       "group": "Tools",
       "subject": "CI",
-      "text": "format: buildifier; analysis: buildifier"
+      "text": "format: buildifier 8.2.1; analysis: buildifier 8.2.1"
     },
     {
       "data": {
+        "architectures": [
+          "x64"
+        ],
         "events": [
           "pull_request",
           "push"
@@ -42,7 +45,7 @@
       },
       "group": "CI",
       "subject": "the CI",
-      "text": "runs on pull_request, push; pull requests from forks run it; 3 jobs on 1 OS (linux)"
+      "text": "runs on pull_request, push; pull requests from forks run it; 3 jobs on 1 OS (linux) and 1 architecture (x64)"
     }
   ],
   "answers": {

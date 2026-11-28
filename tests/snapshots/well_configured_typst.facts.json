@@ -141,6 +141,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -265,6 +266,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -362,6 +364,7 @@
       "reference": "typst-community/setup-typst@00ad6338f0b34724ea002136bfb701a6c18585b0"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
