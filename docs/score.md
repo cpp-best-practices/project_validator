@@ -6,6 +6,32 @@ issue #295; this is **version 7**.
 
 > **87% · Level 2 Analysis · 41 of 47 gates in place**
 
+## What the score is for
+
+The validator exists to drive a project's development towards higher quality, whether a person or an AI agent does
+the work. Copy-pasted code, code no tool checks, large and complex functions, warnings turned off: each makes the code
+worse, and each is something a quality gate can catch and keep out. The score counts those gates, so that the way to
+raise it is to put them in place and keep them on.
+
+That only works if the number has two properties:
+
+- **It changes in meaningful ways as the code gets better.** A new gate, a tool turned back on, a suppression removed:
+  each moves the score, in proportion to what it adds. A change that doesn't make the code better doesn't move it.
+- **It is hard to game.** A tireless optimiser told to raise the number must find that the cheapest way to raise it is
+  to improve the code. A gate that runs but can't fail, a check turned off, a tool nobody's code reaches: none of these
+  earns what the real gate does.
+
+This is why turning a warning off has a cost even when it is done one line at a time. If a comment like
+`NOLINT(bugprone-…)` were free, a project could keep every tool "on" and silence each finding where it appears. The
+gate would look in place while finding nothing. So a local suppression of a rule that finds bugs costs something,
+less with a reason, never nothing, and always less than turning the rule off everywhere. The cheapest way to keep a
+rule that must be off for some code is to move that code into one small, well-tested function and turn the rule off
+there once. A comment that turns off a lint rule that finds no bugs, or formatting, costs nothing, but the report still
+lists it.
+
+The score measures whether the gates are in place, not the code itself. The gates are what keep the code from getting
+worse.
+
 ## 100% means every gate is in place
 
 A **slot** is one check's result for one language in one unit: one of the `places` in `--format json`. A check of the
@@ -179,8 +205,9 @@ With `--format json --score`, the output is `{"format": "results", "version": "1
 ## What the score is not
 
 It measures whether quality gates are in place, not the quality of the code, nor the cost of the CI. A gate that runs
-but can not fail CI (`|| true`) still counts for now; reading that, and verified points from CI artefacts, are for a
-later version. The score's version is printed with it, so numbers from different versions are never compared.
+but can not fail CI (`|| true`, a pipe without `pipefail`, `continue-on-error`) is a warning, and fills half its slot;
+verified points from CI artefacts are for a later version. The score's version is printed with it, so numbers from
+different versions are never compared.
 
 ## The leaderboard
 
