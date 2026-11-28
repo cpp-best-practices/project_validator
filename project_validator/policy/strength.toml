@@ -15,9 +15,9 @@ covered = 0.5
 # - blanket: everything at once (clang-tidy's `-*` with nothing enabled after it, ruff's `ALL`, `-w`, mypy's
 #   `ignore_errors`). Everywhere, nothing is left of the tool, reason or not.
 # - key: a diagnostic that finds bugs.
-# - stylistic: any other. Style weighs nothing: strength is what a tool can still find of bugs, and a project that
-#   enables every check and turns off those that don't apply to it (clang-tidy's altera-*, fuchsia-*) must not count
-#   for less than one that enabled few.
+# - stylistic: any other, a lint rule that finds no bugs. It weighs nothing: strength is what a tool can still find
+#   of bugs, and a project that enables every check and turns off those that don't apply to it (clang-tidy's
+#   altera-*, fuchsia-*) must not count for less than one that enabled few.
 [weights.blanket]
 global = { unjustified = 1.0, justified = 1.0 }
 file = { unjustified = 0.5, justified = 0.5 }
@@ -30,10 +30,17 @@ file = { unjustified = 0.05, justified = 0.02 }
 global = { unjustified = 0.0, justified = 0.0 }
 file = { unjustified = 0.0, justified = 0.0 }
 
-# The suppressions written in the product's code (`NOLINT`, `# noqa`, `eslint-disable`, ...), per suppression per
-# thousand lines of the tool's languages; together they weigh at most `most`. A file turned off whole weighs as a
-# blanket in one file.
+# The suppressions written in the product's code (`NOLINT`, `# noqa`, `eslint-disable`, ...) that turn off rules that
+# find bugs, or name none: each weighs this much per thousand lines of the tool's languages, and together they weigh at
+# most `most`. A comment that turns off only lint rules that find no bugs weighs nothing (the About section counts
+# them). A file turned off whole weighs as a blanket in one file.
+#
+# For each rule, the comments are held below `below` times what turning the rule off weighs: those in one file below
+# turning it off for that file, and all of them below turning it off everywhere (a comment naming no rule, below
+# turning everything off). So one comment costs less than many, many cost less than turning the rule off, and moving
+# the code that needs the rule off into one well-tested place costs least of all.
 [density]
 unjustified = 0.02
 justified = 0.005
 most = 0.5
+below = 0.8

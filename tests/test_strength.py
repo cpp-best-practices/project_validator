@@ -10,7 +10,16 @@ from dataclasses import replace
 from project_validator.core import Status
 from project_validator.facts import Facts, Origin
 from project_validator.facts.structure import SourceFile
-from project_validator.facts.suppressions import BLANKET, FILE, GLOBAL, KEY, STYLISTIC, Disabled, Suppressions
+from project_validator.facts.suppressions import (
+    BLANKET,
+    FILE,
+    GLOBAL,
+    KEY,
+    STYLISTIC,
+    Disabled,
+    Suppression,
+    Suppressions,
+)
 from project_validator.score import score
 from project_validator.strength import COVERED, TurnedOff, strengths, turned_off
 from tests.support import make_context, temp_project
@@ -33,6 +42,28 @@ def _strength(*facts: object, tool: str = "clang-tidy") -> float:
     return strengths(Facts(facts)).get(tool, 1.0)  # type: ignore[arg-type]
 
 
+def _cost(*facts: object) -> float:
+    """What the facts take off clang-tidy's strength, in a project of 1,000 lines of C++."""
+    return 1.0 - _strength(_source(1000), *facts)
+
+
+def _inline(path: str, *found: Suppression, blanket: bool = False) -> Suppressions:
+    return Suppressions(origin=Origin(path=path), tool="clang-tidy", found=found, blanket=blanket)
+
+
+def _finds_bugs(rule: str = "bugprone-x", *, justified: bool = False) -> Suppression:
+    return Suppression(rules=(rule,), justified=justified, kind=KEY)
+
+
+def _lint(rule: str = "readability-x") -> Suppression:
+    return Suppression(rules=(rule,), kind=STYLISTIC)
+
+
+def _spread(count: int, *, justified: bool = False, rule: str = "bugprone-x") -> list[Suppressions]:
+    """`count` comments turning off `rule`, one in each of as many files."""
+    return [_inline(f"src/{number}.cpp", _finds_bugs(rule, justified=justified)) for number in range(count)]
+
+
 class StrengthTests(unittest.TestCase):
     def test_what_the_configuration_turns_off_weighs_by_kind_scope_and_reason(self) -> None:
         for disabled, expected in (
@@ -53,17 +84,49 @@ class StrengthTests(unittest.TestCase):
         self.assertAlmostEqual(_strength(_disabled(KEY), _disabled(KEY)), 0.5)
         self.assertEqual(_strength(*(_disabled(KEY) for _ in range(5))), 0.0)
 
-    def test_suppressions_in_the_code_weigh_by_how_dense_they_are(self) -> None:
-        unjustified = Suppressions(origin=Origin(path="src/a.cpp"), tool="clang-tidy", count=10)
-        self.assertAlmostEqual(_strength(_source(1000), unjustified), 0.8)
-        justified = Suppressions(origin=Origin(path="src/a.cpp"), tool="clang-tidy", count=10, justified=10)
-        self.assertAlmostEqual(_strength(_source(1000), justified), 0.95)
-        many = Suppressions(origin=Origin(path="src/a.cpp"), tool="clang-tidy", count=500)
-        self.assertAlmostEqual(_strength(_source(1000), many), 0.5)  # density weighs at most half
+    def test_comments_that_turn_off_rules_that_find_bugs_weigh_by_how_dense_they_are(self) -> None:
+        self.assertAlmostEqual(_cost(*_spread(5)), 0.1)
+        self.assertAlmostEqual(_cost(*_spread(10, justified=True)), 0.05)
         python = SourceFile(origin=Origin(path="tool.py"), language="Python", lines=9000)
-        self.assertAlmostEqual(_strength(_source(1000), python, unjustified), 0.8)  # only its languages' lines count
-        whole = Suppressions(origin=Origin(path="src/a.cpp"), tool="clang-tidy", count=0, blanket=True)
-        self.assertAlmostEqual(_strength(_source(1000), whole), 0.5)  # a file turned off whole
+        self.assertAlmostEqual(1.0 - _strength(_source(1000), python, *_spread(5)), 0.1)  # only its languages' lines
+
+    def test_comments_that_turn_off_lint_rules_that_find_no_bugs_are_free(self) -> None:
+        self.assertEqual(_cost(_inline("src/a.cpp", *(_lint() for _ in range(50)))), 0.0)
+        self.assertEqual(_cost(*(_inline(f"src/{number}.cpp", _lint()) for number in range(50))), 0.0)
+
+    def test_a_comment_naming_no_rule_turns_off_those_that_find_bugs(self) -> None:
+        self.assertAlmostEqual(_cost(_inline("src/a.cpp", Suppression(kind=KEY))), 0.02)
+
+    def test_one_comment_costs_less_than_many_and_many_less_than_turning_the_rule_off(self) -> None:
+        for justified in (False, True):
+            with self.subTest(justified=justified):
+                one, many = _cost(*_spread(1, justified=justified)), _cost(*_spread(200, justified=justified))
+                everywhere = _cost(_disabled(KEY, justified=justified))
+                self.assertLess(0.0, one)
+                self.assertLess(one, many)
+                self.assertLess(many, everywhere)
+        self.assertLess(_cost(*_spread(1, justified=True)), _cost(*_spread(1)))  # a reason costs less, never nothing
+
+    def test_comments_in_one_file_cost_less_than_turning_the_rule_off_for_that_file(self) -> None:
+        for justified in (False, True):
+            with self.subTest(justified=justified):
+                comments = (_finds_bugs(justified=justified) for _ in range(40))
+                self.assertLess(
+                    _cost(_inline("src/a.cpp", *comments)), _cost(_disabled(KEY, FILE, justified=justified))
+                )
+
+    def test_each_rule_is_held_below_turning_it_off_on_its_own(self) -> None:
+        one_rule = _cost(*_spread(200))
+        self.assertAlmostEqual(_cost(*_spread(200), *_spread(200, rule="bugprone-y")), 2 * one_rule)
+        many_rules = [comment for rule in range(10) for comment in _spread(200, rule=f"bugprone-{rule}")]
+        self.assertAlmostEqual(_cost(*many_rules), 0.5)  # the comments weigh at most half together
+
+    def test_a_comment_naming_several_rules_counts_for_each_that_finds_bugs(self) -> None:
+        both = Suppression(rules=("bugprone-x", "bugprone-y", "readability-z"), kind=KEY)
+        self.assertAlmostEqual(_cost(_inline("src/a.cpp", both)), 0.04)
+
+    def test_a_file_turned_off_whole_weighs_as_everything_off_for_one_file(self) -> None:
+        self.assertAlmostEqual(_cost(_inline("src/a.cpp", blanket=True)), 0.5)
 
     def test_a_tool_nothing_turns_off_is_at_full_strength(self) -> None:
         self.assertNotIn("clang-tidy", strengths(Facts(())))

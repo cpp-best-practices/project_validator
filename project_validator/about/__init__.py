@@ -16,6 +16,7 @@ from project_validator.about.dependencies import dependencies
 from project_validator.about.detail import Detail
 from project_validator.about.documents import documents
 from project_validator.about.history import history
+from project_validator.about.inline import inline_comments
 from project_validator.about.licences import licences
 from project_validator.about.publishing import publishing
 from project_validator.about.size import size
@@ -30,6 +31,7 @@ GROUPS: tuple[Callable[[Facts], Iterable[Detail]], ...] = (
     licences,
     history,
     tools,
+    inline_comments,
     ci_shape,
     publishing,
     documents,

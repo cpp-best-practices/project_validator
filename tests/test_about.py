@@ -440,6 +440,36 @@ class ToolsTest(unittest.TestCase):
         self.assertEqual("format: ruff format; analysis: ruff check; test: pytest", found.text)
 
 
+class InlineCommentsTest(unittest.TestCase):
+    """The comments in the product's code that turn rules off, for each tool CI runs: those that turn off only lint
+    rules that find no bugs cost nothing, so they are shown here, beside those that cost."""
+
+    def _tools(self, files: Mapping[str, str]) -> dict[str, Detail]:
+        return _group({**files, **_workflow(["push"], {"run": "ruff check ."})}, "Tools")
+
+    def test_comments_are_counted_by_whether_their_rules_find_bugs(self) -> None:
+        code = "a = 1  # noqa: E501\nb = 2  # noqa: E501\nc = 3  # noqa: N802\nimport os  # noqa: F401\nd = 4  # noqa\n"
+        found = self._tools({"app.py": code})["inline comments"]
+        self.assertEqual(
+            "ruff check: 3 turn off lint rules that find no bugs (E501 2 times, N802); "
+            "2 turn off rules that find bugs (F401, every rule)",
+            found.text,
+        )
+        self.assertEqual(
+            {"ruff check": {"lint": {"E501": 2, "N802": 1}, "bugs": {"F401": 1, "*": 1}}}, found.data["tools"]
+        )
+
+    def test_one_comment_is_said_in_the_singular(self) -> None:
+        found = self._tools({"app.py": "a = 1  # noqa: E501\n"})["inline comments"]
+        self.assertEqual("ruff check: 1 turns off lint rules that find no bugs (E501)", found.text)
+
+    def test_only_the_tools_ci_runs_are_shown(self) -> None:
+        self.assertNotIn("inline comments", self._tools({"app.py": "a = 1  # pylint: disable=invalid-name\n"}))
+
+    def test_a_project_without_such_comments_shows_nothing(self) -> None:
+        self.assertNotIn("inline comments", self._tools({"app.py": "a = 1\n"}))
+
+
 class PinnedToolTest(unittest.TestCase):
     def _tools(self, files: Mapping[str, str]) -> str:
         return _group({"app.py": "", **files}, "Tools")["CI"].text

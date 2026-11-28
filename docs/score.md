@@ -2,7 +2,7 @@
 
 The console and HTML reports always show the score; `python -m project_validator --score path/to/project` adds it to
 the plain text, markdown and JSON outputs too. The statuses and the exit code do not change. The design is upstream
-issue #295; this is **version 6**.
+issue #295; this is **version 7**.
 
 > **87% · Level 2 Analysis · 41 of 47 gates in place**
 
@@ -50,9 +50,9 @@ each part's gates is in place. The headline stays the one score of the whole pro
 
 ## Strength
 
-A tool that is turned off counts for less (score version 4; style weighs nothing since version 5). A tool's
-**strength**, from 0 to 1, is what is left after what its configuration turns off and the suppressions written in the
-code:
+A tool that is turned off counts for less (score version 4; lint rules that find no bugs weigh nothing since version
+5). A tool's **strength**, from 0 to 1, is what is left after what its configuration turns off and the suppressions
+written in the code:
 
 ```text
 strength = max(0, 1 - the weights of what is turned off - the density of the suppressions)
@@ -63,11 +63,11 @@ strength = max(0, 1 - the weights of what is turned off - the density of the sup
 | Everything (clang-tidy's `-*` with nothing enabled after it, ruff's `ALL`, `-w`, mypy's `ignore_errors`) | the tool counts as not run | 0.5 |
 | A diagnostic that finds bugs (`bugprone-*`, clang-tidy's memory checks such as `cppcoreguidelines-pro-bounds-*`, `-Wconversion`, bugbear `B`, bandit `S`, mypy's error codes, tsconfig's strict flags), no reason given | 0.25 | 0.05 |
 | The same, with a comment saying why on its line or the line above | 0.12 | 0.02 |
-| Any other diagnostic (style) | 0 | 0 |
+| Any other diagnostic: a lint rule that finds no bugs (naming, readability, line length) | 0 | 0 |
 
-Style weighs nothing: strength is what a tool can still find of bugs. A project that enables every check and turns off
-the ones that don't apply to it (clang-tidy's `altera-*` for FPGAs, `fuchsia-*` for Fuchsia's rules) must not count for
-less than one that only ever enabled a few.
+Lint rules that find no bugs weigh nothing: strength is what a tool can still find of bugs. A project that enables
+every check and turns off the ones that don't apply to it (clang-tidy's `altera-*` for FPGAs, `fuchsia-*` for
+Fuchsia's rules) must not count for less than one that only ever enabled a few.
 
 clang-tidy's checks against undefined behaviour (`cppcoreguidelines-pro-bounds-*`, `pro-type-reinterpret-cast`,
 `pro-type-union-access`, `hicpp-no-array-decay`, `hicpp-signed-bitwise`) find bugs for this purpose. Each flags every
@@ -80,10 +80,26 @@ The weights are in `project_validator/policy/strength.toml`, and which diagnosti
 with what they guard against, in `project_validator/policy/diagnostics.toml`
 ([#440](https://github.com/cpp-best-practices/project_validator/issues/440)).
 
-The suppressions in the product's code (`NOLINT`, `# noqa`, `# type: ignore`, `eslint-disable`, `#[allow]`,
-`//nolint`, `@SuppressWarnings`, ...) weigh 0.02 each per thousand lines of the tool's languages, 0.005 when text or a
-link after one says why, at most 0.5 together; a file turned off whole (`# mypy: ignore-errors`,
-`/* eslint-disable */`) weighs as everything turned off for one file.
+The comments in the product's code that turn rules off (`NOLINT`, `# noqa`, `# type: ignore`, `eslint-disable`,
+`#[allow]`, `//nolint`, `@SuppressWarnings`, ...) weigh by the rules they name (score version 7):
+
+| A comment that turns off | Weighs |
+| --- | --- |
+| Only lint rules that find no bugs (`# noqa: E501`, `NOLINT(readability-magic-numbers)`, `rubocop:disable Style/…`) | nothing; "About the project" counts them |
+| A rule that finds bugs, or names none (`NOLINT(bugprone-…)`, `# noqa: F401`, a bare `# noqa`) | 0.02 per thousand lines of the tool's languages |
+| The same, with text or a link after it saying why | 0.005 per thousand lines |
+
+The comments that cost weigh at most 0.5 together, and each rule's are held below what turning that rule off weighs:
+those in one file at most 0.8 of turning it off for that file, and all of them at most 0.8 of turning it off
+everywhere (a comment naming no rule, of turning everything off). So one comment costs less than many, and many cost
+less than turning the rule off: the cheapest way to keep a rule that must be off for some code is to move that code
+into one well-tested place and turn the rule off there once. A comment naming several rules counts for each that finds
+bugs. A file turned off whole (`# mypy: ignore-errors`, `/* eslint-disable */`) weighs as everything turned off for
+one file.
+
+Which rules find bugs is the same list as for the configuration, in `policy/diagnostics.toml`; eslint, golangci-lint
+and RuboCop are named there for their comments alone. A tool the file doesn't name (cppcheck, Error Prone, PHPStan)
+finds bugs with every rule, until its table says otherwise.
 
 **A gate counts only when its strongest tool is at least half strong.** Below that, its slot is not filled, it holds
 its level back, and it is a next step: turn back on what is turned off, and fix what the tool finds. A gate's extra

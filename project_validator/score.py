@@ -40,10 +40,12 @@ from project_validator.strength import COVERED, TurnedOff
 # 2: each language's slots weigh its share of its unit's code (upstream #331).
 # 3: what the validator finds itself (`FINDINGS`) earns nothing; 4: tools' strength weighs their slots.
 # 5: style disables cost nothing; 6: ruff's linter and flake8 are one family, as `FAMILIES` meant (upstream #440).
-SCORE_VERSION = "6"
+# 7: a comment turning off lint rules that find no bugs costs nothing, and each rule's comments are held below turning
+# the rule off (upstream #295).
+SCORE_VERSION = "7"
 # The digest of the scored policy files (`policy_tables.SCORED`) this version stands for: a test fails when they change
 # without a new SCORE_VERSION, and gives the new digest to put here.
-POLICY_DIGEST = "226969e7716e04a5"
+POLICY_DIGEST = "1fd7740ce1a59f78"
 
 # The tables are policy, with the comments that say why: policy/score.toml (upstream #440).
 _TABLE = policy_tables.load("score")
