@@ -92,6 +92,16 @@
     {
       "kind": "ConfigurationFile",
       "origin": "Cargo.toml",
+      "reader": "Cargo.toml version"
+    },
+    {
+      "kind": "PackageVersion",
+      "origin": "Cargo.toml",
+      "version": "0.1.0"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
       "reader": "Cargo dependencies"
     },
     {

@@ -31,6 +31,7 @@ from project_validator.facts import (
     Facts,
     declaration,
     expansion,
+    history,
     outputs,
     repository,
     settings,
@@ -80,6 +81,7 @@ def _project_facts(context: Context) -> Facts:
     names = structure.project_languages(found) | structure.project_formats(found)
     built = (out for out in outputs.known_build_outputs() if out.languages & names)
     found = _stage(context, "the repository", lambda: found + repository.repository_facts(project, built), before=found)
+    found = _stage(context, "the history", lambda: found + history.history_facts(project), before=found)
     found = _stage(
         context,
         "the test files",

@@ -217,13 +217,23 @@ class Project:
             self._listed["origin"] = (url,) if url else ()
         return next(iter(self._listed["origin"]), None)
 
+    def shallow(self) -> bool:
+        """Whether the checkout holds only part of its history (a shallow clone); true outside a checkout too, which
+        holds none of it."""
+        if "shallow" not in self._listed:
+            self._listed["shallow"] = (self._checkout_git("rev-parse", "--is-shallow-repository") or "true",)
+        return "false" not in self._listed["shallow"]
+
+    def git(self, *arguments: str) -> str | None:
+        """What git prints for the checkout whose root the project is (its history, its tags); None for any other
+        project, or when git is not installed or fails."""
+        return self._checkout_git(*arguments)
+
     def last_changed(self, relative: str) -> int | None:
         """When a commit last changed the file, in seconds since the epoch; None without its history: outside a
         checkout whose root the project is, in a shallow clone (whose one commit changed every file), or for a file git
         does not track."""
-        if "shallow" not in self._listed:
-            self._listed["shallow"] = (self._checkout_git("rev-parse", "--is-shallow-repository") or "true",)
-        if "false" not in self._listed["shallow"]:
+        if self.shallow():
             return None
         found = self._checkout_git("log", "-1", "--format=%ct", "--", relative)
         return int(found) if found and found.isdigit() else None

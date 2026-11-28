@@ -2387,6 +2387,16 @@
     {
       "kind": "ConfigurationFile",
       "origin": "package.json",
+      "reader": "package.json version"
+    },
+    {
+      "kind": "PackageVersion",
+      "origin": "package.json",
+      "version": "0.1.0"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
       "reader": "package.json engines"
     },
     {
