@@ -1,4 +1,24 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "Erlang/OTP or Elixir version",
+        "declared": [],
+        "languages": [
+          "Elixir",
+          "Erlang"
+        ],
+        "tested": [
+          "Elixir 1.17 / OTP 27",
+          "Elixir 1.18 / OTP 27"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Elixir, Erlang",
+      "text": "declares no version; CI tests Erlang/OTP or Elixir versions Elixir 1.17 / OTP 27, Elixir 1.18 / OTP 27"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

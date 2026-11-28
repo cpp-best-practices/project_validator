@@ -1,4 +1,29 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "Go version",
+        "declared": [
+          {
+            "origin": "go.mod",
+            "pinned": false,
+            "version": "1.23"
+          }
+        ],
+        "languages": [
+          "Go"
+        ],
+        "tested": [
+          "1.22",
+          "1.23"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Go",
+      "text": "supports 1.23 (go.mod); CI tests Go versions 1.22, 1.23"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

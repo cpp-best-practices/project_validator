@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "Zig version",
+        "declared": [],
+        "languages": [
+          "Zig"
+        ],
+        "tested": [
+          "0.13.0",
+          "0.14.1"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Zig",
+      "text": "declares no version; CI tests Zig versions 0.13.0, 0.14.1"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

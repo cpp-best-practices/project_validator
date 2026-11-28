@@ -76,7 +76,8 @@ What you see:
 
 - **In a terminal** (with rich): a header with the score, then what was detected (each language and what recognised
   it, the units, the code in each role and how it is judged, the CI, what the source-control host says of the
-  repository, how much was read), the results grouped by
+  repository, how much was read), what is shown about the project without being judged ("About the project": the
+  versions each language declares beside those CI tests), the results grouped by
   category with a line per language where they differ, and the score's breakdown and next steps. Progress is shown
   while the project is read. `--verbose` shows every detail and the checks that do not apply.
 - **Elsewhere** (CI logs, or without rich): the same detection, then one greppable `[STATUS] check: message` line per
@@ -126,7 +127,8 @@ Exit codes: `0` everything passed, `1` a check failed or raised an error, `2` us
 Every JSON output (`--format json`, `--map`, `--facts`, `--answers`, `--list --format json`, `--support-matrix
 --format json`) is an object that names its format and that format's version, with what it holds under the format's
 name: `{"format": "results", "version": "1", "results": [...]}`; the formats are `results`, `map`, `facts`,
-`answers`, `checks` and `support-matrix`.
+`answers`, `checks` and `support-matrix`. The `results` output also holds, under `about`, what is shown about the
+project without being judged: each detail's group, subject, text and data.
 
 ### Stability
 

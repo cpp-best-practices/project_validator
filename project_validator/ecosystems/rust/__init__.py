@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 import tomllib
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from pathlib import Path
 
 from project_validator.ecosystems.model import BuildSystem, Ecosystem, toml_members, toolchain_patterns
@@ -15,6 +15,7 @@ from project_validator.facts.dependencies import Lock, PackageManager, lockfile_
 from project_validator.facts.expansion import Action, joined
 from project_validator.facts.licenses import declared_license_reader, toml_license
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
+from project_validator.facts.versions import declared_version_reader, pinned_file, toml_version
 
 
 def is_cargo_target(directory: Path) -> bool:
@@ -145,6 +146,27 @@ TARGET_DIRECTORY = BuildOutput(
 
 CARGO_LICENSE = declared_license_reader(
     name="Cargo.toml license", files=("Cargo.toml",), languages=RUST_LANGUAGE, declared=toml_license("package")
+)
+RUST_VERSION = declared_version_reader(
+    name="Cargo.toml rust-version",
+    files=("Cargo.toml",),
+    language="Rust",
+    declares=toml_version(("package", "rust-version"), ("workspace", "package", "rust-version")),
+)
+_TOOLCHAIN_CHANNEL = toml_version(("toolchain", "channel"), pinned=True)
+
+
+def _rust_toolchain(text: str) -> Iterator[tuple[str, bool]]:
+    """`rust-toolchain`: a `[toolchain]` table, like `rust-toolchain.toml`, or the older file that holds only the
+    channel."""
+    try:
+        yield from _TOOLCHAIN_CHANNEL(text)
+    except ValueError:
+        yield from pinned_file(text)
+
+
+RUST_TOOLCHAIN = declared_version_reader(
+    name="rust-toolchain", files=("rust-toolchain.toml", "rust-toolchain"), language="Rust", declares=_rust_toolchain
 )
 
 

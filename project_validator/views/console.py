@@ -17,8 +17,11 @@ from project_validator.core import Status
 from project_validator.runner import Report
 from project_validator.score import LEVEL_NAMES, Score, floor_percent
 from project_validator.views.common import (
+    ABOUT_NOTE,
+    ABOUT_TITLE,
     SYMBOLS,
     Group,
+    about_rows,
     branch_label,
     ci_summary,
     credit,
@@ -154,6 +157,20 @@ class _Renderer:
                 self.print(self.text(f"    {stage.name}: {stage.found:,} facts in {stage.seconds:.3f} s", style="dim"))
         self.print()
 
+    def about(self, analysis: Analysis) -> None:
+        """What is shown of the project without being judged."""
+        if not (rows := about_rows(analysis)):
+            return
+        title = f"[bold]{ABOUT_TITLE}[/]  [dim]{ABOUT_NOTE}[/]"
+        self.print(self.rich["rule"].Rule(title, align="left", style=ACCENT))
+        grid = self.rich["table"].Table.grid(padding=(0, 2))
+        grid.add_column(no_wrap=True, style="bold")
+        grid.add_column(ratio=1)
+        for label, text in rows:
+            grid.add_row(label, text)
+        self.print(grid)
+        self.print()
+
     def facts(self, analysis: Analysis) -> Any:
         """The code in each role and how it is judged, what was not recognised, the CI and how much was read."""
         grid = self.rich["table"].Table.grid(padding=(0, 2))
@@ -271,6 +288,7 @@ def render(analysis: Analysis, stream: TextIO, *, verbose: bool = False, width: 
     renderer = _Renderer(_rich, console, verbose=verbose)
     renderer.header(analysis)
     renderer.detected(analysis)
+    renderer.about(analysis)
     for found in grouped(analysis.reports):
         renderer.group(found)
     renderer.skipped(analysis.reports)

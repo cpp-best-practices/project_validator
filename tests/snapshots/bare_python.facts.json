@@ -120,6 +120,11 @@
     {
       "kind": "ConfigurationFile",
       "origin": "pyproject.toml",
+      "reader": "pyproject.toml requires-python"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
       "reader": "Python dependencies"
     },
     {

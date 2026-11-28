@@ -18,7 +18,10 @@ from project_validator.facts import as_dict
 from project_validator.runner import Report
 from project_validator.score import LEVEL_NAMES, floor_percent
 from project_validator.views.common import (
+    ABOUT_NOTE,
+    ABOUT_TITLE,
     SYMBOLS,
+    about_rows,
     ci_summary,
     dedupe,
     ecosystems,
@@ -104,13 +107,21 @@ def detected(analysis: Analysis) -> str:
     for job in analysis.structure.ci_jobs:
         what = ", ".join(sorted(job.compilers | {str(t) for t in job.toolchains})) or "-"
         lines.append(f"  {markup(job.name)} [dim]{markup(job.os or '-')} / {markup(what)}[/]")
-    lines += ["", f"[bold]Host[/]: {markup(host_summary(analysis))}"]
+    lines += ["", f"[bold]Host[/]: {markup(host_summary(analysis))}", *_about(analysis)]
     lines += ["", "[bold]How it was read[/]"]
     lines += [
         f"  {markup(STAGE_NAMES.get(stage.name, stage.name))}: {stage.found:,} facts, {stage.seconds:.2f} s"
         for stage in analysis.stages
     ]
     return "\n".join(lines)
+
+
+def _about(analysis: Analysis) -> list[str]:
+    """What is shown of the project without being judged; nothing when there is none."""
+    if not (rows := about_rows(analysis)):
+        return []
+    title = f"[bold]{ABOUT_TITLE}[/] [dim]{ABOUT_NOTE}[/]"
+    return ["", title, *(f"  [cyan]{markup(label)}[/]: {markup(text)}" for label, text in rows)]
 
 
 def report_page(report: Report) -> str:

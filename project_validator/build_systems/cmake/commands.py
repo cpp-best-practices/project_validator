@@ -256,6 +256,18 @@ def _property(
             collector.setting(frame, invocation, name, Value(";".join(value.text for value in group), when), target)
 
 
+_COMPILE_FEATURE_STANDARD = re.compile(r"(?P<language>c|cxx|cuda)_std_(?P<standard>\w+)")
+
+
+def _compile_features(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
+    """`target_compile_features(app PUBLIC cxx_std_20)` requires the standard, as the target's `CXX_STANDARD` would
+    (at least that standard): recorded as that setting."""
+    for word in words[1:]:
+        if found := _COMPILE_FEATURE_STANDARD.fullmatch(word.text):
+            name = f"{found['language'].upper()}_STANDARD"
+            collector.setting(frame, invocation, name, Value(found["standard"], word.when), words[0].text)
+
+
 def _set_target_properties(collector: Collector, frame: Frame, invocation: Invocation, words: list[Value]) -> None:
     texts = [word.text for word in words]
     if "PROPERTIES" not in texts:
@@ -425,6 +437,7 @@ _COMMANDS: Mapping[str, Callable[[Collector, Frame, Invocation, list[Value]], No
     "target_compile_definitions": _target_options("definition"),
     "target_link_options": _target_options("link"),
     "target_link_libraries": _link_libraries,
+    "target_compile_features": _compile_features,
     "set_target_properties": _set_target_properties,
     "set_property": _set_property,
     "option": _option,

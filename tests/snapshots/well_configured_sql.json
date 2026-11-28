@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "database engine version",
+        "declared": [],
+        "languages": [
+          "SQL"
+        ],
+        "tested": [
+          "PostgreSQL 16",
+          "PostgreSQL 17"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "SQL",
+      "text": "declares no version; CI tests database engine versions PostgreSQL 16, PostgreSQL 17"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

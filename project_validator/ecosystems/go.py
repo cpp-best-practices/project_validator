@@ -36,6 +36,7 @@ from project_validator.facts.shell import split_words
 from project_validator.facts.suppressions import Marker
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Definition, Run, all_of, defined_by, either, starts, when, with_option
+from project_validator.facts.versions import declared_version_reader
 from project_validator.text import pattern
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.limits import function_length_limiters
@@ -503,3 +504,17 @@ NOLINT_GO = Marker(
     languages=GO_LANGUAGE,
     pattern=re.compile(r"//\s*nolint(?::(?P<codes>[\w,-]+))?(?P<reason>[^\n]*)"),
 )
+
+_GO_DIRECTIVE = re.compile(r"^go\s+(?P<version>\S+)", re.MULTILINE)
+_TOOLCHAIN_DIRECTIVE = re.compile(r"^toolchain\s+go(?P<version>\S+)", re.MULTILINE)
+
+
+def _go_mod_versions(text: str) -> Iterator[tuple[str, bool]]:
+    """go.mod's `go` directive (the oldest Go the module builds with) and its `toolchain` (the one it pins)."""
+    if found := _GO_DIRECTIVE.search(text):
+        yield found["version"], False
+    if found := _TOOLCHAIN_DIRECTIVE.search(text):
+        yield found["version"], True
+
+
+GO_VERSION = declared_version_reader(name="go.mod go", files=("go.mod",), language="Go", declares=_go_mod_versions)

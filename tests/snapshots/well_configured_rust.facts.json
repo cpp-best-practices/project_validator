@@ -3613,6 +3613,11 @@
     {
       "kind": "ConfigurationFile",
       "origin": "Cargo.toml",
+      "reader": "Cargo.toml rust-version"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "Cargo.toml",
       "reader": "Cargo dependencies"
     },
     {
@@ -3708,6 +3713,11 @@
       "kind": "ConfigurationFile",
       "origin": "fuzz/Cargo.toml",
       "reader": "Cargo.toml license"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "fuzz/Cargo.toml",
+      "reader": "Cargo.toml rust-version"
     },
     {
       "kind": "ConfigurationFile",

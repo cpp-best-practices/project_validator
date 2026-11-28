@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "Swift toolchain",
+        "declared": [],
+        "languages": [
+          "Swift"
+        ],
+        "tested": [
+          "6.0",
+          "6.1"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Swift",
+      "text": "declares no version; CI tests Swift toolchains 6.0, 6.1"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

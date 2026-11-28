@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "OCaml version",
+        "declared": [],
+        "languages": [
+          "OCaml"
+        ],
+        "tested": [
+          "4.14",
+          "5.2"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "OCaml",
+      "text": "declares no version; CI tests OCaml versions 4.14, 5.2"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "Ruby version",
+        "declared": [],
+        "languages": [
+          "Ruby"
+        ],
+        "tested": [
+          "3.3",
+          "3.4"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Ruby",
+      "text": "declares no version; CI tests Ruby versions 3.3, 3.4"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

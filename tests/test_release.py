@@ -85,7 +85,7 @@ class JsonFormatTests(unittest.TestCase):
     def test_the_score_sits_beside_the_results(self) -> None:
         with temp_project({"main.py": "print(1)\n"}) as root:
             output = json.loads(_stdout("--format", "json", "--score", str(root)))
-        self.assertEqual(sorted(output), ["format", "results", "score", "version"])
+        self.assertEqual(sorted(output), ["about", "format", "results", "score", "version"])
 
 
 def _stdout(*arguments: str) -> str:

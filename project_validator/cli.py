@@ -325,21 +325,36 @@ def _usage_error(parser: argparse.ArgumentParser, message: str) -> int:
     return EXIT_USAGE
 
 
+def _results_json(analysis: Analysis, *, scored: bool) -> dict[str, object]:
+    """`--format json`: each result, what is shown without being judged (`about`), and the score when asked for."""
+    beside: dict[str, object] = {"about": [detail.as_dict() for detail in analysis.about]}
+    if scored and analysis.score is not None:
+        beside["score"] = analysis.score.as_dict()
+    return versioned("results", report_dicts(list(analysis.reports)), **beside)
+
+
+def _markdown(analysis: Analysis, *, scored: bool) -> str:
+    """`--format markdown`: the grid of results, what is shown without being judged, and the score when asked for."""
+    shown = render_grid(list(analysis.reports))
+    if lines := text_view.about_lines(analysis):
+        shown += (
+            "\n" + "\n".join([f"**{lines[0].rstrip(':')}**", "", *(f"- {line.strip()}" for line in lines[1:])]) + "\n"
+        )
+    if scored and analysis.score is not None:
+        shown += "\n" + "\n".join(text_view.score_lines(analysis.score, markdown=True)) + "\n"
+    return shown
+
+
 def _print_analysis(analysis: Analysis, arguments: argparse.Namespace) -> None:
     """Print the analysis in the format asked for, and write the HTML report when `--html` asks for one."""
     if arguments.html is not None:
         arguments.html.write_text(html_view.render(analysis), encoding="utf-8")
-    reports = list(analysis.reports)
     if arguments.format == "json":
-        results = report_dicts(reports)
-        scored = analysis.score.as_dict() if arguments.score and analysis.score else None
-        print(json.dumps(versioned("results", results, **({} if scored is None else {"score": scored})), indent=2))
+        print(json.dumps(_results_json(analysis, scored=arguments.score), indent=2))
     elif arguments.format == "html":
         print(html_view.render(analysis), end="")
     elif arguments.format == "markdown":
-        print(render_grid(reports), end="")
-        if arguments.score and analysis.score is not None:
-            print("\n" + "\n".join(text_view.score_lines(analysis.score, markdown=True)))
+        print(_markdown(analysis, scored=arguments.score), end="")
     elif _use_color(arguments.color) and console_view.available():
         console_view.render(analysis, sys.stdout, verbose=arguments.verbose)
     else:

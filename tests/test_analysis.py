@@ -90,7 +90,19 @@ class AnalysisTests(unittest.TestCase):
         data = _analysis(MIXED).as_dict()
         self.assertEqual(
             set(data),
-            {"project", "validator", "options", "seconds", "stages", "structure", "roles", "results", "score", "git"},
+            {
+                "project",
+                "validator",
+                "options",
+                "seconds",
+                "stages",
+                "structure",
+                "roles",
+                "results",
+                "score",
+                "git",
+                "about",
+            },
         )
         json.dumps(data)
 

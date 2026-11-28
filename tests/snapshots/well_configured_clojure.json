@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "JDK version",
+        "declared": [],
+        "languages": [
+          "Clojure"
+        ],
+        "tested": [
+          "17",
+          "21"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Clojure",
+      "text": "declares no version; CI tests JDK versions 17, 21"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

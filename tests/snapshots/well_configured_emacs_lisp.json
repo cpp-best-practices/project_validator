@@ -1,4 +1,24 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "Emacs version",
+        "declared": [],
+        "languages": [
+          "Emacs Lisp"
+        ],
+        "tested": [
+          "snapshot",
+          "29.4",
+          "30.1"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Emacs Lisp",
+      "text": "declares no version; CI tests Emacs versions snapshot, 29.4, 30.1"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

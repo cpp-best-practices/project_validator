@@ -8,6 +8,9 @@ from project_validator.analysis import Analysis
 from project_validator.runner import Report
 from project_validator.score import Score, floor_percent
 from project_validator.views.common import (
+    ABOUT_NOTE,
+    ABOUT_TITLE,
+    about_rows,
     ci_summary,
     dedupe,
     ecosystems,
@@ -46,6 +49,12 @@ def detected_lines(analysis: Analysis) -> list[str]:
     return lines
 
 
+def about_lines(analysis: Analysis) -> list[str]:
+    """What is shown of the project without being judged; nothing when there is none."""
+    rows = about_rows(analysis)
+    return [f"{ABOUT_TITLE} ({ABOUT_NOTE}):", *(f"  {label}: {text}" for label, text in rows)] if rows else []
+
+
 def report_lines(reports: list[Report]) -> list[str]:
     lines: list[str] = []
     for report in reports:
@@ -71,10 +80,12 @@ def score_lines(scored: Score, *, markdown: bool = False, steps: int = NEXT_STEP
 
 def render(analysis: Analysis, *, scored: bool = False) -> str:
     """The report: what was detected, each check, the totals, and the score when `scored`."""
-    lines = [*detected_lines(analysis), "", *report_lines(list(analysis.reports)), "", summary(analysis.reports)]
+    about = about_lines(analysis)
+    lines = [*detected_lines(analysis), *([""] if about else []), *about]
+    lines += ["", *report_lines(list(analysis.reports)), "", summary(analysis.reports)]
     if scored and analysis.score is not None:
         lines += ["", *score_lines(analysis.score)]
     return "\n".join(lines)
 
 
-__all__ = ["NEXT_STEPS", "detected_lines", "render", "report_lines", "score_lines"]
+__all__ = ["NEXT_STEPS", "about_lines", "detected_lines", "render", "report_lines", "score_lines"]

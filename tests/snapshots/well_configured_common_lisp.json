@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "Lisp implementation",
+        "declared": [],
+        "languages": [
+          "Common Lisp"
+        ],
+        "tested": [
+          "ccl-bin",
+          "sbcl-bin"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Common Lisp",
+      "text": "declares no version; CI tests Lisp implementations ccl-bin, sbcl-bin"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {
