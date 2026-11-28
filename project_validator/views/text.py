@@ -81,7 +81,9 @@ def score_lines(scored: Score, *, markdown: bool = False, steps: int = NEXT_STEP
 def render(analysis: Analysis, *, scored: bool = False) -> str:
     """The report: what was detected, each check, the totals, and the score when `scored`."""
     about = about_lines(analysis)
-    lines = [*detected_lines(analysis), *([""] if about else []), *about]
+    lines = detected_lines(analysis)
+    if about:
+        lines += ["", *about]
     lines += ["", *report_lines(list(analysis.reports)), "", summary(analysis.reports)]
     if scored and analysis.score is not None:
         lines += ["", *score_lines(analysis.score)]
