@@ -43,6 +43,49 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "clj-kondo"
+        ],
+        "audit": [
+          "nvd-clojure"
+        ],
+        "coverage": [
+          "cloverage"
+        ],
+        "format": [
+          "cljfmt"
+        ],
+        "security": [
+          "semgrep"
+        ],
+        "test": [
+          "clojure.test"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: cljfmt; analysis: clj-kondo; test: clojure.test; coverage: cloverage; security: semgrep; audit: nvd-clojure"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 9,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 9 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

@@ -56,6 +56,43 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "dbt parse",
+          "sqlfluff",
+          "squawk"
+        ],
+        "format": [
+          "sqlfluff"
+        ],
+        "migrations": [
+          "squawk"
+        ],
+        "test": [
+          "dbt test"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: sqlfluff; analysis: dbt parse, sqlfluff, squawk; test: dbt test; migrations: squawk"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 4,
+        "oses": [
+          "linux"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 4 jobs on 1 OS (linux)"
     }
   ],
   "answers": {

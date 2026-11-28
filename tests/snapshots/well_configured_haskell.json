@@ -58,6 +58,46 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT; app.cabal declares MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "hlint"
+        ],
+        "audit": [
+          "cabal-audit"
+        ],
+        "coverage": [
+          "HPC"
+        ],
+        "format": [
+          "ormolu"
+        ],
+        "test": [
+          "cabal test"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: ormolu; analysis: hlint; test: cabal test; coverage: HPC; audit: cabal-audit"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 9,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 9 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

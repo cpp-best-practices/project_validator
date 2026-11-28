@@ -58,6 +58,62 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT; pyproject.toml declares MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "ruff check"
+        ],
+        "audit": [
+          "pip-audit"
+        ],
+        "coverage": [
+          "coverage.py"
+        ],
+        "format": [
+          "ruff format"
+        ],
+        "function-length": [
+          "lizard"
+        ],
+        "fuzz": [
+          "atheris"
+        ],
+        "mutation": [
+          "mutmut"
+        ],
+        "security": [
+          "CodeQL",
+          "bandit"
+        ],
+        "test": [
+          "pytest"
+        ],
+        "type-check": [
+          "mypy"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: ruff format; analysis: ruff check; type-check: mypy; test: pytest; coverage: coverage.py; mutation: mutmut; fuzz: atheris; security: CodeQL, bandit; audit: pip-audit; function-length: lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 9,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 9 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

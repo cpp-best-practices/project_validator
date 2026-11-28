@@ -44,6 +44,46 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "coverage": [
+          "julia --code-coverage"
+        ],
+        "format": [
+          "JuliaFormatter"
+        ],
+        "security": [
+          "semgrep"
+        ],
+        "test": [
+          "Pkg.test"
+        ],
+        "type-check": [
+          "JET.jl"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: JuliaFormatter; type-check: JET.jl; test: Pkg.test; coverage: julia --code-coverage; security: semgrep"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 12,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 12 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

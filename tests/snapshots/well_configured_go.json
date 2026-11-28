@@ -48,6 +48,62 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "go vet",
+          "golangci-lint",
+          "staticcheck"
+        ],
+        "audit": [
+          "govulncheck"
+        ],
+        "coverage": [
+          "go test -cover"
+        ],
+        "format": [
+          "gofmt"
+        ],
+        "function-length": [
+          "golangci-lint's funlen",
+          "lizard"
+        ],
+        "fuzz": [
+          "go test -fuzz"
+        ],
+        "mutation": [
+          "gremlins"
+        ],
+        "security": [
+          "CodeQL",
+          "gosec"
+        ],
+        "test": [
+          "go test"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: gofmt; analysis: go vet, golangci-lint, staticcheck; test: go test; coverage: go test -cover; mutation: gremlins; fuzz: go test -fuzz; security: CodeQL, gosec; audit: govulncheck; function-length: golangci-lint's funlen, lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 10,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 10 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

@@ -14,6 +14,38 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "ruff check"
+        ],
+        "format": [
+          "ruff format"
+        ],
+        "test": [
+          "notebook execution"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: ruff format; analysis: ruff check; test: notebook execution"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 3,
+        "oses": [
+          "linux"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 3 jobs on 1 OS (linux)"
     }
   ],
   "answers": {

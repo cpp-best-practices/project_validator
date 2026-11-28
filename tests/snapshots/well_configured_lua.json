@@ -44,6 +44,52 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "luacheck"
+        ],
+        "coverage": [
+          "luacov"
+        ],
+        "format": [
+          "StyLua"
+        ],
+        "function-length": [
+          "lizard"
+        ],
+        "security": [
+          "semgrep"
+        ],
+        "test": [
+          "busted"
+        ],
+        "type-check": [
+          "lua-language-server"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: StyLua; analysis: luacheck; type-check: lua-language-server; test: busted; coverage: luacov; security: semgrep; function-length: lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 13,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 13 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

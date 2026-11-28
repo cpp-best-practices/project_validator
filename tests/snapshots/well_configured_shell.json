@@ -38,6 +38,46 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "PSScriptAnalyzer",
+          "shellcheck"
+        ],
+        "coverage": [
+          "Pester",
+          "kcov"
+        ],
+        "format": [
+          "shfmt"
+        ],
+        "test": [
+          "Pester",
+          "bats"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: shfmt; analysis: PSScriptAnalyzer, shellcheck; test: Pester, bats; coverage: Pester, kcov"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 7,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 7 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

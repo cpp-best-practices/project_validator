@@ -14,6 +14,40 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "hadolint",
+          "trivy"
+        ],
+        "audit": [
+          "trivy"
+        ],
+        "security": [
+          "hadolint",
+          "trivy"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "analysis: hadolint, trivy; security: hadolint, trivy; audit: trivy"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 4,
+        "oses": [
+          "linux"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 4 jobs on 1 OS (linux)"
     }
   ],
   "answers": {

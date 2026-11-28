@@ -1,5 +1,16 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generators": [
+          "MkDocs"
+        ]
+      },
+      "group": "Documents",
+      "subject": "the project",
+      "text": "docs built with MkDocs; no CHANGELOG, CONTRIBUTING, CODEOWNERS"
+    }
+  ],
   "answers": {
     "action-pinning": [],
     "ci-lint": [],

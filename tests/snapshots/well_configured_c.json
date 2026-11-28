@@ -55,6 +55,56 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "clang-tidy",
+          "cmake-lint",
+          "cppcheck"
+        ],
+        "coverage": [
+          "gcc -fcondition-coverage",
+          "gcovr"
+        ],
+        "format": [
+          "clang-format",
+          "gersemi"
+        ],
+        "function-length": [
+          "clang-tidy's readability-function-size"
+        ],
+        "mutation": [
+          "Mull"
+        ],
+        "security": [
+          "CodeQL"
+        ],
+        "test": [
+          "ctest"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: clang-format, gersemi; analysis: clang-tidy, cmake-lint, cppcheck; test: ctest; coverage: gcc -fcondition-coverage, gcovr; mutation: Mull; security: CodeQL; function-length: clang-tidy's readability-function-size"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 24,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 24 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

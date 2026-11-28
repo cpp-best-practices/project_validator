@@ -58,6 +58,60 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT; composer.json declares MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "PHPStan",
+          "Psalm"
+        ],
+        "audit": [
+          "composer audit"
+        ],
+        "coverage": [
+          "PHPUnit"
+        ],
+        "format": [
+          "PHP-CS-Fixer"
+        ],
+        "function-length": [
+          "lizard"
+        ],
+        "mutation": [
+          "Infection"
+        ],
+        "security": [
+          "Psalm taint analysis"
+        ],
+        "test": [
+          "phpunit, pest or composer test"
+        ],
+        "type-check": [
+          "PHPStan",
+          "Psalm"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: PHP-CS-Fixer; analysis: PHPStan, Psalm; type-check: PHPStan, Psalm; test: phpunit, pest or composer test; coverage: PHPUnit; mutation: Infection; security: Psalm taint analysis; audit: composer audit; function-length: lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 9,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 9 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

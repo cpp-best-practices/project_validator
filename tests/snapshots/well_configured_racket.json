@@ -45,6 +45,43 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT; info.rkt declares MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "Resyntax"
+        ],
+        "coverage": [
+          "raco cover"
+        ],
+        "format": [
+          "raco fmt"
+        ],
+        "test": [
+          "raco test"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: raco fmt; analysis: Resyntax; test: raco test; coverage: raco cover"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 10,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 10 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

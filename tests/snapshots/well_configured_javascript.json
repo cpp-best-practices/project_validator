@@ -58,6 +58,59 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT; package.json declares MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "eslint"
+        ],
+        "audit": [
+          "npm audit"
+        ],
+        "coverage": [
+          "Vitest"
+        ],
+        "format": [
+          "prettier"
+        ],
+        "function-length": [
+          "eslint's max-lines-per-function",
+          "lizard"
+        ],
+        "fuzz": [
+          "Jazzer.js"
+        ],
+        "mutation": [
+          "StrykerJS"
+        ],
+        "security": [
+          "eslint-plugin-security"
+        ],
+        "test": [
+          "a JavaScript test runner"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: prettier; analysis: eslint; test: a JavaScript test runner; coverage: Vitest; mutation: StrykerJS; fuzz: Jazzer.js; security: eslint-plugin-security; audit: npm audit; function-length: eslint's max-lines-per-function, lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 9,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 9 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {
