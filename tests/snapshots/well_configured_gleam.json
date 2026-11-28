@@ -26,6 +26,35 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "format": [
+          "gleam format"
+        ],
+        "test": [
+          "gleam test"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: gleam format; test: gleam test"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 3,
+        "oses": [
+          "linux"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 3 jobs on 1 OS (linux)"
     }
   ],
   "answers": {

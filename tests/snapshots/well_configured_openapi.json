@@ -14,6 +14,44 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "redocly",
+          "spectral"
+        ],
+        "compatibility": [
+          "oasdiff"
+        ],
+        "examples": [
+          "redocly",
+          "spectral"
+        ],
+        "schema": [
+          "redocly",
+          "spectral"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "analysis: redocly, spectral; compatibility: oasdiff; examples: redocly, spectral; schema: redocly, spectral"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 4,
+        "oses": [
+          "linux"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 4 jobs on 1 OS (linux)"
     }
   ],
   "answers": {

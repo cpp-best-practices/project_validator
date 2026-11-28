@@ -12,7 +12,7 @@ from functools import partial
 from project_validator import remote
 from project_validator.ci import FETCHES_REMOTE, REPOSITORY, CiProvider, Load, strings
 from project_validator.ci.github_expressions import Known, evaluate, rendered, requirement
-from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, Origin, Unknown
+from project_validator.facts import NOTHING, ActionStep, CiJob, CiTriggers, Command, Fact, Origin, Unknown
 from project_validator.facts.exit_status import ERREXIT, STRICT, Shell, shell_of
 from project_validator.facts.expansion import advised, known_actions, required, script_facts
 from project_validator.facts.shell import CMD, POSIX, POWERSHELL, Dialect, ShellSyntaxError, split_words
@@ -670,6 +670,8 @@ def workflow_facts(
         return
     if not caller and _only_called(document):
         return  # its jobs run where another workflow calls it
+    if not caller and (events := _triggers(document)):
+        yield CiTriggers(origin=Origin(path=path, at=("on",)), provider=GITHUB_ACTIONS.name, events=tuple(events))
     advisory = "" if caller else _conversational(document)
     for job_id, job in jobs.items():
         if not isinstance(job, Mapping):

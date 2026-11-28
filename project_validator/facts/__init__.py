@@ -55,6 +55,14 @@ class CiConfiguration(Fact):
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
+class CiTriggers(Fact):
+    """The events a CI configuration runs on (a GitHub workflow's `on:`): `push`, `pull_request`, `schedule`."""
+
+    provider: str
+    events: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
 class CiJob(Fact):
     """One CI job as it runs: one combination of its matrix, on one runner.
 
@@ -325,6 +333,7 @@ __all__ = [
     "ActionStep",
     "CiConfiguration",
     "CiJob",
+    "CiTriggers",
     "Command",
     "ConfigurationFile",
     "Fact",

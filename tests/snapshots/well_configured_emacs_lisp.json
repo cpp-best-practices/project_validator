@@ -44,6 +44,41 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "checkdoc",
+          "package-lint"
+        ],
+        "coverage": [
+          "undercover.el"
+        ],
+        "test": [
+          "ERT"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "analysis: checkdoc, package-lint; test: ERT; coverage: undercover.el"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 12,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 12 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

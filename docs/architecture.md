@@ -394,7 +394,10 @@ license files beside the manifests' declarations, counts the sources' SPDX heade
 vendored code's license files, which a reader of vendored code alone records apart (`VendoredLicenseFile`) so that the
 license check never sees them. History and Releases read the checkout's git (`History`, `Tag` and `PackageVersion`
 facts, in the history stage), counting every window back from the last commit so that a checkout always says the same
-thing; a shallow clone's age and authors are not guessed. An item may become a check once the corpus shows where to draw
+thing; a shallow clone's age and authors are not guessed. Tools lists the tool runs by aspect; CI sets the events GitHub
+workflows run on (`CiTriggers`) beside the jobs and their OSes; Publishing finds the steps that publish a release, by
+the actions and commands `about/publishing.py` lists for each destination; Documents reads the project documents
+(`ProjectDocument`) and the documentation-site formats. An item may become a check once the corpus shows where to draw
 its line.
 
 ### Worked example: branch coverage in this repository

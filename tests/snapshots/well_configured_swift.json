@@ -56,6 +56,59 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "SwiftLint"
+        ],
+        "audit": [
+          "osv-scanner"
+        ],
+        "coverage": [
+          "swift test"
+        ],
+        "format": [
+          "swift-format"
+        ],
+        "function-length": [
+          "SwiftLint's function_body_length",
+          "lizard"
+        ],
+        "fuzz": [
+          "libFuzzer"
+        ],
+        "mutation": [
+          "Muter"
+        ],
+        "security": [
+          "CodeQL"
+        ],
+        "test": [
+          "swift test or xcodebuild test"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: swift-format; analysis: SwiftLint; test: swift test or xcodebuild test; coverage: swift test; mutation: Muter; fuzz: libFuzzer; security: CodeQL; audit: osv-scanner; function-length: SwiftLint's function_body_length, lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 17,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 17 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

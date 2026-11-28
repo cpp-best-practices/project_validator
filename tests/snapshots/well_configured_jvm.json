@@ -54,6 +54,58 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "SpotBugs"
+        ],
+        "audit": [
+          "OWASP dependency-check"
+        ],
+        "coverage": [
+          "JaCoCo"
+        ],
+        "format": [
+          "Spotless"
+        ],
+        "function-length": [
+          "lizard"
+        ],
+        "fuzz": [
+          "Jazzer"
+        ],
+        "mutation": [
+          "PIT"
+        ],
+        "security": [
+          "Find Security Bugs"
+        ],
+        "test": [
+          "mvn test or gradle test"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: Spotless; analysis: SpotBugs; test: mvn test or gradle test; coverage: JaCoCo; mutation: PIT; fuzz: Jazzer; security: Find Security Bugs; audit: OWASP dependency-check; function-length: lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 9,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 9 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

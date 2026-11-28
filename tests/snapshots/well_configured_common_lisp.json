@@ -43,6 +43,40 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "sblint"
+        ],
+        "coverage": [
+          "sb-cover"
+        ],
+        "test": [
+          "asdf:test-system"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "analysis: sblint; test: asdf:test-system; coverage: sb-cover"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 9,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 9 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

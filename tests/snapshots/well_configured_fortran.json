@@ -54,6 +54,46 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "fortitude"
+        ],
+        "coverage": [
+          "gcovr"
+        ],
+        "format": [
+          "fprettify"
+        ],
+        "function-length": [
+          "lizard"
+        ],
+        "test": [
+          "fpm test"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: fprettify; analysis: fortitude; test: fpm test; coverage: gcovr; function-length: lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 23,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 23 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

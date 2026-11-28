@@ -360,6 +360,95 @@ class HistoryTest(unittest.TestCase):
         self.assertIn("pyproject.toml says 1.2.0, the latest tag's", found.text)
 
 
+def _workflow(
+    on: object, *steps: Mapping[str, object], name: str = "ci", runners: tuple[str, ...] = ("ubuntu-latest",)
+) -> dict[str, str]:
+    jobs = {f"job{index}": {"runs-on": runner, "steps": list(steps)} for index, runner in enumerate(runners)}
+    return {f".github/workflows/{name}.yml": json.dumps({"on": on, "jobs": jobs})}
+
+
+class ToolsTest(unittest.TestCase):
+    def test_the_tools_ci_runs_are_listed_by_aspect(self) -> None:
+        files = {
+            "app.py": "",
+            **_workflow(["push"], {"run": "ruff check ."}, {"run": "ruff format --check ."}, {"run": "pytest"}),
+        }
+        found = _group(files, "Tools")["CI"]
+        self.assertEqual("format: ruff format; analysis: ruff check; test: pytest", found.text)
+
+
+class CiShapeTest(unittest.TestCase):
+    def test_the_triggers_forks_and_platforms_are_shown(self) -> None:
+        files = {
+            "app.py": "",
+            **_workflow(
+                {"push": {}, "pull_request": {}, "schedule": [{"cron": "0 0 * * 0"}]},
+                {"run": "pytest"},
+                runners=("ubuntu-latest", "macos-latest", "windows-latest"),
+            ),
+        }
+        found = _group(files, "CI")["the CI"]
+        self.assertEqual(
+            "runs on pull_request, push, schedule; pull requests from forks run it; "
+            "3 jobs on 3 OSes (linux, macos, windows)",
+            found.text,
+        )
+
+    def test_ci_that_never_runs_on_a_pull_request_says_forks_do_not_run_it(self) -> None:
+        found = _group({"app.py": "", **_workflow(["push"], {"run": "pytest"})}, "CI")["the CI"]
+        self.assertIn("pull requests from forks do not run it", found.text)
+
+
+class PublishingTest(unittest.TestCase):
+    def test_trusted_publishing_to_pypi_is_shown(self) -> None:
+        step = {"uses": "pypa/gh-action-pypi-publish@release/v1"}
+        found = _group({"app.py": "", **_workflow(["release"], step, name="release")}, "Publishing")
+        self.assertEqual(
+            "by pypa/gh-action-pypi-publish (.github/workflows/release.yml), with trusted publishing",
+            found["PyPI"].text,
+        )
+
+    def test_a_token_is_not_trusted_publishing(self) -> None:
+        step = {"uses": "pypa/gh-action-pypi-publish@release/v1", "with": {"password": "${{ secrets.PYPI }}"}}
+        found = _group({"app.py": "", **_workflow(["release"], step, name="release")}, "Publishing")
+        self.assertEqual(
+            "by pypa/gh-action-pypi-publish (.github/workflows/release.yml), with a token", found["PyPI"].text
+        )
+
+    def test_npm_with_provenance_and_an_sbom_are_shown(self) -> None:
+        steps = ({"run": "npm publish --provenance"}, {"uses": "anchore/sbom-action@v0"})
+        found = _group({"index.js": "", **_workflow(["release"], *steps, name="release")}, "Publishing")
+        self.assertEqual("by npm publish (.github/workflows/release.yml), with provenance", found["npm"].text)
+        self.assertEqual("an SBOM by anchore/sbom-action (.github/workflows/release.yml)", found["attestations"].text)
+
+    def test_a_project_that_publishes_nothing_shows_no_publishing(self) -> None:
+        self.assertEqual({}, _group({"app.py": "", **_workflow(["push"], {"run": "pytest"})}, "Publishing"))
+
+
+class DocumentsTest(unittest.TestCase):
+    def test_the_project_documents_and_the_docs_generator_are_shown(self) -> None:
+        files = {
+            "app.py": "",
+            "mkdocs.yml": "site_name: app\n",
+            "docs/index.md": "# app\n",
+            "CHANGELOG.md": "# Changelog\n\n## [Unreleased]\n\n## [1.2.0] - 2026-01-01\n\n- First.\n",
+            ".github/CONTRIBUTING.md": "# Contributing\n",
+            ".github/ISSUE_TEMPLATE/bug.yml": "name: Bug\n",
+            ".github/ISSUE_TEMPLATE/feature.yml": "name: Feature\n",
+            ".github/pull_request_template.md": "## What\n",
+        }
+        found = _group(files, "Documents")["the project"]
+        self.assertEqual(
+            "docs built with MkDocs; CHANGELOG.md, its latest entry 1.2.0; .github/CONTRIBUTING.md; 2 issue templates; "
+            "a pull request template; no CODEOWNERS",
+            found.text,
+        )
+
+    def test_a_doxyfile_is_a_docs_generator(self) -> None:
+        found = _group({"main.c": "", "Doxyfile": "PROJECT_NAME = app\n"}, "Documents")["the project"]
+        self.assertTrue(found.text.startswith("docs built with Doxygen; "), found.text)
+
+
 MIT = """MIT License
 
 Copyright (c) 2026 Someone
@@ -390,8 +479,8 @@ class ViewsTest(unittest.TestCase):
             _code, output, _errors = run_cli("--format", "json", "--only", "coverage", str(root))
         found = json.loads(output)
         json_output(output, "results")
-        self.assertEqual(["Versions"], [detail["group"] for detail in found["about"]])
-        self.assertEqual(["3.10", "3.12"], found["about"][0]["data"]["tested"])
+        versions = [detail for detail in found["about"] if detail["group"] == "Versions"]
+        self.assertEqual(["3.10", "3.12"], versions[0]["data"]["tested"])
 
     def test_a_project_with_nothing_to_show_has_no_section(self) -> None:
         with temp_project({"README.md": "# app\n"}) as root:

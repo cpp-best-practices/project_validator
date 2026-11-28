@@ -56,6 +56,59 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT; app.gemspec declares MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "RuboCop"
+        ],
+        "audit": [
+          "bundler-audit"
+        ],
+        "coverage": [
+          "SimpleCov"
+        ],
+        "format": [
+          "RuboCop"
+        ],
+        "function-length": [
+          "RuboCop's Metrics/MethodLength",
+          "lizard"
+        ],
+        "mutation": [
+          "mutant"
+        ],
+        "security": [
+          "RuboCop Security cops"
+        ],
+        "test": [
+          "rspec, rake test or rails test"
+        ],
+        "type-check": [
+          "Steep"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: RuboCop; analysis: RuboCop; type-check: Steep; test: rspec, rake test or rails test; coverage: SimpleCov; mutation: mutant; security: RuboCop Security cops; audit: bundler-audit; function-length: RuboCop's Metrics/MethodLength, lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 9,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 9 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

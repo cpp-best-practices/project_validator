@@ -43,6 +43,40 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "deadnix",
+          "statix"
+        ],
+        "format": [
+          "nix fmt"
+        ],
+        "test": [
+          "nix flake check"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: nix fmt; analysis: deadnix, statix; test: nix flake check"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 6,
+        "oses": [
+          "linux",
+          "macos"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 6 jobs on 2 OSes (linux, macos)"
     }
   ],
   "answers": {

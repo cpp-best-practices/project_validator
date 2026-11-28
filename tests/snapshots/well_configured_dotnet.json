@@ -58,6 +58,58 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT; Directory.Build.props declares MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "Roslynator"
+        ],
+        "audit": [
+          "NuGet audit of every package"
+        ],
+        "coverage": [
+          "coverlet"
+        ],
+        "format": [
+          "dotnet format"
+        ],
+        "function-length": [
+          "lizard"
+        ],
+        "fuzz": [
+          "SharpFuzz"
+        ],
+        "mutation": [
+          "Stryker.NET"
+        ],
+        "security": [
+          ".NET security analyzers"
+        ],
+        "test": [
+          "dotnet test"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: dotnet format; analysis: Roslynator; test: dotnet test; coverage: coverlet; mutation: Stryker.NET; fuzz: SharpFuzz; security: .NET security analyzers; audit: NuGet audit of every package; function-length: lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 9,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 9 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

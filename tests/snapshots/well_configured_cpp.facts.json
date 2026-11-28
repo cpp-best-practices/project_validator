@@ -220,6 +220,15 @@
       "provider": "GitHub Actions"
     },
     {
+      "events": [
+        "push",
+        "pull_request"
+      ],
+      "kind": "CiTriggers",
+      "origin": ".github/workflows/ci-lint.yml:1:1 (on)",
+      "provider": "GitHub Actions"
+    },
+    {
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -333,6 +342,15 @@
       "kind": "StepReference",
       "origin": ".github/workflows/ci-lint.yml",
       "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
+    },
+    {
+      "events": [
+        "push",
+        "pull_request"
+      ],
+      "kind": "CiTriggers",
+      "origin": ".github/workflows/ci.yml:2:1 (on)",
+      "provider": "GitHub Actions"
     },
     {
       "builds": true,
@@ -3574,6 +3592,15 @@
       "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "events": [
+        "push",
+        "pull_request"
+      ],
+      "kind": "CiTriggers",
+      "origin": ".github/workflows/codeql-analysis.yml:2:1 (on)",
+      "provider": "GitHub Actions"
+    },
+    {
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -3690,6 +3717,15 @@
       "kind": "StepReference",
       "origin": ".github/workflows/codeql-analysis.yml",
       "reference": "github/codeql-action/analyze@9418214df1f2c4b8128c770156c409013b07d6b9"
+    },
+    {
+      "events": [
+        "push",
+        "pull_request"
+      ],
+      "kind": "CiTriggers",
+      "origin": ".github/workflows/copy-paste-detection.yml:2:1 (on)",
+      "provider": "GitHub Actions"
     },
     {
       "builds": true,

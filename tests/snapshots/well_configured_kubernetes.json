@@ -14,6 +14,43 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "helm lint",
+          "kube-linter"
+        ],
+        "schema": [
+          "kubeconform"
+        ],
+        "security": [
+          "kube-linter"
+        ],
+        "test": [
+          "helm test",
+          "helm-unittest"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "analysis: helm lint, kube-linter; test: helm test, helm-unittest; security: kube-linter; schema: kubeconform"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 4,
+        "oses": [
+          "linux"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 4 jobs on 1 OS (linux)"
     }
   ],
   "answers": {

@@ -43,6 +43,43 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "coverage": [
+          "bisect_ppx"
+        ],
+        "format": [
+          "ocamlformat"
+        ],
+        "security": [
+          "semgrep"
+        ],
+        "test": [
+          "dune test"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: ocamlformat; test: dune test; coverage: bisect_ppx; security: semgrep"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 9,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 9 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

@@ -16,6 +16,32 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT; datapackage.json declares MIT"
+    },
+    {
+      "data": {
+        "schema": [
+          "frictionless"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "schema: frictionless"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 3,
+        "oses": [
+          "linux"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 3 jobs on 1 OS (linux)"
     }
   ],
   "answers": {

@@ -56,6 +56,52 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "dart analyze"
+        ],
+        "audit": [
+          "osv-scanner"
+        ],
+        "coverage": [
+          "dart test --coverage"
+        ],
+        "format": [
+          "dart format"
+        ],
+        "function-length": [
+          "lizard"
+        ],
+        "security": [
+          "semgrep"
+        ],
+        "test": [
+          "dart test"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: dart format; analysis: dart analyze; test: dart test; coverage: dart test --coverage; security: semgrep; audit: osv-scanner; function-length: lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 10,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 10 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

@@ -68,6 +68,56 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "Credo",
+          "elvis"
+        ],
+        "audit": [
+          "mix_audit"
+        ],
+        "coverage": [
+          "mix test --cover"
+        ],
+        "format": [
+          "erlfmt",
+          "mix format"
+        ],
+        "function-length": [
+          "lizard"
+        ],
+        "security": [
+          "Sobelow"
+        ],
+        "test": [
+          "mix test"
+        ],
+        "type-check": [
+          "Dialyzer"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: erlfmt, mix format; analysis: Credo, elvis; type-check: Dialyzer; test: mix test; coverage: mix test --cover; security: Sobelow; audit: mix_audit; function-length: lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 7,
+        "oses": [
+          "linux",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 7 jobs on 2 OSes (linux, windows)"
     }
   ],
   "answers": {

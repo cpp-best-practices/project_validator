@@ -45,6 +45,59 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT; Cargo.toml declares MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "clippy"
+        ],
+        "audit": [
+          "cargo audit"
+        ],
+        "coverage": [
+          "cargo-llvm-cov"
+        ],
+        "format": [
+          "rustfmt"
+        ],
+        "function-length": [
+          "lizard"
+        ],
+        "fuzz": [
+          "cargo-fuzz"
+        ],
+        "mutation": [
+          "cargo-mutants"
+        ],
+        "security": [
+          "CodeQL",
+          "unsafe_code forbidden"
+        ],
+        "test": [
+          "cargo test"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: rustfmt; analysis: clippy; test: cargo test; coverage: cargo-llvm-cov; mutation: cargo-mutants; fuzz: cargo-fuzz; security: CodeQL, unsafe_code forbidden; audit: cargo audit; function-length: lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 16,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 16 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

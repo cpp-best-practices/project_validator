@@ -14,6 +14,40 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "actionlint"
+        ],
+        "security": [
+          "zizmor"
+        ],
+        "test": [
+          "the action's own workflow"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "analysis: actionlint; test: the action's own workflow; security: zizmor"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 5,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 5 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

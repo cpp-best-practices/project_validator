@@ -25,6 +25,38 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "chktex"
+        ],
+        "format": [
+          "latexindent"
+        ],
+        "test": [
+          "latexmk"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: latexindent; analysis: chktex; test: latexmk"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 3,
+        "oses": [
+          "linux"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 3 jobs on 1 OS (linux)"
     }
   ],
   "answers": {

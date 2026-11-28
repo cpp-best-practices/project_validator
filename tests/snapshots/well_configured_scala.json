@@ -43,6 +43,52 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "scalafix"
+        ],
+        "audit": [
+          "sbt-dependency-check"
+        ],
+        "coverage": [
+          "scoverage"
+        ],
+        "format": [
+          "scalafmt"
+        ],
+        "function-length": [
+          "lizard"
+        ],
+        "security": [
+          "semgrep"
+        ],
+        "test": [
+          "sbt test"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: scalafmt; analysis: scalafix; test: sbt test; coverage: scoverage; security: semgrep; audit: sbt-dependency-check; function-length: lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 10,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 10 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

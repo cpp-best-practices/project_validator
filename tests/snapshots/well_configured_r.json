@@ -45,6 +45,46 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "lintr"
+        ],
+        "coverage": [
+          "covr"
+        ],
+        "format": [
+          "air"
+        ],
+        "function-length": [
+          "lizard"
+        ],
+        "test": [
+          "R CMD check"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: air; analysis: lintr; test: R CMD check; coverage: covr; function-length: lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 10,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 10 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

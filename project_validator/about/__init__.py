@@ -11,16 +11,29 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable
 
+from project_validator.about.ci import ci_shape, tools
 from project_validator.about.dependencies import dependencies
 from project_validator.about.detail import Detail
+from project_validator.about.documents import documents
 from project_validator.about.history import history
 from project_validator.about.licences import licences
+from project_validator.about.publishing import publishing
 from project_validator.about.size import size
 from project_validator.about.versions import versions
 from project_validator.facts import Facts
 
 # The groups shown, in order: each a function of the facts.
-GROUPS: tuple[Callable[[Facts], Iterable[Detail]], ...] = (versions, size, dependencies, licences, history)
+GROUPS: tuple[Callable[[Facts], Iterable[Detail]], ...] = (
+    versions,
+    size,
+    dependencies,
+    licences,
+    history,
+    tools,
+    ci_shape,
+    publishing,
+    documents,
+)
 
 
 def about(facts: Facts) -> tuple[Detail, ...]:

@@ -42,6 +42,46 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "coverage": [
+          "kcov"
+        ],
+        "format": [
+          "zig fmt"
+        ],
+        "function-length": [
+          "lizard"
+        ],
+        "fuzz": [
+          "zig build fuzz"
+        ],
+        "test": [
+          "zig build test"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: zig fmt; test: zig build test; coverage: kcov; fuzz: zig build fuzz; function-length: lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 29,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 29 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {

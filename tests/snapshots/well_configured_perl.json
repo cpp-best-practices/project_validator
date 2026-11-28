@@ -43,6 +43,49 @@
       "group": "Licences",
       "subject": "the project",
       "text": "LICENSE holds MIT"
+    },
+    {
+      "data": {
+        "analysis": [
+          "perlcritic"
+        ],
+        "audit": [
+          "cpan-audit"
+        ],
+        "coverage": [
+          "Devel::Cover"
+        ],
+        "format": [
+          "perltidy"
+        ],
+        "function-length": [
+          "lizard"
+        ],
+        "test": [
+          "prove"
+        ]
+      },
+      "group": "Tools",
+      "subject": "CI",
+      "text": "format: perltidy; analysis: perlcritic; test: prove; coverage: Devel::Cover; audit: cpan-audit; function-length: lizard"
+    },
+    {
+      "data": {
+        "events": [
+          "pull_request",
+          "push"
+        ],
+        "forks": true,
+        "jobs": 10,
+        "oses": [
+          "linux",
+          "macos",
+          "windows"
+        ]
+      },
+      "group": "CI",
+      "subject": "the CI",
+      "text": "runs on pull_request, push; pull requests from forks run it; 10 jobs on 3 OSes (linux, macos, windows)"
     }
   ],
   "answers": {
