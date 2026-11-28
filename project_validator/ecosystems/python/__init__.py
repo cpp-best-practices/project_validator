@@ -20,6 +20,7 @@ from project_validator.facts.coverage import Granularity, coverage_tool, measure
 from project_validator.facts.dependencies import Declared, Locked, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched, joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.history import package_version_reader
 from project_validator.facts.licenses import declared_license_reader, toml_license
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Wording, always, required, requirement_reader
@@ -443,6 +444,9 @@ REQUIRES_PYTHON = declared_version_reader(
     files=("pyproject.toml",),
     language="Python",
     declares=toml_version(("project", "requires-python")),
+)
+PYPROJECT_VERSION = package_version_reader(
+    name="pyproject.toml version", files=("pyproject.toml",), declares=toml_version(("project", "version"))
 )
 PYTHON_VERSION_FILE = declared_version_reader(
     name=".python-version", files=(".python-version",), language="Python", declares=pinned_file

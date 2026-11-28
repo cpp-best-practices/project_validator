@@ -13,13 +13,14 @@ from collections.abc import Callable, Iterable
 
 from project_validator.about.dependencies import dependencies
 from project_validator.about.detail import Detail
+from project_validator.about.history import history
 from project_validator.about.licences import licences
 from project_validator.about.size import size
 from project_validator.about.versions import versions
 from project_validator.facts import Facts
 
 # The groups shown, in order: each a function of the facts.
-GROUPS: tuple[Callable[[Facts], Iterable[Detail]], ...] = (versions, size, dependencies, licences)
+GROUPS: tuple[Callable[[Facts], Iterable[Detail]], ...] = (versions, size, dependencies, licences, history)
 
 
 def about(facts: Facts) -> tuple[Detail, ...]:

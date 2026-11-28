@@ -14,6 +14,7 @@ STAGE_NAMES = {
     "the project's structure": "Finding the sources, build files and units",
     "the data files": "Parsing the data files and schemas",
     "the repository": "Reading what the repository tracks and ignores",
+    "the history": "Reading the repository's history and tags",
     "the test files": "Finding the tests",
     "the build probes": "Building the project (--build)",
     "the CI configuration": "Reading the CI configuration",

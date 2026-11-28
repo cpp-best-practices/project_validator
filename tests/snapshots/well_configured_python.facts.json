@@ -2418,6 +2418,11 @@
     {
       "kind": "ConfigurationFile",
       "origin": "pyproject.toml",
+      "reader": "pyproject.toml version"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "pyproject.toml",
       "reader": "Python dependencies"
     },
     {

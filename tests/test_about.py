@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import json
+import os
+import subprocess
 import unittest
 from collections.abc import Mapping
+from pathlib import Path
 
 from project_validator.about import Detail, about
 from project_validator.analysis import analyse
@@ -234,6 +237,127 @@ class LicencesTest(unittest.TestCase):
 
     def test_a_project_with_no_license_information_shows_none(self) -> None:
         self.assertEqual({}, _group({"app.py": ""}, "Licences"))
+
+
+def _git(root: Path, *arguments: str, date: str = "2026-01-01T12:00:00+00:00", email: str = "a@example.com") -> None:
+    environment = {
+        **os.environ,
+        "GIT_AUTHOR_DATE": date,
+        "GIT_COMMITTER_DATE": date,
+        "GIT_AUTHOR_NAME": email.split("@")[0],
+        "GIT_AUTHOR_EMAIL": email,
+        "GIT_COMMITTER_NAME": "c",
+        "GIT_COMMITTER_EMAIL": "c@example.com",
+        "GIT_CONFIG_GLOBAL": os.devnull,
+        "GIT_CONFIG_NOSYSTEM": "1",
+    }
+    subprocess.run(["git", "-C", str(root), *arguments], check=True, capture_output=True, env=environment)  # noqa: S603, S607
+
+
+def _output(root: Path, *arguments: str) -> str:
+    found = subprocess.run(["git", "-C", str(root), *arguments], check=True, capture_output=True, text=True)  # noqa: S603, S607
+    return found.stdout.strip()
+
+
+def _commit(root: Path, date: str, email: str = "a@example.com") -> None:
+    (root / "log.txt").write_text(f"{date} {email}\n", encoding="utf-8")
+    _git(root, "add", "-A", date=date, email=email)
+    _git(root, "commit", "-q", "-m", date, date=date, email=email)
+
+
+# Commits by date and author: the first in 2020, then four in the last year, three of them by one author.
+COMMITS = (
+    ("2020-03-01T12:00:00+00:00", "a@example.com"),
+    ("2026-02-01T12:00:00+00:00", "a@example.com"),
+    ("2026-05-01T12:00:00+00:00", "b@example.com"),
+    ("2026-08-01T12:00:00+00:00", "a@example.com"),
+    ("2026-11-01T12:00:00+00:00", "a@example.com"),
+)
+
+
+def _history(files: Mapping[str, str], tags: Mapping[str, int] = {}) -> dict[str, Detail]:
+    """The History and Releases details of a checkout with `files` and `COMMITS`, each tag on the commit it names."""
+    with temp_project(files) as root:
+        _git(root, "init", "-q", "-b", "main")
+        for index, (date, email) in enumerate(COMMITS):
+            _commit(root, date, email)
+            for tag, at in tags.items():
+                if at == index:
+                    _git(root, "tag", "-a", tag, "-m", tag, date=date)
+        found = about(make_context(root).facts)
+    return {detail.group: detail for detail in found if detail.group in ("History", "Releases")}
+
+
+class HistoryTest(unittest.TestCase):
+    def test_the_history_shows_its_age_its_last_year_and_its_authors(self) -> None:
+        found = _history({"app.py": ""})["History"]
+        self.assertEqual(
+            "5 commits since 2020-03-01, the last on 2026-11-01; 4 in the year before it, by 2 authors "
+            "(the most active made 75% of them); none signed",
+            found.text,
+        )
+        self.assertEqual(0.75, found.data["top_share"])
+
+    def test_a_shallow_clone_does_not_guess_its_history(self) -> None:
+        with temp_project({"app.py": ""}) as root:
+            _git(root, "init", "-q", "-b", "main")
+            for date, email in COMMITS:
+                _commit(root, date, email)
+            with temp_project({}) as parent:
+                clone = parent / "clone"
+                _git(parent, "clone", "-q", "--depth", "1", f"file://{root}", str(clone))
+                found = {detail.group: detail for detail in about(make_context(clone).facts)}
+        self.assertEqual(
+            "a shallow clone, holding 1 of its commits, the last on 2026-11-01: its history is not read",
+            found["History"].text,
+        )
+        self.assertNotIn("Releases", found)
+
+    def test_signed_commits_are_counted_without_checking_their_signatures(self) -> None:
+        with temp_project({"app.py": ""}) as root:
+            _git(root, "init", "-q", "-b", "main")
+            _commit(root, "2026-10-01T12:00:00+00:00")
+            tree = _output(root, "rev-parse", "HEAD^{tree}")
+            parent = _output(root, "rev-parse", "HEAD")
+            signature = "gpgsig -----BEGIN PGP SIGNATURE-----\n \n -----END PGP SIGNATURE-----"
+            stamp = "1793448000 +0000"
+            raw = (
+                f"tree {tree}\nparent {parent}\nauthor a <a@example.com> {stamp}\ncommitter c <c@example.com> {stamp}\n"
+                f"{signature}\n\nsigned\n"
+            )
+            (root / "raw").write_bytes(raw.encode())  # bytes: no CRLF on Windows, which git rejects
+            commit = _output(root, "hash-object", "-t", "commit", "-w", "raw")
+            (root / "raw").unlink()
+            _git(root, "update-ref", "refs/heads/main", commit)
+            found = {detail.group: detail for detail in about(make_context(root).facts)}["History"]
+        self.assertTrue(found.text.endswith("; 50% of them signed"), found.text)
+
+    def test_a_project_outside_a_checkout_has_no_history(self) -> None:
+        self.assertEqual({}, {detail.group: detail for detail in _about({"app.py": ""}) if detail.group == "History"})
+
+    def test_releases_show_the_latest_tag_and_how_often_they_come(self) -> None:
+        found = _history({"app.py": ""}, {"v1.0.0": 1, "v1.1.0": 3, "v1.2.0": 4})["Releases"]
+        self.assertTrue(found.text.startswith("latest tag v1.2.0, of 2026-11-01; 3 version tags in the year before"))
+        self.assertEqual("v1.2.0", found.data["latest"])
+
+    def test_the_manifests_version_is_set_beside_the_latest_tags(self) -> None:
+        cargo = '[package]\nname = "app"\nversion = "1.3.0"\n'
+        found = _history({"Cargo.toml": cargo, "src/main.rs": ""}, {"v1.2.0": 4})["Releases"]
+        self.assertIn("Cargo.toml says 1.3.0, not the latest tag's 1.2.0", found.text)
+
+    def test_a_monorepos_packages_are_counted_after_its_top_manifests(self) -> None:
+        cargo = '[package]\nname = "{}"\nversion = "{}"\n'
+        files = {"Cargo.toml": cargo.format("app", "1.3.0"), "src/main.rs": ""}
+        files |= {f"crates/{name}/Cargo.toml": cargo.format(name, "0.1.0") for name in ("a", "b", "c")}
+        found = _history(files, {"v1.3.0": 4})["Releases"]
+        self.assertTrue(
+            found.text.endswith("; Cargo.toml says 1.3.0, the latest tag's; and 3 more packages"), found.text
+        )
+
+    def test_a_manifest_at_the_latest_tags_version_says_so(self) -> None:
+        pyproject = '[project]\nname = "app"\nversion = "1.2.0"\n'
+        found = _history({"pyproject.toml": pyproject, "app.py": ""}, {"v1.2.0": 4})["Releases"]
+        self.assertIn("pyproject.toml says 1.2.0, the latest tag's", found.text)
 
 
 MIT = """MIT License

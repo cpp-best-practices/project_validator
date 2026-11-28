@@ -49,6 +49,7 @@ from project_validator.facts.expansion import (
     launcher,
 )
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
+from project_validator.facts.history import package_version_reader
 from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.practices import Practice, PracticeName, Requirement, Wording, always, met, required
@@ -786,6 +787,18 @@ def _engines(text: str) -> Iterator[tuple[str, bool]]:
 
 
 _RUNTIMES = ("node", "deno", "bun")
+
+
+def _package_version(text: str) -> Iterator[tuple[str, bool]]:
+    manifest = json.loads(text)
+    version = manifest.get("version") if isinstance(manifest, dict) else None
+    if isinstance(version, str):
+        yield version, False
+
+
+PACKAGE_JSON_VERSION = package_version_reader(
+    name="package.json version", files=(PACKAGE_JSON,), declares=_package_version
+)
 ENGINES = declared_version_reader(
     name="package.json engines", files=(PACKAGE_JSON,), language=JAVASCRIPT, declares=_engines
 )

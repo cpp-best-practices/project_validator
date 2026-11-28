@@ -383,17 +383,19 @@ leaderboard) and the TUI (textual, imported only when installed). What they shar
 checks are grouped by category, what was detected in words, is in `views/common.py`, so that every view says the same
 thing. Why each check matters, and its category, is in `project_validator/explanations.py`, which `--explain` prints.
 
-What is shown without being judged ([#412](https://github.com/cpp-best-practices/project_validator/issues/412)) is
-in `project_validator/about`: each group is a function of the facts that yields `Detail`s (a group, a subject, the
-text, the same as data), so the "About the project" section is reproducible offline and never counts towards a result
-or the score. The first group, Versions, sets the versions each language declares (`DeclaredVersion` facts, read by
-each profile's `declared_version_reader`, and the C and C++ standards a build sets) beside the toolchains its
-platform answer finds CI testing. Size counts each language's lines by role (`SourceFile.lines`, and the generator
-its first lines name); Dependencies lists each package manager's manifests and lockfiles and the vendored code;
-Licences sets the license files beside the manifests' declarations, counts the sources' SPDX headers
-(`SourceFile.license`), and lists vendored code's license files, which a reader of vendored code alone records apart
-(`VendoredLicenseFile`) so that the license check never sees them. An item may become a check once the corpus shows
-where to draw its line.
+What is shown without being judged ([#412](https://github.com/cpp-best-practices/project_validator/issues/412)) is in
+`project_validator/about`: each group is a function of the facts that yields `Detail`s (a group, a subject, the text,
+the same as data), so the "About the project" section is reproducible offline and never counts towards a result or the
+score. The first group, Versions, sets the versions each language declares (`DeclaredVersion` facts, read by each
+profile's `declared_version_reader`, and the C and C++ standards a build sets) beside the toolchains its platform answer
+finds CI testing. Size counts each language's lines by role (`SourceFile.lines`, and the generator its first lines
+name); Dependencies lists each package manager's manifests and lockfiles and the vendored code; Licences sets the
+license files beside the manifests' declarations, counts the sources' SPDX headers (`SourceFile.license`), and lists
+vendored code's license files, which a reader of vendored code alone records apart (`VendoredLicenseFile`) so that the
+license check never sees them. History and Releases read the checkout's git (`History`, `Tag` and `PackageVersion`
+facts, in the history stage), counting every window back from the last commit so that a checkout always says the same
+thing; a shallow clone's age and authors are not guessed. An item may become a check once the corpus shows where to draw
+its line.
 
 ### Worked example: branch coverage in this repository
 

@@ -13,6 +13,7 @@ from project_validator.facts.arguments import option_values
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action, joined
+from project_validator.facts.history import package_version_reader
 from project_validator.facts.licenses import declared_license_reader, toml_license
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 from project_validator.facts.versions import declared_version_reader, pinned_file, toml_version
@@ -152,6 +153,11 @@ RUST_VERSION = declared_version_reader(
     files=("Cargo.toml",),
     language="Rust",
     declares=toml_version(("package", "rust-version"), ("workspace", "package", "rust-version")),
+)
+CARGO_VERSION = package_version_reader(
+    name="Cargo.toml version",
+    files=("Cargo.toml",),
+    declares=toml_version(("package", "version"), ("workspace", "package", "version")),
 )
 _TOOLCHAIN_CHANNEL = toml_version(("toolchain", "channel"), pinned=True)
 
