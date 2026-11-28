@@ -135,6 +135,8 @@
       "reader": "Cabal packages"
     },
     {
+      "development": [],
+      "direct": null,
       "kind": "Declared",
       "manager": "Cabal",
       "origin": "app.cabal"

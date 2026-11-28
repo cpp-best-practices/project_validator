@@ -106,6 +106,8 @@
       "reader": "Mix dependencies"
     },
     {
+      "development": [],
+      "direct": null,
       "kind": "Declared",
       "manager": "Mix",
       "origin": "mix.exs"

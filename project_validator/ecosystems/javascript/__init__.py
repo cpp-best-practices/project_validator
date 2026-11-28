@@ -37,7 +37,7 @@ from project_validator.facts.arguments import has_option, option_values, positio
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured, reported
-from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
+from project_validator.facts.dependencies import Dependencies, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.exit_status import POSIX
 from project_validator.facts.expansion import (
     CommandExpander,
@@ -749,8 +749,33 @@ def _deno_declares(_path: str, text: str) -> bool:
     return isinstance(config, dict) and bool(config.get("imports"))
 
 
+# A dependency on one of the project's own packages, in a workspace or beside it.
+_OWN = ("workspace:", "file:", "link:", "portal:")
+
+
+def _package_json_dependencies(_path: str, text: str) -> Dependencies:
+    """package.json's dependencies (peer and optional ones too), and its devDependencies for its development."""
+    manifest = json.loads(text)
+
+    def named(*fields: str) -> list[str]:
+        tables = [manifest.get(field) for field in fields] if isinstance(manifest, dict) else []
+        return [
+            name
+            for table in tables
+            if isinstance(table, dict)
+            for name, version in table.items()
+            if not (isinstance(version, str) and version.startswith(_OWN))
+        ]
+
+    return named("dependencies", "peerDependencies", "optionalDependencies"), named("devDependencies")
+
+
 PACKAGE_JSON_DEPENDENCIES = manifest_reader(
-    name="package.json dependencies", manager=JS_PACKAGES, files=(PACKAGE_JSON,), declares=_package_json_declares
+    name="package.json dependencies",
+    manager=JS_PACKAGES,
+    files=(PACKAGE_JSON,),
+    declares=_package_json_declares,
+    lists=_package_json_dependencies,
 )
 DENO_DEPENDENCIES = manifest_reader(
     name="Deno imports", manager=JS_PACKAGES, files=DENO_CONFIG_FILES, declares=_deno_declares

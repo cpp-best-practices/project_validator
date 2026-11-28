@@ -389,13 +389,17 @@ the same as data), so the "About the project" section is reproducible offline an
 score. The first group, Versions, sets the versions each language declares (`DeclaredVersion` facts, read by each
 profile's `declared_version_reader`, and the C and C++ standards a build sets) beside the toolchains its platform answer
 finds CI testing. Size counts each language's lines by role (`SourceFile.lines`, and the generator its first lines
-name); Dependencies lists each package manager's manifests and lockfiles and the vendored code; Licences sets the
+name); Dependencies counts each package manager's direct dependencies, by name across its manifests (`Declared.direct`
+and `Declared.development`, where a manifest's reader lists them), and lists its manifests and lockfiles and the
+vendored code; Licences sets the
 license files beside the manifests' declarations, counts the sources' SPDX headers (`SourceFile.license`), and lists
 vendored code's license files, which a reader of vendored code alone records apart (`VendoredLicenseFile`) so that the
 license check never sees them. History and Releases read the checkout's git (`History`, `Tag` and `PackageVersion`
 facts, in the history stage), counting every window back from the last commit so that a checkout always says the same
-thing; a shallow clone's age and authors are not guessed. Tools lists the tool runs by aspect; CI sets the events GitHub
-workflows run on (`CiTriggers`) beside the jobs and their OSes; Publishing finds the steps that publish a release, by
+thing; a shallow clone's age and authors are not guessed. Tools lists the tool runs by aspect, each with the exact
+versions it is pinned at (`PinnedTool` facts from pre-commit's `rev:`, requirements and package.json, and CI's install
+commands and actions' `version` inputs); CI sets the events GitHub workflows run on (`CiTriggers`) beside the jobs, their
+OSes and their runners' architectures (`CiJob.arch`); Publishing finds the steps that publish a release, by
 the actions and commands `about/publishing.py` lists for each destination; Documents reads the project documents
 (`ProjectDocument`) and the documentation-site formats. An item may become a check once the corpus shows where to draw
 its line.

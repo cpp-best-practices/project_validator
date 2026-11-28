@@ -138,6 +138,8 @@
       "reader": "fpm dependencies"
     },
     {
+      "development": [],
+      "direct": null,
       "kind": "Declared",
       "manager": "fpm",
       "origin": "fpm.toml"

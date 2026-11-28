@@ -34,13 +34,22 @@
         "declared": [
           "composer.json"
         ],
+        "development": [
+          "friendsofphp/php-cs-fixer",
+          "phpstan/phpstan",
+          "phpunit/phpunit",
+          "vimeo/psalm"
+        ],
+        "direct": [
+          "psr/log"
+        ],
         "locked": [
           "composer.lock"
         ]
       },
       "group": "Dependencies",
       "subject": "Composer",
-      "text": "declared in composer.json; locked by composer.lock"
+      "text": "1 direct dependency and 4 for development, declared in composer.json; locked by composer.lock"
     },
     {
       "data": {
@@ -97,6 +106,10 @@
     },
     {
       "data": {
+        "architectures": [
+          "arm64",
+          "x64"
+        ],
         "events": [
           "pull_request",
           "push"
@@ -111,7 +124,7 @@
       },
       "group": "CI",
       "subject": "the CI",
-      "text": "runs on pull_request, push; pull requests from forks run it; 9 jobs on 3 OSes (linux, macos, windows)"
+      "text": "runs on pull_request, push; pull requests from forks run it; 9 jobs on 3 OSes (linux, macos, windows) and 2 architectures (arm64, x64)"
     }
   ],
   "answers": {

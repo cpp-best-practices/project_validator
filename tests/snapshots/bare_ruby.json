@@ -16,11 +16,15 @@
         "declared": [
           "Gemfile"
         ],
+        "development": [],
+        "direct": [
+          "rack"
+        ],
         "locked": []
       },
       "group": "Dependencies",
       "subject": "Bundler",
-      "text": "declared in Gemfile; no lockfile"
+      "text": "1 direct dependency, declared in Gemfile; no lockfile"
     }
   ],
   "answers": {

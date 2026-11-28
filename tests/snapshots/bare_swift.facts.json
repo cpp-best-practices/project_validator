@@ -86,6 +86,8 @@
       "reader": "SwiftPM dependencies"
     },
     {
+      "development": [],
+      "direct": null,
       "kind": "Declared",
       "manager": "SwiftPM",
       "origin": "Package.swift"

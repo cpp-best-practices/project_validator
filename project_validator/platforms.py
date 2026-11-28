@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Iterable, Mapping
 from typing import TYPE_CHECKING
 
@@ -44,6 +45,25 @@ RUNNER_DEFAULT_COMPILERS = {"linux": "gcc", "macos": "appleclang", "windows": "m
 RUNNER_DEFAULT_COMPILERS |= {"freebsd": "clang", "openbsd": "clang", "netbsd": "gcc", "dragonflybsd": "gcc"}
 # The ecosystems whose jobs compile with the runner's default compiler when they name none.
 COMPILING_ECOSYSTEMS = frozenset({"C", "C++", "Fortran"})
+
+
+# A runner's architecture, by what its labels say (`ubuntu-24.04-arm`, a self-hosted runner's `ARM64`), else by
+# GitHub's hosted images: their Linux and Windows runners are x64 unless named `-arm`; macOS runners are Apple silicon
+# from macos-14 on, and Intel up to macos-13 and in the `-large` sizes (`-xlarge` is Apple silicon). Another
+# provider's labels that merely contain an image's name (`buildjet-4vcpu-ubuntu-2204`) don't say.
+_ARCHITECTURES = (
+    ("arm64", re.compile(r"\b(?:arm64|aarch64|arm)\b|-xlarge\b")),
+    ("x64", re.compile(r"\b(?:x64|x86_64|amd64)\b|(?<!\S)macos-(?:1[0-3]|10\.15)(?:\.\d+)?\b|-large\b")),
+    ("arm64", re.compile(r"(?<!\S)macos-")),
+    ("x64", re.compile(r"(?<!\S)(?:ubuntu|windows)-")),
+)
+
+
+def runner_architecture(labels: str) -> str:
+    """The architecture (`arm64`, `x64`) of the runner `labels` (as written, space-separated) select; `""` when they
+    don't say."""
+    text = labels.lower()
+    return next((architecture for architecture, regex in _ARCHITECTURES if regex.search(text)), "")
 
 
 def detect_operating_systems(text: str) -> list[str]:

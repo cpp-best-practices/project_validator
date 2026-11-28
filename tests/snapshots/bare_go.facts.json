@@ -74,6 +74,10 @@
       "reader": "Go module requirements"
     },
     {
+      "development": [],
+      "direct": [
+        "golang.org/x/text"
+      ],
       "kind": "Declared",
       "manager": "Go modules",
       "origin": "go.mod"

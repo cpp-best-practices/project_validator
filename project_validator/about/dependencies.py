@@ -50,20 +50,35 @@ def _vendored(facts: Facts) -> Detail | None:
     )
 
 
+def _counts(declared: list[Declared]) -> tuple[str, dict[str, list[str]]]:
+    """How many direct dependencies the manifests declare, each named once (`12 direct dependencies and 3 for
+    development, `), and which: none said unless every manifest's are read. One used both ways counts as direct."""
+    if not declared or any(fact.direct is None for fact in declared):
+        return "", {}
+    direct = sorted({name for fact in declared for name in fact.direct or ()})
+    development = sorted({name for fact in declared for name in fact.development} - set(direct))
+    words = counted(len(direct), "direct dependency", "direct dependencies")
+    if development:
+        words += f" and {len(development)} for development"
+    return f"{words}, ", {"direct": direct, "development": development}
+
+
 def dependencies(facts: Facts) -> Iterator[Detail]:
     """Each package manager's manifests and lockfiles, then the vendored code."""
     managers = sorted({fact.manager for fact in facts.of(Declared)})
     for manager in managers:
-        declared = _products(facts.where(Declared, manager=manager))
+        manifests = list(in_product(facts.where(Declared, manager=manager)))
+        declared = [fact.origin.path for fact in manifests]
         if not declared:
             continue
         locked = _products(facts.where(Locked, manager=manager))
         lock = f"locked by {_named(locked)}" if locked else "no lockfile"
+        count, names = _counts(manifests)
         yield Detail(
             group="Dependencies",
             subject=manager,
-            text=f"declared in {_named(declared)}; {lock}",
-            data={"declared": list(dict.fromkeys(declared)), "locked": list(dict.fromkeys(locked))},
+            text=f"{count}declared in {_named(declared)}; {lock}",
+            data={"declared": list(dict.fromkeys(declared)), "locked": list(dict.fromkeys(locked)), **names},
         )
     if vendored := _vendored(facts):
         yield vendored

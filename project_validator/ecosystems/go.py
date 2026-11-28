@@ -14,7 +14,7 @@ from project_validator.facts.arguments import has_option, positional, starts_wit
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, reported
-from project_validator.facts.dependencies import PackageManager, lockfile_reader, manifest_reader
+from project_validator.facts.dependencies import Dependencies, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched
 from project_validator.facts.formatting import Enforcement, flagged, format_tool, formatted
 from project_validator.facts.fuzzing import FuzzTargets, PropertyTests, fuzzed, fuzzer
@@ -455,11 +455,35 @@ GO_MUTESTING = mutation_tool(
 
 REQUIRE = re.compile(r"^\s*require\b", re.MULTILINE)
 
+# A requirement: a module and its version, which go.mod may mark indirect.
+_REQUIREMENT = re.compile(r"(?P<module>\S+)\s+v\S+(?P<indirect>\s*//\s*indirect)?")
+
+
+def _go_requirements(_path: str, text: str) -> Dependencies:
+    """The modules go.mod requires directly, on `require` lines and in `require ( ... )` blocks (not those `replace`
+    or `exclude` names); Go has no development dependencies of its own."""
+    found, block = [], ""
+    for line in text.splitlines():
+        words = line.strip()
+        if block and words.startswith(")"):
+            block = ""
+            continue
+        keyword, _, rest = words.partition(" ")
+        if not block and rest.strip() == "(":
+            block = keyword
+            continue
+        requirement = words if block == "require" else rest if keyword == "require" and not block else ""
+        if (match := _REQUIREMENT.match(requirement.strip())) and not match["indirect"]:
+            found.append(match["module"])
+    return found, []
+
+
 GO_MOD = manifest_reader(
     name="Go module requirements",
     manager="Go modules",
     files=("go.mod",),
     declares=lambda _path, text: bool(REQUIRE.search(text)),
+    lists=_go_requirements,
 )
 GO_SUM = lockfile_reader(manager="Go modules", files=("go.sum",))
 GO_MODULES_MANAGER = PackageManager(

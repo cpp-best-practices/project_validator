@@ -219,6 +219,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -334,6 +335,7 @@
       "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -576,6 +578,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -818,6 +821,7 @@
       "via": []
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1060,6 +1064,7 @@
       "via": []
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1302,6 +1307,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1544,6 +1550,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1796,6 +1803,7 @@
       "reference": "shivammathur/setup-php@ccf2c627fe61b1b4d924adfcbd19d661a18133a0"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1866,6 +1874,7 @@
       "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -2171,6 +2180,15 @@
       "reader": "Composer dependencies"
     },
     {
+      "development": [
+        "friendsofphp/php-cs-fixer",
+        "phpstan/phpstan",
+        "phpunit/phpunit",
+        "vimeo/psalm"
+      ],
+      "direct": [
+        "psr/log"
+      ],
       "kind": "Declared",
       "manager": "Composer",
       "origin": "composer.json"

@@ -159,6 +159,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -283,6 +284,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -382,6 +384,7 @@
       "reference": "xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,

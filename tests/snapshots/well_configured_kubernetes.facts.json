@@ -273,6 +273,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -397,6 +398,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -552,6 +554,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -646,6 +649,7 @@
       "reference": "helm/kind-action@ea822c7bf1874f08e5a491df991c228edffc3376"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,

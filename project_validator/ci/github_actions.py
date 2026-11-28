@@ -18,7 +18,7 @@ from project_validator.facts.expansion import advised, known_actions, required, 
 from project_validator.facts.shell import CMD, POSIX, POWERSHELL, Dialect, ShellSyntaxError, split_words
 from project_validator.includes import Chain, Refused, follow
 from project_validator.limits import COMPOSITE_ACTIONS, REUSABLE_WORKFLOWS
-from project_validator.platforms import detect_operating_systems
+from project_validator.platforms import detect_operating_systems, runner_architecture
 from project_validator.templates import SHELL, Reference, Syntax, known
 from project_validator.text import pattern
 
@@ -130,21 +130,25 @@ def _rendered_or_written(expression: str, known: Known) -> str:
     return expression if value is None else value
 
 
+def _runs_on(job: Mapping[str, object], combination: Combination, inputs: Mapping[str, str] = NOTHING) -> str:
+    """The labels `runs-on` names, its expressions over the matrix and the called workflow's `inputs` evaluated
+    (`matrix.os || 'ubuntu-latest'`, `fromJSON(inputs.runs-on)`), space-separated."""
+    known = Known(os="unknown", matrix=combination, env={}, inputs=inputs)
+    labels = job.get("runs-on", "")
+    text = substitute_matrix(labels if isinstance(labels, str) else json.dumps(labels), combination, missing="")
+    return EXPRESSION.sub(lambda match: _rendered_or_written(match[0], known), text)
+
+
 def _runner_os(job: Mapping[str, object], combination: Combination, inputs: Mapping[str, str] = NOTHING) -> str:
     """The OS a job runs on in a combination: Linux in a container (one whose image is not empty: googletest's and
-    Homebrew's off-Linux entries leave it so), else what `runs-on` names, its expressions over the matrix and the
-    called workflow's `inputs` evaluated (`matrix.os || 'ubuntu-latest'`, `fromJSON(inputs.runs-on)`)."""
-    known = Known(os="unknown", matrix=combination, env={}, inputs=inputs)
-
-    def evaluated(value: object) -> str:
-        text = substitute_matrix(value if isinstance(value, str) else json.dumps(value), combination, missing="")
-        return EXPRESSION.sub(lambda match: _rendered_or_written(match[0], known), text)
-
+    Homebrew's off-Linux entries leave it so), else what `runs-on` names."""
     container = job.get("container")
     image = container.get("image") if isinstance(container, Mapping) else container
-    if container is not None and (not isinstance(image, str) or evaluated(image).strip()):
+    if container is not None and (
+        not isinstance(image, str) or _runs_on({"runs-on": image}, combination, inputs).strip()
+    ):
         return "linux"
-    found = detect_operating_systems(evaluated(job.get("runs-on", "")))
+    found = detect_operating_systems(_runs_on(job, combination, inputs))
     return found[0] if found else "unknown"
 
 
@@ -383,6 +387,7 @@ class _Combination:
             name=_job_label(str(job.get("name", self.origin.at[-1])), self.combination, self.substitute)
             + ("" if self.matrix_known else " (matrix computed by an expression)"),
             os=_virtual_machine(steps) or known.os,
+            arch=runner_architecture(" ".join(re.findall(r"[\w.-]+", _runs_on(job, self.combination, self.inputs)))),
             matrix={
                 key: value if isinstance(value, str) else json.dumps(value) for key, value in self.combination.items()
             },

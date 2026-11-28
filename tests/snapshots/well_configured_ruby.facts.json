@@ -250,6 +250,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -365,6 +366,7 @@
       "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -555,6 +557,7 @@
       ]
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -745,6 +748,7 @@
       ]
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -935,6 +939,7 @@
       ]
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1125,6 +1130,7 @@
       ]
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1315,6 +1321,7 @@
       ]
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1515,6 +1522,7 @@
       "reference": "ruby/setup-ruby@a4effe49ee8ee5b8b5091268c473a4628afb5651"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1585,6 +1593,7 @@
       "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1923,6 +1932,15 @@
       "reader": "Gemfile dependencies"
     },
     {
+      "development": [],
+      "direct": [
+        "bundler-audit",
+        "rake",
+        "rspec",
+        "rubocop",
+        "simplecov",
+        "steep"
+      ],
       "kind": "Declared",
       "manager": "Bundler",
       "origin": "Gemfile"

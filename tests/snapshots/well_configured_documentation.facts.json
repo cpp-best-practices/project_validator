@@ -199,6 +199,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -324,6 +325,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -396,6 +398,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -479,6 +482,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -559,6 +563,7 @@
       "reference": "lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,

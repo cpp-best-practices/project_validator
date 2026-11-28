@@ -11,7 +11,7 @@ import re
 from project_validator.build_systems.model import standalone_package
 from project_validator.ecosystems.model import VERSION, BuildSystem, Ecosystem, subcommands, toolchain_patterns
 from project_validator.facts.axes import versions_axis
-from project_validator.facts.dependencies import Lock, PackageManager, lockfile_reader, manifest_reader
+from project_validator.facts.dependencies import Dependencies, Lock, PackageManager, lockfile_reader, manifest_reader
 from project_validator.facts.licenses import declared_license_reader
 from project_validator.facts.outputs import BuildOutput, directories, ignored_at_top_level
 
@@ -39,20 +39,54 @@ GEM = re.compile(r"^\s*gem\s+[\"']", re.MULTILINE)
 GEMSPEC_DEPENDENCY = re.compile(r"\.add_(?:runtime_|development_)?dependency\b")
 
 
+_GEM_NAME = re.compile(r"""^\s*gem\s+["'](?P<name>[^"']+)["'](?P<rest>[^\n]*)""", re.MULTILINE)
+_GROUP = re.compile(r"^\s*group\b(?P<groups>[^\n]*?)\bdo\b", re.MULTILINE)
+_END = re.compile(r"^\s*end\b", re.MULTILINE)
+# The groups only a project's development installs.
+_DEVELOPMENT = re.compile(r":(?:development|test)\b|\b(?:development|test):")
+
+
+def _gemfile_dependencies(_path: str, text: str) -> Dependencies:
+    """The gems a Gemfile names; those in a development or test group (a `group ... do` block, or a `group:` option)
+    are its development's."""
+    direct: list[str] = []
+    development: list[str] = []
+    groups: list[bool] = []
+    for line in text.splitlines():
+        if found := _GROUP.match(line):
+            groups.append(bool(_DEVELOPMENT.search(found["groups"])))
+        elif _END.match(line) and groups:
+            groups.pop()
+        elif found := _GEM_NAME.match(line):
+            developing = any(groups) or bool(_DEVELOPMENT.search(found["rest"]))
+            (development if developing else direct).append(found["name"])
+    return direct, development
+
+
 GEMFILE_DEPENDENCIES = manifest_reader(
     name="Gemfile dependencies",
     manager="Bundler",
     files=(GEMFILE,),
     declares=lambda _path, text: bool(GEM.search(text)),
+    lists=_gemfile_dependencies,
 )
 
 
 # A gem's users resolve its dependencies themselves.
+_GEMSPEC_NAMED = re.compile(r"""\.add_(?P<kind>runtime_|development_)?dependency\b\s*\(?\s*["'](?P<name>[^"']+)""")
+
+
+def _gemspec_dependencies(_path: str, text: str) -> Dependencies:
+    found = [(match["kind"] == "development_", match["name"]) for match in _GEMSPEC_NAMED.finditer(text)]
+    return [name for developing, name in found if not developing], [name for developing, name in found if developing]
+
+
 GEMSPEC_DEPENDENCIES = manifest_reader(
     name="gemspec dependencies",
     manager="Bundler",
     files=("*.gemspec",),
     declares=lambda _path, text: bool(GEMSPEC_DEPENDENCY.search(text)),
+    lists=_gemspec_dependencies,
     library=lambda _path, _text: True,
 )
 

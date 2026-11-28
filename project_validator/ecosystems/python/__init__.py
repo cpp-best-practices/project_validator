@@ -17,7 +17,14 @@ from project_validator.facts.arguments import has_option, option_values, program
 from project_validator.facts.audit import audited, auditor
 from project_validator.facts.axes import versions_axis
 from project_validator.facts.coverage import Granularity, coverage_tool, measured, reported
-from project_validator.facts.dependencies import Declared, Locked, PackageManager, lockfile_reader, manifest_reader
+from project_validator.facts.dependencies import (
+    Dependencies,
+    Locked,
+    PackageManager,
+    declared,
+    lockfile_reader,
+    manifest_reader,
+)
 from project_validator.facts.expansion import Action, CommandExpander, Expansion, Launched, joined, launcher
 from project_validator.facts.formatting import Enforcement, flagged, format_tool
 from project_validator.facts.history import package_version_reader
@@ -470,11 +477,72 @@ def _pyproject_declares(_path: str, text: str) -> bool:
     return declared or (isinstance(poetry_dependencies, dict) and bool(set(poetry_dependencies) - {"python"}))
 
 
+# A requirement's name (PEP 508): `requests>=2`, `rich[jupyter]; python_version < "3.12"`.
+REQUIREMENT_NAME = re.compile(r"^\s*(?P<name>[A-Za-z0-9](?:[\w.-]*[A-Za-z0-9])?)")
+# A requirements file only a project's development installs, by its name.
+_DEVELOPMENT_FILE = re.compile(r"dev|test|lint|doc|\bci\b|typing|check", re.IGNORECASE)
+
+
+def _names(requirements: object) -> list[str]:
+    """The names of a list of requirements (an `{include-group = ...}` names none)."""
+    entries = requirements if isinstance(requirements, list) else []
+    found = (REQUIREMENT_NAME.match(entry) for entry in entries if isinstance(entry, str))
+    return [match["name"] for match in found if match]
+
+
+def _table(container: object, *keys: str) -> object:
+    for key in keys:
+        container = container.get(key) if isinstance(container, dict) else None
+    return container
+
+
+def _poetry(table: object) -> list[str]:
+    """A Poetry dependency table's packages, but Python itself and the project's own (`path = ...`)."""
+    items = table.items() if isinstance(table, dict) else ()
+    return [name for name, spec in items if name != "python" and not (isinstance(spec, dict) and "path" in spec)]
+
+
+def _pyproject_dependencies(_path: str, text: str) -> Dependencies:
+    """`[project]`'s dependencies and extras, and Poetry's; the dependency groups (PEP 735, Poetry's, uv's and PDM's
+    dev-dependencies) are its development's."""
+    manifest = tomllib.loads(text)
+    extras = _table(manifest, "project", "optional-dependencies")
+    direct = [
+        *_names(_table(manifest, "project", "dependencies")),
+        *(name for listed in (extras.values() if isinstance(extras, dict) else ()) for name in _names(listed)),
+        *_poetry(_table(manifest, "tool", "poetry", "dependencies")),
+    ]
+    groups = _table(manifest, "dependency-groups")
+    poetry_groups = _table(manifest, "tool", "poetry", "group")
+    pdm = _table(manifest, "tool", "pdm", "dev-dependencies")
+    development = [
+        *(name for listed in (groups.values() if isinstance(groups, dict) else ()) for name in _names(listed)),
+        *(
+            name
+            for group in (poetry_groups.values() if isinstance(poetry_groups, dict) else ())
+            for name in _poetry(_table(group, "dependencies"))
+        ),
+        *_poetry(_table(manifest, "tool", "poetry", "dev-dependencies")),
+        *_names(_table(manifest, "tool", "uv", "dev-dependencies")),
+        *(name for listed in (pdm.values() if isinstance(pdm, dict) else ()) for name in _names(listed)),
+    ]
+    return direct, development
+
+
+def _requirements_dependencies(path: str, text: str) -> Dependencies:
+    """A requirements file's packages, but its options (`-r base.txt`, `-e .`) and URLs; a file named for development
+    (`requirements-dev.txt`, `requirements/test.txt`) lists its development's."""
+    lines = (line.split("#", 1)[0] for line in text.splitlines())
+    found = [match["name"] for line in lines if (match := REQUIREMENT_NAME.match(line)) and "://" not in line]
+    return ([], found) if _DEVELOPMENT_FILE.search(PurePosixPath(path).name) else (found, [])
+
+
 PYPROJECT_DEPENDENCIES = manifest_reader(
     name="Python dependencies",
     manager=PYTHON_PACKAGES,
     files=("pyproject.toml",),
     declares=_pyproject_declares,
+    lists=_pyproject_dependencies,
 )
 SETUP_PY_DEPENDENCIES = manifest_reader(
     name="setup.py dependencies",
@@ -489,7 +557,7 @@ def _read_requirements(path: str, text: str) -> Iterator[Fact]:
     that pins them by hash locks them."""
     origin = Origin(path=path)
     if not path.startswith("."):
-        yield Declared(origin=origin, manager=PYTHON_PACKAGES)
+        yield declared(origin, PYTHON_PACKAGES, text, _requirements_dependencies)
     if HASH.search(text):
         yield Locked(origin=origin, manager=PYTHON_PACKAGES)
 

@@ -75,6 +75,8 @@
       "reader": "pubspec dependencies"
     },
     {
+      "development": [],
+      "direct": null,
       "kind": "Declared",
       "manager": "pub",
       "origin": "pubspec.yaml"

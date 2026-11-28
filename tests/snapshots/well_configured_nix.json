@@ -63,6 +63,10 @@
     },
     {
       "data": {
+        "architectures": [
+          "arm64",
+          "x64"
+        ],
         "events": [
           "pull_request",
           "push"
@@ -76,7 +80,7 @@
       },
       "group": "CI",
       "subject": "the CI",
-      "text": "runs on pull_request, push; pull requests from forks run it; 6 jobs on 2 OSes (linux, macos)"
+      "text": "runs on pull_request, push; pull requests from forks run it; 6 jobs on 2 OSes (linux, macos) and 2 architectures (arm64, x64)"
     }
   ],
   "answers": {

@@ -77,6 +77,8 @@ class CiJob(Fact):
     os: str
     matrix: Mapping[str, str] = NOTHING
     image: str | None = None
+    # The runner's architecture (`arm64`, `x64`), where its labels say (see `platforms.runner_architecture`).
+    arch: str = ""
     # The images of the service containers the job runs beside itself (a database its tests use).
     services: tuple[str, ...] = ()
     env: Mapping[str, str] = NOTHING

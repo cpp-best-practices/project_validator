@@ -188,6 +188,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -312,6 +313,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -398,6 +400,7 @@
       "reference": "actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,

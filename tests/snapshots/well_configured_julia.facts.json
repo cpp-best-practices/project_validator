@@ -202,6 +202,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -326,6 +327,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -463,6 +465,7 @@
       "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -600,6 +603,7 @@
       "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -737,6 +741,7 @@
       "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -874,6 +879,7 @@
       "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1011,6 +1017,7 @@
       "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
     },
     {
+      "arch": "arm64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1148,6 +1155,7 @@
       "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1285,6 +1293,7 @@
       "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1422,6 +1431,7 @@
       "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1559,6 +1569,7 @@
       "uses": "codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1709,6 +1720,7 @@
       "reference": "julia-actions/julia-format@cde9661e440a6a214c9c0c2c63a3dbdaa5fabd2f"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,

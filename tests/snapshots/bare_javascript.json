@@ -16,11 +16,15 @@
         "declared": [
           "package.json"
         ],
+        "development": [],
+        "direct": [
+          "left-pad"
+        ],
         "locked": []
       },
       "group": "Dependencies",
       "subject": "npm packages",
-      "text": "declared in package.json; no lockfile"
+      "text": "1 direct dependency, declared in package.json; no lockfile"
     }
   ],
   "answers": {

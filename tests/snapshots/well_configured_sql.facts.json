@@ -279,6 +279,7 @@
       "provider": "GitHub Actions"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -394,6 +395,7 @@
       "reference": "rhysd/actionlint@914e7df21a07ef503a81201c76d2b11c789d3fca"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {
         "PGPASSWORD": "postgres"
@@ -604,6 +606,7 @@
       "via": []
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {
         "PGPASSWORD": "postgres"
@@ -824,6 +827,7 @@
       "reference": "actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0"
     },
     {
+      "arch": "x64",
       "builds": true,
       "env": {},
       "heuristic": false,
@@ -1077,6 +1081,8 @@
       "reader": "dbt package requirements"
     },
     {
+      "development": [],
+      "direct": null,
       "kind": "Declared",
       "manager": "dbt packages",
       "origin": "packages.yml"
