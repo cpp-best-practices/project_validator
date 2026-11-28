@@ -16,6 +16,44 @@
       "group": "Versions",
       "subject": "Fortran",
       "text": "declares no version; CI tests compilers gcc, intel"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 15,
+          "test": 5
+        }
+      },
+      "group": "Size",
+      "subject": "Fortran",
+      "text": "20 lines: 15 in the product, 5 in tests (0.33 of the product's)"
+    },
+    {
+      "data": {
+        "declared": [
+          "fpm.toml"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "fpm",
+      "text": "declared in fpm.toml; no lockfile"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 3
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
     }
   ],
   "answers": {

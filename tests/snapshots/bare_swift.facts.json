@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Swift",
+      "license": "",
       "lines": 12,
       "origin": "Package.swift",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Swift",
+      "license": "",
       "lines": 3,
       "origin": "Sources/App/main.swift",
       "role": "product"

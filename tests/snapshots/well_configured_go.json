@@ -22,6 +22,32 @@
       "group": "Versions",
       "subject": "Go",
       "text": "supports 1.23 (go.mod); CI tests Go versions 1.22, 1.23"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 33
+        }
+      },
+      "group": "Size",
+      "subject": "Go",
+      "text": "33 lines: 33 in the product"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 3
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
     }
   ],
   "answers": {

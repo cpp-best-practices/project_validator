@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Zig",
+      "license": "",
       "lines": 11,
       "origin": "build.zig",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Zig",
+      "license": "",
       "lines": 5,
       "origin": "src/main.zig",
       "role": "product"

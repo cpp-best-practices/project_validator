@@ -1,5 +1,28 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 5
+        }
+      },
+      "group": "Size",
+      "subject": "PowerShell",
+      "text": "5 lines: 5 in the product"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 5
+        }
+      },
+      "group": "Size",
+      "subject": "Shell",
+      "text": "5 lines: 5 in the product"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

@@ -16,6 +16,46 @@
       "group": "Versions",
       "subject": "Ruby",
       "text": "declares no version; CI tests Ruby versions 3.3, 3.4"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 6,
+          "test": 12
+        }
+      },
+      "group": "Size",
+      "subject": "Ruby",
+      "text": "18 lines: 6 in the product, 12 in tests (2.00 of the product's)"
+    },
+    {
+      "data": {
+        "declared": [
+          "Gemfile"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "Bundler",
+      "text": "declared in Gemfile; no lockfile"
+    },
+    {
+      "data": {
+        "declared": {
+          "app.gemspec": "MIT"
+        },
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 3
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT; app.gemspec declares MIT"
     }
   ],
   "answers": {

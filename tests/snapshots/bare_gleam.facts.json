@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "TOML",
+      "license": "",
       "lines": 2,
       "origin": "gleam.toml",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Gleam",
+      "license": "",
       "lines": 6,
       "origin": "src/shop.gleam",
       "role": "product"

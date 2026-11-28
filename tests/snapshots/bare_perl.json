@@ -1,5 +1,17 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 5
+        }
+      },
+      "group": "Size",
+      "subject": "Perl",
+      "text": "5 lines: 5 in the product"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

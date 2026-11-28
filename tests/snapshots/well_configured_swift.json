@@ -16,6 +16,46 @@
       "group": "Versions",
       "subject": "Swift",
       "text": "declares no version; CI tests Swift toolchains 6.0, 6.1"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 35,
+          "test": 6
+        }
+      },
+      "group": "Size",
+      "subject": "Swift",
+      "text": "41 lines: 35 in the product, 6 in tests (0.17 of the product's)"
+    },
+    {
+      "data": {
+        "declared": [
+          "Package.swift"
+        ],
+        "locked": [
+          "Package.resolved"
+        ]
+      },
+      "group": "Dependencies",
+      "subject": "SwiftPM",
+      "text": "declared in Package.swift; locked by Package.resolved"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 5
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
     }
   ],
   "answers": {

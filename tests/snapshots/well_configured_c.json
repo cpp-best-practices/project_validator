@@ -17,6 +17,44 @@
       "group": "Versions",
       "subject": "C",
       "text": "declares no version; CI tests compilers clang, gcc, msvc"
+    },
+    {
+      "data": {
+        "lines": {
+          "C": {
+            "test": 8
+          }
+        }
+      },
+      "group": "Size",
+      "subject": "outside the product",
+      "text": "C: 8 lines in tests"
+    },
+    {
+      "data": {
+        "declared": [
+          "cmake/Dependencies.cmake"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "FetchContent",
+      "text": "declared in cmake/Dependencies.cmake; no lockfile"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 1
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
     }
   ],
   "answers": {

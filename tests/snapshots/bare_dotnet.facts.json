@@ -11,6 +11,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "C#",
+      "license": "",
       "lines": 8,
       "origin": "src/App/Calculator.cs",
       "role": "product"

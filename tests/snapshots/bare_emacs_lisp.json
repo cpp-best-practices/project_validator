@@ -1,5 +1,17 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 7
+        }
+      },
+      "group": "Size",
+      "subject": "Emacs Lisp",
+      "text": "7 lines: 7 in the product"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

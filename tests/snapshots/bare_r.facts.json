@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "R",
+      "license": "",
       "lines": 1,
       "origin": "R/shop.R",
       "role": "product"

@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Fortran",
+      "license": "",
       "lines": 5,
       "origin": "app/main.f90",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "TOML",
+      "license": "",
       "lines": 5,
       "origin": "fpm.toml",
       "role": "product"
@@ -31,6 +33,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Fortran",
+      "license": "",
       "lines": 10,
       "origin": "src/app.f90",
       "role": "product"
@@ -40,6 +43,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Fortran",
+      "license": "",
       "lines": 0,
       "origin": "third_party/minpack/enorm.f",
       "role": "vendored"

@@ -1,5 +1,17 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 1
+        }
+      },
+      "group": "Size",
+      "subject": "OCaml",
+      "text": "1 line: 1 in the product"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

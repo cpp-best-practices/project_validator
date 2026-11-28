@@ -14,7 +14,10 @@ The first release.
 - **What it prints:** a console report, plain text, Markdown, HTML and JSON, a terminal UI (`--tui`), and the tooling
   score (`--score`, score version 5). "About the project" shows what is learned without being judged: the versions
   each language declares (`requires-python`, `rust-version`, the `go` directive, `engines`, the C and C++ standard,
-  and the pins of `.python-version`, `rust-toolchain.toml` and `.nvmrc`) beside the versions CI tests.
+  and the pins of `.python-version`, `rust-toolchain.toml` and `.nvmrc`) beside the versions CI tests; each
+  language's lines by role and how much is generated; each package manager's manifests and lockfiles, and the
+  vendored code; the license files beside what the manifests declare, the sources' SPDX headers, and the licenses of
+  vendored code.
 - **The JSON formats,** each at version 1: `results`, `map`, `facts`, `answers`, `checks` and `support-matrix`.
 - **The command** is `project_validator`; `project-validator`, its old name, still runs for this release and says it
   is deprecated.

@@ -1,38 +1,14 @@
-"""What the validator shows of a project without judging it (upstream #412): context for the checks, in the views'
-"About the project" section and under `about` in the JSON. Nothing here counts towards a result or the score; an
-item may become a check once the corpus shows where to draw a line.
-
-Each group reads the facts alone, so the details are reproducible offline: the same checkout says the same thing.
-A group is a function of the facts that yields `Detail`s; `GROUPS` lists them in the order they are shown.
-"""
+"""Versions: the versions each language declares beside those CI tests it with (upstream #412)."""
 
 from __future__ import annotations
 
 import re
-from collections.abc import Callable, Iterable, Iterator, Mapping
-from dataclasses import dataclass, field
+from collections.abc import Iterable, Iterator
 
-from project_validator.ecosystems import formats
+from project_validator.about.detail import Detail, and_more, in_product, own_code
 from project_validator.facts import Facts
 from project_validator.facts.axes import ToolchainAxis, axis_of
-from project_validator.facts.roles import role
-from project_validator.facts.structure import SourceFile
 from project_validator.facts.versions import DeclaredVersion, declared_versions
-
-
-@dataclass(frozen=True, slots=True, kw_only=True)
-class Detail:
-    """One thing shown about the project: its `group` ("Versions"), what it is about (`subject`: "Python"), what is
-    said of it in words, and the same as data for the JSON."""
-
-    group: str
-    subject: str
-    text: str
-    data: Mapping[str, object] = field(default_factory=dict)
-
-    def as_dict(self) -> dict[str, object]:
-        return {"group": self.group, "subject": self.subject, "text": self.text, "data": dict(self.data)}
-
 
 _NUMBER = re.compile(r"v?\d+(?:\.\d+)*")
 # The oldest version a declaration supports, when it names one first: `>=3.10`, `^18`, `~=3.9`, `1.70`, `node >=18`.
@@ -82,12 +58,7 @@ def _tested(languages: Iterable[str], axis: ToolchainAxis, facts: Facts) -> froz
 def _product_languages(facts: Facts) -> set[str]:
     """The languages the product is written in, not its tests' (fixtures in other languages) nor its formats; those
     of its own code when it has no product code (its only code is tests)."""
-    known = formats()
-    own = [
-        source
-        for source in facts.of(SourceFile)
-        if not source.vendored and source.language is not None and source.language not in known
-    ]
+    own = own_code(facts)
     product = {str(source.language) for source in own if source.role == "product"}
     return product or {str(source.language) for source in own}
 
@@ -102,17 +73,13 @@ def _subjects(facts: Facts, declared: Iterable[DeclaredVersion]) -> dict[tuple[s
     return {tuple(found): key if isinstance(key, ToolchainAxis) else None for key, found in by_axis.items()}
 
 
-def _more(count: int) -> str:
-    return f" and {count} more" if count else ""
-
-
 def _declared_words(declared: Iterable[DeclaredVersion]) -> list[str]:
     """What is declared, each version said once with where (`supports node >=18 (package.json and 3 more)`)."""
     origins: dict[tuple[bool, str], list[str]] = {}
     for version in declared:
         origins.setdefault((version.pinned, version.version), []).append(version.origin.path)
     found = [
-        f"{'pins' if pinned else 'supports'} {version} ({paths[0]}{_more(len(paths) - 1)})"
+        f"{'pins' if pinned else 'supports'} {version} ({paths[0]}{and_more(len(paths) - 1)})"
         for (pinned, version), paths in origins.items()
     ]
     return found or ["declares no version"]
@@ -156,19 +123,10 @@ def _versions_of(
 def versions(facts: Facts) -> Iterator[Detail]:
     """The versions each language declares beside those CI tests it with: `supports >=3.10 (pyproject.toml); CI tests
     Python versions 3.10, 3.12`, and the oldest supported when CI does not test it."""
-    declared = [version for version in declared_versions(facts) if role(version.origin.path) == "product"]
+    declared = in_product(declared_versions(facts))
     for languages, axis in _subjects(facts, declared).items():
         if detail := _versions_of(languages, axis, declared, facts):
             yield detail
 
 
-# The groups shown, in order: each a function of the facts.
-GROUPS: tuple[Callable[[Facts], Iterable[Detail]], ...] = (versions,)
-
-
-def about(facts: Facts) -> tuple[Detail, ...]:
-    """Everything shown about the project, group by group."""
-    return tuple(detail for group in GROUPS for detail in group(facts))
-
-
-__all__ = ["GROUPS", "Detail", "about", "versions"]
+__all__ = ["versions"]

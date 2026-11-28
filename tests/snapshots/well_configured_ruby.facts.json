@@ -21,6 +21,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
@@ -30,6 +31,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
@@ -39,6 +41,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 17,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
@@ -48,6 +51,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
@@ -57,6 +61,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 7,
       "origin": ".github/workflows/function-limits.yml",
       "role": "product"
@@ -66,6 +71,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 1,
       "origin": ".mutant.yml",
       "role": "product"
@@ -75,6 +81,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 2,
       "origin": ".rubocop.yml",
       "role": "product"
@@ -84,6 +91,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Ruby",
+      "license": "",
       "lines": 6,
       "origin": "lib/app.rb",
       "role": "product"
@@ -93,6 +101,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Ruby",
+      "license": "",
       "lines": 7,
       "origin": "spec/app_spec.rb",
       "role": "test"
@@ -102,6 +111,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Ruby",
+      "license": "",
       "lines": 5,
       "origin": "spec/spec_helper.rb",
       "role": "test"

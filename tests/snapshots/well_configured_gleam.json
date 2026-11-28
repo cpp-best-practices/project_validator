@@ -1,5 +1,33 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 6,
+          "test": 10
+        }
+      },
+      "group": "Size",
+      "subject": "Gleam",
+      "text": "16 lines: 6 in the product, 10 in tests (1.67 of the product's)"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 2
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

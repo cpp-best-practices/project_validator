@@ -17,6 +17,33 @@
       "group": "Versions",
       "subject": "Emacs Lisp",
       "text": "declares no version; CI tests Emacs versions snapshot, 29.4, 30.1"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 30,
+          "test": 25
+        }
+      },
+      "group": "Size",
+      "subject": "Emacs Lisp",
+      "text": "55 lines: 30 in the product, 25 in tests (0.83 of the product's)"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 2
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
     }
   ],
   "answers": {

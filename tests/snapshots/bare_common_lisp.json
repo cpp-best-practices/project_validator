@@ -1,5 +1,17 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 4
+        }
+      },
+      "group": "Size",
+      "subject": "Common Lisp",
+      "text": "4 lines: 4 in the product"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

@@ -1,5 +1,28 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 3
+        }
+      },
+      "group": "Size",
+      "subject": "Julia",
+      "text": "3 lines: 3 in the product"
+    },
+    {
+      "data": {
+        "declared": [
+          "Project.toml"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "Pkg",
+      "text": "declared in Project.toml; no lockfile"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

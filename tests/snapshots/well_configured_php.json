@@ -16,6 +16,48 @@
       "group": "Versions",
       "subject": "PHP",
       "text": "declares no version; CI tests PHP versions 8.3, 8.4"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 13,
+          "test": 16
+        }
+      },
+      "group": "Size",
+      "subject": "PHP",
+      "text": "29 lines: 13 in the product, 16 in tests (1.23 of the product's)"
+    },
+    {
+      "data": {
+        "declared": [
+          "composer.json"
+        ],
+        "locked": [
+          "composer.lock"
+        ]
+      },
+      "group": "Dependencies",
+      "subject": "Composer",
+      "text": "declared in composer.json; locked by composer.lock"
+    },
+    {
+      "data": {
+        "declared": {
+          "composer.json": "MIT"
+        },
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 2
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT; composer.json declares MIT"
     }
   ],
   "answers": {

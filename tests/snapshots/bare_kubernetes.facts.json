@@ -5,6 +5,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 17,
       "origin": "k8s/deployment.yaml",
       "role": "product"

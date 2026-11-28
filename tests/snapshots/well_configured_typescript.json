@@ -16,6 +16,48 @@
       "group": "Versions",
       "subject": "TypeScript",
       "text": "declares no version; CI tests runtime versions 22, 24"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 11,
+          "test": 6
+        }
+      },
+      "group": "Size",
+      "subject": "TypeScript",
+      "text": "17 lines: 11 in the product, 6 in tests (0.55 of the product's)"
+    },
+    {
+      "data": {
+        "declared": [
+          "package.json"
+        ],
+        "locked": [
+          "package-lock.json"
+        ]
+      },
+      "group": "Dependencies",
+      "subject": "npm packages",
+      "text": "declared in package.json; locked by package-lock.json"
+    },
+    {
+      "data": {
+        "declared": {
+          "package.json": "MIT"
+        },
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 3
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT; package.json declares MIT"
     }
   ],
   "answers": {

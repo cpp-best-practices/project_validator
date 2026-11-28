@@ -159,9 +159,23 @@ def role(path: str, *, directory: bool = False) -> str:
     return "product"
 
 
+# How each role is named in words.
+ROLE_NAMES = {
+    "product": "the product",
+    "test": "tests",
+    "example": "examples",
+    "docs": "documentation",
+    "tooling": "tooling",
+    "benchmark": "benchmarks",
+    "template": "templates",
+    "vendored": "vendored code",
+}
+
+
 __all__ = [
     "AUXILIARY",
     "AUXILIARY_UNITS",
+    "ROLE_NAMES",
     "VENDOR_DIRECTORIES",
     "fixture_data",
     "in_source_root",

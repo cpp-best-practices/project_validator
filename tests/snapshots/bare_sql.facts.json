@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 4,
       "origin": "dbt_project.yml",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 3,
       "origin": "packages.yml",
       "role": "product"
@@ -31,6 +33,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "JSON",
+      "license": "",
       "lines": 1,
       "origin": "target/manifest.json",
       "role": "product"
@@ -48,6 +51,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "SQL",
+      "license": "",
       "lines": 1,
       "origin": "migrations/V1__orders.sql",
       "role": "product"
@@ -57,6 +61,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "SQL",
+      "license": "",
       "lines": 1,
       "origin": "models/orders.sql",
       "role": "product"

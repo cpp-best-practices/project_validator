@@ -1,5 +1,39 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 14
+        }
+      },
+      "group": "Size",
+      "subject": "Elixir",
+      "text": "14 lines: 14 in the product"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 5
+        }
+      },
+      "group": "Size",
+      "subject": "Erlang",
+      "text": "5 lines: 5 in the product"
+    },
+    {
+      "data": {
+        "declared": [
+          "mix.exs"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "Mix",
+      "text": "declared in mix.exs; no lockfile"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

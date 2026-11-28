@@ -11,6 +11,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "CMake",
+      "license": "",
       "lines": 2,
       "origin": "CMakeLists.txt",
       "role": "product"

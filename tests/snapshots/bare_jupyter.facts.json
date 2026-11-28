@@ -5,6 +5,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Jupyter",
+      "license": "",
       "lines": 5,
       "origin": "notebooks/prices.ipynb",
       "role": "product"

@@ -1,5 +1,28 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 13
+        }
+      },
+      "group": "Size",
+      "subject": "PHP",
+      "text": "13 lines: 13 in the product"
+    },
+    {
+      "data": {
+        "declared": [
+          "composer.json"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "Composer",
+      "text": "declared in composer.json; no lockfile"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

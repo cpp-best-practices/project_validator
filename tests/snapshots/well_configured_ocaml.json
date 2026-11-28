@@ -16,6 +16,33 @@
       "group": "Versions",
       "subject": "OCaml",
       "text": "declares no version; CI tests OCaml versions 4.14, 5.2"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 13,
+          "test": 15
+        }
+      },
+      "group": "Size",
+      "subject": "OCaml",
+      "text": "28 lines: 13 in the product, 15 in tests (1.15 of the product's)"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 3
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
     }
   ],
   "answers": {

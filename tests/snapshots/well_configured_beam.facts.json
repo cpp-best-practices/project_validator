@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Elixir",
+      "license": "",
       "lines": 9,
       "origin": ".credo.exs",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Elixir",
+      "license": "",
       "lines": 3,
       "origin": ".formatter.exs",
       "role": "product"
@@ -31,6 +33,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 10,
       "origin": ".github/dependabot.yml",
       "role": "product"
@@ -40,6 +43,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
@@ -49,6 +53,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 35,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
@@ -58,6 +63,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
@@ -67,6 +73,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Elixir",
+      "license": "",
       "lines": 1,
       "origin": "config/config.exs",
       "role": "product"
@@ -76,6 +83,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Elixir",
+      "license": "",
       "lines": 6,
       "origin": "lib/shop.ex",
       "role": "product"
@@ -85,6 +93,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Elixir",
+      "license": "",
       "lines": 39,
       "origin": "mix.exs",
       "role": "product"
@@ -94,6 +103,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Erlang",
+      "license": "",
       "lines": 6,
       "origin": "src/shop_legacy.erl",
       "role": "product"
@@ -103,6 +113,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Elixir",
+      "license": "",
       "lines": 12,
       "origin": "test/shop_test.exs",
       "role": "test"
@@ -112,6 +123,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Elixir",
+      "license": "",
       "lines": 1,
       "origin": "test/test_helper.exs",
       "role": "test"

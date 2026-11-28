@@ -1,5 +1,28 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 3
+        }
+      },
+      "group": "Size",
+      "subject": "TypeScript",
+      "text": "3 lines: 3 in the product"
+    },
+    {
+      "data": {
+        "declared": [
+          "package.json"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "npm packages",
+      "text": "declared in package.json; no lockfile"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

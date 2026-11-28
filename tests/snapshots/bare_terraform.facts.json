@@ -5,6 +5,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Terraform",
+      "license": "",
       "lines": 9,
       "origin": "main.tf",
       "role": "product"

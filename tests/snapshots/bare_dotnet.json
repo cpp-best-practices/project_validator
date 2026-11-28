@@ -1,5 +1,28 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 8
+        }
+      },
+      "group": "Size",
+      "subject": "C#",
+      "text": "8 lines: 8 in the product"
+    },
+    {
+      "data": {
+        "declared": [
+          "src/App/App.csproj"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "NuGet",
+      "text": "declared in src/App/App.csproj; no lockfile"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

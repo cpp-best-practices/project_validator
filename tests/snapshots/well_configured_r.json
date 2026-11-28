@@ -18,6 +18,33 @@
       "group": "Versions",
       "subject": "R",
       "text": "declares no version; CI tests R versions default, devel, oldrel-1, release"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 21,
+          "test": 12
+        }
+      },
+      "group": "Size",
+      "subject": "R",
+      "text": "33 lines: 21 in the product, 12 in tests (0.57 of the product's)"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 3
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
     }
   ],
   "answers": {

@@ -16,6 +16,33 @@
       "group": "Versions",
       "subject": "Clojure",
       "text": "declares no version; CI tests JDK versions 17, 21"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 16,
+          "test": 13
+        }
+      },
+      "group": "Size",
+      "subject": "Clojure",
+      "text": "29 lines: 16 in the product, 13 in tests (0.81 of the product's)"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 2
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
     }
   ],
   "answers": {

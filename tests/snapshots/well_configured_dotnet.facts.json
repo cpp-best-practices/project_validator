@@ -29,6 +29,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "INI",
+      "license": "",
       "lines": 5,
       "origin": ".editorconfig",
       "role": "product"
@@ -38,6 +39,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
@@ -47,6 +49,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
@@ -56,6 +59,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 20,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
@@ -65,6 +69,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
@@ -74,6 +79,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 7,
       "origin": ".github/workflows/function-limits.yml",
       "role": "product"
@@ -83,6 +89,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "C#",
+      "license": "",
       "lines": 8,
       "origin": "fuzz/App.Fuzz/Program.cs",
       "role": "test"
@@ -92,6 +99,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "JSON",
+      "license": "",
       "lines": 4,
       "origin": "fuzz/App.Fuzz/packages.lock.json",
       "role": "test"
@@ -101,6 +109,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "C#",
+      "license": "",
       "lines": 8,
       "origin": "src/App/Calculator.cs",
       "role": "product"
@@ -110,6 +119,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "JSON",
+      "license": "",
       "lines": 4,
       "origin": "src/App/packages.lock.json",
       "role": "product"
@@ -119,6 +129,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "JSON",
+      "license": "",
       "lines": 1,
       "origin": "stryker-config.json",
       "role": "product"
@@ -128,6 +139,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "C#",
+      "license": "",
       "lines": 7,
       "origin": "tests/App.Tests/CalculatorTests.cs",
       "role": "test"
@@ -137,6 +149,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "JSON",
+      "license": "",
       "lines": 4,
       "origin": "tests/App.Tests/packages.lock.json",
       "role": "test"

@@ -16,6 +16,46 @@
       "group": "Versions",
       "subject": "Dart",
       "text": "declares no version; CI tests Dart or Flutter SDK versions Dart stable, Dart 3.5"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 7,
+          "test": 8
+        }
+      },
+      "group": "Size",
+      "subject": "Dart",
+      "text": "15 lines: 7 in the product, 8 in tests (1.14 of the product's)"
+    },
+    {
+      "data": {
+        "declared": [
+          "pubspec.yaml"
+        ],
+        "locked": [
+          "pubspec.lock"
+        ]
+      },
+      "group": "Dependencies",
+      "subject": "pub",
+      "text": "declared in pubspec.yaml; locked by pubspec.lock"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 3
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
     }
   ],
   "answers": {

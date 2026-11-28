@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Ruby",
+      "license": "",
       "lines": 6,
       "origin": "app.rb",
       "role": "product"

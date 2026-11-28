@@ -1,5 +1,28 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 9
+        }
+      },
+      "group": "Size",
+      "subject": "Terraform",
+      "text": "9 lines: 9 in the product"
+    },
+    {
+      "data": {
+        "declared": [
+          "main.tf"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "Terraform providers",
+      "text": "declared in main.tf; no lockfile"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

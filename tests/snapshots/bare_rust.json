@@ -1,5 +1,28 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 4
+        }
+      },
+      "group": "Size",
+      "subject": "Rust",
+      "text": "4 lines: 4 in the product"
+    },
+    {
+      "data": {
+        "declared": [
+          "Cargo.toml"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "Cargo",
+      "text": "declared in Cargo.toml; no lockfile"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

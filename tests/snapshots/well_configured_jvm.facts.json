@@ -11,6 +11,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
@@ -20,6 +21,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
@@ -29,6 +31,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 17,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
@@ -38,6 +41,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
@@ -47,6 +51,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 7,
       "origin": ".github/workflows/function-limits.yml",
       "role": "product"
@@ -56,6 +61,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "XML",
+      "license": "",
       "lines": 110,
       "origin": "pom.xml",
       "role": "product"
@@ -65,6 +71,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Java",
+      "license": "",
       "lines": 11,
       "origin": "src/main/java/com/example/App.java",
       "role": "product"
@@ -74,6 +81,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Java",
+      "license": "",
       "lines": 10,
       "origin": "src/test/java/com/example/AppFuzzTest.java",
       "role": "test"
@@ -83,6 +91,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Java",
+      "license": "",
       "lines": 12,
       "origin": "src/test/java/com/example/AppTest.java",
       "role": "test"

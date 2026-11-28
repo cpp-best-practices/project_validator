@@ -1,5 +1,19 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "declared": {
+          "datapackage.json": "MIT"
+        },
+        "files": {},
+        "headers": {},
+        "sources": 0
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "datapackage.json declares MIT"
+    }
+  ],
   "answers": {
     "action-pinning": [],
     "ci-lint": [],

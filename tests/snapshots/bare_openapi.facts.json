@@ -5,6 +5,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 5,
       "origin": "openapi.yaml",
       "role": "product"

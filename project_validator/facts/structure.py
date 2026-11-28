@@ -13,12 +13,14 @@ from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass, replace
 from fnmatch import fnmatchcase
 from pathlib import PurePosixPath
+from typing import TypedDict
 
 from project_validator.core import Project
 from project_validator.ecosystems import Ecosystem, Kind, build_systems, families, formats, registered
 from project_validator.ecosystems.model import C_FAMILY
 from project_validator.facts import Fact, Facts, Origin
 from project_validator.facts.auxiliary import AuxiliaryCode, Selectors
+from project_validator.facts.licenses import SPDX_IDENTIFIER
 from project_validator.facts.roles import AUXILIARY, fixture_data, in_source_root, role
 from project_validator.facts.tools import owner, within
 
@@ -75,6 +77,8 @@ class SourceFile(Fact):
     # project's to fix, so a tool's settings may exclude it (upstream #333); "" for code written by hand, or by a
     # generator of the project's own.
     generator: str = ""
+    # The license its SPDX header names (`SPDX-License-Identifier: MIT`), "" when it has none (upstream #412).
+    license: str = ""
 
     @property
     def path(self) -> str:
@@ -232,9 +236,13 @@ def _ambiguous(
         named = list(dict.fromkeys(language for language in candidates if language is not None))
         language = named[0] if len(named) == 1 else neighbours.language(path, named, declared) if named else None
         purpose, lines = _role_and_lines(project, path, language)
-        generator = _generator(project, path) if lines else ""
         yield SourceFile(
-            origin=Origin(path=path), language=language, ambiguous=True, role=purpose, lines=lines, generator=generator
+            origin=Origin(path=path),
+            language=language,
+            ambiguous=True,
+            role=purpose,
+            lines=lines,
+            **_head(project, path, lines),
         )
 
 
@@ -405,9 +413,8 @@ def _sources(project: Project, generated: frozenset[str]) -> Iterator[SourceFile
             found = named[1:]
         if found is not None and (found[1] == "format" or not _configuration(path)):
             purpose, lines = _role_and_lines(project, path, found[0])
-            generator = _generator(project, path) if lines else ""
             yield SourceFile(
-                origin=Origin(path=path), language=found[0], role=purpose, lines=lines, generator=generator
+                origin=Origin(path=path), language=found[0], role=purpose, lines=lines, **_head(project, path, lines)
             )
 
 
@@ -437,10 +444,22 @@ _GENERATED = (
 )
 
 
-def _generator(project: Project, path: str) -> str:
-    """The outside generator that wrote the file at `path`, as its first lines say; "" when none does."""
+class _Head(TypedDict):
+    generator: str
+    license: str
+
+
+def _head(project: Project, path: str, lines: int) -> _Head:
+    """What the first lines of a source say, when it has any: the outside generator that wrote it, and the license its
+    SPDX header names ("" for each that they do not say)."""
+    if not lines:
+        return {"generator": "", "license": ""}
     head = project.read_head(path, 1024)
-    return next((name for name, pattern in _GENERATED if pattern.search(head)), "")
+    spdx = SPDX_IDENTIFIER.search(head)
+    return {
+        "generator": next((name for name, pattern in _GENERATED if pattern.search(head)), ""),
+        "license": spdx[1] if spdx else "",
+    }
 
 
 def _lines(project: Project, path: str) -> int:

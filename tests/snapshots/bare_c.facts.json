@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "CMake",
+      "license": "",
       "lines": 3,
       "origin": "CMakeLists.txt",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "C",
+      "license": "",
       "lines": 0,
       "origin": "third_party/cjson/cJSON.c",
       "role": "vendored"
@@ -31,6 +33,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "C",
+      "license": "",
       "lines": 0,
       "origin": "third_party/cjson/cJSON.h",
       "role": "vendored"

@@ -1,5 +1,28 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 15
+        }
+      },
+      "group": "Size",
+      "subject": "Swift",
+      "text": "15 lines: 15 in the product"
+    },
+    {
+      "data": {
+        "declared": [
+          "Package.swift"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "SwiftPM",
+      "text": "declared in Package.swift; no lockfile"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

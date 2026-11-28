@@ -1,5 +1,28 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 6
+        }
+      },
+      "group": "Size",
+      "subject": "Ruby",
+      "text": "6 lines: 6 in the product"
+    },
+    {
+      "data": {
+        "declared": [
+          "Gemfile"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "Bundler",
+      "text": "declared in Gemfile; no lockfile"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

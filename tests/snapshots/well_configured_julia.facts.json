@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "TOML",
+      "license": "",
       "lines": 3,
       "origin": ".JuliaFormatter.toml",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
@@ -31,6 +33,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
@@ -40,6 +43,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 31,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
@@ -49,6 +53,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
@@ -58,6 +63,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "TOML",
+      "license": "",
       "lines": 18,
       "origin": "Project.toml",
       "role": "product"
@@ -67,6 +73,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Julia",
+      "license": "",
       "lines": 22,
       "origin": "src/Shop.jl",
       "role": "product"
@@ -76,6 +83,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Julia",
+      "license": "",
       "lines": 19,
       "origin": "test/runtests.jl",
       "role": "test"

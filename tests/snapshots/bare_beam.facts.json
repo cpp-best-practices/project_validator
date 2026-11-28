@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Elixir",
+      "license": "",
       "lines": 3,
       "origin": "lib/shop.ex",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Elixir",
+      "license": "",
       "lines": 11,
       "origin": "mix.exs",
       "role": "product"
@@ -31,6 +33,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Erlang",
+      "license": "",
       "lines": 5,
       "origin": "src/shop_legacy.erl",
       "role": "product"

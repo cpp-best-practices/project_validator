@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "JSON",
+      "license": "",
       "lines": 5,
       "origin": "MYMETA.json",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Perl",
+      "license": "",
       "lines": 5,
       "origin": "lib/Shop.pm",
       "role": "product"
@@ -31,6 +33,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": null,
+      "license": "",
       "lines": 2,
       "origin": "Makefile.PL",
       "role": "product"

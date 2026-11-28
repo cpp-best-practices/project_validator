@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Clojure",
+      "license": "",
       "lines": 2,
       "origin": "project.clj",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Clojure",
+      "license": "",
       "lines": 3,
       "origin": "src/shop/core.clj",
       "role": "product"

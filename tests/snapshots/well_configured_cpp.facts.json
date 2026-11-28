@@ -25,6 +25,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
@@ -34,6 +35,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
@@ -43,6 +45,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 46,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
@@ -52,6 +55,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 15,
       "origin": ".github/workflows/codeql-analysis.yml",
       "role": "product"
@@ -61,6 +65,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 9,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
@@ -70,6 +75,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "CMake",
+      "license": "",
       "lines": 48,
       "origin": "CMakeLists.txt",
       "role": "product"
@@ -79,6 +85,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "CMake",
+      "license": "",
       "lines": 7,
       "origin": "cmake/Dependencies.cmake",
       "role": "product"
@@ -88,6 +95,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "CMake",
+      "license": "",
       "lines": 6,
       "origin": "fuzz_test/CMakeLists.txt",
       "role": "test"
@@ -97,6 +105,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "C++",
+      "license": "",
       "lines": 8,
       "origin": "fuzz_test/fuzz_tester.cpp",
       "role": "test"
@@ -106,6 +115,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "CMake",
+      "license": "",
       "lines": 2,
       "origin": "test/CMakeLists.txt",
       "role": "test"

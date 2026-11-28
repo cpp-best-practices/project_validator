@@ -17,6 +17,33 @@
       "group": "Versions",
       "subject": "Lua",
       "text": "declares no version; CI tests Lua versions luajit-2.1, 5.1, 5.4"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 15,
+          "test": 7
+        }
+      },
+      "group": "Size",
+      "subject": "Lua",
+      "text": "22 lines: 15 in the product, 7 in tests (0.47 of the product's)"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 2
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
     }
   ],
   "answers": {

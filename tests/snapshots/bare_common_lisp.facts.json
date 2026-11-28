@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Common Lisp",
+      "license": "",
       "lines": 4,
       "origin": "src/shop.lisp",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": null,
+      "license": "",
       "lines": 3,
       "origin": "shop.asd",
       "role": "product"

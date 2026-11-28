@@ -11,6 +11,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "XML",
+      "license": "",
       "lines": 15,
       "origin": "pom.xml",
       "role": "product"
@@ -20,6 +21,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Java",
+      "license": "",
       "lines": 11,
       "origin": "src/main/java/com/example/App.java",
       "role": "product"

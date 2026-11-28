@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Scala",
+      "license": "",
       "lines": 4,
       "origin": "src/main/scala/shop/Shop.scala",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": null,
+      "license": "",
       "lines": 3,
       "origin": "build.sbt",
       "role": "product"

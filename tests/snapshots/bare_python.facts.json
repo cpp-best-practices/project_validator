@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "gzip",
+      "license": "",
       "lines": 0,
       "origin": "dist/bare-0.1.tar.gz",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "TOML",
+      "license": "",
       "lines": 3,
       "origin": "pyproject.toml",
       "role": "product"
@@ -31,6 +33,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Python",
+      "license": "",
       "lines": 2,
       "origin": "src/app/__init__.py",
       "role": "product"

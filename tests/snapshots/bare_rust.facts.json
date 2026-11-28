@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "TOML",
+      "license": "",
       "lines": 7,
       "origin": "Cargo.toml",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Rust",
+      "license": "",
       "lines": 3,
       "origin": "src/lib.rs",
       "role": "product"
@@ -31,6 +33,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Rust",
+      "license": "",
       "lines": 1,
       "origin": "src/main.rs",
       "role": "product"

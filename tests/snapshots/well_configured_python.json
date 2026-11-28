@@ -16,6 +16,48 @@
       "group": "Versions",
       "subject": "Python",
       "text": "declares no version; CI tests Python versions 3.13, 3.14"
+    },
+    {
+      "data": {
+        "lines": {
+          "Python": {
+            "test": 16
+          }
+        }
+      },
+      "group": "Size",
+      "subject": "outside the product",
+      "text": "Python: 16 lines in tests"
+    },
+    {
+      "data": {
+        "declared": [
+          "pyproject.toml"
+        ],
+        "locked": [
+          "uv.lock"
+        ]
+      },
+      "group": "Dependencies",
+      "subject": "Python packages",
+      "text": "declared in pyproject.toml; locked by uv.lock"
+    },
+    {
+      "data": {
+        "declared": {
+          "pyproject.toml": "MIT"
+        },
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 1
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT; pyproject.toml declares MIT"
     }
   ],
   "answers": {

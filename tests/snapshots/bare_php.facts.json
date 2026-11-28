@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "JSON",
+      "license": "",
       "lines": 7,
       "origin": "composer.json",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "PHP",
+      "license": "",
       "lines": 13,
       "origin": "src/Calculator.php",
       "role": "product"

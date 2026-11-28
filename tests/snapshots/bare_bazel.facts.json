@@ -11,6 +11,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Bazel",
+      "license": "",
       "lines": 1,
       "origin": "MODULE.bazel",
       "role": "product"

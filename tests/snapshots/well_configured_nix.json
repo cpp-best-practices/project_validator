@@ -17,6 +17,32 @@
       "group": "Versions",
       "subject": "Nix",
       "text": "declares no version; CI tests systems aarch64-darwin, aarch64-linux, x86_64-linux"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 21
+        }
+      },
+      "group": "Size",
+      "subject": "Nix",
+      "text": "21 lines: 21 in the product"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 2
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
     }
   ],
   "answers": {
