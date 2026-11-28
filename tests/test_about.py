@@ -325,7 +325,7 @@ class HistoryTest(unittest.TestCase):
                 f"tree {tree}\nparent {parent}\nauthor a <a@example.com> {stamp}\ncommitter c <c@example.com> {stamp}\n"
                 f"{signature}\n\nsigned\n"
             )
-            (root / "raw").write_text(raw, encoding="utf-8")
+            (root / "raw").write_bytes(raw.encode())  # bytes: no CRLF on Windows, which git rejects
             commit = _output(root, "hash-object", "-t", "commit", "-w", "raw")
             (root / "raw").unlink()
             _git(root, "update-ref", "refs/heads/main", commit)
