@@ -187,7 +187,7 @@ calling job; a known action that runs a known command (`psf/black`) is expanded 
 tools only ever claim commands. A job whose only work is an action of another repository that the validator neither
 models nor reads (without `--fetch-remote`) may run any tool, so what it runs is unknown (upstream #273), unless the
 action is known to run none of the project's code: GitHub's own, or one in the curated list of
-`project_validator/ci/inert_actions.py`, grouped by what the actions do (label, merge, release, notify, harden the
+`project_validator/policy/inert_actions.toml`, grouped by what the actions do (label, merge, release, notify, harden the
 runner...). pre-commit.ci is a provider whose job never builds; GitLab's known security
 templates are jobs that run the template as a marker command.
 
@@ -346,6 +346,14 @@ Checks are thin (`project_validator/checks`): a check names its question and its
 policy (`answered_check`), and `--strict` and `--warnings-as-errors` adjust the policy, not the questions. The policy
 is built in; it is a separate layer so that it can be made configurable later without touching extraction. Hints
 come from the tools (`can`), not from profiles.
+
+The judgement calls that are tables rather than logic are TOML files in `project_validator/policy/` (upstream #440),
+loaded by `project_validator/policy_tables.py`: what a turned-off diagnostic costs a tool's strength
+(`strength.toml`), each tool's diagnostics that turn everything off or find bugs (`diagnostics.toml`), the score's
+levels, weights and extra credit (`score.toml`), and the actions known to run none of the project's code
+(`inert_actions.toml`). Their comments say why each entry is there, and a test checks each file against the code that
+uses it. A project can't override them: that would let it change its own score. The scored files' digest is recorded
+beside `SCORE_VERSION`, so changing one without a new score version fails the tests.
 
 An **unknown** answer is a gap in the validator's tooling (configuration it cannot read, such as a CI provider it
 only scans heuristically, or a matrix computed by an expression), not a finding about the project. So it is an

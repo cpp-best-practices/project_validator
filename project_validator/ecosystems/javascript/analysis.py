@@ -245,7 +245,7 @@ def _tsc_disabled(setting: Setting) -> Iterator[tuple[str, str]]:
         yield name, GLOBAL
 
 
-TSC_DISABLED = Disabler(tool="tsc", settings="TypeScript", disabled=_tsc_disabled, key=STRICT_FLAGS)
+TSC_DISABLED = Disabler(tool="tsc", settings="TypeScript", disabled=_tsc_disabled)
 ESLINT_DISABLE = Marker(
     tool="eslint",
     languages=JS_LANGUAGES,

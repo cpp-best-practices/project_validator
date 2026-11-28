@@ -15,7 +15,9 @@ import re
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
+from functools import cache
 
+from project_validator import policy_tables
 from project_validator.components import known
 from project_validator.core import Project
 from project_validator.facts import Command, Fact, Facts, Origin, Setting
@@ -48,14 +50,10 @@ class Suppressions(Fact):
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class Disabler:
-    """How the settings of `settings` (a reader's name) turn off diagnostics of `tool`: `disabled` gives each
-    (diagnostic, scope) a setting turns off; `blanket` names what turns off every diagnostic, and `key` (globs) the
-    diagnostics that find bugs; `reasons` (glob, why) say what some of them guard against."""
+class Diagnostics:
+    """Which of a tool's diagnostics turn everything off (`blanket`) and which find bugs (`key`, globs), and what some
+    of them guard against (`reasons`: glob, why), as `policy/diagnostics.toml` says (upstream #440)."""
 
-    tool: str
-    settings: str
-    disabled: Callable[[Setting], Iterable[tuple[str, str]]]
     blanket: tuple[str, ...] = ()
     key: tuple[str, ...] = ()
     reasons: tuple[tuple[str, str], ...] = ()
@@ -66,7 +64,38 @@ class Disabler:
     def kind(self, diagnostic: str) -> str:
         if diagnostic in self.blanket:
             return BLANKET
-        return KEY if any(fnmatchcase(diagnostic, glob) for glob in self.key) else STYLISTIC
+        found = any(fnmatchcase(diagnostic, glob) for glob in self.key) or bool(self.why(diagnostic))
+        return KEY if found else STYLISTIC
+
+
+@cache
+def diagnostics(tool: str) -> Diagnostics:
+    """What `policy/diagnostics.toml` says of `tool`'s diagnostics: a table may take its key diagnostics from another
+    tool's (`key_of`); a tool it doesn't name has only stylistic ones."""
+    table = policy_tables.load("diagnostics")
+    entry = table.get(tool, {})
+    return Diagnostics(
+        blanket=tuple(entry.get("blanket", ())),
+        key=tuple(table[entry["key_of"]]["key"] if "key_of" in entry else entry.get("key", ())),
+        reasons=tuple((reason["glob"], reason["why"]) for reason in entry.get("reasons", ())),
+    )
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class Disabler:
+    """How the settings of `settings` (a reader's name) turn off diagnostics of `tool`: `disabled` gives each
+    (diagnostic, scope) a setting turns off. Which of them turn everything off or find bugs is policy
+    (`diagnostics`)."""
+
+    tool: str
+    settings: str
+    disabled: Callable[[Setting], Iterable[tuple[str, str]]]
+
+    def why(self, diagnostic: str) -> str:
+        return diagnostics(self.tool).why(diagnostic)
+
+    def kind(self, diagnostic: str) -> str:
+        return diagnostics(self.tool).kind(diagnostic)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -157,14 +186,6 @@ def disabled_facts(project: Project, facts: Facts, disablers: Iterable[Disabler]
 # A compiler's warnings turned off on a command line: every one (`-w`, MSVC's `/W0`), or one (`-Wno-conversion`,
 # `-Wno-error=shadow`, MSVC's `/wd4244`).
 _COMPILER_OFF = re.compile(r"^(?:-w|/w|/W0|-Wno-(?:error=)?(?P<gnu>[\w=+-]+)|/wd(?P<msvc>\d+))$")
-# The compiler warnings that find bugs (the strict set and its kin), by name after -W.
-COMPILER_KEY = (
-    *("conversion", "sign-conversion", "float-conversion", "shadow*", "null-dereference", "format*"),
-    *("implicit-fallthrough", "old-style-cast", "cast-*", "uninitialized", "maybe-uninitialized", "return-type"),
-    *("array-bounds*", "stringop-*", "use-after-free*", "dangling*", "deprecated*", "overloaded-virtual"),
-)
-
-
 # The C and C++ compilers' programs, whose command lines say which warnings they turn off.
 COMPILERS = re.compile(
     r"^(?:.*/)?(?:gcc|g\+\+|cc|c\+\+|clang|clang\+\+|clang-cl|cl|icc|icpc|icx|icpx|nvcc|emcc|em\+\+)"
@@ -184,10 +205,9 @@ def compiler_disabled(commands: Iterable[Command]) -> Iterator[Disabled]:
             if found is None:
                 continue
             name = found["gnu"] or found["msvc"] or "*"
-            kind = (
-                BLANKET if name == "*" else KEY if any(fnmatchcase(name, glob) for glob in COMPILER_KEY) else STYLISTIC
+            yield Disabled(
+                origin=command.origin, tool="compiler", diagnostic=word, kind=diagnostics("compiler").kind(name)
             )
-            yield Disabled(origin=command.origin, tool="compiler", diagnostic=word, kind=kind)
 
 
 def _counted(text: str, marker: Marker) -> tuple[int, int, bool]:
@@ -238,11 +258,13 @@ __all__ = [
     "GLOBAL",
     "KEY",
     "STYLISTIC",
+    "Diagnostics",
     "Disabled",
     "Disabler",
     "Marker",
     "Suppressions",
     "compiler_disabled",
+    "diagnostics",
     "keyed",
     "known_disablers",
     "known_markers",

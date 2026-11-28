@@ -496,7 +496,7 @@ def _unread_action(step: ActionStep) -> Unknown:
     (upstream #273): it may run any tool, so what it runs is unknown until --fetch-remote reads it."""
     reason = (
         "it is the job's work, and its action.yml is not read (--fetch-remote reads it); an action that runs none of"
-        " the project's code belongs in project_validator/ci/inert_actions.py"
+        " the project's code belongs in project_validator/policy/inert_actions.toml"
     )
     return Unknown(origin=step.origin, subject=f"the action {step.uses}", reason=reason, hides="commands")
 
@@ -522,7 +522,7 @@ def _setup_actions() -> tuple[re.Pattern[str], ...]:
 def known_action(uses: str) -> bool:
     """Whether the validator knows what the action `uses` names does: one in this repository or a Docker image (read
     as they are), one it models (what it runs), one known to run none of the project's code (GitHub's own, and the
-    curated list in `project_validator/ci/inert_actions.py`), or a toolchain's setup action."""
+    curated list in `project_validator/policy/inert_actions.toml`), or a toolchain's setup action."""
     if not _ELSEWHERE.match(uses):
         return True
     from project_validator.ci.inert_actions import inert  # the ci package reads the profiles, which import this module

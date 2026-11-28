@@ -1,0 +1,63 @@
+# The tooling score (upstream #295, docs/score.md): its levels, what a slot weighs, the extra credit, and the checks
+# that never earn points.
+#
+# Changing anything here changes the score: bump SCORE_VERSION in project_validator/score.py, say why in the
+# changelog, and update docs/score.md (a test checks its table of levels).
+
+# The checks each level's core and project slots must pass, in order. Every other check belongs to the level after the
+# last, which a project reaches with every check run and every slot filled: 100%.
+[levels]
+1 = ["ci-present", "compiler-warnings", "warnings-as-errors", "code-formatting", "tests-run", "license", "vcs-ignore"]
+2 = ["static-analysis", "type-checking", "coverage", "dependency-management", "dependency-audit"]
+3 = ["sanitizers", "fuzz-testing", "mutation-testing", "security-scanning", "action-pinning"]
+
+# Each level's name, from 0 (no level reached) to the top.
+[level_names]
+0 = "Getting started"
+1 = "Foundations"
+2 = "Analysis"
+3 = "Hardening"
+4 = "Complete"
+
+# What a slot weighs by its tier: a language's core code, its auxiliary code (tests, examples, scripts: what
+# --auxiliary names), and the whole project's own gates (a licence, CI). Every slot of a tier weighs the same; the
+# levels already give the foundations precedence.
+[tiers]
+core = 1.0
+auxiliary = 0.5
+project = 1.0
+
+[weights]
+# The least a language's core slots weigh, whatever its share of its unit's product lines: a gap in a small language
+# still costs.
+floor = 0.1
+
+[extra_credit]
+# The gates where each more tool finds more: two analysers are stronger than one; two formatters are not.
+checks = [
+    "static-analysis", "security-scanning", "dependency-audit", "fuzz-testing", "sanitizers", "type-checking",
+    "compiler-warnings",
+]
+# The extra credit of the 2nd, 3rd, ... distinct tool family in a slot, in slots.
+steps = [0.25, 0.10]
+
+# Tools that are one tool for the extra credit, by the family they count in: reimplementations of each other's rules.
+# A tool is named as the validator names it. A bundled linter's bundle (golangci-lint's gosec, ruff's bandit rules) is
+# its family without being listed. The validator keeps this table; a project can't regroup its own tools.
+[families]
+flake8 = "ruff"
+"ruff check" = "ruff"
+
+[unscored]
+# Reported, never scored: what a README shows is not a quality gate.
+cosmetic = ["status-badges"]
+# Defects the validator finds itself, in the files: a check of them passes because none was found, not because the
+# project put a process in place, so it can take points away but never add them. Passing, it is no slot; warning or
+# failing, it is a slot that nothing fills (and a next step). The processes that keep the defects out are scored on
+# their own: file-soundness, vcs-ignore, ci-lint, ...
+findings = ["data-wellformed", "repository-hygiene", "committed-artifacts", "large-files", "ci-current"]
+
+[next_steps]
+# The fewest points a re-enabling step must be worth to be shown: the least that rounds to a tenth, which is the least
+# the score shows.
+smallest_step = 0.05

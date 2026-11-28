@@ -1,0 +1,39 @@
+# A tool's strength (upstream #295): how much of it is left on, from 0 to 1.
+#
+#     strength = max(0, 1 - the weights of what is turned off - the density of the suppressions)
+#
+# Changing a number here changes the score: bump SCORE_VERSION in project_validator/score.py, say why in the
+# changelog, and update docs/score.md's tables.
+
+# The strength a gate's strongest tool needs for the gate to count. Below it, the slot is not filled, holds its level
+# back, and turning back on what is off is a next step.
+covered = 0.5
+
+# What turning a diagnostic off weighs, by its kind (see diagnostics.toml), where it is off, and whether a comment on
+# its line or the line above says why. A reason halves a key diagnostic's weight but never brings it to 0.
+#
+# - blanket: everything at once (clang-tidy's `-*` with nothing enabled after it, ruff's `ALL`, `-w`, mypy's
+#   `ignore_errors`). Everywhere, nothing is left of the tool, reason or not.
+# - key: a diagnostic that finds bugs.
+# - stylistic: any other. Style weighs nothing: strength is what a tool can still find of bugs, and a project that
+#   enables every check and turns off those that don't apply to it (clang-tidy's altera-*, fuchsia-*) must not count
+#   for less than one that enabled few.
+[weights.blanket]
+global = { unjustified = 1.0, justified = 1.0 }
+file = { unjustified = 0.5, justified = 0.5 }
+
+[weights.key]
+global = { unjustified = 0.25, justified = 0.12 }
+file = { unjustified = 0.05, justified = 0.02 }
+
+[weights.stylistic]
+global = { unjustified = 0.0, justified = 0.0 }
+file = { unjustified = 0.0, justified = 0.0 }
+
+# The suppressions written in the product's code (`NOLINT`, `# noqa`, `eslint-disable`, ...), per suppression per
+# thousand lines of the tool's languages; together they weigh at most `most`. A file turned off whole weighs as a
+# blanket in one file.
+[density]
+unjustified = 0.02
+justified = 0.005
+most = 0.5

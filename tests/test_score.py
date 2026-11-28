@@ -186,14 +186,15 @@ class ExtraCreditTests(unittest.TestCase):
                 self.assertEqual(scored([report(check, PASS, place(PASS, "one", "two"))]).percent, 100)
 
     def test_tools_of_one_family_count_once(self) -> None:
-        reports = [report("static-analysis", PASS, place(PASS, "ruff", "flake8"))]
+        # As the tools are named: ruff's linter is `ruff check`, and its bandit rules are bundled in it.
+        reports = [report("static-analysis", PASS, place(PASS, "ruff check", "flake8", "ruff's bandit rules"))]
         self.assertEqual(scored(reports).percent, 100)
         reports = [report("security-scanning", PASS, place(PASS, "golangci-lint's gosec", "golangci-lint's revive"))]
         self.assertEqual(scored(reports).percent, 100)
 
     def test_a_bundled_linter_belongs_to_its_bundle(self) -> None:
         self.assertEqual(family("golangci-lint's gosec"), "golangci-lint")
-        self.assertEqual(family("flake8"), family("ruff"))
+        self.assertEqual(family("flake8"), family("ruff check"))
         self.assertEqual(family("CodeQL"), "CodeQL")
 
     def test_extra_credit_scales_with_the_slot(self) -> None:
@@ -332,7 +333,8 @@ class SummaryTests(unittest.TestCase):
     def test_as_json(self) -> None:
         data = scored(foundations()).as_dict()
         self.assertEqual(data["version"], SCORE_VERSION)
-        self.assertEqual(SCORE_VERSION, "5")  # 2: by size (#331); 3: findings only take away; 4: strength; 5: no style
+        # 2: by size (#331); 3: findings only take away; 4: strength; 5: no style; 6: ruff and flake8 one family
+        self.assertEqual(SCORE_VERSION, "6")
         self.assertEqual(data["percent"], 100)
         self.assertEqual((data["level"], data["level_name"]), (1, "Foundations"))
         self.assertEqual((data["filled"], data["slots"], data["extra"], data["held"]), (7, 7, 0, 0))

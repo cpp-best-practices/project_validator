@@ -1,0 +1,73 @@
+# Which of each tool's diagnostics turn everything off (`blanket`) and which find bugs (`key`, globs), and what some
+# of them guard against (`reasons`: a glob and the words a next step uses). A diagnostic a reason names finds bugs too.
+# Any other diagnostic is style, which costs a tool's strength nothing (see strength.toml).
+#
+# A table is a tool as the validator names it, whose settings a reader turns into what is turned off. Changing an
+# entry changes the score: bump SCORE_VERSION in project_validator/score.py and say why in the changelog.
+
+# clang-tidy: its bug-finding families, and the guidelines' checks against undefined behaviour. Each of those flags
+# every use of a construct that can be undefined, not only the uses that are, so a project may turn one off on
+# purpose; it still costs as a check that finds bugs, and the next step says what it guards against.
+[clang-tidy]
+blanket = ["*"]
+key = ["bugprone-*", "cert-*", "clang-analyzer-*", "concurrency-*"]
+
+[[clang-tidy.reasons]]
+glob = "cppcoreguidelines-pro-bounds-*"
+why = "it guards against undefined behaviour: reads and writes out of bounds"
+
+[[clang-tidy.reasons]]
+glob = "cppcoreguidelines-pro-type-reinterpret-cast"
+why = "it guards against undefined behaviour: accesses that break the strict aliasing rule"
+
+[[clang-tidy.reasons]]
+glob = "cppcoreguidelines-pro-type-union-access"
+why = "it guards against undefined behaviour: reads of a union's inactive member"
+
+[[clang-tidy.reasons]]
+glob = "hicpp-no-array-decay"
+why = "it guards against undefined behaviour: arrays decayed to pointers, which lose their length and invite out-of-bounds access"
+
+[[clang-tidy.reasons]]
+glob = "hicpp-signed-bitwise"
+why = "it guards against undefined behaviour: shifts of negative numbers or into the sign bit (undefined before C++20)"
+
+# The C and C++ compilers' warnings that a `-Wno-` (or MSVC's `/wd`) turns off; `-w` turns off every one.
+[compiler]
+blanket = ["*"]
+key = [
+    "conversion", "sign-conversion", "float-conversion", "shadow*", "null-dereference", "format*",
+    "implicit-fallthrough", "old-style-cast", "cast-*", "uninitialized", "maybe-uninitialized", "return-type",
+    "array-bounds*", "stringop-*", "use-after-free*", "dangling*", "deprecated*", "overloaded-virtual",
+]
+
+# clippy's groups that find bugs, and the restriction lints against panics: not its pedantic lints (casts, docs).
+[clippy]
+key = [
+    "correctness", "suspicious", "unwrap_used", "expect_used", "panic", "indexing_slicing",
+    "undocumented_unsafe_blocks",
+]
+
+# Python's codes that find bugs: pyflakes' (undefined names), bugbear's, bandit's (each a letter and digits, or the
+# letter alone for the whole plugin: not flynt's FLY, flake8-simplify's SIM, flake8-blind-except's BLE), and syntax
+# errors.
+[flake8]
+key = ["F", "F[0-9]*", "B", "B[0-9]*", "S", "S[0-9]*", "E9*"]
+
+[mypy]
+blanket = ["ignore_errors"]
+# Every error code mypy reports is a type error.
+key = ["*"]
+
+[pylint]
+blanket = ["all"]
+key = ["E*", "undefined-*", "used-before-assignment", "no-member", "dangerous-default-value"]
+
+# ruff reimplements flake8's codes, and finds bugs with the same ones.
+["ruff check"]
+blanket = ["ALL"]
+key_of = "flake8"
+
+# The flags `strict` turns on, which tsconfig may turn off one by one: each lets bugs through.
+[tsc]
+key = ["*"]
