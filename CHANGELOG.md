@@ -31,7 +31,9 @@ The first release.
   weighs the comments in the code that turn rules off by the rules they name: a comment that turns off only lint
   rules that find no bugs costs nothing (the About section counts them), one that turns off a rule that finds bugs,
   or names none, costs, less with a reason but never nothing, and each rule's comments cost less than turning that
-  rule off for their file, and less than turning it off everywhere. eslint, golangci-lint and RuboCop say which of
+  rule off for their file, and less than turning it off everywhere. A slot is now filled as far as its strongest tool
+  is strong, so these costs, and what a configuration turns off, show in the score rather than only below half
+  strength. eslint, golangci-lint and RuboCop say which of
   their rules find bugs; a tool the diagnostics table doesn't name finds bugs with every rule.
 - **The JSON formats,** each at version 1: `results`, `map`, `facts`, `answers`, `checks` and `support-matrix`.
 - **The command** is `project_validator`; `project-validator`, its old name, still runs for this release and says it

@@ -40,8 +40,8 @@ from project_validator.strength import COVERED, TurnedOff
 # 2: each language's slots weigh its share of its unit's code (upstream #331).
 # 3: what the validator finds itself (`FINDINGS`) earns nothing; 4: tools' strength weighs their slots.
 # 5: style disables cost nothing; 6: ruff's linter and flake8 are one family, as `FAMILIES` meant (upstream #440).
-# 7: a comment turning off lint rules that find no bugs costs nothing, and each rule's comments are held below turning
-# the rule off (upstream #295).
+# 7: a comment turning off lint rules that find no bugs costs nothing, each rule's comments are held below turning the
+# rule off, and a slot is filled as far as its strongest tool is strong (upstream #295).
 SCORE_VERSION = "7"
 # The digest of the scored policy files (`policy_tables.SCORED`) this version stands for: a test fails when they change
 # without a new SCORE_VERSION, and gives the new digest to put here.
@@ -133,12 +133,18 @@ class Cell:
         return weight_of(self.tier) * (max(FLOOR, self.size) if self.tier == CORE else 1.0)
 
     @property
-    def fill(self) -> float:
-        """How much of the slot is filled: a finding's (`FINDINGS`) slot, there only when it found a defect, never; nor
-        one whose strongest tool is turned off more than half (see `COVERED`)."""
+    def reach(self) -> float:
+        """How far the gate is in place, before its tools' strength: a finding's (`FINDINGS`) slot, there only when it
+        found a defect, never; nor one whose strongest tool is turned off more than half (see `COVERED`)."""
         if self.check in FINDINGS or self.strength < COVERED:
             return 0.0
         return _FILLS.get(self.status, 0.0) * self.share
+
+    @property
+    def fill(self) -> float:
+        """How much of the slot is filled: as far as the gate is in place, and as far as its strongest tool is strong,
+        so that whatever turns a tool off shows in the score."""
+        return self.reach * self.strength
 
     @property
     def filled(self) -> float:
@@ -152,9 +158,9 @@ class Cell:
     def extra(self) -> float:
         """The extra credit the slot earns, in slots: for each distinct tool family past the first, in a gate where
         more tools find more."""
-        if self.check not in EXTRA_CREDIT or not self.fill:
+        if self.check not in EXTRA_CREDIT or not self.reach:
             return 0.0
-        return sum(EXTRA[: max(0, len(self.families) - 1)]) * self.weight * self.fill * self.power
+        return sum(EXTRA[: max(0, len(self.families) - 1)]) * self.weight * self.reach * self.power
 
     def as_dict(self) -> dict[str, object]:
         return {

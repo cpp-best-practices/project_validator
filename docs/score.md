@@ -101,14 +101,17 @@ Which rules find bugs is the same list as for the configuration, in `policy/diag
 and RuboCop are named there for their comments alone. A tool the file doesn't name (cppcheck, Error Prone, PHPStan)
 finds bugs with every rule, until its table says otherwise.
 
-**A gate counts only when its strongest tool is at least half strong.** Below that, its slot is not filled, it holds
-its level back, and it is a next step: turn back on what is turned off, and fix what the tool finds. A gate's extra
-credit is scaled by its tools' mean strength. Each slot's `strength` is in `--format json --score`.
+**A slot is filled as far as its strongest tool is strong** (score version 7): a gate whose clang-tidy is at 0.9
+fills 0.9 of its slot, so whatever turns a tool off shows in the score, a comment as much as a configuration. **A gate
+counts only when its strongest tool is at least half strong.** Below that, its slot is not filled at all, it holds its
+level back, and it is a next step: turn back on what is turned off, and fix what the tool finds. A gate's extra credit
+is scaled by its tools' mean strength (once: not again by how far its slot is filled). Each slot's `strength` is in
+`--format json --score`.
 
 Each diagnostic that finds bugs a tool's configuration turns off is a next step of its own, where turning it back on
 restores points: `re-enable bugprone-narrowing-conversions in .clang-tidy (clang-tidy)`, and fix what the tool finds.
-It is worth the slots it fills again, or the extra credit it restores; a small, local task that improves the code
-rather than adding a tool.
+It is worth what it fills of its slots again, and the extra credit it restores, whether or not the gate already counts;
+a small, local task that improves the code rather than adding a tool.
 
 ## Extra credit
 

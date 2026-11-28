@@ -147,12 +147,18 @@ class ScoreTests(unittest.TestCase):
         self.assertEqual(COVERED, 0.5)
         self.assertEqual(_scored({"clang-tidy": 0.4, "cppcheck": 0.3})[:1], (0,))
         self.assertEqual(_scored({"clang-tidy": 0.4, "cppcheck": 0.3})[2], ["static-analysis"])
-        self.assertEqual(_scored({"clang-tidy": 0.4, "cppcheck": 0.6})[0], 1)
         self.assertEqual(_scored({})[0], 1)
+
+    def test_a_slot_is_filled_as_far_as_its_strongest_tool_is_strong(self) -> None:
+        """Every cost shows in the score: a tool at 0.9 fills 0.9 of its slot, not all of it."""
+        self.assertAlmostEqual(_scored({"clang-tidy": 0.4, "cppcheck": 0.6})[0], 0.6)
+        self.assertAlmostEqual(_scored({"clang-tidy": 0.99})[0], 1.0)  # cppcheck is still at full strength
+        self.assertAlmostEqual(_scored({"clang-tidy": 0.9, "cppcheck": 0.75})[0], 0.9)
+        self.assertEqual(_scored({"clang-tidy": 0.9, "cppcheck": 0.75})[2], [])  # still in place: not a next step
 
     def test_extra_credit_scales_with_the_tools_strength(self) -> None:
         full, half = _scored({})[1], _scored({"clang-tidy": 0.5, "cppcheck": 0.5})[1]
-        self.assertAlmostEqual(half, full * 0.5)
+        self.assertAlmostEqual(half, full * 0.5)  # by their mean strength, once: not again by the slot's fill
 
     def test_the_cell_says_how_strong_its_tools_are(self) -> None:
         found = score([report("static-analysis", PASS, place(PASS, "clang-tidy"))], strengths={"clang-tidy": 0.75})
@@ -192,11 +198,12 @@ class ReenableTests(unittest.TestCase):
         self.assertEqual(step.hint, "re-enable bugprone-a in .clang-tidy and fix what clang-tidy finds")
         self.assertEqual(
             step.describe(),
-            "static-analysis (C++): +50 points; re-enable bugprone-a in .clang-tidy and fix what clang-tidy finds",
+            "static-analysis (C++): +32.5 points; re-enable bugprone-a in .clang-tidy and fix what clang-tidy finds",
         )
-        self.assertAlmostEqual(step.points, 50.0)  # it fills the slot again: half the points
+        self.assertAlmostEqual(step.points, 32.5)  # the slot fills again, to 0.65 of it: of two slots, 32.5 points
         unblocked = score(reports, strengths={"clang-tidy": 0.75}, turned_off=(off,))
-        self.assertFalse([step for step in unblocked.next_steps if step.message.startswith("re-enable")])
+        [step] = [step for step in unblocked.next_steps if step.message.startswith("re-enable")]
+        self.assertAlmostEqual(step.points, 12.5)  # a gate in place still gains what turning it back on restores
 
     def test_a_step_says_why_its_diagnostic_matters_where_it_is_known(self) -> None:
         why = "it guards against undefined behaviour: reads and writes out of bounds"
