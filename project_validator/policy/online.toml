@@ -1,0 +1,35 @@
+# What the "About the project" section asks online (upstream #412): the source-control host, unless --offline, and
+# the outside services, only with --ask-services. Nothing asked here is judged or scored: these are the windows the
+# host's activity is counted in, and the addresses of the services and what is read of their answers.
+
+[activity]
+# The days back from the run over which the median time to close an issue, and to merge a pull request, is taken.
+window_days = 90
+# An open pull request not updated in this many days is counted as stale.
+stale_days = 30
+
+[scorecard]
+# The OpenSSF Scorecard API, asked for the score of the repository the origin remote names, on the hosts it scores.
+url = "https://api.securityscorecards.dev/projects/{host}/{repository}"
+hosts = ["github.com", "gitlab.com"]
+
+# The package registries asked for the latest version they publish of a package: one a manifest named `manifest`
+# declares by name and version (a package.json that is `private` is not published). The registry is asked at `url`,
+# and its answer holds the version at the keys of `version`.
+[[registries]]
+name = "PyPI"
+manifest = "pyproject.toml"
+url = "https://pypi.org/pypi/{package}/json"
+version = ["info", "version"]
+
+[[registries]]
+name = "crates.io"
+manifest = "Cargo.toml"
+url = "https://crates.io/api/v1/crates/{package}"
+version = ["crate", "max_stable_version"]
+
+[[registries]]
+name = "npm"
+manifest = "package.json"
+url = "https://registry.npmjs.org/{package}/latest"
+version = ["version"]

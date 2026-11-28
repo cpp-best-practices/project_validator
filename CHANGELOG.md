@@ -22,7 +22,13 @@ The first release.
   what it does and at the version it is pinned at; the events CI runs on, whether pull requests from forks run it,
   and its jobs, OSes and architectures; where releases are published,
   by trusted publishing or with provenance, and any SBOM or attestation; and the docs generator, the changelog's
-  latest entry, CONTRIBUTING, CODEOWNERS and the issue and pull request templates.
+  latest entry, CONTRIBUTING, CODEOWNERS and the issue and pull request templates. Online (unless `--offline`), it
+  shows what the source-control host says beyond its settings: GitHub's metadata (archived, a fork, visibility, topics,
+  homepage, the licence it detects), activity (open issues and pull requests, stale pull requests, the median time to
+  close and to merge), open Dependabot and code scanning alerts where the token can read them, private vulnerability
+  reporting, the latest release, and CI on the default branch's latest commit. `--ask-services` adds what outside
+  services say: the OpenSSF Scorecard score, and the latest version PyPI, crates.io and npm publish beside the
+  manifest's.
 - **The policy tables** behind the score and the unknowns are TOML files in `project_validator/policy/`: strength
   weights, each tool's key and blanket diagnostics with their reasons, the score's levels and weights, and the
   actions known to run none of the project's code. Score version 6 counts ruff's linter and flake8 as one family for

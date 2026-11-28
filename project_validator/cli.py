@@ -200,7 +200,14 @@ def _add_network_options(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--offline",
         action="store_true",
-        help="never ask the source-control host (GitHub, GitLab, ...) for the repository's settings",
+        help="never ask the source-control host (GitHub, GitLab, ...) for the repository's settings and details, "
+        "nor the outside services",
+    )
+    parser.add_argument(
+        "--ask-services",
+        action="store_true",
+        help="ask outside services (the OpenSSF Scorecard, PyPI, crates.io, npm) what they say of the project, "
+        "shown in About the project and never judged",
     )
 
 
@@ -242,6 +249,7 @@ def _options(arguments: argparse.Namespace) -> Options:
         local_checks=arguments.local_checks,
         offline=arguments.offline,
         fetch_remote=arguments.fetch_remote,
+        ask_services=arguments.ask_services,
     )
 
 

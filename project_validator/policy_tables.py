@@ -7,6 +7,8 @@ changed apart from the code, which only loads and applies them.
   them guard against (see `facts.suppressions.Disabler`).
 - `score.toml`: the levels, the slots' weights, the extra credit and the checks that are never scored (see `score`).
 - `inert_actions.toml`: the GitHub Actions known to run none of the project's code (see `ci.inert_actions`).
+- `online.toml`: the windows the host's activity is counted in, and the outside services asked, for the "About the
+  project" section (see `host_details`, `services`).
 
 The tables are the validator's, not a project's: a project cannot override them, since that would let it change its
 own score. Changing a number in a scored table (`SCORED`) changes the score, so it bumps `score.SCORE_VERSION`; a test
@@ -21,7 +23,7 @@ from functools import cache
 from importlib.resources import files
 from typing import Any
 
-TABLES = ("diagnostics", "inert_actions", "score", "strength")
+TABLES = ("diagnostics", "inert_actions", "online", "score", "strength")
 # The tables whose numbers decide the score.
 SCORED = ("diagnostics", "score", "strength")
 

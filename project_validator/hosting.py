@@ -26,6 +26,7 @@ import urllib.parse
 import urllib.request
 from collections.abc import Callable, Iterator, Mapping
 from dataclasses import dataclass
+from typing import Protocol
 
 from project_validator.facts import NOTHING, Fact, Origin
 
@@ -75,27 +76,70 @@ class HostAccess(Fact):
 
 
 class Refused(Exception):
-    """The host answered with an error (`status`), or not at all (0)."""
+    """The host answered with an error (`status`), or not at all (0); `detail` is what its answer said of the error
+    (GitHub's `message`: "Dependabot alerts are disabled for this repository."), if anything."""
 
-    def __init__(self, status: int, message: str) -> None:
+    def __init__(self, status: int, message: str, detail: str = "") -> None:
         super().__init__(message)
         self.status = status
+        self.detail = detail
 
 
 type Get = Callable[[str], object]
 
 
-def fetch(url: str, headers: Mapping[str, str]) -> object:
-    """The JSON a GET of `url` answers (None for an empty answer); `Refused` for an error status or no answer."""
-    request = urllib.request.Request(url, headers=dict(headers))  # noqa: S310 - the host's https API
+class Ask(Protocol):
+    """A GET of a URL, or a POST of a JSON `body` to it (a GraphQL query), answered with the JSON the host sends."""
+
+    def __call__(self, url: str, body: Mapping[str, object] | None = None, /) -> object: ...
+
+
+def _said(error: urllib.error.HTTPError) -> str:
+    """The `message` an API's error answer holds, if it is JSON that has one."""
     try:
-        with urllib.request.urlopen(request, timeout=_TIMEOUT) as answer:  # noqa: S310 - the host's https API
-            body = answer.read()
+        answer = json.loads(error.read() or b"null")
+    except (ValueError, OSError):
+        return ""
+    return str(answer.get("message") or "") if isinstance(answer, dict) else ""
+
+
+def fetch(url: str, headers: Mapping[str, str], body: Mapping[str, object] | None = None) -> object:
+    """The JSON a GET of `url` answers, or a POST of `body` (None for an empty answer); `Refused` for an error status
+    or no answer."""
+    data = None if body is None else json.dumps(body).encode()
+    sent = dict(headers) | ({} if data is None else {"Content-Type": "application/json"})
+    request = urllib.request.Request(url, data=data, headers=sent)  # noqa: S310 - an https API
+    try:
+        with urllib.request.urlopen(request, timeout=_TIMEOUT) as answer:  # noqa: S310 - an https API
+            read = answer.read()
     except urllib.error.HTTPError as error:
-        raise Refused(error.code, f"HTTP {error.code}") from error
+        raise Refused(error.code, f"HTTP {error.code}", _said(error)) from error
     except (urllib.error.URLError, TimeoutError, OSError) as error:
         raise Refused(0, str(getattr(error, "reason", error))) from error
-    return json.loads(body) if body.strip() else None
+    return json.loads(read) if read.strip() else None
+
+
+class _Asked:
+    """`fetch` with the host's headers, each URL (and body) asked once in a run: the settings and the details share
+    the repository's answer. A refusal is remembered too, and raised again."""
+
+    def __init__(self, headers: Mapping[str, str]) -> None:
+        self._headers = headers
+        self._answers: dict[str, object] = {}
+
+    def _answer(self, url: str, body: Mapping[str, object] | None) -> object:
+        try:
+            return fetch(url, self._headers) if body is None else fetch(url, self._headers, body)
+        except Refused as error:
+            return error
+
+    def __call__(self, url: str, body: Mapping[str, object] | None = None, /) -> object:
+        key = url if body is None else f"{url} {json.dumps(body, sort_keys=True)}"
+        if key not in self._answers:
+            self._answers[key] = self._answer(url, body)
+        if isinstance(answer := self._answers[key], Refused):
+            raise answer
+        return answer
 
 
 def _environment_token(*names: str) -> str | None:
@@ -178,9 +222,13 @@ def _github_security(repository: Mapping[str, object], unread: list[str]) -> dic
     return security
 
 
+def github_api(remote: Remote) -> str:
+    """The root of GitHub's REST API for `remote`: api.github.com, or a GitHub Enterprise server's /api/v3."""
+    return "https://api.github.com" if remote.host == "github.com" else f"https://{remote.host}/api/v3"
+
+
 def _github(remote: Remote, get: Get, origin: Origin) -> HostSettings:
-    api = "https://api.github.com" if remote.host == "github.com" else f"https://{remote.host}/api/v3"
-    base = f"{api}/repos/{remote.path}"
+    base = f"{github_api(remote)}/repos/{remote.path}"
     answer = get(base)
     repository = answer if isinstance(answer, dict) else {}
     branch = str(repository.get("default_branch") or "main")
@@ -353,8 +401,14 @@ def offline(requested: bool) -> bool:
     return requested or bool(os.environ.get(OFFLINE_VARIABLE))
 
 
-def host_facts(url: str | None, *, requested_offline: bool = False) -> Iterator[Fact]:
-    """What the host of the `origin` remote at `url` says of the repository, or why it was not asked."""
+type Details = Callable[[Remote, Ask, Origin], Iterator[Fact]]
+
+
+def host_facts(
+    url: str | None, *, requested_offline: bool = False, details: Mapping[str, Details] = NOTHING
+) -> Iterator[Fact]:
+    """What the host of the `origin` remote at `url` says of the repository, or why it was not asked: its settings,
+    then what the reader of `details` for the host (by its name: `host_details.DETAILS`) reads, asking each URL once."""
     if offline(requested_offline):
         yield HostAccess(origin=_ORIGIN, reason="the source-control host is not asked offline (--offline)")
         return
@@ -371,11 +425,27 @@ def host_facts(url: str | None, *, requested_offline: bool = False) -> Iterator[
     if token is None:
         yield HostAccess(origin=_ORIGIN, reason=f"no token to ask {host.name}: {host.how}")
         return
-    headers = host.headers(token)
+    ask = _Asked(host.headers(token))
     try:
-        yield host.read(remote, lambda address: fetch(address, headers), _ORIGIN)
+        yield host.read(remote, ask, _ORIGIN)
     except Refused as error:
         yield HostAccess(origin=_ORIGIN, reason=f"{host.name} did not answer for {remote.path}: {error}")
+        return
+    if (reader := details.get(host.name)) is not None:
+        yield from reader(remote, ask, _ORIGIN)
 
 
-__all__ = ["HOSTS", "HostAccess", "HostSettings", "Refused", "Remote", "fetch", "host_facts", "offline", "remote_of"]
+__all__ = [
+    "HOSTS",
+    "Ask",
+    "Details",
+    "HostAccess",
+    "HostSettings",
+    "Refused",
+    "Remote",
+    "fetch",
+    "github_api",
+    "host_facts",
+    "offline",
+    "remote_of",
+]

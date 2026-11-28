@@ -13,7 +13,9 @@
 7. The settings the configuration files hold, those the commands name included (`facts.settings`).
 8. The tools the commands run, and what each run provides (`facts.tools`).
 9. What the source-control host says of the repository: its default branch's protection and its security features
-   (`hosting`), unless offline.
+   (`hosting`), and its metadata, activity, alerts, releases and default-branch CI (`host_details`), unless offline.
+10. With --ask-services, what outside services say of it: its Scorecard score, its packages' published versions
+    (`services`), unless offline.
 
 A plugin adds components to a stage (an expander, a settings reader, a tool); it never changes the order. The
 components of each stage are asked of its module (`tools.known_tools()`), so that a test may stand others in.
@@ -25,7 +27,7 @@ import time
 from collections.abc import Callable, Sized
 from typing import TYPE_CHECKING
 
-from project_validator import ci, hosting
+from project_validator import ci, host_details, hosting, services
 from project_validator.core import ExtractionError, Progress
 from project_validator.facts import (
     Facts,
@@ -120,8 +122,16 @@ def extract_facts(context: Context) -> Facts:
     used = tuple(tool for tool in tools.known_tools() if tool.languages & names)
     found = _stage(context, "the tool runs", lambda: found + tools.tool_runs(found, used), before=found)
     found = _stage(context, "what the tools turn off", lambda: found + suppressions(project, found), before=found)
-    asked = hosting.host_facts(project.origin_url(), requested_offline=context.options.offline)
-    return _stage(context, "the source-control host", lambda: found + asked, before=found)
+    return _online_facts(context, found)
+
+
+def _online_facts(context: Context, found: Facts) -> Facts:
+    """What is asked online: of the source-control host, unless offline; of the outside services, only when asked."""
+    options, url = context.options, context.project.origin_url()
+    asked = hosting.host_facts(url, requested_offline=options.offline, details=host_details.DETAILS)
+    found = _stage(context, "the source-control host", lambda: found + asked, before=found)
+    said = services.service_facts(url, found, ask=options.ask_services, requested_offline=options.offline)
+    return _stage(context, "the outside services", lambda: found + said, before=found)
 
 
 __all__ = ["extract_facts"]

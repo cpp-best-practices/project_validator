@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import re
 from collections import Counter
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
@@ -55,17 +55,37 @@ class PackageVersion(Fact):
     version: str
 
 
-def package_version_reader(*, name: str, files: tuple[str, ...], declares: Declares) -> SettingsReader:
-    """A reader of the manifests `files`, whose package version `declares` reads; one that does not parse says none."""
+@dataclass(frozen=True, slots=True, kw_only=True)
+class PackageName(Fact):
+    """The name a manifest publishes its package under (`name = "app"` in Cargo.toml): none is recorded for a package
+    it never publishes (a `private` package.json, a crate with `publish = false`)."""
+
+    name: str
+
+
+def package_version_reader(
+    *, name: str, files: tuple[str, ...], declares: Declares, named: Declares | None = None
+) -> SettingsReader:
+    """A reader of the manifests `files`: the package version `declares` reads, and the name it is published under
+    `named` reads; one that does not parse says neither."""
 
     def read(path: str, text: str) -> Iterator[Fact]:
         try:
             found = [version for version, _pinned in declares(text)]
+            names = [package for package, _pinned in named(text)] if named is not None else []
         except ValueError:  # TOML and JSON errors are ValueErrors
             return
+        yield from (PackageName(origin=Origin(path=path), name=package) for package in names[:1] if package)
         yield from (PackageVersion(origin=Origin(path=path), version=version) for version in found if version)
 
     return SettingsReader(name=name, files=files, read=read)
+
+
+def top_manifests[F: Fact](found: Iterable[F]) -> list[F]:
+    """The facts of the manifests nearest the root: a monorepo's top package's, not those of the packages below it."""
+    facts = list(found)
+    depth = min((fact.origin.path.count("/") for fact in facts), default=0)
+    return [fact for fact in facts if fact.origin.path.count("/") == depth]
 
 
 def _recent(project: Project, since: str) -> tuple[int, Counter[str], int]:
@@ -115,4 +135,13 @@ def history_facts(project: Project) -> Iterator[Fact]:
     yield from _tags(project)
 
 
-__all__ = ["YEAR", "History", "PackageVersion", "Tag", "history_facts", "package_version_reader"]
+__all__ = [
+    "YEAR",
+    "History",
+    "PackageName",
+    "PackageVersion",
+    "Tag",
+    "history_facts",
+    "package_version_reader",
+    "top_manifests",
+]

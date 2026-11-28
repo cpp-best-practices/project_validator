@@ -2652,6 +2652,11 @@
       "reader": "package.json version"
     },
     {
+      "kind": "PackageName",
+      "name": "app",
+      "origin": "package.json"
+    },
+    {
       "kind": "PackageVersion",
       "origin": "package.json",
       "version": "0.1.0"

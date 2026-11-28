@@ -11,7 +11,7 @@ from datetime import date
 
 from project_validator.about.detail import Detail, in_product
 from project_validator.facts import Facts
-from project_validator.facts.history import YEAR, History, PackageVersion, Tag
+from project_validator.facts.history import YEAR, History, PackageVersion, Tag, top_manifests
 
 # A tag that names a version: `v1.2.0`, `1.2`, `release-3.1.4`.
 _VERSION_TAG = re.compile(r"(?:[a-z]+[-_/]?)?v?(?P<version>\d+(?:\.\d+)+)", re.IGNORECASE)
@@ -60,8 +60,7 @@ def _manifests(facts: Facts, latest: str | None) -> list[str]:
     """What the top manifests say the version is (those nearest the root: a monorepo's packages below them are
     counted), beside the latest version tag's."""
     versions = in_product(facts.of(PackageVersion))
-    depth = min((version.origin.path.count("/") for version in versions), default=0)
-    top = [version for version in versions if version.origin.path.count("/") == depth]
+    top = top_manifests(versions)
     words = []
     for version in top:
         said = f"{version.origin.path} says {version.version}"
