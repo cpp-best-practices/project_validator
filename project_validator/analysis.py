@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
 
 from project_validator import __version__
+from project_validator.about import Detail, about
 from project_validator.core import Check, Context, ExtractionError, Observer, Progress
 from project_validator.ecosystems import formats
 from project_validator.facts import Facts
@@ -100,6 +101,8 @@ class Analysis:
     error: ExtractionError | None = None
     # The paths git ignores, left out of the project (see `Project.ignored`).
     ignored: tuple[str, ...] = ()
+    # What is shown of the project without being judged (upstream #412).
+    about: tuple[Detail, ...] = ()
 
     @property
     def name(self) -> str:
@@ -119,6 +122,7 @@ class Analysis:
             "roles": [role.as_dict() for role in self.roles],
             "results": report_dicts(list(self.reports)),
             "score": self.score.as_dict() if self.score is not None else None,
+            "about": [detail.as_dict() for detail in self.about],
         }
 
 
@@ -266,6 +270,7 @@ def _finished(
         git=git_of(context.project.root),
         error=error,
         ignored=context.project.ignored(),
+        about=about(facts) if error is None else (),
     )
 
 

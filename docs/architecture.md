@@ -383,6 +383,13 @@ leaderboard) and the TUI (textual, imported only when installed). What they shar
 checks are grouped by category, what was detected in words, is in `views/common.py`, so that every view says the same
 thing. Why each check matters, and its category, is in `project_validator/explanations.py`, which `--explain` prints.
 
+What is shown without being judged ([#412](https://github.com/cpp-best-practices/project_validator/issues/412)) is
+in `project_validator/about.py`: each group is a function of the facts that yields `Detail`s (a group, a subject, the
+text, the same as data), so the "About the project" section is reproducible offline and never counts towards a result
+or the score. The first group, Versions, sets the versions each language declares (`DeclaredVersion` facts, read by
+each profile's `declared_version_reader`, and the C and C++ standards a build sets) beside the toolchains its
+platform answer finds CI testing. An item may become a check once the corpus shows where to draw its line.
+
 ### Worked example: branch coverage in this repository
 
 1. The GitHub Actions extractor records the job `coverage` and its command

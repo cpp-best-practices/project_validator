@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "JDK or Scala version",
+        "declared": [],
+        "languages": [
+          "Scala"
+        ],
+        "tested": [
+          "JDK 17",
+          "JDK 21"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Scala",
+      "text": "declares no version; CI tests JDK or Scala versions JDK 17, JDK 21"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

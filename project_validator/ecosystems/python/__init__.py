@@ -28,6 +28,7 @@ from project_validator.facts.settings import SettingsReader, ini_settings, toml_
 from project_validator.facts.shell import split_words
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, Scoping, defined_by, either, starts, when
+from project_validator.facts.versions import declared_version_reader, pinned_file, toml_version
 from project_validator.text import Pattern
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.scanners import multi_language_scanners
@@ -436,6 +437,15 @@ BYTECODE = BuildOutput(
 
 PYPROJECT_LICENSE = declared_license_reader(
     name="pyproject.toml license", files=("pyproject.toml",), languages=PYTHON_ONLY, declared=toml_license("project")
+)
+REQUIRES_PYTHON = declared_version_reader(
+    name="pyproject.toml requires-python",
+    files=("pyproject.toml",),
+    language="Python",
+    declares=toml_version(("project", "requires-python")),
+)
+PYTHON_VERSION_FILE = declared_version_reader(
+    name=".python-version", files=(".python-version",), language="Python", declares=pinned_file
 )
 
 

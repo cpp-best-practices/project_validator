@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "JDK version",
+        "declared": [],
+        "languages": [
+          "Java"
+        ],
+        "tested": [
+          "21",
+          "25"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Java",
+      "text": "declares no version; CI tests JDK versions 21, 25"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

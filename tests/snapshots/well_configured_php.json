@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "PHP version",
+        "declared": [],
+        "languages": [
+          "PHP"
+        ],
+        "tested": [
+          "8.3",
+          "8.4"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "PHP",
+      "text": "declares no version; CI tests PHP versions 8.3, 8.4"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

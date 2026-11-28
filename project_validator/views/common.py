@@ -225,6 +225,16 @@ def host_summary(analysis: Analysis) -> str:
     return f"{settings[0].host} {settings[0].repository}: {'; '.join(found)}"
 
 
+ABOUT_TITLE = "About the project"
+ABOUT_NOTE = "shown, never judged"
+
+
+def about_rows(analysis: Analysis) -> list[tuple[str, str]]:
+    """What is shown of the project without being judged (upstream #412), as (label, text): `Versions (Python)`,
+    `supports >=3.10 (pyproject.toml); CI tests Python versions 3.10, 3.12`."""
+    return [(f"{detail.group} ({detail.subject})", detail.text) for detail in analysis.about]
+
+
 def reading(analysis: Analysis) -> str:
     """`1,500 facts in 0.31 s`: how much was read, how many paths git ignores were left out, and how many places a
     reader could follow only in part (see `partly_read`)."""

@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "Perl version",
+        "declared": [],
+        "languages": [
+          "Perl"
+        ],
+        "tested": [
+          "5.38",
+          "5.40"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Perl",
+      "text": "declares no version; CI tests Perl versions 5.38, 5.40"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

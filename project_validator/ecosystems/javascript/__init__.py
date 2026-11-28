@@ -64,6 +64,7 @@ from project_validator.facts.settings import (
 )
 from project_validator.facts.testing import TestFiles, test_runner, tested, tests_of
 from project_validator.facts.tools import Claim, Run, Tool, all_of, defined_by, known_tools, starts, when, with_option
+from project_validator.facts.versions import declared_version_reader, pinned_file
 from project_validator.text import pattern, strip_json_comments
 from project_validator.tools.audits import multi_ecosystem_audits
 from project_validator.tools.prettier import prettier_tool
@@ -772,6 +773,24 @@ def _package_license(text: str) -> str | None:
 
 PACKAGE_JSON_LICENSE = declared_license_reader(
     name="package.json license", files=(PACKAGE_JSON,), languages=JS_LANGUAGES, declared=_package_license
+)
+
+
+def _engines(text: str) -> Iterator[tuple[str, bool]]:
+    """package.json's `engines`: the runtimes (Node.js, Deno, Bun) and the range of each the package supports."""
+    manifest = json.loads(text)
+    engines = manifest.get("engines") if isinstance(manifest, dict) else None
+    if isinstance(engines, dict):
+        found = ((name, value) for name, value in engines.items() if name in _RUNTIMES and isinstance(value, str))
+        yield from ((f"{name} {value}", False) for name, value in found)
+
+
+_RUNTIMES = ("node", "deno", "bun")
+ENGINES = declared_version_reader(
+    name="package.json engines", files=(PACKAGE_JSON,), language=JAVASCRIPT, declares=_engines
+)
+NODE_VERSION_FILE = declared_version_reader(
+    name=".nvmrc", files=(".nvmrc", ".node-version"), language=JAVASCRIPT, declares=pinned_file
 )
 
 NODE_MODULES = BuildOutput(

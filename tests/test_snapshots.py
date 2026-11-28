@@ -1,6 +1,7 @@
-"""Every fixture, compared with recorded snapshots: what the validator says about it (`<fixture>.json`: the results
-and the answers, the behaviour a change in policy or in a question shows in), and what it learned
-(`<fixture>.facts.json`: the facts and the project map, which a change in an extractor or in a fact type shows in).
+"""Every fixture, compared with recorded snapshots: what the validator says about it (`<fixture>.json`: the results,
+the answers and what it shows without judging, the behaviour a change in policy or in a question shows in), and what it
+learned (`<fixture>.facts.json`: the facts and the project map, which a change in an extractor or in a fact type shows
+in).
 
 Refactorings must reproduce both; a deliberate change is recorded with `UPDATE_SNAPSHOTS=1 python3 -m unittest
 tests.test_snapshots` and reviewed in the diff. The two are kept apart so that a change to how a fact is recorded is
@@ -15,6 +16,7 @@ import os
 import unittest
 from pathlib import Path
 
+from project_validator.about import about
 from project_validator.facts.tools import known_tools
 from project_validator.plugins import discover
 from project_validator.questions.answers import answers
@@ -40,6 +42,7 @@ def snapshots_of(fixture: Path) -> dict[str, dict[str, object]]:
             }
             for report in reports
         },
+        "about": [detail.as_dict() for detail in about(context.facts)],
     }
     facts: dict[str, object] = {"facts": context.facts.as_dicts(), "map": context.structure.as_dict()}
     return {".json": behaviour, ".facts.json": facts}

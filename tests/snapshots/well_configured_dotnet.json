@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": ".NET SDK version",
+        "declared": [],
+        "languages": [
+          "C#"
+        ],
+        "tested": [
+          "9.0.x",
+          "10.0.x"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "C#",
+      "text": "declares no version; CI tests .NET SDK versions 9.0.x, 10.0.x"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

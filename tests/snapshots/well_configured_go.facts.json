@@ -2862,6 +2862,18 @@
       "reader": "Go module requirements"
     },
     {
+      "kind": "ConfigurationFile",
+      "origin": "go.mod",
+      "reader": "go.mod go"
+    },
+    {
+      "kind": "DeclaredVersion",
+      "language": "Go",
+      "origin": "go.mod",
+      "pinned": false,
+      "version": "1.23"
+    },
+    {
       "heuristic": false,
       "key": "main",
       "kind": "Setting",

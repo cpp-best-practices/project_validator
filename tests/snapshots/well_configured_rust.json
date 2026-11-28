@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "Rust toolchain",
+        "declared": [],
+        "languages": [
+          "Rust"
+        ],
+        "tested": [
+          "nightly",
+          "stable"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Rust",
+      "text": "declares no version; CI tests Rust toolchains nightly, stable"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

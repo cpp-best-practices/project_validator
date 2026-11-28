@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "runtime version",
+        "declared": [],
+        "languages": [
+          "JavaScript"
+        ],
+        "tested": [
+          "22",
+          "24"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "JavaScript",
+      "text": "declares no version; CI tests runtime versions 22, 24"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

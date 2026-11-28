@@ -33,11 +33,14 @@ from project_validator.project_map import LanguageFiles
 from project_validator.runner import Report
 from project_validator.score import LEVEL_NAMES, Score, floor_percent
 from project_validator.views.common import (
+    ABOUT_NOTE,
+    ABOUT_TITLE,
     OUTCOMES,
     STATUS_ORDER,
     SYMBOLS,
     LanguageView,
     ScoreRow,
+    about_rows,
     branch_label,
     ci_summary,
     counts,
@@ -316,6 +319,17 @@ def _host_card(analysis: Analysis) -> str:
     )
 
 
+def _about_card(analysis: Analysis) -> str:
+    """What is shown of the project without being judged (upstream #412); nothing when there is none."""
+    if not (rows := about_rows(analysis)):
+        return ""
+    return (
+        f'<div class="card" style="margin-top:1rem" id="about"><h3>{e(ABOUT_TITLE)} '
+        f'<span class="muted" style="font-weight:400">{e(ABOUT_NOTE)}</span></h3>'
+        f"{table(('What', 'Shown'), [(e(label), e(text)) for label, text in rows])}</div>"
+    )
+
+
 NO_CHECK = '<p class="muted">No check judges it.</p>'
 
 
@@ -354,7 +368,7 @@ def _detected(analysis: Analysis) -> str:
         '<section class="wrap" id="detected"><h2>What was detected</h2>'
         f'<div class="grid two">{_languages_card(analysis)}{_units_card(analysis)}</div>{_files_card(analysis)}'
         f"{_language_views(analysis)}{_roles_card(analysis, structure.vendored)}{_ci_card(analysis, structure.ci_jobs)}"
-        f"{_host_card(analysis)}"
+        f"{_host_card(analysis)}{_about_card(analysis)}"
         "</section>"
     )
 

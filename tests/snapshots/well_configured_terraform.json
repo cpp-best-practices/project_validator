@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "Terraform version",
+        "declared": [],
+        "languages": [
+          "Terraform"
+        ],
+        "tested": [
+          "1.9.8",
+          "1.10.3"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Terraform",
+      "text": "declares no version; CI tests Terraform versions 1.9.8, 1.10.3"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

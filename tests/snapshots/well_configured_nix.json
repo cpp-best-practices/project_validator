@@ -1,4 +1,24 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "system",
+        "declared": [],
+        "languages": [
+          "Nix"
+        ],
+        "tested": [
+          "aarch64-darwin",
+          "aarch64-linux",
+          "x86_64-linux"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Nix",
+      "text": "declares no version; CI tests systems aarch64-darwin, aarch64-linux, x86_64-linux"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

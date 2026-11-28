@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "Python version",
+        "declared": [],
+        "languages": [
+          "Python"
+        ],
+        "tested": [
+          "3.13",
+          "3.14"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Python",
+      "text": "declares no version; CI tests Python versions 3.13, 3.14"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

@@ -358,7 +358,7 @@ class CliTests(unittest.TestCase):
         code, output = self._run("--score", "--format", "json", str(FIXTURES / "bare_python"))
         self.assertEqual(code, EXIT_FAILURE)
         data = json.loads(output)
-        self.assertEqual(set(data), {"format", "version", "results", "score"})
+        self.assertEqual(set(data), {"format", "version", "results", "score", "about"})
         self.assertLess(data["score"]["percent"], 100)
 
     def test_the_next_steps_are_listed(self) -> None:

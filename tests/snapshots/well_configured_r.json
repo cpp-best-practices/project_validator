@@ -1,4 +1,25 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "R version",
+        "declared": [],
+        "languages": [
+          "R"
+        ],
+        "tested": [
+          "default",
+          "devel",
+          "oldrel-1",
+          "release"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "R",
+      "text": "declares no version; CI tests R versions default, devel, oldrel-1, release"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

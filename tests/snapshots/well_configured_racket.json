@@ -1,4 +1,24 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "Racket version",
+        "declared": [],
+        "languages": [
+          "Racket"
+        ],
+        "tested": [
+          "stable",
+          "8.12",
+          "8.12 BC"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Racket",
+      "text": "declares no version; CI tests Racket versions stable, 8.12, 8.12 BC"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

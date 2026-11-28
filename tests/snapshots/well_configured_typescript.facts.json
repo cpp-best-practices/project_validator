@@ -2604,6 +2604,11 @@
     {
       "kind": "ConfigurationFile",
       "origin": "package.json",
+      "reader": "package.json engines"
+    },
+    {
+      "kind": "ConfigurationFile",
+      "origin": "package.json",
       "reader": "eslint rules"
     },
     {

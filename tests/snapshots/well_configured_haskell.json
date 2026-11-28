@@ -1,4 +1,23 @@
 {
+  "about": [
+    {
+      "data": {
+        "axis": "GHC version",
+        "declared": [],
+        "languages": [
+          "Haskell"
+        ],
+        "tested": [
+          "9.8",
+          "9.10"
+        ],
+        "untested_minimum": null
+      },
+      "group": "Versions",
+      "subject": "Haskell",
+      "text": "declares no version; CI tests GHC versions 9.8, 9.10"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {
