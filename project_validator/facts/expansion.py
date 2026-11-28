@@ -18,7 +18,7 @@ from functools import partial
 from pathlib import PurePosixPath
 from typing import TYPE_CHECKING
 
-from project_validator.components import known
+from project_validator.components import component_cache, known
 from project_validator.evidence import DEVENV, DEVENV_HOOKS, PRE_COMMIT_CONFIGURATION
 from project_validator.facts import NOTHING, ActionStep, CiJob, Command, Fact, Origin, PartlyRead, Unknown, resolved
 from project_validator.facts.arguments import starts_with
@@ -469,17 +469,71 @@ def _expanded(
     facts: Iterable[Fact], context: Context, expanders: tuple[CommandExpander, ...], actions: tuple[Action, ...]
 ) -> Iterator[Fact]:
     platforms: dict[str, Condition] = {}
+    working: set[str] = set()  # the jobs that run a command
+    unread: list[ActionStep] = []  # the steps whose action the validator does not know
     for fact in facts:
         yield fact
         if isinstance(fact, CiJob):
             platforms[fact.id] = _platform(fact)
         elif isinstance(fact, Command):
+            working.add(fact.job)
             yield from expand_command(fact, context, expanders, platforms.get(fact.job, ALWAYS))
         elif isinstance(fact, ActionStep):
+            unread += [fact] if not known_action(fact.uses) else []
             for found in action_commands(fact, actions):
                 yield found
                 if isinstance(found, Command):
+                    working.add(fact.job)
                     yield from expand_command(found, context, expanders, platforms.get(fact.job, ALWAYS))
+    from project_validator.hosting import offline
+
+    if not (context.options.fetch_remote and not offline(context.options.offline)):  # else read where it is used
+        yield from (_unread_action(step) for step in unread if step.job not in working)
+
+
+def _unread_action(step: ActionStep) -> Unknown:
+    """A job that runs no command, whose work is an action of another repository the validator does not know
+    (upstream #273): it may run any tool, so what it runs is unknown until --fetch-remote reads it."""
+    reason = (
+        "it is the job's work, and its action.yml is not read (--fetch-remote reads it); an action that runs none of"
+        " the project's code belongs in project_validator/ci/inert_actions.py"
+    )
+    return Unknown(origin=step.origin, subject=f"the action {step.uses}", reason=reason, hides="commands")
+
+
+# Actions of other repositories, by what `uses:` names: `owner/repo[/path]@ref`.
+_ELSEWHERE = re.compile(r"^[\w.-]+/[\w.-]+(?:/[^@]*)?@\S+$")
+
+
+@component_cache
+def _setup_actions() -> tuple[re.Pattern[str], ...]:
+    """How the toolchains' setup actions are told (`dtolnay/rust-toolchain`, `julia-actions/setup-julia`)."""
+    from project_validator.ecosystems import registered  # the profiles define actions with this module
+
+    patterns: list[re.Pattern[str]] = []
+    for ecosystem in registered():
+        patterns += [ecosystem.ci_usage] if ecosystem.ci_usage is not None else []
+        if (toolchain := ecosystem.toolchain) is not None:
+            patterns += [*toolchain.versions, *([toolchain.usage] if toolchain.usage is not None else [])]
+            patterns += [re.compile(re.escape(repository), re.IGNORECASE) for repository, _ in toolchain.steps]
+    return tuple(patterns)
+
+
+def known_action(uses: str) -> bool:
+    """Whether the validator knows what the action `uses` names does: one in this repository or a Docker image (read
+    as they are), one it models (what it runs), one known to run none of the project's code (GitHub's own, and the
+    curated list in `project_validator/ci/inert_actions.py`), or a toolchain's setup action."""
+    if not _ELSEWHERE.match(uses):
+        return True
+    from project_validator.ci.inert_actions import inert  # the ci package reads the profiles, which import this module
+
+    repository = uses.partition("@")[0].lower()
+    if inert(repository):
+        return True
+    names = (action.name.lower() for action in known_actions())
+    if any(repository == name or repository.startswith(f"{name}/") for name in names):
+        return True
+    return any(found.search(f"uses: {uses}") for found in _setup_actions())
 
 
 def from_hook(command: Command) -> bool:

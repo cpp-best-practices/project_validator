@@ -184,7 +184,11 @@ which `project_validator/facts/shell.py` derives the simple commands; PowerShell
 step's condition, the reusable steps it uses with their inputs, and what it could not read. A job that calls a
 reusable workflow of the same repository runs that workflow's jobs; a local composite action runs its steps in the
 calling job; a known action that runs a known command (`psf/black`) is expanded into that command (`Action`), so
-tools only ever claim commands. pre-commit.ci is a provider whose job never builds; GitLab's known security
+tools only ever claim commands. A job whose only work is an action of another repository that the validator neither
+models nor reads (without `--fetch-remote`) may run any tool, so what it runs is unknown (upstream #273), unless the
+action is known to run none of the project's code: GitHub's own, or one in the curated list of
+`project_validator/ci/inert_actions.py`, grouped by what the actions do (label, merge, release, notify, harden the
+runner...). pre-commit.ci is a provider whose job never builds; GitLab's known security
 templates are jobs that run the template as a marker command.
 
 **Conditional commands** (upstream #361): a command records what it needs, to run, that the checkout does not settle
