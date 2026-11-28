@@ -3656,6 +3656,11 @@
       "reader": "Cargo.toml version"
     },
     {
+      "kind": "PackageName",
+      "name": "app",
+      "origin": "Cargo.toml"
+    },
+    {
       "kind": "ConfigurationFile",
       "origin": "Cargo.toml",
       "reader": "Cargo dependencies"

@@ -108,6 +108,9 @@ class Options:
     # Read the reusable workflows and composite actions of other repositories CI uses, fetched from GitHub at the ref
     # they are pinned to (upstream #248; see `remote`).
     fetch_remote: bool = False
+    # Ask outside services (OpenSSF Scorecard, the package registries) what they say of the project, shown in "About
+    # the project" (upstream #412; see `services`). Off by default, and offline.
+    ask_services: bool = False
 
 
 _SKIPPED_DIRECTORIES = frozenset({"node_modules", "__pycache__"})

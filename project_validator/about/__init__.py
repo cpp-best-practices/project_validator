@@ -2,7 +2,9 @@
 "About the project" section and under `about` in the JSON. Nothing here counts towards a result or the score; an
 item may become a check once the corpus shows where to draw a line.
 
-Each group reads the facts alone, so the details are reproducible offline: the same checkout says the same thing.
+Each group reads the facts alone. Those from the checkout are reproducible offline: the same checkout says the same
+thing. The last two read what was asked online: the source-control host's details (`host_details`, unless offline) and
+the outside services' (`services`, only with --ask-services); offline they show nothing, or say they were not asked.
 A group is a function of the facts that yields `Detail`s, in a module of its own; `GROUPS` lists them in the order
 they are shown.
 """
@@ -16,8 +18,10 @@ from project_validator.about.dependencies import dependencies
 from project_validator.about.detail import Detail
 from project_validator.about.documents import documents
 from project_validator.about.history import history
+from project_validator.about.host import host
 from project_validator.about.licences import licences
 from project_validator.about.publishing import publishing
+from project_validator.about.services import outside_services
 from project_validator.about.size import size
 from project_validator.about.versions import versions
 from project_validator.facts import Facts
@@ -33,6 +37,8 @@ GROUPS: tuple[Callable[[Facts], Iterable[Detail]], ...] = (
     ci_shape,
     publishing,
     documents,
+    host,
+    outside_services,
 )
 
 

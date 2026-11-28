@@ -453,7 +453,10 @@ REQUIRES_PYTHON = declared_version_reader(
     declares=toml_version(("project", "requires-python")),
 )
 PYPROJECT_VERSION = package_version_reader(
-    name="pyproject.toml version", files=("pyproject.toml",), declares=toml_version(("project", "version"))
+    name="pyproject.toml version",
+    files=("pyproject.toml",),
+    declares=toml_version(("project", "version")),
+    named=toml_version(("project", "name")),
 )
 PYTHON_VERSION_FILE = declared_version_reader(
     name=".python-version", files=(".python-version",), language="Python", declares=pinned_file

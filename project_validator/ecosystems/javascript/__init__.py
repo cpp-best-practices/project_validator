@@ -821,8 +821,15 @@ def _package_version(text: str) -> Iterator[tuple[str, bool]]:
         yield version, False
 
 
+def _published_name(text: str) -> Iterator[tuple[str, bool]]:
+    """The name a package.json publishes its package under: none for a `private` one."""
+    manifest = json.loads(text)
+    if isinstance(manifest, dict) and isinstance(name := manifest.get("name"), str) and not manifest.get("private"):
+        yield name, False
+
+
 PACKAGE_JSON_VERSION = package_version_reader(
-    name="package.json version", files=(PACKAGE_JSON,), declares=_package_version
+    name="package.json version", files=(PACKAGE_JSON,), declares=_package_version, named=_published_name
 )
 ENGINES = declared_version_reader(
     name="package.json engines", files=(PACKAGE_JSON,), language=JAVASCRIPT, declares=_engines

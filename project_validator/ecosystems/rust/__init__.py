@@ -154,10 +154,23 @@ RUST_VERSION = declared_version_reader(
     language="Rust",
     declares=toml_version(("package", "rust-version"), ("workspace", "package", "rust-version")),
 )
+
+
+def _crate_name(text: str) -> Iterator[tuple[str, bool]]:
+    """The name a Cargo.toml publishes its crate under on crates.io: none for `publish = false`, or a list of
+    registries without crates.io."""
+    package = tomllib.loads(text).get("package")
+    found = package if isinstance(package, dict) else {}
+    publish = found.get("publish", True)
+    if isinstance(name := found.get("name"), str) and (publish is True or "crates-io" in (publish or ())):
+        yield name, False
+
+
 CARGO_VERSION = package_version_reader(
     name="Cargo.toml version",
     files=("Cargo.toml",),
     declares=toml_version(("package", "version"), ("workspace", "package", "version")),
+    named=_crate_name,
 )
 _TOOLCHAIN_CHANNEL = toml_version(("toolchain", "channel"), pinned=True)
 

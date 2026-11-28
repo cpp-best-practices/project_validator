@@ -412,6 +412,17 @@ the actions and commands `about/publishing.py` lists for each destination; Docum
 (`ProjectDocument`) and the documentation-site formats. An item may become a check once the corpus shows where to draw
 its line.
 
+The last two groups show what was asked online, so they are not reproducible offline, and offline they show nothing.
+Host reads what `host_details` asked of the source-control host with the settings, through `hosting.host_facts`, its
+token and its client, which asks each URL once in a run (the settings and the details share the repository's answer):
+of GitHub, one GraphQL query (open issues and pull requests, the stale ones by a search, the issues closed and pull
+requests merged in the window, the latest release, and the check suites and combined status of the default branch's
+latest commit) and three REST calls (open Dependabot and code scanning alerts, a page of 100 at most, and private
+vulnerability reporting). Each item the token cannot read is a `HostUnread` saying why; the other hosts' details are
+not read yet. Services reads what `services` asked, only with `--ask-services`: the OpenSSF Scorecard API, and each
+registry of `policy/online.toml` for the package the top manifests name (`PackageName`, read beside `PackageVersion`).
+No token is sent to them.
+
 ### Worked example: branch coverage in this repository
 
 1. The GitHub Actions extractor records the job `coverage` and its command
