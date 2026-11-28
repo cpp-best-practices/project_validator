@@ -16,6 +16,44 @@
       "group": "Versions",
       "subject": "Java",
       "text": "declares no version; CI tests JDK versions 21, 25"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 11,
+          "test": 22
+        }
+      },
+      "group": "Size",
+      "subject": "Java",
+      "text": "33 lines: 11 in the product, 22 in tests (2.00 of the product's)"
+    },
+    {
+      "data": {
+        "declared": [
+          "pom.xml"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "Maven",
+      "text": "declared in pom.xml; no lockfile"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 3
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
     }
   ],
   "answers": {

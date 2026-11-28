@@ -5,6 +5,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 3,
       "origin": "playbooks/site.yml",
       "role": "product"

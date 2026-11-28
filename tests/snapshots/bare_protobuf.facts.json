@@ -5,6 +5,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Protobuf",
+      "license": "",
       "lines": 2,
       "origin": "proto/shop.proto",
       "role": "product"

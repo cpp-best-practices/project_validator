@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 10,
       "origin": ".github/dependabot.yml",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
@@ -31,6 +33,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 25,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
@@ -40,6 +43,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
@@ -49,6 +53,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 7,
       "origin": ".github/workflows/function-limits.yml",
       "role": "product"
@@ -58,6 +63,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 11,
       "origin": "analysis_options.yaml",
       "role": "product"
@@ -67,6 +73,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Dart",
+      "license": "",
       "lines": 5,
       "origin": "bin/shop.dart",
       "role": "product"
@@ -76,6 +83,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Dart",
+      "license": "",
       "lines": 2,
       "origin": "lib/shop.dart",
       "role": "product"
@@ -85,6 +93,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 14,
       "origin": "pubspec.yaml",
       "role": "product"
@@ -94,6 +103,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Dart",
+      "license": "",
       "lines": 8,
       "origin": "test/shop_test.dart",
       "role": "test"

@@ -5,6 +5,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Dockerfile",
+      "license": "",
       "lines": 3,
       "origin": "Dockerfile",
       "role": "product"

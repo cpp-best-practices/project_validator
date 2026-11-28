@@ -77,9 +77,9 @@ What you see:
 - **In a terminal** (with rich): a header with the score, then what was detected (each language and what recognised
   it, the units, the code in each role and how it is judged, the CI, what the source-control host says of the
   repository, how much was read), what is shown about the project without being judged ("About the project": the
-  versions each language declares beside those CI tests), the results grouped by
-  category with a line per language where they differ, and the score's breakdown and next steps. Progress is shown
-  while the project is read. `--verbose` shows every detail and the checks that do not apply.
+  versions each language declares beside those CI tests, its size, its dependencies and its licences), the results
+  grouped by category with a line per language where they differ, and the score's breakdown and next steps. Progress
+  is shown while the project is read. `--verbose` shows every detail and the checks that do not apply.
 - **Elsewhere** (CI logs, or without rich): the same detection, then one greppable `[STATUS] check: message` line per
   check, each detail said once.
 - **The HTML report** (`--html FILE`, or `--format html`): one self-contained file, light and dark, with the score, what

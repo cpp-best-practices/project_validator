@@ -5,6 +5,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 1,
       "origin": "mkdocs.yml",
       "role": "product"

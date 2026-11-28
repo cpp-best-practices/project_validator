@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Dart",
+      "license": "",
       "lines": 1,
       "origin": "lib/shop.dart",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": "pubspec.yaml",
       "role": "product"

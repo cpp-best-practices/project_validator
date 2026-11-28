@@ -6,12 +6,16 @@ its manifests declare (`declared_license_reader`).
 
 from __future__ import annotations
 
+import re
 import tomllib
 from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 
 from project_validator.facts import Fact, Origin
 from project_validator.facts.settings import SettingsReader
+
+# A REUSE-style header naming a file's license (`SPDX-License-Identifier: MIT`), in a license file or a source.
+SPDX_IDENTIFIER = re.compile(r"SPDX-License-Identifier:\s*([^\n*]+?)\s*(?:\*/|-->)?\s*$", re.MULTILINE)
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -24,6 +28,13 @@ class LicenseFile(Fact):
     licenses: frozenset[str]
     note: bool = False
     named: frozenset[str] = frozenset()
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class VendoredLicenseFile(Fact):
+    """A license file of another project vendored into this one, and the licenses it holds (shown, never judged)."""
+
+    licenses: frozenset[str]
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -70,4 +81,12 @@ def toml_license(table: str) -> Callable[[str], str | None]:
     return declared
 
 
-__all__ = ["DeclaredLicense", "LicenseFile", "LicenseLink", "declared_license_reader", "toml_license"]
+__all__ = [
+    "SPDX_IDENTIFIER",
+    "DeclaredLicense",
+    "LicenseFile",
+    "LicenseLink",
+    "VendoredLicenseFile",
+    "declared_license_reader",
+    "toml_license",
+]

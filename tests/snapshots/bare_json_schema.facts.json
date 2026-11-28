@@ -5,6 +5,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "JSON",
+      "license": "",
       "lines": 13,
       "origin": "schema/catalog.schema.json",
       "role": "product"

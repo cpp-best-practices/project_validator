@@ -17,6 +17,57 @@
       "group": "Versions",
       "subject": "Elixir, Erlang",
       "text": "declares no version; CI tests Erlang/OTP or Elixir versions Elixir 1.17 / OTP 27, Elixir 1.18 / OTP 27"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 58,
+          "test": 13
+        }
+      },
+      "group": "Size",
+      "subject": "Elixir",
+      "text": "71 lines: 58 in the product, 13 in tests (0.22 of the product's)"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 6
+        }
+      },
+      "group": "Size",
+      "subject": "Erlang",
+      "text": "6 lines: 6 in the product"
+    },
+    {
+      "data": {
+        "declared": [
+          "mix.exs"
+        ],
+        "locked": [
+          "mix.lock"
+        ]
+      },
+      "group": "Dependencies",
+      "subject": "Mix",
+      "text": "declared in mix.exs; locked by mix.lock"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 8
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
     }
   ],
   "answers": {

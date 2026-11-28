@@ -1,5 +1,17 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "files": 1,
+        "folders": [
+          "third_party/"
+        ]
+      },
+      "group": "Dependencies",
+      "subject": "vendored code",
+      "text": "1 file in third_party/"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

@@ -16,6 +16,35 @@
       "group": "Versions",
       "subject": "Rust",
       "text": "declares no version; CI tests Rust toolchains nightly, stable"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 5,
+          "test": 7
+        }
+      },
+      "group": "Size",
+      "subject": "Rust",
+      "text": "12 lines: 5 in the product, 7 in tests (1.40 of the product's)"
+    },
+    {
+      "data": {
+        "declared": {
+          "Cargo.toml": "MIT"
+        },
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 2
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT; Cargo.toml declares MIT"
     }
   ],
   "answers": {

@@ -1,5 +1,45 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 26,
+          "test": 23
+        }
+      },
+      "group": "Size",
+      "subject": "PowerShell",
+      "text": "49 lines: 26 in the product, 23 in tests (0.88 of the product's)"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 20,
+          "test": 25
+        }
+      },
+      "group": "Size",
+      "subject": "Shell",
+      "text": "45 lines: 20 in the product, 25 in tests (1.25 of the product's)"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 4
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Haskell",
+      "license": "",
       "lines": 6,
       "origin": "app/Main.hs",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Haskell",
+      "license": "",
       "lines": 4,
       "origin": "src/App.hs",
       "role": "product"

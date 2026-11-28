@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "JSON",
+      "license": "",
       "lines": 8,
       "origin": "package.json",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "TypeScript",
+      "license": "",
       "lines": 3,
       "origin": "src/index.ts",
       "role": "product"

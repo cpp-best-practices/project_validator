@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
@@ -31,6 +33,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 26,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
@@ -40,6 +43,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
@@ -49,6 +53,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 8,
       "origin": "dbt_project.yml",
       "role": "product"
@@ -58,6 +63,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 19,
       "origin": "models/staging/schema.yml",
       "role": "product"
@@ -67,6 +73,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 4,
       "origin": "package-lock.yml",
       "role": "product"
@@ -76,6 +83,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 3,
       "origin": "packages.yml",
       "role": "product"
@@ -85,6 +93,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 12,
       "origin": "profiles.yml",
       "role": "product"
@@ -102,6 +111,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "SQL",
+      "license": "",
       "lines": 4,
       "origin": "migrations/V1__orders.sql",
       "role": "product"
@@ -111,6 +121,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "SQL",
+      "license": "",
       "lines": 5,
       "origin": "models/staging/stg_orders.sql",
       "role": "product"
@@ -120,6 +131,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "SQL",
+      "license": "",
       "lines": 3,
       "origin": "tests/assert_positive_amounts.sql",
       "role": "test"

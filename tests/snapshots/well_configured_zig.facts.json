@@ -21,6 +21,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
@@ -30,6 +31,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
@@ -39,6 +41,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 35,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
@@ -48,6 +51,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
@@ -57,6 +61,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 7,
       "origin": ".github/workflows/function-limits.yml",
       "role": "product"
@@ -66,6 +71,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Zig",
+      "license": "",
       "lines": 27,
       "origin": "build.zig",
       "role": "product"
@@ -75,6 +81,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Zig",
+      "license": "",
       "lines": 6,
       "origin": "src/main.zig",
       "role": "product"
@@ -84,6 +91,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Zig",
+      "license": "",
       "lines": 34,
       "origin": "src/shop.zig",
       "role": "product"
@@ -93,6 +101,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": null,
+      "license": "",
       "lines": 12,
       "origin": "build.zig.zon",
       "role": "product"

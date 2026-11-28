@@ -16,6 +16,48 @@
       "group": "Versions",
       "subject": "Haskell",
       "text": "declares no version; CI tests GHC versions 9.8, 9.10"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 10,
+          "test": 8
+        }
+      },
+      "group": "Size",
+      "subject": "Haskell",
+      "text": "18 lines: 10 in the product, 8 in tests (0.80 of the product's)"
+    },
+    {
+      "data": {
+        "declared": [
+          "app.cabal"
+        ],
+        "locked": [
+          "cabal.project.freeze"
+        ]
+      },
+      "group": "Dependencies",
+      "subject": "Cabal",
+      "text": "declared in app.cabal; locked by cabal.project.freeze"
+    },
+    {
+      "data": {
+        "declared": {
+          "app.cabal": "MIT"
+        },
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 3
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT; app.cabal declares MIT"
     }
   ],
   "answers": {

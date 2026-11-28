@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Lua",
+      "license": "",
       "lines": 7,
       "origin": "src/shop.lua",
       "role": "product"

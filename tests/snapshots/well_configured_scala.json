@@ -16,6 +16,33 @@
       "group": "Versions",
       "subject": "Scala",
       "text": "declares no version; CI tests JDK or Scala versions JDK 17, JDK 21"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 4,
+          "test": 6
+        }
+      },
+      "group": "Size",
+      "subject": "Scala",
+      "text": "10 lines: 4 in the product, 6 in tests (1.50 of the product's)"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 2
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
     }
   ],
   "answers": {

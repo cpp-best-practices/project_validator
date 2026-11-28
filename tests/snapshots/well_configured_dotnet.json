@@ -16,6 +16,48 @@
       "group": "Versions",
       "subject": "C#",
       "text": "declares no version; CI tests .NET SDK versions 9.0.x, 10.0.x"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 8,
+          "test": 15
+        }
+      },
+      "group": "Size",
+      "subject": "C#",
+      "text": "23 lines: 8 in the product, 15 in tests (1.88 of the product's)"
+    },
+    {
+      "data": {
+        "declared": [
+          "Directory.Build.props"
+        ],
+        "locked": [
+          "src/App/packages.lock.json"
+        ]
+      },
+      "group": "Dependencies",
+      "subject": "NuGet",
+      "text": "declared in Directory.Build.props; locked by src/App/packages.lock.json"
+    },
+    {
+      "data": {
+        "declared": {
+          "Directory.Build.props": "MIT"
+        },
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 3
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT; Directory.Build.props declares MIT"
     }
   ],
   "answers": {

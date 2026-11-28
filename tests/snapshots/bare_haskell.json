@@ -1,5 +1,41 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 10
+        }
+      },
+      "group": "Size",
+      "subject": "Haskell",
+      "text": "10 lines: 10 in the product"
+    },
+    {
+      "data": {
+        "declared": [
+          "app.cabal"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "Cabal",
+      "text": "declared in app.cabal; no lockfile"
+    },
+    {
+      "data": {
+        "declared": {
+          "app.cabal": "MIT"
+        },
+        "files": {},
+        "headers": {},
+        "sources": 2
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "app.cabal declares MIT"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

@@ -11,6 +11,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
@@ -20,6 +21,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
@@ -29,6 +31,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 10,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
@@ -38,6 +41,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
@@ -47,6 +51,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "CMake",
+      "license": "",
       "lines": 4,
       "origin": "CMakeLists.txt",
       "role": "product"
@@ -56,6 +61,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "CMake",
+      "license": "",
       "lines": 3,
       "origin": "cmake/Shop.cmake",
       "role": "product"

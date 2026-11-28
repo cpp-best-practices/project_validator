@@ -1,5 +1,21 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 0
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
+    }
+  ],
   "answers": {
     "action-pinning": [],
     "ci-lint": [],

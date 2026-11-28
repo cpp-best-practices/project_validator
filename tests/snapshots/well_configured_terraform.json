@@ -16,6 +16,46 @@
       "group": "Versions",
       "subject": "Terraform",
       "text": "declares no version; CI tests Terraform versions 1.9.8, 1.10.3"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 39,
+          "test": 8
+        }
+      },
+      "group": "Size",
+      "subject": "Terraform",
+      "text": "47 lines: 39 in the product, 8 in tests (0.21 of the product's)"
+    },
+    {
+      "data": {
+        "declared": [
+          "main.tf"
+        ],
+        "locked": [
+          ".terraform.lock.hcl"
+        ]
+      },
+      "group": "Dependencies",
+      "subject": "Terraform providers",
+      "text": "declared in main.tf; locked by .terraform.lock.hcl"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 6
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
     }
   ],
   "answers": {

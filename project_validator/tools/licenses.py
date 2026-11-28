@@ -9,13 +9,12 @@ from collections.abc import Iterator
 from pathlib import PurePosixPath
 
 from project_validator.facts import Fact, Origin
-from project_validator.facts.licenses import LicenseFile, LicenseLink
+from project_validator.facts.licenses import SPDX_IDENTIFIER, LicenseFile, LicenseLink, VendoredLicenseFile
 from project_validator.facts.settings import SettingsReader
 
 # LICENSE, LICENSE.md, LICENSE-MIT, LICENCE, COPYING, COPYING.LESSER, UNLICENSE, ...
 LICENSE_FILE = re.compile(r"(?:LICEN[CS]E|COPYING|UNLICENSE)(?:[-._].*)?", re.IGNORECASE)
 REUSE_DIRECTORY = "LICENSES"
-SPDX_IDENTIFIER = re.compile(r"SPDX-License-Identifier:\s*([^\n*]+?)\s*(?:\*/|-->)?\s*$", re.MULTILINE)
 
 # SPDX identifier -> the opening of its text, lowercase with whitespace collapsed. The first match wins, so a
 # license that quotes another one comes first.
@@ -164,12 +163,27 @@ def _any_case(name: str) -> str:
     return "".join(f"[{letter.upper()}{letter.lower()}]" for letter in name) + "*"
 
 
-LICENSE_FILES = SettingsReader(
-    name="license files",
-    files=(*(_any_case(name) for name in ("licence", "license", "copying", "unlicense")), f"{REUSE_DIRECTORY}/*"),
-    read=_read,
+_LICENSE_FILES = (*(_any_case(name) for name in ("licence", "license", "copying", "unlicense")), f"{REUSE_DIRECTORY}/*")
+LICENSE_FILES = SettingsReader(name="license files", files=_LICENSE_FILES, read=_read)
+
+
+def _read_vendored(path: str, text: str) -> Iterator[Fact]:
+    for found in _read(path, text):
+        if isinstance(found, LicenseFile) and not found.note:
+            yield VendoredLicenseFile(origin=found.origin, licenses=found.licenses | found.named)
+
+
+VENDORED_LICENSE_FILES = SettingsReader(
+    name="vendored license files", files=_LICENSE_FILES, read=_read_vendored, vendored=True
 )
 
 LICENSE_LINKS = SettingsReader(name="license links", files=(_any_case("readme"),), read=_read_links)
 
-__all__ = ["LICENSE_FILES", "LICENSE_LINKS", "REUSE_DIRECTORY", "identifiers_in", "recognised"]
+__all__ = [
+    "LICENSE_FILES",
+    "LICENSE_LINKS",
+    "REUSE_DIRECTORY",
+    "VENDORED_LICENSE_FILES",
+    "identifiers_in",
+    "recognised",
+]

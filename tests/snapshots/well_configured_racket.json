@@ -17,6 +17,34 @@
       "group": "Versions",
       "subject": "Racket",
       "text": "declares no version; CI tests Racket versions stable, 8.12, 8.12 BC"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 31
+        }
+      },
+      "group": "Size",
+      "subject": "Racket",
+      "text": "31 lines: 31 in the product"
+    },
+    {
+      "data": {
+        "declared": {
+          "info.rkt": "MIT"
+        },
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 2
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT; info.rkt declares MIT"
     }
   ],
   "answers": {

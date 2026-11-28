@@ -1,5 +1,32 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 7
+        }
+      },
+      "group": "Size",
+      "subject": "LaTeX",
+      "text": "7 lines: 7 in the product"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 1
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

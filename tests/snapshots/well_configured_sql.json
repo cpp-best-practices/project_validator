@@ -16,6 +16,46 @@
       "group": "Versions",
       "subject": "SQL",
       "text": "declares no version; CI tests database engine versions PostgreSQL 16, PostgreSQL 17"
+    },
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 9,
+          "test": 3
+        }
+      },
+      "group": "Size",
+      "subject": "SQL",
+      "text": "12 lines: 9 in the product, 3 in tests (0.33 of the product's)"
+    },
+    {
+      "data": {
+        "declared": [
+          "packages.yml"
+        ],
+        "locked": [
+          "package-lock.yml"
+        ]
+      },
+      "group": "Dependencies",
+      "subject": "dbt packages",
+      "text": "declared in packages.yml; locked by package-lock.yml"
+    },
+    {
+      "data": {
+        "declared": {},
+        "files": {
+          "LICENSE": [
+            "MIT"
+          ]
+        },
+        "headers": {},
+        "sources": 3
+      },
+      "group": "Licences",
+      "subject": "the project",
+      "text": "LICENSE holds MIT"
     }
   ],
   "answers": {

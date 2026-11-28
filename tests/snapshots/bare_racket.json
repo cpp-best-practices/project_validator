@@ -1,5 +1,17 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 6
+        }
+      },
+      "group": "Size",
+      "subject": "Racket",
+      "text": "6 lines: 6 in the product"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

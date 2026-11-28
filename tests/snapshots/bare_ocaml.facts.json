@@ -21,6 +21,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "OCaml",
+      "license": "",
       "lines": 1,
       "origin": "bin/main.ml",
       "role": "product"

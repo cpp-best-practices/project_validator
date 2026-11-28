@@ -1,5 +1,28 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 2
+        }
+      },
+      "group": "Size",
+      "subject": "Python",
+      "text": "2 lines: 2 in the product"
+    },
+    {
+      "data": {
+        "declared": [
+          "pyproject.toml"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "Python packages",
+      "text": "declared in pyproject.toml; no lockfile"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

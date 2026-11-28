@@ -1,0 +1,72 @@
+"""Dependencies: each package manager's manifests and whether a lockfile pins what they declare, and how much of
+other projects' code is vendored into the repository (upstream #412)."""
+
+from __future__ import annotations
+
+from collections.abc import Iterable, Iterator
+from pathlib import PurePosixPath
+
+from project_validator.about.detail import Detail, and_more, in_product
+from project_validator.facts import Fact, Facts
+from project_validator.facts.dependencies import Declared, Locked
+from project_validator.facts.roles import VENDOR_DIRECTORIES
+from project_validator.facts.structure import SourceFile
+from project_validator.words import counted, folder
+
+# Manifests named before the rest are counted.
+SHOWN = 3
+
+
+def _named(paths: Iterable[str]) -> str:
+    """`Cargo.toml, crates/a/Cargo.toml and 4 more`."""
+    paths = list(dict.fromkeys(paths))
+    rest = len(paths) - SHOWN
+    return ", ".join(paths[:SHOWN]) + and_more(rest)
+
+
+def _products(facts: Iterable[Fact]) -> list[str]:
+    """The paths of the product's own facts: not those of its tests' fixtures."""
+    return [fact.origin.path for fact in in_product(facts)]
+
+
+def _vendor_folder(path: str) -> str:
+    """The folder vendored code is kept in: its vendor directory (`third_party/`), else the file's own folder (a
+    minified bundle)."""
+    parts = PurePosixPath(path).parts
+    index = next((at for at, part in enumerate(parts[:-1]) if part.lower() in VENDOR_DIRECTORIES), len(parts) - 2)
+    return folder("/".join(parts[: index + 1]) if index >= 0 else ".")
+
+
+def _vendored(facts: Facts) -> Detail | None:
+    paths = [source.path for source in facts.of(SourceFile) if source.vendored]
+    if not paths:
+        return None
+    folders = sorted(set(map(_vendor_folder, paths)))
+    return Detail(
+        group="Dependencies",
+        subject="vendored code",
+        text=f"{counted(len(paths), 'file')} in {_named(folders)}",
+        data={"files": len(paths), "folders": folders},
+    )
+
+
+def dependencies(facts: Facts) -> Iterator[Detail]:
+    """Each package manager's manifests and lockfiles, then the vendored code."""
+    managers = sorted({fact.manager for fact in facts.of(Declared)})
+    for manager in managers:
+        declared = _products(facts.where(Declared, manager=manager))
+        if not declared:
+            continue
+        locked = _products(facts.where(Locked, manager=manager))
+        lock = f"locked by {_named(locked)}" if locked else "no lockfile"
+        yield Detail(
+            group="Dependencies",
+            subject=manager,
+            text=f"declared in {_named(declared)}; {lock}",
+            data={"declared": list(dict.fromkeys(declared)), "locked": list(dict.fromkeys(locked))},
+        )
+    if vendored := _vendored(facts):
+        yield vendored
+
+
+__all__ = ["dependencies"]

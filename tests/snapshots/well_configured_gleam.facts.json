@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
@@ -31,6 +33,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 12,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
@@ -40,6 +43,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
@@ -49,6 +53,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "TOML",
+      "license": "",
       "lines": 6,
       "origin": "gleam.toml",
       "role": "product"
@@ -58,6 +63,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Gleam",
+      "license": "",
       "lines": 6,
       "origin": "src/shop.gleam",
       "role": "product"
@@ -67,6 +73,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Gleam",
+      "license": "",
       "lines": 10,
       "origin": "test/shop_test.gleam",
       "role": "test"

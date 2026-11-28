@@ -1,5 +1,28 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 11
+        }
+      },
+      "group": "Size",
+      "subject": "Java",
+      "text": "11 lines: 11 in the product"
+    },
+    {
+      "data": {
+        "declared": [
+          "pom.xml"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "Maven",
+      "text": "declared in pom.xml; no lockfile"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

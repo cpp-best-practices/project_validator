@@ -47,6 +47,8 @@ class SettingsReader:
     read: Read = _nothing
     named_by: Callable[[Command], Iterable[str]] | None = None
     read_project: Callable[[Context], Iterable[Fact]] | None = None
+    # Reads the files of the other projects vendored into this one instead of its own (their license files).
+    vendored: bool = False
 
 
 def file_reader(name: str, files: tuple[str, ...]) -> SettingsReader:
@@ -112,11 +114,11 @@ def _hidden_directories(readers: Iterable[SettingsReader]) -> frozenset[str]:
 
 def _read_by_default(project: Project, readers: tuple[SettingsReader, ...]) -> Iterator[tuple[SettingsReader, str]]:
     """Each reader with each file it reads by default, outside vendored code: a vendored project's configuration is
-    its own, not this project's."""
+    its own, not this project's. A reader of vendored code reads only the files inside it."""
     index = _Index(readers)
-    own = (path for path in project.files(hidden=_hidden_directories(readers)) if role(path) != "vendored")
-    for path in own:
-        yield from ((reader, path) for reader in index.reading(path))
+    for path in project.files(hidden=_hidden_directories(readers)):
+        vendored = role(path) == "vendored"
+        yield from ((reader, path) for reader in index.reading(path) if reader.vendored == vendored)
 
 
 def _named(

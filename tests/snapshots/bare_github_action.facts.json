@@ -5,6 +5,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 19,
       "origin": "action.yml",
       "role": "product"

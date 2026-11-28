@@ -1,5 +1,39 @@
 {
-  "about": [],
+  "about": [
+    {
+      "data": {
+        "generated": {},
+        "lines": {
+          "product": 15
+        }
+      },
+      "group": "Size",
+      "subject": "Fortran",
+      "text": "15 lines: 15 in the product"
+    },
+    {
+      "data": {
+        "declared": [
+          "fpm.toml"
+        ],
+        "locked": []
+      },
+      "group": "Dependencies",
+      "subject": "fpm",
+      "text": "declared in fpm.toml; no lockfile"
+    },
+    {
+      "data": {
+        "files": 1,
+        "folders": [
+          "third_party/"
+        ]
+      },
+      "group": "Dependencies",
+      "subject": "vendored code",
+      "text": "1 file in third_party/"
+    }
+  ],
   "answers": {
     "action-pinning": [
       {

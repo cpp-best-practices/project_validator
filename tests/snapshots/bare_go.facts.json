@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Go",
+      "license": "",
       "lines": 6,
       "origin": "app.go",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Go",
+      "license": "",
       "lines": 11,
       "origin": "cmd/app/main.go",
       "role": "product"

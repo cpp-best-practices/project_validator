@@ -15,6 +15,7 @@ from project_validator.core import Placed, Status
 from project_validator.ecosystems import registered
 from project_validator.explanations import CATEGORIES, category
 from project_validator.facts import PartlyRead
+from project_validator.facts.roles import ROLE_NAMES
 from project_validator.hosting import HostAccess, HostSettings
 from project_validator.project_map import LanguageFiles, Place
 from project_validator.runner import Report
@@ -30,16 +31,6 @@ OUTCOMES = {
     Status.FAIL: "failed",
     Status.ERROR: "errored",
     Status.SKIP: "skipped",
-}
-ROLE_NAMES = {
-    "product": "the product",
-    "test": "tests",
-    "example": "examples",
-    "docs": "documentation",
-    "tooling": "tooling",
-    "benchmark": "benchmarks",
-    "template": "templates",
-    "vendored": "vendored code",
 }
 
 

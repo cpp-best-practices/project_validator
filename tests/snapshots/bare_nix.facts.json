@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Nix",
+      "license": "",
       "lines": 2,
       "origin": "default.nix",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "Nix",
+      "license": "",
       "lines": 7,
       "origin": "shop.nix",
       "role": "product"

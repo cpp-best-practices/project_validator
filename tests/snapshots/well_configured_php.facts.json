@@ -13,6 +13,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/dependabot.yml",
       "role": "product"
@@ -22,6 +23,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 9,
       "origin": ".github/workflows/ci-lint.yml",
       "role": "product"
@@ -31,6 +33,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 17,
       "origin": ".github/workflows/ci.yml",
       "role": "product"
@@ -40,6 +43,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 6,
       "origin": ".github/workflows/copy-paste-detection.yml",
       "role": "product"
@@ -49,6 +53,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "YAML",
+      "license": "",
       "lines": 7,
       "origin": ".github/workflows/function-limits.yml",
       "role": "product"
@@ -58,6 +63,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "JSON",
+      "license": "",
       "lines": 30,
       "origin": "composer.json",
       "role": "product"
@@ -67,6 +73,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "PHP",
+      "license": "",
       "lines": 13,
       "origin": "src/Calculator.php",
       "role": "product"
@@ -76,6 +83,7 @@
       "generator": "",
       "kind": "SourceFile",
       "language": "PHP",
+      "license": "",
       "lines": 16,
       "origin": "tests/CalculatorTest.php",
       "role": "test"
