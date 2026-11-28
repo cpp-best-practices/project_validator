@@ -93,14 +93,19 @@ def _cargo_package(text: str) -> bool:
     return bool(re.search(r"^\[(package|workspace)\]", text, re.MULTILINE))
 
 
+def _scopes(manifest: dict[str, object]) -> list[object]:
+    """Where a Cargo.toml's dependency tables are: at its top, and in each `[target.'cfg(...)']`."""
+    targets = manifest.get("target")
+    return [manifest, *targets.values()] if isinstance(targets, dict) else [manifest]
+
+
 def _path_dependencies(text: str) -> tuple[str, ...]:
     """The directories of the crates a Cargo.toml depends on by path, in any of its dependency tables."""
     try:
         manifest = tomllib.loads(text)
     except tomllib.TOMLDecodeError:
         return ()
-    targets = manifest.get("target")
-    holders = [manifest, *(targets.values() if isinstance(targets, dict) else ())]
+    holders = _scopes(manifest)
     kinds = ("dependencies", "dev-dependencies", "build-dependencies")
     tables = [holder.get(kind) for holder in holders if isinstance(holder, dict) for kind in kinds]
     specs = (spec for table in tables if isinstance(table, dict) for spec in table.values() if isinstance(spec, dict))
@@ -197,22 +202,16 @@ def _named(table: object) -> Iterator[str]:
 def _cargo_dependencies(_path: str, text: str) -> Dependencies:
     """A crate's (and its workspace's) dependencies, for every target; its dev-dependencies are its development's."""
     manifest = tomllib.loads(text)
-    targets = manifest.get("target")
-    scopes = [manifest, *(targets.values() if isinstance(targets, dict) else ())]
+    direct: list[str] = []
+    development: list[str] = []
+    for scope in _scopes(manifest):
+        if isinstance(scope, dict):
+            direct += _named(scope.get("dependencies"))
+            direct += _named(scope.get("build-dependencies"))
+            development += _named(scope.get("dev-dependencies"))
     workspace = manifest.get("workspace")
-    direct = [
-        *(
-            name
-            for scope in scopes
-            if isinstance(scope, dict)
-            for table in ("dependencies", "build-dependencies")
-            for name in _named(scope.get(table))
-        ),
-        *_named(workspace.get("dependencies") if isinstance(workspace, dict) else None),
-    ]
-    development = [
-        name for scope in scopes if isinstance(scope, dict) for name in _named(scope.get("dev-dependencies"))
-    ]
+    if isinstance(workspace, dict):
+        direct += _named(workspace.get("dependencies"))
     return direct, development
 
 

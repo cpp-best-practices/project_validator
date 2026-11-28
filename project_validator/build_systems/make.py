@@ -329,7 +329,9 @@ class _Evaluation:
         unset = both(self.when, negated(either(*(when for _, when in old))))
         # With the job's environment known, a variable it does not set is not set: `?=` and `+=` settle it.
         if node.how == "?=":
-            variables[node.name] = [*old, *([(Setting(node.value, settled=self.settles), unset)] if unset else [])]
+            variables[node.name] = list(old)
+            if unset:
+                variables[node.name].append((Setting(node.value, settled=self.settles), unset))
         elif node.how == "+=":
             appended = [(Setting(f"{setting.text} {node.value}", setting.settled), when) for setting, when in old]
             variables[node.name] = assigned(old, appended, self.when)

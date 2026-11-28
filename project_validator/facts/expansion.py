@@ -512,9 +512,12 @@ def _setup_actions() -> tuple[re.Pattern[str], ...]:
 
     patterns: list[re.Pattern[str]] = []
     for ecosystem in registered():
-        patterns += [ecosystem.ci_usage] if ecosystem.ci_usage is not None else []
+        if ecosystem.ci_usage is not None:
+            patterns.append(ecosystem.ci_usage)
         if (toolchain := ecosystem.toolchain) is not None:
-            patterns += [*toolchain.versions, *([toolchain.usage] if toolchain.usage is not None else [])]
+            patterns += toolchain.versions
+            if toolchain.usage is not None:
+                patterns.append(toolchain.usage)
             patterns += [re.compile(re.escape(repository), re.IGNORECASE) for repository, _ in toolchain.steps]
     return tuple(patterns)
 

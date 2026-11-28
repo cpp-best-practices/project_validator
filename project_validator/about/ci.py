@@ -65,34 +65,39 @@ def _counted(names: list[str], noun: str, plural: str = "") -> str:
     return f"{len(names)} {noun if len(names) == 1 else plural or noun + 's'} ({', '.join(names)})"
 
 
-def _jobs(facts: Facts) -> tuple[str, int, list[str], list[str]]:
-    """`9 jobs on 3 OSes (linux, macos, windows) and 2 architectures (arm64, x64)`, with the jobs, OSes and
-    architectures it counts."""
-    jobs = facts.of(Job)
-    systems = sorted({job.os for job in jobs if job.os and job.os != "unknown"})
-    architectures = sorted({job.arch for job in facts.of(CiJob) if job.arch}) if systems else []
-    words = counted(len(jobs), "job") if jobs else ""
-    if jobs and systems:
+def _jobs_words(count: int, systems: list[str], architectures: list[str]) -> str:
+    """`9 jobs on 3 OSes (linux, macos, windows) and 2 architectures (arm64, x64)`."""
+    words = counted(count, "job")
+    if systems:
         words += f" on {_counted(systems, 'OS', 'OSes')}"
-        words += f" and {_counted(architectures, 'architecture')}" if architectures else ""
-    return words, len(jobs), systems, architectures
+    if architectures:
+        words += f" and {_counted(architectures, 'architecture')}"
+    return words
 
 
 def ci_shape(facts: Facts) -> Iterator[Detail]:
     """The events CI runs on, whether pull requests from forks run it, and its jobs, OSes and architectures."""
     events = sorted({event for triggers in facts.of(CiTriggers) for event in triggers.events})
     forks = bool(_PULL_REQUESTS & set(events))
-    jobs, count, systems, architectures = _jobs(facts)
-    words = [f"runs on {', '.join(events)}", f"pull requests from forks {'run' if forks else 'do not run'} it"]
-    words = [*(words if events else []), *([jobs] if jobs else [])]
-    if words:
-        data = {"events": events, "forks": forks if events else None, "jobs": count}
-        yield Detail(
-            group="CI",
-            subject="the CI",
-            text="; ".join(words),
-            data={**data, "oses": systems, "architectures": architectures},
-        )
+    jobs = facts.of(Job)
+    systems = sorted({job.os for job in jobs if job.os and job.os != "unknown"})
+    architectures = sorted({job.arch for job in facts.of(CiJob) if job.arch}) if systems else []
+    words = []
+    if events:
+        words.append(f"runs on {', '.join(events)}")
+        words.append(f"pull requests from forks {'run' if forks else 'do not run'} it")
+    if jobs:
+        words.append(_jobs_words(len(jobs), systems, architectures))
+    if not words:
+        return
+    data = {
+        "events": events,
+        "forks": forks if events else None,
+        "jobs": len(jobs),
+        "oses": systems,
+        "architectures": architectures,
+    }
+    yield Detail(group="CI", subject="the CI", text="; ".join(words), data=data)
 
 
 __all__ = ["ASPECTS", "ci_shape", "tools"]

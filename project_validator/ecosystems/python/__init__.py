@@ -502,30 +502,28 @@ def _poetry(table: object) -> list[str]:
     return [name for name, spec in items if name != "python" and not (isinstance(spec, dict) and "path" in spec)]
 
 
+def _groups(table: object) -> Iterable[object]:
+    """The groups a table holds by name (extras, dependency groups); none when it is not a table."""
+    return table.values() if isinstance(table, dict) else ()
+
+
 def _pyproject_dependencies(_path: str, text: str) -> Dependencies:
     """`[project]`'s dependencies and extras, and Poetry's; the dependency groups (PEP 735, Poetry's, uv's and PDM's
     dev-dependencies) are its development's."""
     manifest = tomllib.loads(text)
-    extras = _table(manifest, "project", "optional-dependencies")
-    direct = [
-        *_names(_table(manifest, "project", "dependencies")),
-        *(name for listed in (extras.values() if isinstance(extras, dict) else ()) for name in _names(listed)),
-        *_poetry(_table(manifest, "tool", "poetry", "dependencies")),
-    ]
-    groups = _table(manifest, "dependency-groups")
-    poetry_groups = _table(manifest, "tool", "poetry", "group")
-    pdm = _table(manifest, "tool", "pdm", "dev-dependencies")
-    development = [
-        *(name for listed in (groups.values() if isinstance(groups, dict) else ()) for name in _names(listed)),
-        *(
-            name
-            for group in (poetry_groups.values() if isinstance(poetry_groups, dict) else ())
-            for name in _poetry(_table(group, "dependencies"))
-        ),
-        *_poetry(_table(manifest, "tool", "poetry", "dev-dependencies")),
-        *_names(_table(manifest, "tool", "uv", "dev-dependencies")),
-        *(name for listed in (pdm.values() if isinstance(pdm, dict) else ()) for name in _names(listed)),
-    ]
+    direct = _names(_table(manifest, "project", "dependencies"))
+    for extra in _groups(_table(manifest, "project", "optional-dependencies")):
+        direct += _names(extra)
+    direct += _poetry(_table(manifest, "tool", "poetry", "dependencies"))
+    development: list[str] = []
+    for group in _groups(_table(manifest, "dependency-groups")):
+        development += _names(group)
+    for group in _groups(_table(manifest, "tool", "poetry", "group")):
+        development += _poetry(_table(group, "dependencies"))
+    development += _poetry(_table(manifest, "tool", "poetry", "dev-dependencies"))
+    development += _names(_table(manifest, "tool", "uv", "dev-dependencies"))
+    for group in _groups(_table(manifest, "tool", "pdm", "dev-dependencies")):
+        development += _names(group)
     return direct, development
 
 
