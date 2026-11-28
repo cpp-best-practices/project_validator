@@ -33,6 +33,7 @@ class Disabled(Fact):
     kind: str
     scope: str = GLOBAL
     justified: bool = False
+    why: str = ""  # what the diagnostic guards against, where the validator says so
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -50,13 +51,17 @@ class Suppressions(Fact):
 class Disabler:
     """How the settings of `settings` (a reader's name) turn off diagnostics of `tool`: `disabled` gives each
     (diagnostic, scope) a setting turns off; `blanket` names what turns off every diagnostic, and `key` (globs) the
-    diagnostics that find bugs."""
+    diagnostics that find bugs; `reasons` (glob, why) say what some of them guard against."""
 
     tool: str
     settings: str
     disabled: Callable[[Setting], Iterable[tuple[str, str]]]
     blanket: tuple[str, ...] = ()
     key: tuple[str, ...] = ()
+    reasons: tuple[tuple[str, str], ...] = ()
+
+    def why(self, diagnostic: str) -> str:
+        return next((why for glob, why in self.reasons if fnmatchcase(diagnostic, glob)), "")
 
     def kind(self, diagnostic: str) -> str:
         if diagnostic in self.blanket:
@@ -105,15 +110,27 @@ _COMMENT = re.compile(r"(?:#|//|;)\s*(?P<text>.*)$")
 _REASON = re.compile(r"\w{2,}|https?://")
 
 
+# A glob of diagnostics a comment may name for several (`cppcoreguidelines-pro-bounds-*`).
+_GLOB = re.compile(r"(?<![\w*-])[\w.-]*\*[\w.*-]*")
+
+
+def _named(line: str, diagnostic: str) -> str | None:
+    """How `line` names `diagnostic`: as itself, or by a glob that covers it; None where it does not."""
+    if re.search(rf"(?<!\w){re.escape(diagnostic)}(?![\w-])", line):
+        return diagnostic
+    return next((glob for glob in _GLOB.findall(line) if glob != "*" and fnmatchcase(diagnostic, glob)), None)
+
+
 def _justified(text: str, diagnostic: str) -> bool:
-    """Whether the configuration says why it turns `diagnostic` off: a comment on its line, or on the line above."""
+    """Whether the configuration says why it turns `diagnostic` off: a comment on a line naming it (or a glob that
+    covers it), or on the line above."""
     lines = text.splitlines()
     for number, line in enumerate(lines):
-        if not re.search(rf"(?<!\w){re.escape(diagnostic)}(?![\w-])", line):
+        if (name := _named(line, diagnostic)) is None:
             continue
-        here = _COMMENT.search(line.split(diagnostic, 1)[1])
+        here = _COMMENT.search(line.split(name, 1)[1])
         above = _COMMENT.match(lines[number - 1].strip()) if number else None
-        if any(found and _REASON.search(found["text"].replace(diagnostic, "")) for found in (here, above)):
+        if any(found and _REASON.search(found["text"].replace(name, "")) for found in (here, above)):
             return True
     return False
 
@@ -133,6 +150,7 @@ def disabled_facts(project: Project, facts: Facts, disablers: Iterable[Disabler]
                     kind=disabler.kind(diagnostic),
                     scope=scope,
                     justified=_justified(texts[setting.path], diagnostic),
+                    why=disabler.why(diagnostic),
                 )
 
 

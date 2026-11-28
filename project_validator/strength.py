@@ -22,7 +22,9 @@ from project_validator.facts.tools import known_tools
 
 # The strength a gate's strongest tool needs for the gate to count.
 COVERED = 0.5
-# (kind, scope, justified) -> weight; a global blanket leaves nothing.
+# (kind, scope, justified) -> weight; a global blanket leaves nothing. Style weighs nothing: strength is what a tool can
+# still find of bugs, and a project that enables every check and turns off those that don't apply to it (clang-tidy's
+# altera-*, fuchsia-*) must not count for less than one that enabled few.
 WEIGHTS: Mapping[tuple[str, str, bool], float] = {
     (BLANKET, GLOBAL, False): 1.0,
     (BLANKET, GLOBAL, True): 1.0,
@@ -32,8 +34,8 @@ WEIGHTS: Mapping[tuple[str, str, bool], float] = {
     (KEY, GLOBAL, True): 0.12,
     (KEY, FILE, False): 0.05,
     (KEY, FILE, True): 0.02,
-    (STYLISTIC, GLOBAL, False): 0.02,
-    (STYLISTIC, GLOBAL, True): 0.02,
+    (STYLISTIC, GLOBAL, False): 0.0,
+    (STYLISTIC, GLOBAL, True): 0.0,
     (STYLISTIC, FILE, False): 0.0,
     (STYLISTIC, FILE, True): 0.0,
 }
@@ -75,6 +77,7 @@ class TurnedOff:
     diagnostic: str
     path: str
     weight: float
+    why: str = ""  # what the diagnostic guards against, where it is known
 
 
 def turned_off(facts: Facts) -> tuple[TurnedOff, ...]:
@@ -85,6 +88,7 @@ def turned_off(facts: Facts) -> tuple[TurnedOff, ...]:
             diagnostic=disabled.diagnostic,
             path=disabled.origin.path,
             weight=WEIGHTS[disabled.kind, disabled.scope, disabled.justified],
+            why=disabled.why,
         )
         for disabled in facts.of(Disabled)
         if disabled.kind in (BLANKET, KEY)

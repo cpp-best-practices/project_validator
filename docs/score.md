@@ -2,7 +2,7 @@
 
 The console and HTML reports always show the score; `python -m project_validator --score path/to/project` adds it to
 the plain text, markdown and JSON outputs too. The statuses and the exit code do not change. The design is upstream
-issue #295; this is **version 4**.
+issue #295; this is **version 5**.
 
 > **87% · Level 2 Analysis · 41 of 47 gates in place**
 
@@ -50,8 +50,9 @@ each part's gates is in place. The headline stays the one score of the whole pro
 
 ## Strength
 
-A tool that is turned off counts for less (score version 4). A tool's **strength**, from 0 to 1, is what is left
-after what its configuration turns off and the suppressions written in the code:
+A tool that is turned off counts for less (score version 4; style weighs nothing since version 5). A tool's
+**strength**, from 0 to 1, is what is left after what its configuration turns off and the suppressions written in the
+code:
 
 ```text
 strength = max(0, 1 - the weights of what is turned off - the density of the suppressions)
@@ -60,9 +61,23 @@ strength = max(0, 1 - the weights of what is turned off - the density of the sup
 | Turned off | Everywhere | In one file |
 | --- | --- | --- |
 | Everything (clang-tidy's `-*` with nothing enabled after it, ruff's `ALL`, `-w`, mypy's `ignore_errors`) | the tool counts as not run | 0.5 |
-| A diagnostic that finds bugs (`bugprone-*`, `-Wconversion`, bugbear `B`, bandit `S`, mypy's error codes, tsconfig's strict flags), no reason given | 0.25 | 0.05 |
+| A diagnostic that finds bugs (`bugprone-*`, clang-tidy's memory checks such as `cppcoreguidelines-pro-bounds-*`, `-Wconversion`, bugbear `B`, bandit `S`, mypy's error codes, tsconfig's strict flags), no reason given | 0.25 | 0.05 |
 | The same, with a comment saying why on its line or the line above | 0.12 | 0.02 |
-| Any other diagnostic | 0.02 | 0 |
+| Any other diagnostic (style) | 0 | 0 |
+
+Style weighs nothing: strength is what a tool can still find of bugs. A project that enables every check and turns off
+the ones that don't apply to it (clang-tidy's `altera-*` for FPGAs, `fuchsia-*` for Fuchsia's rules) must not count for
+less than one that only ever enabled a few.
+
+clang-tidy's checks against undefined behaviour (`cppcoreguidelines-pro-bounds-*`, `pro-type-reinterpret-cast`,
+`pro-type-union-access`, `hicpp-no-array-decay`, `hicpp-signed-bitwise`) find bugs for this purpose. Each flags every
+use of a construct that can be undefined (an index out of bounds, an aliasing violation, a read of a union's inactive
+member), not only the uses that are, so a project may turn one off on purpose; it still costs as a check that finds
+bugs, and the next step to turn it back on says what it guards against. A comment naming a glob that covers a check
+(`# cppcoreguidelines-pro-bounds-*: parsers index by design`) says why for each check it covers.
+
+These tables are in the code for now; [#440](https://github.com/cpp-best-practices/project_validator/issues/440) moves
+them into configuration files.
 
 The suppressions in the product's code (`NOLINT`, `# noqa`, `# type: ignore`, `eslint-disable`, `#[allow]`,
 `//nolint`, `@SuppressWarnings`, ...) weigh 0.02 each per thousand lines of the tool's languages, 0.005 when text or a

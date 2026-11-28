@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import unittest
 from collections.abc import Mapping
+from dataclasses import replace
 
 from project_validator.core import Status
 from project_validator.facts import Facts, Origin
@@ -39,7 +40,8 @@ class StrengthTests(unittest.TestCase):
             (_disabled(KEY, justified=True), 0.88),
             (_disabled(KEY, FILE), 0.95),
             (_disabled(KEY, FILE, justified=True), 0.98),
-            (_disabled(STYLISTIC), 0.98),
+            (_disabled(STYLISTIC), 1.0),  # style is not what strength measures
+            (_disabled(STYLISTIC, justified=True), 1.0),
             (_disabled(STYLISTIC, FILE), 1.0),
             (_disabled(BLANKET), 0.0),
             (_disabled(BLANKET, FILE), 0.5),
@@ -132,6 +134,23 @@ class ReenableTests(unittest.TestCase):
         self.assertAlmostEqual(step.points, 50.0)  # it fills the slot again: half the points
         unblocked = score(reports, strengths={"clang-tidy": 0.75}, turned_off=(off,))
         self.assertFalse([step for step in unblocked.next_steps if step.message.startswith("re-enable")])
+
+    def test_a_step_says_why_its_diagnostic_matters_where_it_is_known(self) -> None:
+        why = "it guards against undefined behaviour: reads and writes out of bounds"
+        off = TurnedOff(tool="clang-tidy", diagnostic="cppcoreguidelines-pro-bounds-x", path=".clang-tidy", weight=0.25)
+        reports = [report("static-analysis", PASS, place(PASS, "clang-tidy"))]
+        found = score(reports, strengths={"clang-tidy": 0.4}, turned_off=(replace(off, why=why),))
+        [step] = [step for step in found.next_steps if step.message.startswith("re-enable")]
+        self.assertEqual(
+            step.hint,
+            f"re-enable cppcoreguidelines-pro-bounds-x in .clang-tidy and fix what clang-tidy finds; {why}",
+        )
+
+    def test_turned_off_carries_why_its_diagnostic_matters(self) -> None:
+        disabled = Disabled(
+            origin=Origin(path=".clang-tidy"), tool="clang-tidy", diagnostic="hicpp-a", kind=KEY, why="it guards"
+        )
+        self.assertEqual([found.why for found in turned_off(Facts((disabled,)))], ["it guards"])
 
     def test_a_gain_too_small_to_show_is_no_step(self) -> None:
         """Extra credit restored by a hair: not worth a tenth of a point, so not a step (the board shows tenths)."""

@@ -332,7 +332,7 @@ class SummaryTests(unittest.TestCase):
     def test_as_json(self) -> None:
         data = scored(foundations()).as_dict()
         self.assertEqual(data["version"], SCORE_VERSION)
-        self.assertEqual(SCORE_VERSION, "4")  # 2: weighted by size (#331); 3: findings only take away; 4: strength
+        self.assertEqual(SCORE_VERSION, "5")  # 2: by size (#331); 3: findings only take away; 4: strength; 5: no style
         self.assertEqual(data["percent"], 100)
         self.assertEqual((data["level"], data["level_name"]), (1, "Foundations"))
         self.assertEqual((data["filled"], data["slots"], data["extra"], data["held"]), (7, 7, 0, 0))
